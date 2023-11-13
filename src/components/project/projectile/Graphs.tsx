@@ -1,11 +1,9 @@
 // @ts-ignore
-import CanvasJSReact from "@canvasjs/react-charts";
+import CanvasJSChart from "~/components/common/CanvasJS.jsx";
 import { useAtomValue } from "jotai";
 
 import { useEffect, useState } from "react";
 import { pointsAtom } from "./store";
-
-const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const Graphs = () => {
   const points = useAtomValue(pointsAtom);
