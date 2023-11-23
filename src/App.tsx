@@ -1,9 +1,10 @@
 import { HashRouter, Route, Routes } from "react-router-dom";
 
+import BoatRiverPage from "./pages/boatRiver/page";
+import HomePage from "./pages/page";
 import ProjectilePage from "./pages/projectile/page";
 import RainManPage from "./pages/rain/page";
 import VectorPage from "./pages/vector/page";
-import HomePage from "./pages/page";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="projectile" element={<ProjectilePage />} />
           <Route path="rain" element={<RainManPage />} />
           <Route path="vector" element={<VectorPage />} />
+          <Route path="boat-river" element={<BoatRiverPage />} />
         </Route>
       </Routes>
     </HashRouter>
