@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import Vector from "~/lib/vector";
+import VectorDisplay from "~/components/project/vector/VectorDisplay";
 
 const vectorSchema = z.object({
   a: z.tuple([
@@ -216,13 +217,11 @@ export default function VectorPage() {
                 <TableCell className="font-medium">{param}</TableCell>
                 <TableCell className="text-right">
                   {val instanceof Vector ? (
-                    <span>
-                      {val.x}
-                      <b>i</b> + {val.y}
-                      <b>j</b> + {val.z} <b>k</b>
-                    </span>
+                    <VectorDisplay vector={val} />
                   ) : (
-                    (val as number).toFixed(2)
+                    (val as number).toLocaleString(undefined, {
+                      maximumFractionDigits: 2,
+                    })
                   )}
                 </TableCell>
               </TableRow>
