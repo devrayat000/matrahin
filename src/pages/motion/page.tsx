@@ -1,103 +1,30 @@
-import {
-  atom,
-  type PrimitiveAtom,
-  type Atom,
-  useSetAtom,
-  useAtomValue,
-  useStore,
-} from "jotai";
-import { atomWithReset, RESET } from "jotai/utils";
+import { useAtomValue, useStore } from "jotai";
+import { RESET } from "jotai/utils";
 
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { a, s, t, u, v } from "~/components/project/dynamics/formulae";
 import { Button } from "~/components/ui/button";
-
-const displacementPrimitiveAtom = atomWithReset<number | "">("");
-const initialVelocityPrimitiveAtom = atomWithReset<number | "">("");
-const finalVelocityPrimitiveAtom = atomWithReset<number | "">("");
-const accelerationPrimitiveAtom = atomWithReset<number | "">("");
-const timePrimitiveAtom = atomWithReset<number | "">("");
-
-const propsAtom = atom((get) => {
-  return {
-    s: get(displacementPrimitiveAtom),
-    u: get(initialVelocityPrimitiveAtom),
-    v: get(finalVelocityPrimitiveAtom),
-    a: get(accelerationPrimitiveAtom),
-    t: get(timePrimitiveAtom),
-  };
-});
-
-// const dpChange = atomEffect(get => {})
-
-const displacementAtom = atom((get) => {
-  const { s: displacement, ...props } = get(propsAtom);
-  if (displacement !== "") return displacement;
-  return s(props);
-});
-
-const initialVelocityAtom = atom((get) => {
-  const { u: initialVelocity, ...props } = get(propsAtom);
-  if (initialVelocity !== "") return initialVelocity;
-  return u(props);
-});
-
-const finalVelocityAtom = atom((get) => {
-  const { v: finalVelocity, ...props } = get(propsAtom);
-  if (finalVelocity !== "") return finalVelocity;
-  return v(props);
-});
-
-const accelerationAtom = atom((get) => {
-  const { a: acceleration, ...props } = get(propsAtom);
-  if (acceleration !== "") return acceleration;
-  return a(props);
-});
-
-const timeAtom = atom((get) => {
-  const { t: time, ...props } = get(propsAtom);
-  if (time !== "") return time;
-  return t(props);
-});
-
-const completedAtom = atom((get) => {
-  return (
-    !!get(displacementAtom) &&
-    !!get(initialVelocityAtom) &&
-    !!get(finalVelocityAtom) &&
-    !!get(accelerationAtom) &&
-    !!get(timeAtom)
-  );
-});
-
-function useAtomChanger(atom: PrimitiveAtom<number | "">) {
-  const setAtom = useSetAtom(atom);
-
-  return (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value === "") return setAtom("");
-    setAtom(event.target.valueAsNumber);
-  };
-}
-
-function useRoundedAtomValue(atom: Atom<number | "">) {
-  const val = useAtomValue(atom);
-
-  return val === ""
-    ? ""
-    : val.toLocaleString(undefined, { maximumFractionDigits: 2 });
-}
+import {
+  accelerationAtom,
+  completedAtom,
+  displacementAtom,
+  finalVelocityAtom,
+  initialVelocityAtom,
+  timeAtom,
+  useAtomChanger,
+  useRoundedAtomValue,
+} from "~/components/project/dynamics/store";
 
 export default function DynamicsPage() {
   const completed = useAtomValue(completedAtom);
   const store = useStore();
 
   function reset() {
-    store.set(displacementPrimitiveAtom, RESET);
-    store.set(initialVelocityPrimitiveAtom, RESET);
-    store.set(finalVelocityPrimitiveAtom, RESET);
-    store.set(accelerationPrimitiveAtom, RESET);
-    store.set(timePrimitiveAtom, RESET);
+    store.set(displacementAtom, RESET);
+    store.set(initialVelocityAtom, RESET);
+    store.set(finalVelocityAtom, RESET);
+    store.set(accelerationAtom, RESET);
+    store.set(timeAtom, RESET);
   }
 
   return (
@@ -112,7 +39,7 @@ export default function DynamicsPage() {
             type="number"
             disabled={completed}
             value={useRoundedAtomValue(displacementAtom)}
-            onChange={useAtomChanger(displacementPrimitiveAtom)}
+            onChange={useAtomChanger(displacementAtom)}
           />
         </div>
         <div className="flex items-center gap-2">
@@ -124,7 +51,7 @@ export default function DynamicsPage() {
             type="number"
             disabled={completed}
             value={useRoundedAtomValue(initialVelocityAtom)}
-            onChange={useAtomChanger(initialVelocityPrimitiveAtom)}
+            onChange={useAtomChanger(initialVelocityAtom)}
           />
         </div>
         <div className="flex items-center gap-2">
@@ -136,7 +63,7 @@ export default function DynamicsPage() {
             type="number"
             disabled={completed}
             value={useRoundedAtomValue(finalVelocityAtom)}
-            onChange={useAtomChanger(finalVelocityPrimitiveAtom)}
+            onChange={useAtomChanger(finalVelocityAtom)}
           />
         </div>
         <div className="flex items-center gap-2">
@@ -148,7 +75,7 @@ export default function DynamicsPage() {
             type="number"
             disabled={completed}
             value={useRoundedAtomValue(accelerationAtom)}
-            onChange={useAtomChanger(accelerationPrimitiveAtom)}
+            onChange={useAtomChanger(accelerationAtom)}
           />
         </div>
         <div className="flex items-center gap-2">
@@ -160,7 +87,7 @@ export default function DynamicsPage() {
             type="number"
             disabled={completed}
             value={useRoundedAtomValue(timeAtom)}
-            onChange={useAtomChanger(timePrimitiveAtom)}
+            onChange={useAtomChanger(timeAtom)}
           />
         </div>
         <Button
