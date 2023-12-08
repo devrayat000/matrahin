@@ -26,13 +26,16 @@ import {
 } from "~/lib/UnitConverter";
 import UnitValue, { IUnitValue } from "~/lib/UnitValue";
 
-interface PendulumParams {
+type PendulumParams = {
   aMax: IUnitValue<any>;
   a: IUnitValue<any>;
   vMax: IUnitValue<any>;
   v: IUnitValue<any>;
   T: IUnitValue<any>;
-}
+  eTotal?: IUnitValue<any>;
+  eK?: IUnitValue<any>;
+  eP?: IUnitValue<any>;
+};
 
 const pendulumSchema = {
   aMax: "Maximum displacement, a",
@@ -40,6 +43,9 @@ const pendulumSchema = {
   vMax: "Maximum velocity, v<sub>max</sub>",
   v: "Velocity, v(θ)",
   T: "Period, T",
+  eTotal: "Total energy, E<sub>total</sub>",
+  eK: "Kinetic energy, E<sub>K</sub>",
+  eP: "Potential energy, E<sub>P</sub>",
 } satisfies Record<keyof PendulumParams, string>;
 
 export default function PendulumPage() {
@@ -57,13 +63,29 @@ export default function PendulumPage() {
       v = Math.sqrt(2 * 9.80665 * (aMax - a)),
       T = 2 * Math.PI * Math.sqrt(L.value / 9.81);
 
-    setParams({
+    let newParams: PendulumParams = {
       aMax: new UnitValue(aMax, "m"),
       a: new UnitValue(a, "m"),
       vMax: new UnitValue(vMax, "m/s"),
       v: new UnitValue(v, "m/s"),
       T: new UnitValue(T, "s"),
-    });
+    };
+
+    if (data.mass.value) {
+      const M = massConverter.convert(data.mass, "kg"),
+        eTotal = new UnitValue(M.value * 9.80665 * aMax, "J"),
+        eK = new UnitValue((M.value * v ** 2) / 2, "J"),
+        eP = new UnitValue(M.value * 9.80665 * a, "J");
+
+      newParams = {
+        ...newParams,
+        eTotal,
+        eK,
+        eP,
+      };
+    }
+
+    setParams(newParams);
   }
 
   function reset() {
@@ -139,20 +161,22 @@ export default function PendulumPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {Object.entries(pendulumSchema).map(([name, label]) => (
-                  <TableRow key={name}>
-                    <TableCell
-                      className="font-medium"
-                      dangerouslySetInnerHTML={{
-                        __html: label,
-                      }}
-                    />
-                    <TableCell className="text-right">
-                      {params[name as keyof PendulumParams].value.toCalc()}{" "}
-                      {params[name as keyof PendulumParams].unit}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {Object.entries(params).map(([name, param]) => {
+                  const label = pendulumSchema[name as keyof PendulumParams];
+                  return (
+                    <TableRow key={name}>
+                      <TableCell
+                        className="font-medium"
+                        dangerouslySetInnerHTML={{
+                          __html: label,
+                        }}
+                      />
+                      <TableCell className="text-right">
+                        {param.value.toCalc()} {param.unit}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </div>
