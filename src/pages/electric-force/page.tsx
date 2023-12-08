@@ -32,11 +32,9 @@ export default function ElectricForcePage() {
 
   const body = useMemo(() => {
     switch (initialParams) {
-      case "f_2":
-        return <StaticFields />;
       case "f_net":
       case "f_neut":
-        return <IterableFiels />;
+        return <IterableFiels key={initialParams} />;
       default:
         return <StaticFields />;
     }
