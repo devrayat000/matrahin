@@ -11,29 +11,45 @@ import {
 import { useController, useFormContext } from "react-hook-form";
 import { useId } from "react";
 
-export interface DynamicUnitInputProps<T extends string> {
-  converter: UnitConverter<T>;
-  name: string;
+export interface DynamicUnitInputProps<
+  Units extends string,
+  Name extends string
+> {
+  converter: UnitConverter<Units>;
+  name: Name;
   label: string;
   required?: boolean;
   min?: string | number;
   description?: string;
 }
 
-export default function DynamicUnitInput<T extends string>({
+type FormField<Units extends string, Name extends string> = {
+  [Key in Name]: {
+    value: number;
+    unit: Units;
+  };
+};
+
+export default function DynamicUnitInput<
+  Units extends string,
+  Name extends string
+>({
   converter,
   name,
   label,
   required,
   min,
   description,
-}: DynamicUnitInputProps<T>) {
-  const form = useFormContext();
+}: DynamicUnitInputProps<Units, Name>) {
+  const form = useFormContext<FormField<Units, Name>>();
+
   const control = useController({
-    name: `${name}.unit`,
+    // @ts-ignore
+    name: `${name}.unit` as const,
     rules: { required: true },
     shouldUnregister: true,
     control: form.control,
+    // @ts-ignore
     defaultValue: converter.units[0],
   });
   const id = useId();
@@ -47,19 +63,24 @@ export default function DynamicUnitInput<T extends string>({
           type="number"
           defaultValue={0}
           className="flex-1 rounded-r-none"
-          {...form.register(`${name}.value`, {
-            valueAsNumber: true,
-            required,
-            min:
-              typeof min !== "undefined"
-                ? { value: min, message: `Minimum value is ${min}` }
-                : undefined,
-          })}
+          {...form.register(
+            // @ts-ignore
+            `${name}.value`,
+            {
+              valueAsNumber: true,
+              required,
+              min:
+                typeof min !== "undefined"
+                  ? { value: min, message: `Minimum value is ${min}` }
+                  : undefined,
+            }
+          )}
           required={required}
           min={min}
         />
         <Select
           onValueChange={control.field.onChange}
+          // @ts-ignore
           value={control.field.value}
         >
           <SelectTrigger className="w-20 rounded-l-none border-l-0">
@@ -75,11 +96,17 @@ export default function DynamicUnitInput<T extends string>({
         </Select>
       </div>
       {description && <FormDescription>{description}</FormDescription>}
-      {form.formState.errors[name]?.value?.message && (
-        <FormMessage>
-          {form.formState.errors[name]?.value?.message?.toString()}
-        </FormMessage>
-      )}
+      {
+        // @ts-ignore
+        form.formState.errors[name]?.value?.message && (
+          <FormMessage>
+            {
+              // @ts-ignore
+              form.formState.errors[name]?.value?.message?.toString()
+            }
+          </FormMessage>
+        )
+      }
     </FormItem>
   );
 }
