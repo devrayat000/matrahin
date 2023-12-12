@@ -42,7 +42,7 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
 
     if (
       calculationObject[index].case == CaseOfInertia.Hollow &&
-      inputs["innerRadius"] >= inputs["radius"]
+      inputs["innerRadius"] > inputs["radius"]
     ) {
       alert("Inner radius must be smaller than outer radius");
       return;
@@ -66,20 +66,39 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
   };
 
   return (
-    <>
-      <h1 className="text-center text-4xl py-3 text-primary font-bold leading-8 text-gray-900 ">
-        Moment of Inertia
-      </h1>
-      <h2 className="text-center text-xl font-semibold leading-8 text-gray-900 pt-2">
+    <div className="m-4">
+      <h1 className="text-3xl font-bold text-center">Moment of Inertia</h1>
+      <h2 className="text-2xl font-semibold italic pt-2 text-center">
         {calculationObject[index].title}
       </h2>
-      <div className="flex w-full flex-col gap-4  lg:m-4 p-2 items-center justify-center lg:flex-row   ">
+
+      <div className="flex flex-row gap-2 pt-2 lg:pt-4 items-center justify-center">
+        {calculationObject.map((option, i) => (
+          <Button
+            key={option.case}
+            className={cn(
+              i !== index
+                ? "bg-slate-100 text-black"
+                : "bg-green-500 text-white",
+              "hover:text-white hover:bg-green-500"
+            )}
+            onClick={() => {
+              setIndex(i), setResult([]);
+            }}
+          >
+            {option.title}
+          </Button>
+        ))}
+      </div>
+      <div className="flex w-full flex-col gap-4   p-2 items-center justify-center lg:flex-row   ">
         <div className="flex  flex-col  items-center justify-center md:flex-row   ">
+          {/* <figure className="basis-[45%]"> */}
           <img
             src={calculationObject[index].image}
             alt={calculationObject[index].title}
             className="w-96 flex-wrap"
           />
+          {/* </figure> */}
           <ul className="text-left max-w-lg  text-lg  leading-6 text-gray-800 p-3 ">
             {calculationObject[index].description.map((line) => (
               <li key={line}>
@@ -90,27 +109,6 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
             ))}
           </ul>
           <div className="flex flex-col gap-2  items-start justify-center">
-            <div className="flex flex-row gap-2 items-center justify-center">
-              <p className="text-left max-w-lg  text-lg leading-6 text-gray-800 p-3 ">
-                Select the case:
-              </p>
-              {calculationObject.map((option, i) => (
-                <Button
-                  key={option.case}
-                  className={cn(
-                    i !== index
-                      ? "bg-slate-100 text-black"
-                      : "bg-green-500 text-white",
-                    "hover:text-white hover:bg-green-500"
-                  )}
-                  onClick={() => {
-                    setIndex(i), setResult([]);
-                  }}
-                >
-                  {option.title}
-                </Button>
-              ))}
-            </div>
             <form
               className="w-full m-2 rounded-lg border-slate-200 border p-4 "
               onSubmit={onSubmit}
@@ -156,13 +154,13 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
             {result.length > 0 && (
               <ResultsTable
                 firstColumn={calculationObject[index].axes}
-                secondColumn={result.map((i) => i.toPrecision(4))}
+                secondColumn={result}
               />
             )}
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

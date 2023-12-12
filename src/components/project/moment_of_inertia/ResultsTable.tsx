@@ -1,3 +1,4 @@
+import { MathJax } from "better-react-mathjax";
 import React from "react";
 import {
   Table,
@@ -7,10 +8,12 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
+import { formatNumber } from "~/lib/utils/formatNumber";
 interface ResultsTableProps {
   firstColumn: string[];
-  secondColumn: string[];
+  secondColumn: number[];
 }
+
 const ResultsTable: React.FC<ResultsTableProps> = ({
   firstColumn,
   secondColumn,
@@ -23,12 +26,14 @@ const ResultsTable: React.FC<ResultsTableProps> = ({
 
       <TableHeader>
         <TableRow>
-          <TableCell align="center" className="font-bold text-lg font-sans">
+          <TableCell align="center" className=" font-bold text-lg font-sans">
             Axis
           </TableCell>
 
           <TableCell align="center" className="font-bold text-lg font-sans">
-            Moment of Inertia
+            <MathJax inline hideUntilTypeset={"first"}>
+              Moment of Inertia ({`\\(kg \\ m^2\\)`})
+            </MathJax>
           </TableCell>
         </TableRow>
       </TableHeader>
@@ -41,16 +46,16 @@ const ResultsTable: React.FC<ResultsTableProps> = ({
                 key={index}
                 className={cn(index & 1 ? "bg-inherit" : "bg-slate-100")}
               >
-                <TableCell align="center">
-                  <p className="py-2 text-lg tracking-wide">
-                    {firstColumn[index]}
+                <td align="center" className="p-2">
+                  <p className="text-lg ">{firstColumn[index]}</p>
+                </td>
+                <td align="center" className="p-0">
+                  <p className="font-semibold text-lg   ">
+                    <MathJax inline hideUntilTypeset={"first"}>
+                      {`\\[${formatNumber(item)} \\]`}
+                    </MathJax>
                   </p>
-                </TableCell>
-                <TableCell align="center" className="px-10">
-                  <p className="bg-green-300 py-2 font-semibold rounded-2xl  tracking-wider">
-                    {item}
-                  </p>
-                </TableCell>
+                </td>
               </TableRow>
             )
         )}

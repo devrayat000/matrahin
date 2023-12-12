@@ -54,11 +54,9 @@ const MOI_DifferentAxes: React.FC<MOI_DifferentAxesProps> = ({ shape }) => {
   };
 
   return (
-    <>
-      <h1 className="text-center text-4xl py-3 text-primary font-bold leading-8 text-gray-900 ">
-        Moment of Inertia
-      </h1>
-      <h2 className="text-center text-xl font-semibold leading-8 text-gray-900 pt-2">
+    <div className="m-4">
+      <h1 className="text-3xl font-bold text-center">Moment of Inertia</h1>
+      <h2 className="text-2xl font-semibold italic pt-2 text-center">
         {calculationObject.title}
       </h2>
       <div className="flex w-full flex-col gap-4  lg:m-4 p-2 items-center justify-center lg:flex-row   ">
@@ -123,13 +121,13 @@ const MOI_DifferentAxes: React.FC<MOI_DifferentAxesProps> = ({ shape }) => {
             {result.length > 0 && (
               <ResultsTable
                 firstColumn={calculationObject.axes}
-                secondColumn={result.map((i) => i.toPrecision(4))}
+                secondColumn={result}
               />
             )}
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

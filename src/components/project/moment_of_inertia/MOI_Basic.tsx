@@ -1,7 +1,3 @@
-/**
- * Represents a page component without cases for calculating moment of inertia.
- */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Label } from "@radix-ui/react-label";
 import { MathJax } from "better-react-mathjax";
 import React, { useState } from "react";
@@ -11,6 +7,7 @@ import constants, {
 } from "~/components/project/moment_of_inertia/schema";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { formatNumber } from "~/lib/utils/formatNumber";
 import {
   MomentOfInertiaObject,
   ShapesOfInertia,
@@ -25,31 +22,36 @@ const MOI_Basic: React.FC<MOI_BasicProps> = ({ shape }) => {
   const [pointMassObject] = useState<momentOfInertiaSchema[0]["options"][0]>(
     constants.filter((option) => option.shape === shape)[0].options[0]
   );
-  const [inputs, setInputs] = useState<Record<string, number>>({});
-  const [result, setResult] = useState<number>(0);
+  const [result, setResult] = useState<number>(NaN);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const inputs: Record<string, number> = {};
+
+    for (const [name, value] of formData.entries()) {
+      inputs[name] = Number(value);
+    }
+    console.log(inputs);
 
     const newPointMassObject = new MomentOfInertiaObject(
       inputs as unknown as momentOfInertiaInput,
       pointMassObject.shape,
       pointMassObject.case
     );
-    try {
-      setResult(newPointMassObject.solve().inertiaMainAxis);
-    } catch (error) {
-      console.log(error);
-      return;
-    }
+
+    const result = newPointMassObject.solve();
+    console.log(result.inertiaMainAxis);
+    setResult(result.inertiaMainAxis);
   }
 
+  console.log(result);
+
   return (
-    <>
-      <h1 className="text-center text-4xl py-3 text-primary font-bold leading-8 text-gray-900 ">
-        Moment of Inertia
-      </h1>
-      <h2 className="text-center text-xl font-semibold leading-8 text-gray-900 pt-2">
+    <div className="m-4">
+      <h1 className="text-3xl font-bold text-center">Moment of Inertia</h1>
+      <h2 className="text-2xl font-semibold italic pt-2 text-center">
         {pointMassObject.title}
       </h2>
 
@@ -76,7 +78,7 @@ const MOI_Basic: React.FC<MOI_BasicProps> = ({ shape }) => {
             <header className="text-center text-xl font-semibold leading-8 text-gray-900 py-2">
               Calculator
             </header>
-            {pointMassObject.fields.map((field) => (
+            {pointMassObject.fields.map((field, index) => (
               <div
                 className="flex items-center justify-center m-2"
                 key={field.name}
@@ -89,15 +91,9 @@ const MOI_Basic: React.FC<MOI_BasicProps> = ({ shape }) => {
                 <Input
                   id={field.name}
                   name={field.name}
-                  className="flex-1"
+                  className="flex-1 border-slate-950"
                   type={field.type}
-                  value={inputs[field.name] || 0}
-                  onChange={(e) =>
-                    setInputs({
-                      ...inputs,
-                      [field.name]: +e.currentTarget.value,
-                    })
-                  }
+                  autoFocus={index == 0}
                 />
               </div>
             ))}
@@ -113,14 +109,17 @@ const MOI_Basic: React.FC<MOI_BasicProps> = ({ shape }) => {
               <Button type="submit">Calculate</Button>
             </div>
           </form>
-          {!Number.isNaN(result) && (
-            <p className="text-center text-lg leading-6  py-2">
-              The moment of inertia is: {result}
-            </p>
-          )}
         </div>
       </div>
-    </>
+      {!Number.isNaN(result) && (
+        <p className="text-center text-lg leading-6  py-2">
+          The moment of inertia is:{" "}
+          <MathJax inline hideUntilTypeset={"first"}>
+            {`\\(${formatNumber(result)} \\ kg \\ m^2\\)`}
+          </MathJax>
+        </p>
+      )}
+    </div>
   );
 };
 
