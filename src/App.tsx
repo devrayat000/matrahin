@@ -4,8 +4,11 @@ import MOI_Basic from "./components/project/moment_of_inertia/MOI_Basic";
 import MOI_Cases from "./components/project/moment_of_inertia/MOI_Cases";
 import MOI_DifferentAxes from "./components/project/moment_of_inertia/MOI_DifferentAxes";
 import BoatRiverPage from "./pages/boatRiver/page";
+import ElectricForcePage from "./pages/electric-force/page";
 import Moment_of_inertia from "./pages/moment_of_inertia/page";
+import DynamicsPage from "./pages/motion/page";
 import HomePage from "./pages/page";
+import PendulumPage from "./pages/pendulum/page";
 import ProjectilePage from "./pages/projectile/page";
 import RainManPage from "./pages/rain/page";
 import VectorPage from "./pages/vector/page";
@@ -21,6 +24,9 @@ function App() {
           <Route path="rain" element={<RainManPage />} />
           <Route path="vector" element={<VectorPage />} />
           <Route path="boat-river" element={<BoatRiverPage />} />
+          <Route path="dynamics" element={<DynamicsPage />} />
+          <Route path="electric-force" element={<ElectricForcePage />} />
+          <Route path="pendulum" element={<PendulumPage />} />
           <Route path="moment-of-inertia" element={<Moment_of_inertia />} />
           <Route
             path="moment-of-inertia/point_mass"

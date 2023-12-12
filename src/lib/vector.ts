@@ -1,3 +1,5 @@
+import { makeDegree, makeRadian } from "./utils";
+
 class VectorMath extends Array<number> {
   static parseFloat(value: string | number): number {
     let r: number;
@@ -232,6 +234,25 @@ export default class Vector extends VectorMath {
     return v.len();
   }
 
+  angle(b: Vector | number[]) {
+    b = Vector.getInstance(b);
+    const dot = Vector.dot(this, b);
+    const lena = Vector.len(this);
+    const lenb = Vector.len(b as Vector);
+    const cos = dot / (lena * lenb);
+    const rad = Math.acos(cos);
+    return makeDegree(rad);
+  }
+
+  static angle(a: Vector, b: Vector) {
+    const dot = Vector.dot(a, b);
+    const lena = Vector.len(a);
+    const lenb = Vector.len(b);
+    const cos = dot / (lena * lenb);
+    const rad = Math.acos(cos);
+    return makeDegree(rad);
+  }
+
   normalize() {
     const f = this.len();
     if (f > 1.0e-6) {
@@ -309,5 +330,25 @@ export default class Vector extends VectorMath {
       throw new Error("Invalid argument");
     }
     return r;
+  }
+
+  static fromLine(magnitude: number, angle: number): Vector;
+  static fromLine(
+    magnitude: number,
+    ...angle: [number, number, number]
+  ): Vector;
+  static fromLine(magnitude: number, angle: number | [number, number, number]) {
+    if (Array.isArray(angle)) {
+      return new Vector([
+        magnitude * Math.cos(makeRadian(angle[0])),
+        magnitude * Math.cos(makeRadian(angle[1])),
+        magnitude * Math.cos(makeRadian(angle[2])),
+      ]);
+    } else {
+      return new Vector([
+        magnitude * Math.cos(makeRadian(angle)),
+        magnitude * Math.sin(makeRadian(angle)),
+      ]);
+    }
   }
 }
