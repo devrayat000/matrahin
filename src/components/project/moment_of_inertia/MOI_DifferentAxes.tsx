@@ -1,12 +1,20 @@
-import { Label } from "@radix-ui/react-label";
 import React, { useState } from "react";
 
 import { MathJax } from "better-react-mathjax";
+import { useForm } from "react-hook-form";
+import DynamicUnitInput from "~/components/common/DynamicUnitInput";
 import constants, {
   momentOfInertiaSchema,
 } from "~/components/project/moment_of_inertia/schema";
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import { Form } from "~/components/ui/form";
 import {
   MomentOfInertiaObject,
   ShapesOfInertia,
@@ -20,21 +28,19 @@ interface MOI_DifferentAxesProps {
 }
 
 const MOI_DifferentAxes: React.FC<MOI_DifferentAxesProps> = ({ shape }) => {
+  const form = useForm();
   const [calculationObject] = useState<momentOfInertiaSchema[0]["options"][0]>(
     constants.filter((option) => option.shape === shape)[0].options[0]
   );
   const [result, setResult] = useState<number[]>([]);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    const formData = new FormData(e.currentTarget);
+  function onSubmit(data: any) {
     const inputs: Record<string, number> = {};
-
-    for (const [name, value] of formData.entries()) {
-      inputs[name] = Number(value);
+    for (const [name, values] of Object.entries<any>(data)) {
+      inputs[name] = calculationObject.fields
+        .filter((e) => e.name == name)[0]
+        .converter.convertDefault(values);
     }
-    console.log(inputs);
 
     const newcalculationObject = new MomentOfInertiaObject(
       inputs as unknown as momentOfInertiaInput,
@@ -49,7 +55,8 @@ const MOI_DifferentAxes: React.FC<MOI_DifferentAxesProps> = ({ shape }) => {
     ]);
   }
 
-  const clearResults = () => {
+  const reset = () => {
+    form.reset();
     setResult([]);
   };
 
@@ -76,42 +83,37 @@ const MOI_DifferentAxes: React.FC<MOI_DifferentAxesProps> = ({ shape }) => {
             ))}
           </ul>
           <div className="flex flex-col gap-2  items-start justify-center">
-            <form
-              className="w-full m-2 rounded-lg border-slate-200 border p-4 "
-              onSubmit={onSubmit}
-            >
-              <header className="text-center text-xl font-semibold leading-8 text-gray-900 py-2">
-                Calculator
-              </header>
-              {calculationObject.fields.map((field) => (
-                <div
-                  className="flex items-center justify-center m-2"
-                  key={field.name}
-                >
-                  <Label
-                    className="flex-1"
-                    htmlFor={field.name}
-                    dangerouslySetInnerHTML={{ __html: field.label }}
-                  />
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    className="flex-1 border-slate-950"
-                    type={field.type}
-                  />
-                </div>
-              ))}
-              <div className="w-full mt-4 flex flex-row items-center justify-evenly">
-                <Button
-                  onClick={clearResults}
-                  type="reset"
-                  className="bg-red-600 px-8  text-white hover:bg-red-800 hover:text-white "
-                >
-                  Clear
+            <Card>
+              <CardHeader>
+                <CardTitle>Calculator</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Form {...form}>
+                  <form
+                    className="w-full m-2 rounded-lg border-slate-200 border p-4 "
+                    onSubmit={onSubmit}
+                  >
+                    {calculationObject.fields.map((field) => (
+                      <DynamicUnitInput
+                        key={field.name}
+                        label={field.label}
+                        converter={field.converter}
+                        name={field.name}
+                        min={0}
+                      />
+                    ))}
+                  </form>
+                </Form>
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <Button variant="destructive" type="reset" onClick={reset}>
+                  Reset
                 </Button>
-                <Button type="submit">Calculate</Button>
-              </div>
-            </form>
+                <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
+                  Calculate
+                </Button>
+              </CardFooter>
+            </Card>
           </div>
         </div>
       </div>

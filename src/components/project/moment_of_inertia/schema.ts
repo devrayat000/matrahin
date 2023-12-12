@@ -13,6 +13,10 @@ import ThinCyl from "~/assets/images/moment_of_inertia/ThinCyl.png";
 import ThinSphere from "~/assets/images/moment_of_inertia/ThinSphere.png";
 import TwoMass from "~/assets/images/moment_of_inertia/TwoMass.png";
 import PointMassImage from "~/assets/images/moment_of_inertia/point_mass2.jpeg";
+import UnitConverter, {
+  lenghtConverter,
+  massConverter,
+} from "~/lib/UnitConverter";
 import { CaseOfInertia, ShapesOfInertia } from "~/services/Moment_of_inertia";
 
 export type momentOfInertiaSchema = {
@@ -33,6 +37,7 @@ export type momentOfInertiaSchema = {
       name: string;
       label: string;
       type: string;
+      converter: UnitConverter<string>;
     }[];
   }[];
 }[];
@@ -59,13 +64,15 @@ const constants: momentOfInertiaSchema = [
         fields: [
           {
             name: "mass",
-            label: "Mass (kg)",
+            label: "Mass (M)",
             type: "number",
+            converter: massConverter,
           },
           {
             name: "radius",
-            label: "Radius (m)",
+            label: "Radius (r)",
             type: "number",
+            converter: lenghtConverter,
           },
         ],
       },
@@ -92,18 +99,21 @@ const constants: momentOfInertiaSchema = [
         fields: [
           {
             name: "mass",
-            label: "Mass, M (kg)",
+            label: "Mass (M)",
             type: "number",
+            converter: massConverter,
           },
           {
             name: "mass2",
-            label: "Mass, m (kg)",
+            label: "Mass 2 (m)",
             type: "number",
+            converter: massConverter,
           },
           {
             name: "distance",
-            label: "Distance, d (m)",
+            label: "Distance (d)",
             type: "number",
+            converter: lenghtConverter,
           },
         ],
       },
@@ -137,18 +147,21 @@ const constants: momentOfInertiaSchema = [
         fields: [
           {
             name: "mass",
-            label: "Mass (kg)",
+            label: "Mass (m)",
             type: "number",
+            converter: massConverter,
           },
           {
             name: "height",
-            label: "Height (m)",
+            label: "Height (h)",
             type: "number",
+            converter: lenghtConverter,
           },
           {
             name: "width",
-            label: "Width (m)",
+            label: "Width (w)",
             type: "number",
+            converter: lenghtConverter,
           },
         ],
       },
@@ -176,13 +189,15 @@ const constants: momentOfInertiaSchema = [
         fields: [
           {
             name: "mass",
-            label: "Mass (kg)",
+            label: "Mass (M)",
             type: "number",
+            converter: massConverter,
           },
           {
             name: "length",
-            label: "Length (m)",
+            label: "Length (L)",
             type: "number",
+            converter: lenghtConverter,
           },
         ],
       },
@@ -215,23 +230,27 @@ const constants: momentOfInertiaSchema = [
         fields: [
           {
             name: "mass",
-            label: "Mass (kg)",
+            label: "Mass (M)",
             type: "number",
+            converter: massConverter,
           },
           {
             name: "height",
-            label: "Height (m)",
+            label: "Height (h)",
             type: "number",
+            converter: lenghtConverter,
           },
           {
             name: "width",
-            label: "Width (m)",
+            label: "Width (w)",
             type: "number",
+            converter: lenghtConverter,
           },
           {
             name: "depth",
-            label: "Depth (m)",
+            label: "Depth (d)",
             type: "number",
+            converter: lenghtConverter,
           },
         ],
       },
@@ -259,19 +278,22 @@ const constants: momentOfInertiaSchema = [
         fields: [
           {
             name: "mass",
-            label: "Mass (kg)",
+            label: "Mass (m)",
             type: "number",
+            converter: massConverter,
           },
           {
             name: "radius",
-            label: "Radius (m)",
+            label: "Radius (R)",
             type: "number",
+            converter: lenghtConverter,
           },
 
           {
             name: "height",
-            label: "Height (for axis along diameter) (m)",
+            label: "Height (for axis along diameter) (h)",
             type: "number",
+            converter: lenghtConverter,
           },
         ],
       },
@@ -289,24 +311,28 @@ const constants: momentOfInertiaSchema = [
         fields: [
           {
             name: "mass",
-            label: "Mass (kg)",
+            label: "Mass (M)",
             type: "number",
+            converter: massConverter,
           },
 
           {
             name: "radius",
-            label: "Outer Radius (m)",
+            label: "Outer Radius (R)",
             type: "number",
+            converter: lenghtConverter,
           },
           {
             name: "innerRadius",
-            label: "Inner Radius (m)",
+            label: "Inner Radius (r)",
             type: "number",
+            converter: lenghtConverter,
           },
           {
             name: "height",
-            label: "Height (for axis along diameter) (m)",
+            label: "Height (for axis along diameter) (h)",
             type: "number",
+            converter: lenghtConverter,
           },
         ],
       },
@@ -324,19 +350,22 @@ const constants: momentOfInertiaSchema = [
         fields: [
           {
             name: "mass",
-            label: "Mass (kg)",
+            label: "Mass (m)",
             type: "number",
+            converter: massConverter,
           },
 
           {
             name: "radius",
-            label: "Radius (m)",
+            label: "Radius (R)",
             type: "number",
+            converter: lenghtConverter,
           },
           {
             name: "height",
-            label: "Height (for axis along diameter) (m)",
+            label: "Height (for axis along diameter) (h)",
             type: "number",
+            converter: lenghtConverter,
           },
         ],
       },
@@ -363,13 +392,15 @@ const constants: momentOfInertiaSchema = [
         fields: [
           {
             name: "mass",
-            label: "Mass (kg)",
+            label: "Mass (m)",
             type: "number",
+            converter: massConverter,
           },
           {
             name: "radius",
-            label: "Radius (m)",
+            label: "Radius (R)",
             type: "number",
+            converter: lenghtConverter,
           },
         ],
       },
@@ -386,19 +417,22 @@ const constants: momentOfInertiaSchema = [
         fields: [
           {
             name: "mass",
-            label: "Mass (kg)",
+            label: "Mass (m)",
             type: "number",
+            converter: massConverter,
           },
 
           {
             name: "radius",
-            label: "Outer Radius (m)",
+            label: "Outer Radius (R)",
             type: "number",
+            converter: lenghtConverter,
           },
           {
             name: "innerRadius",
-            label: "Inner Radius (m)",
+            label: "Inner Radius (r)",
             type: "number",
+            converter: lenghtConverter,
           },
         ],
       },
@@ -415,14 +449,16 @@ const constants: momentOfInertiaSchema = [
         fields: [
           {
             name: "mass",
-            label: "Mass (kg)",
+            label: "Mass (m)",
             type: "number",
+            converter: massConverter,
           },
 
           {
             name: "radius",
-            label: "Radius (m)",
+            label: "Radius (R)",
             type: "number",
+            converter: lenghtConverter,
           },
         ],
       },
@@ -450,13 +486,15 @@ const constants: momentOfInertiaSchema = [
         fields: [
           {
             name: "mass",
-            label: "Mass (kg)",
+            label: "Mass (m)",
             type: "number",
+            converter: massConverter,
           },
           {
             name: "radius",
-            label: "Radius (m)",
+            label: "Radius (R)",
             type: "number",
+            converter: lenghtConverter,
           },
         ],
       },
@@ -475,19 +513,22 @@ const constants: momentOfInertiaSchema = [
         fields: [
           {
             name: "mass",
-            label: "Mass (kg)",
+            label: "Mass (m)",
             type: "number",
+            converter: massConverter,
           },
 
           {
             name: "radius",
-            label: "Outer Radius (m)",
+            label: "Outer Radius (R)",
             type: "number",
+            converter: lenghtConverter,
           },
           {
             name: "innerRadius",
-            label: "Inner Radius (m)",
+            label: "Inner Radius (r)",
             type: "number",
+            converter: lenghtConverter,
           },
         ],
       },
@@ -499,21 +540,23 @@ const constants: momentOfInertiaSchema = [
         axes: ["About Central Axis", "About diameter"],
         case: CaseOfInertia.Thin,
         description: [
-          "Moment of inertia about central axis: \\[ I_z =  \\frac{1}{2} \\cdot M \\cdot r^2\\]",
+          "Moment of inertia about central axis: \\[ I_z =  \\frac{1}{2} \\cdot M \\cdot R^2\\]",
 
-          "Moment of inertia about diameter: \\[I_x = I_y = \\frac{1}{4} \\cdot M \\cdot r^2\\]",
+          "Moment of inertia about diameter: \\[I_x = I_y = \\frac{1}{4} \\cdot M \\cdot R^2\\]",
         ],
         fields: [
           {
             name: "mass",
-            label: "Mass (kg)",
+            label: "Mass (M)",
             type: "number",
+            converter: massConverter,
           },
 
           {
             name: "radius",
-            label: "Radius (m)",
+            label: "Radius (R)",
             type: "number",
+            converter: lenghtConverter,
           },
         ],
       },

@@ -1,20 +1,12 @@
+import { Label } from "@radix-ui/react-label";
 import React, { useState } from "react";
 
 import { MathJax } from "better-react-mathjax";
-import { useForm } from "react-hook-form";
-import DynamicUnitInput from "~/components/common/DynamicUnitInput";
 import constants, {
   momentOfInertiaSchema,
 } from "~/components/project/moment_of_inertia/schema";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import { Form } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
 import { cn } from "~/lib/utils";
 import {
   CaseOfInertia,
@@ -29,8 +21,7 @@ interface MOI_CasesProps {
   shape: ShapesOfInertia;
 }
 
-const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
-  const form = useForm();
+const MOI_Case: React.FC<MOI_CasesProps> = ({ shape }) => {
   const [index, setIndex] = useState<number>(0);
   const [calculationObject] = useState<momentOfInertiaSchema[0]["options"]>(
     constants.filter((option) => option.shape === shape)[0].options
@@ -38,13 +29,16 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
 
   const [result, setResult] = useState<number[]>([]);
 
-  function onSubmit(data: any) {
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
     const inputs: Record<string, number> = {};
-    for (const [name, values] of Object.entries<any>(data)) {
-      inputs[name] = calculationObject[index].fields
-        .filter((e) => e.name == name)[0]
-        .converter.convertDefault(values);
+
+    for (const [name, value] of formData.entries()) {
+      inputs[name] = Number(value);
     }
+    console.log(inputs);
 
     if (
       calculationObject[index].case == CaseOfInertia.Hollow &&
@@ -67,8 +61,7 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
     ]);
   }
 
-  const reset = () => {
-    form.reset();
+  const clearResults = () => {
     setResult([]);
   };
 
@@ -116,53 +109,42 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
             ))}
           </ul>
           <div className="flex flex-col gap-2  items-start justify-center">
-            <Card>
-              <CardHeader>
-                <CardTitle>Calculator</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Form {...form}>
-                  <form
-                    className="w-full m-2 rounded-lg border-slate-200 border p-4 "
-                    onSubmit={onSubmit}
-                  >
-                    {calculationObject[index].fields.map((field) => (
-                      // <div
-                      //   className="flex items-center justify-center m-2"
-                      //   key={field.name}
-                      // >
-                      //   <Label
-                      //     className="flex-1"
-                      //     htmlFor={field.name}
-                      //     dangerouslySetInnerHTML={{ __html: field.label }}
-                      //   />
-                      //   <Input
-                      //     id={field.name}
-                      //     name={field.name}
-                      //     className="flex-1 border-slate-950"
-                      //     type={field.type}
-                      //   />
-                      // </div>
-                      <DynamicUnitInput
-                        key={field.name}
-                        label={field.label}
-                        converter={field.converter}
-                        name={field.name}
-                        min={0}
-                      />
-                    ))}
-                  </form>
-                </Form>
-              </CardContent>
-              <CardFooter className="flex justify-between">
-                <Button variant="destructive" type="reset" onClick={reset}>
-                  Reset
+            <form
+              className="w-full m-2 rounded-lg border-slate-200 border p-4 "
+              onSubmit={onSubmit}
+            >
+              <header className="text-center text-xl font-semibold leading-8 text-gray-900 py-2">
+                Calculator
+              </header>
+              {calculationObject[index].fields.map((field) => (
+                <div
+                  className="flex items-center justify-center m-2"
+                  key={field.name}
+                >
+                  <Label
+                    className="flex-1"
+                    htmlFor={field.name}
+                    dangerouslySetInnerHTML={{ __html: field.label }}
+                  />
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    className="flex-1 border-slate-950"
+                    type={field.type}
+                  />
+                </div>
+              ))}
+              <div className="w-full mt-4 flex flex-row items-center justify-evenly">
+                <Button
+                  onClick={clearResults}
+                  type="reset"
+                  className="bg-red-600 px-8  text-white hover:bg-red-800 hover:text-white"
+                >
+                  Clear
                 </Button>
-                <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
-                  Calculate
-                </Button>
-              </CardFooter>
-            </Card>
+                <Button type="submit">Calculate</Button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -182,4 +164,4 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
   );
 };
 
-export default MOI_Cases;
+export default MOI_Case;
