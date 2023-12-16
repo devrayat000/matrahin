@@ -10,6 +10,10 @@ export default class UnitConverter<T extends string> {
     return new UnitValue<U>(result, toUnit);
   }
 
+  // Fix the generic type parameter here
+  convertDefault(unitValue: IUnitValue<T>): number {
+    return unitValue.value / this.conversionFactors[unitValue.unit];
+  }
   get units(): T[] {
     return Object.keys(this.conversionFactors) as T[];
   }
