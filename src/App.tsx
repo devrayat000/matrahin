@@ -13,6 +13,9 @@ import ProjectilePage from "./pages/projectile/page";
 import RainManPage from "./pages/rain/page";
 import VectorPage from "./pages/vector/page";
 import { ShapesOfInertia } from "./services/Moment_of_inertia";
+import DynamicsPage from "./pages/motion/page";
+import ElectricForcePage from "./pages/electric-force/page";
+import PendulumPage from "./pages/pendulum/page";
 
 function App() {
   return (
