@@ -43,8 +43,15 @@ const ProjectileMotion = () => {
   const [bufferIndex, setBufferIndex] = useState(0);
   const [points, setPoints] = useAtom(pointsAtom);
 
+  const result = useAtomValue(projectileAtom)!;
+
+  const defaultScale = useMemo(() => {
+    const fitScale = (INITIAL.canvasDimension.x - 50) / result.xm;
+    return fitScale;
+  }, [result]);
+
   // scale is used to scale the velocity of boat
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(defaultScale);
   const [animationSpeed, setAnimationSpeed] = useState(1); // [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2
   const zoomScale = useMemo(
     () => Math.floor(animationSpeed * 4 + scale * 4 * animationSpeed),
@@ -54,8 +61,6 @@ const ProjectileMotion = () => {
   useEffect(() => {
     console.log(scale, animationSpeed, zoomScale);
   }, [scale, animationSpeed, zoomScale]);
-
-  const result = useAtomValue(projectileAtom)!;
 
   const values = useMemo(
     () => ({
@@ -131,18 +136,19 @@ const ProjectileMotion = () => {
         setIsAnimating(false);
         setEnded(true);
       }
-      console.log(
-        currentIndex,
-        points[currentIndex],
-        isAnimating,
-        points.length,
-        objectSize
-      );
+      // console.log(
+      //   currentIndex,
+      //   points[currentIndex],
+      //   isAnimating,
+      //   points.length,
+      //   objectSize
+      // );
     };
     drawProjectilePath(ctx, points);
 
     if (isAnimating) {
       currentIndex = bufferIndex;
+
       animate();
     }
 
@@ -318,7 +324,7 @@ const ProjectileMotion = () => {
     ctx.arc(
       currentPosition.x,
       currentPosition.y,
-      40,
+      Math.min(35, vx),
       resultantAngle > 0 ? 0 : -resultantAngle,
       resultantAngle > 0 ? -resultantAngle : 0,
       true
@@ -347,7 +353,11 @@ const ProjectileMotion = () => {
     );
 
     // Draw velocity annotation
-    ctx.fillText(`Initial Velocity: ${values.objectSpeed.magnitude}`, 20, 40);
+    ctx.fillText(
+      `Initial Velocity: ${values.objectSpeed.magnitude.toFixed(2)} m/s`,
+      20,
+      40
+    );
 
     // ctx.fillText(`g : ${properties.g}m/s^2`, ctx.canvas.width - 160, 20);
     ctx.fillText(
@@ -454,15 +464,16 @@ const ProjectileMotion = () => {
   };
 
   const zoomIn = () => {
-    setScale((prev) => prev * 1.5);
+    setScale((prev) => prev * 1.2);
   };
   const zoomOut = () => {
-    setScale((prev) => prev / 1.5);
+    setScale((prev) => prev / 1.2);
   };
 
   const resetZoom = () => {
-    setScale(1);
+    setScale(defaultScale);
   };
+
   return (
     <div className="flex flex-col gap-4">
       <canvas
@@ -480,9 +491,7 @@ const ProjectileMotion = () => {
             <button onClick={zoomOut} title="Zoom Out">
               <ZoomOutIcon />
             </button>
-            <label htmlFor="scale">Zoom : {scale.toFixed(3)}x</label>
-            {/* add tooltip to the button */}
-
+            {/* <label htmlFor="scale">Zoom : {scale.toFixed(3)}x</label> */}
             <button onClick={resetZoom} title="Reset Zoom">
               <RotateCcw />
             </button>
