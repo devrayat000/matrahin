@@ -1,6 +1,10 @@
 // import { useState } from "react";
 import { useState } from "react";
 
+import { useSetAtom } from "jotai";
+import ResultsContainer from "~/components/project/projectile/ResultsContainer";
+import { projectileSchema } from "~/components/project/projectile/schema";
+import { projectileAtom } from "~/components/project/projectile/store";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -12,10 +16,6 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import Projectile, { ProjectileInput } from "~/services/Projectile";
-import { useSetAtom } from "jotai";
-import { projectileAtom } from "~/components/project/projectile/store";
-import ResultsContainer from "~/components/project/projectile/ResultsContainer";
-import { projectileSchema } from "~/components/project/projectile/schema";
 
 export default function ProjectilePage() {
   const [initialState, setInitialState] = useState(projectileSchema[0]);
@@ -88,6 +88,7 @@ export default function ProjectilePage() {
                 name={field.name}
                 className="flex-[16rem]"
                 type={field.type}
+                max={field.name == "angle" ? 90 : Infinity}
                 value={inputs[field.name] || 0}
                 onChange={(e) =>
                   setInputs({ ...inputs, [field.name]: +e.currentTarget.value })
