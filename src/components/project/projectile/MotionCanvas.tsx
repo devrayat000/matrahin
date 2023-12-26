@@ -469,7 +469,7 @@ const ProjectileMotion = () => {
   };
 
   const resetZoom = () => {
-    setScale(defaultScale);
+    setScale(calculateScale());
   };
 
   return (
