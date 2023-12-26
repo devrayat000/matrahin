@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import drawArrow, { drawArrowByAngle } from "~/lib/utils/drawArrow";
 
 import { useAtom, useAtomValue } from "jotai";
@@ -45,18 +45,20 @@ const ProjectileMotion = () => {
 
   const result = useAtomValue(projectileAtom)!;
 
-  const defaultScale = useMemo(() => {
-    const fitScale = (INITIAL.canvasDimension.x - 50) / result.xm;
-    return fitScale;
-  }, [result]);
-
-  // scale is used to scale the velocity of boat
-  const [scale, setScale] = useState(defaultScale);
+  const calculateScale = useCallback(
+    (): number => (INITIAL.canvasDimension.x - 50) / result.xm,
+    [result]
+  );
+  const [scale, setScale] = useState(calculateScale());
   const [animationSpeed, setAnimationSpeed] = useState(1); // [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2
   const zoomScale = useMemo(
     () => Math.floor(animationSpeed * 4 + scale * 4 * animationSpeed),
     [scale, animationSpeed]
   );
+
+  useEffect(() => {
+    setScale(calculateScale());
+  }, [result, calculateScale]);
 
   const values = useMemo(
     () => ({
