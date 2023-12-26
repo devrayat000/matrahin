@@ -1,15 +1,22 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import drawArrow, { drawArrowByAngle } from "~/lib/utils/drawArrow";
 
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import { RotateCcw, ZoomInIcon, ZoomOutIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { pointsAtom, projectileAtom } from "./store";
+import { Point, projectileAtom } from "./store";
 
 // constants
 
+type INITIAL_CONSTANTS = {
+  canvasDimension: {
+    x: number;
+    y: number;
+  };
+};
+
 const objectSize = 5; //radius
-export const INITIAL = {
+const INITIAL: INITIAL_CONSTANTS = {
   canvasDimension: {
     x: 700,
     y: 400,
@@ -34,14 +41,24 @@ export const INITIAL = {
 const theta = "θ";
 
 export interface ProjectileMotionProps {}
-
+type modifiedValues = {
+  objectPosition: {
+    x: number;
+    y: number;
+  };
+  objectSpeed: {
+    magnitude: number;
+    angle: number;
+  };
+  height: number;
+};
 const ProjectileMotion = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [started, setStarted] = useState(false);
   const [ended, setEnded] = useState(false);
   const [bufferIndex, setBufferIndex] = useState(0);
-  const [points, setPoints] = useAtom(pointsAtom);
+  // const [points, setPoints] = useAtom(pointsAtom);
 
   const result = useAtomValue(projectileAtom)!;
 
@@ -56,115 +73,44 @@ const ProjectileMotion = () => {
     [scale, animationSpeed]
   );
 
+  // change zoom scale when input and result changes
   useEffect(() => {
     setScale(calculateScale());
   }, [result, calculateScale]);
 
-  const values = useMemo(
-    () => ({
-      objectPosition: {
-        x: objectSize,
-        y: 400 - objectSize - result.yi,
-      },
+  // an utility function to modify the points to show in the canvas
+  const modifyPoints = useCallback(
+    (x: number, y: number): { x: number; y: number } => {
+      // modify points to show in the canvas
+      // eslint-disable-next-line prefer-const
+      x = x * scale + objectSize;
+      y = INITIAL.canvasDimension.y - y * scale - objectSize;
+      return { x, y };
+    },
+    [scale]
+  );
+  // computed values from result
+  const values: modifiedValues = useMemo(() => {
+    const objectPosition = modifyPoints(0, result.yi);
+
+    return {
+      objectPosition: objectPosition,
       objectSpeed: {
         magnitude: result.vi,
         angle: (result.angle * Math.PI) / 180,
       },
       height: result.yi,
-    }),
-    [result]
-  );
-  //  changed useMemo to derived atom
-  // const valuesAtom = atom((get) => {
-  //   const result = get(projectileAtom) || {
-  //     yi: 0,
-  //     g: 9.8,
-  //     vi: 0,
-  //     angle: 0,
-  //     xm: 0,
-  //     ym: 0,
-  //     t: 0,
-  //   };
-  //   return {
-  //     objectPosition: {
-  //       x: objectSize,
-  //       y: 400 - objectSize - result.yi,
-  //     },
-  //     objectSpeed: {
-  //       magnitude: result.vi,
-  //       angle: (result.angle * Math.PI) / 180,
-  //     },
-  //     height: result.yi,
-  //   };
-  // });
-
-  // const [values] = useAtom(valuesAtom);
-  useEffect(() => {
-    reset();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    reset();
-  }, [values, scale]); // eslint-disable-line react-hooks/exhaustive-deps
-  let currentIndex = bufferIndex;
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
-
-    if (!canvas || !ctx) return;
-
-    let animationFrameId: number;
-    // for storing the values when paused
-
-    const animate = () => {
-      if (
-        currentIndex < points.length &&
-        points[currentIndex].y * scale + objectSize >= objectSize
-      ) {
-        // modify points to show in the canvas
-        // eslint-disable-next-line prefer-const
-        let { x, y, vx, vy, t } = points[currentIndex];
-        x = x * scale + objectSize;
-        y = y * scale + objectSize;
-        render(ctx, canvas, x, canvas.height - y, vx, vy, t);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        currentIndex += zoomScale;
-        animationFrameId = requestAnimationFrame(animate);
-      } else {
-        setIsAnimating(false);
-        setEnded(true);
-      }
-      // console.log(
-      //   currentIndex,
-      //   points[currentIndex],
-      //   isAnimating,
-      //   points.length,
-      //   objectSize
-      // );
     };
-    drawProjectilePath(ctx, points);
+  }, [result, modifyPoints]);
 
-    if (isAnimating) {
-      currentIndex = bufferIndex;
+  const calculatePoints = useCallback(() => {
+    // Example usage
+    const initialVelocity = values.objectSpeed.magnitude;
+    const initialHeight = values.height / scale; // in meters
+    const timeStep = 0.05 / (10 * scale); // in seconds
 
-      animate();
-    }
-
-    return () => {
-      window.cancelAnimationFrame(animationFrameId);
-    };
-  }, [isAnimating]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // rendering functions
-  // Function to simulate the projectile motion
-  function simulateProjectileEquation(
-    initialVelocity: number,
-    launchAngle: number,
-    initialHeight: number,
-    timeStep: number
-  ) {
     const g = result.g; // Acceleration due to gravity (m/s^2)
-    const radians = launchAngle;
+    const radians = values.objectSpeed.angle; // in radians;
     const cosTheta = Math.cos(radians);
     const tanTheta = Math.tan(radians);
     const sinTheta = Math.sin(radians);
@@ -187,25 +133,80 @@ const ProjectileMotion = () => {
       vy = initialVelocity * sinTheta - g * t;
       points.push({ x, y, vx, vy, t });
     }
-
     return points;
-  }
+  }, [values, result, scale]);
+
+  const points: Point[] = useMemo(() => {
+    const points = calculatePoints();
+    return points;
+  }, [calculatePoints]);
+
+  const animatingPoints: Point[] = useMemo(
+    () =>
+      points.map((p) => ({
+        ...p,
+        x: p.x * scale + objectSize,
+        y: INITIAL.canvasDimension.y - p.y * scale - objectSize,
+      })),
+    [points, scale]
+  );
+
+  // initial render
+  useEffect(() => {
+    reset();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    reset();
+  }, [values, scale]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  let currentIndex = bufferIndex;
+
+  const checkNotReachedGround = (): boolean => {
+    // 0 as base line
+    return currentIndex < points.length && points[currentIndex].y * scale >= 0;
+  };
+
+  // main animation starts here.
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+
+    if (!canvas || !ctx) return;
+
+    let animationFrameId: number;
+    // for storing the values when paused
+
+    const animate = () => {
+      if (checkNotReachedGround()) {
+        render(ctx, canvas, animatingPoints[currentIndex]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        currentIndex += zoomScale;
+        animationFrameId = requestAnimationFrame(animate);
+      } else {
+        setIsAnimating(false);
+        setEnded(true);
+      }
+    };
+    drawProjectilePath(ctx);
+
+    if (isAnimating) {
+      currentIndex = bufferIndex;
+
+      animate();
+    }
+
+    return () => {
+      window.cancelAnimationFrame(animationFrameId);
+    };
+  }, [isAnimating]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Function to draw the projectile path on the canvas
-  function drawProjectilePath(
-    ctx: CanvasRenderingContext2D,
-    points: { x: number; y: number }[]
-  ) {
+  function drawProjectilePath(ctx: CanvasRenderingContext2D) {
+    const tempPoints = animatingPoints;
     if (points.length == 0) return;
     ctx.beginPath();
-
-    const tempPoints = points.map((p) => ({
-      x: p.x * scale + objectSize,
-      y: ctx.canvas.height - p.y * scale - objectSize,
-    }));
-
     ctx.moveTo(tempPoints[0].x, tempPoints[0].y);
-
     for (let i = 1; i < tempPoints.length; i++) {
       ctx.lineTo(tempPoints[i].x, tempPoints[i].y);
     }
@@ -224,46 +225,22 @@ const ProjectileMotion = () => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawOuterStructure(ctx, canvas);
-    drawBallObject(ctx, values.objectPosition.x, values.objectPosition.y);
-    // drawPath(ctx, canvas);
-    // values.objectSpeed = { ...INITIAL.objectSpeed };
+    drawBallObject(ctx, {
+      x: values.objectPosition.x,
+      y: values.objectPosition.y,
+    });
 
     const pointsCalculated = calculatePoints();
-    drawProjectilePath(ctx, pointsCalculated);
-    renderAnnotations(
-      ctx,
-      values.objectPosition.x,
-      values.objectPosition.y,
-      pointsCalculated[0].vx,
-      pointsCalculated[0].vy,
-      pointsCalculated[0].t
-    );
+    drawProjectilePath(ctx);
+    renderAnnotations(ctx, {
+      ...pointsCalculated[0],
+      x: values.objectPosition.x,
+      y: values.objectPosition.y,
+    });
   };
 
-  const calculatePoints = () => {
-    // Example usage
-    const initialVelocity = values.objectSpeed.magnitude;
-    const launchAngle = values.objectSpeed.angle; // in radians
-    const initialHeight = values.height / scale; // in meters
-    const timeStep = 0.05 / (10 * scale); // in seconds
-    const points = simulateProjectileEquation(
-      initialVelocity,
-      launchAngle,
-      initialHeight,
-      timeStep
-    );
-    // console.log(points);
-    setPoints(points);
-    return points;
-  };
-  const renderAnnotations = (
-    ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    vx: number,
-    vy: number,
-    t: number
-  ) => {
+  const renderAnnotations = (ctx: CanvasRenderingContext2D, point: Point) => {
+    const { x, y, vx, vy, t } = point;
     const currentPosition = { x, y };
     // const magnitude = values.objectSpeed.magnitude;
 
@@ -357,12 +334,13 @@ const ProjectileMotion = () => {
       40
     );
 
-    // ctx.fillText(`g : ${properties.g}m/s^2`, ctx.canvas.width - 160, 20);
-    ctx.fillText(
-      `Radius of Ball : ${objectSize} m`,
-      ctx.canvas.width - 160,
-      40
-    );
+    // not needed
+    // // ctx.fillText(`g : ${properties.g}m/s^2`, ctx.canvas.width - 160, 20);
+    // ctx.fillText(
+    //   `Radius of Ball : ${objectSize} m`,
+    //   ctx.canvas.width - 160,
+    //   40
+    // );
 
     // Draw time annotation
     ctx.fillText(`Time: ${t.toFixed(2)} s`, ctx.canvas.width - 160, 60);
@@ -394,22 +372,17 @@ const ProjectileMotion = () => {
   const render = (
     ctx: CanvasRenderingContext2D,
     canvas = ctx.canvas,
-    x: number,
-    y: number,
-    vx: number,
-    vy: number,
-    t: number
+    point: Point
   ) => {
     drawOuterStructure(ctx, canvas);
-    drawBallObject(ctx, x, y);
-    renderAnnotations(ctx, x, y, vx, vy, t);
-    drawProjectilePath(ctx, points);
+    drawBallObject(ctx, point);
+    renderAnnotations(ctx, point);
+    drawProjectilePath(ctx);
   };
 
   const drawBallObject = (
     ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number
+    { x, y }: { x: number; y: number }
   ) => {
     ctx.fillStyle = "black";
     ctx.beginPath();
@@ -422,10 +395,8 @@ const ProjectileMotion = () => {
   ) => {
     // complete canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // ctx.fillStyle = "white";
     ctx.strokeStyle = "black";
     ctx.strokeRect(0, 0, canvas.width, canvas.height);
-    // ctx.stroke();
 
     // if initial height available
     ctx.fillStyle = "#c2b280";

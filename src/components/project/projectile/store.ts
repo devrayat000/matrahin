@@ -10,5 +10,5 @@ export interface Point {
 }
 
 export const pointsAtom = atom<Point[]>([]);
-
+export const animatingPointsAtom = atom<Point[]>([]);
 export const projectileAtom = atom<ProjectileOutput | undefined>(undefined);
