@@ -58,10 +58,6 @@ const ProjectileMotion = () => {
     [scale, animationSpeed]
   );
 
-  useEffect(() => {
-    console.log(scale, animationSpeed, zoomScale);
-  }, [scale, animationSpeed, zoomScale]);
-
   const values = useMemo(
     () => ({
       objectPosition: {
@@ -206,7 +202,7 @@ const ProjectileMotion = () => {
       y: ctx.canvas.height - p.y * scale - objectSize,
     }));
 
-    ctx.moveTo(tempPoints[0].x, ctx.canvas.height - tempPoints[0].y);
+    ctx.moveTo(tempPoints[0].x, tempPoints[0].y);
 
     for (let i = 1; i < tempPoints.length; i++) {
       ctx.lineTo(tempPoints[i].x, tempPoints[i].y);
