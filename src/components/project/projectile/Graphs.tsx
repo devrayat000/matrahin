@@ -3,7 +3,7 @@ import CanvasJSChart from "~/components/common/CanvasJS.jsx";
 import { useAtomValue } from "jotai";
 
 import { useEffect, useState } from "react";
-import { pointsAtom } from "./store";
+import { pointsAtom } from "./AnimationHelper";
 
 const Graphs = () => {
   const points = useAtomValue(pointsAtom);

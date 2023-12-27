@@ -1,37 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import drawArrow, { drawArrowByAngle } from "~/lib/utils/drawArrow";
 
-import { Button } from "~/components/ui/button";
 import { useAtom, useAtomValue } from "jotai";
-import { pointsAtom, projectileAtom } from "./store";
-//var CanvasJSReact = require('@canvasjs/react-charts');
-
-// constants
-// scale is used to scale the velocity of boat
-const scale = 0.1;
-
-const objectSize = 10; //radius
-export const INITIAL = {
-  canvasDimension: {
-    x: 700,
-    y: 400,
-  },
-  //   objectPosition: {
-  //     x: objectSize,
-  //     y: 400 - objectSize - properties.height,
-  //   },
-  //   objectSpeed: {
-  //     angle: (properties.velocity.angle * Math.PI) / 180, //in radians
-  //     dx:
-  //       properties.velocity.magnitude *
-  //       scale *
-  //       Math.cos((properties.velocity.angle * Math.PI) / 180),
-  //     dy:
-  //       properties.velocity.magnitude *
-  //       scale *
-  //       Math.sin((properties.velocity.angle * Math.PI) / 180),
-  //   },
-};
+import { RotateCcw, ZoomInIcon, ZoomOutIcon } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import {
+  INITIAL,
+  animatingPointsAtom,
+  modifyPoints,
+  objectSize,
+  pointsAtom,
+  scaleAtom,
+} from "./AnimationHelper";
+import { LegendsType, Point, modifiedValues, projectileAtom } from "./store";
 
 const theta = "θ";
 
@@ -42,34 +23,60 @@ const ProjectileMotion = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [started, setStarted] = useState(false);
   const [ended, setEnded] = useState(false);
-  const [animationSpeed, setAnimationSpeed] = useState(1);
   const [bufferIndex, setBufferIndex] = useState(0);
-  const [points, setPoints] = useAtom(pointsAtom);
-  const result = useAtomValue(projectileAtom)!;
 
-  const values = useMemo(
-    () => ({
-      objectPosition: {
-        x: objectSize,
-        y: 400 - objectSize - result.yi,
-      },
+  const result = useAtomValue(projectileAtom)!;
+  const [scale, setScale] = useAtom(scaleAtom);
+  const points = useAtomValue(pointsAtom);
+  const animatingPoints = useAtomValue(animatingPointsAtom);
+
+  const [animationSpeed, setAnimationSpeed] = useState(1); // [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2
+  const animationSpeedMain = useMemo(
+    () => Math.floor(animationSpeed * 4 + scale * 4 * animationSpeed),
+    [scale, animationSpeed]
+  );
+
+  useEffect(() => {
+    const updateScale = () => {
+      setScale(calculateScale(result.xm));
+    };
+    updateScale();
+  }, [result.xm, setScale]);
+
+  const calculateScale = (maxRange: number) => {
+    return (INITIAL.canvasDimension.x - 50) / maxRange;
+  };
+  // computed values from result
+  const values: modifiedValues = useMemo(() => {
+    const objectPosition = modifyPoints(0, result.yi, scale);
+
+    return {
+      objectPosition: objectPosition,
       objectSpeed: {
         magnitude: result.vi,
         angle: (result.angle * Math.PI) / 180,
       },
       height: result.yi,
-    }),
-    [result]
-  );
+    };
+  }, [result, scale]);
 
+  // initial render
   useEffect(() => {
     reset();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     reset();
-  }, [values]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [values, scale]); // eslint-disable-line react-hooks/exhaustive-deps
+
   let currentIndex = bufferIndex;
+
+  const checkNotReachedGround = (): boolean => {
+    // 0 as base line
+    return currentIndex < points.length && points[currentIndex].y * scale >= 0;
+  };
+
+  // main animation starts here.
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
@@ -80,24 +87,21 @@ const ProjectileMotion = () => {
     // for storing the values when paused
 
     const animate = () => {
-      if (
-        currentIndex < points.length &&
-        points[currentIndex].y >= objectSize
-      ) {
-        // console.log(points[currentIndex].y, canvas.height - objectSize);
-        const { x, y, vx, vy, t } = points[currentIndex];
-        render(ctx, canvas, x, canvas.height - y, vx, vy, t);
-        currentIndex += animationSpeed * 4;
+      if (checkNotReachedGround()) {
+        render(ctx, animatingPoints[currentIndex], points[currentIndex]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        currentIndex += animationSpeedMain;
         animationFrameId = requestAnimationFrame(animate);
       } else {
         setIsAnimating(false);
         setEnded(true);
       }
     };
-    drawProjectilePath(ctx, canvas, points);
+    drawProjectilePath(ctx);
 
     if (isAnimating) {
       currentIndex = bufferIndex;
+
       animate();
     }
 
@@ -106,62 +110,14 @@ const ProjectileMotion = () => {
     };
   }, [isAnimating]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // rendering functions
-  // Function to simulate the projectile motion
-  function simulateProjectileEquation(
-    initialVelocity: number,
-    launchAngle: number,
-    initialHeight: number,
-    timeStep: number
-  ) {
-    const g = 9.8; // Acceleration due to gravity (m/s^2)
-    const radians = launchAngle;
-    const cosTheta = Math.cos(radians);
-    const tanTheta = Math.tan(radians);
-    const sinTheta = Math.sin(radians);
-    const v0squared = Math.pow(initialVelocity, 2);
-
-    let x = 0,
-      y = 0,
-      vx = 0,
-      vy = 0;
-
-    const points = [];
-
-    for (let t = 0; y >= 0; t += timeStep) {
-      x = initialVelocity * cosTheta * t;
-      y =
-        x * tanTheta -
-        (g * Math.pow(x, 2)) / (2 * v0squared * Math.pow(cosTheta, 2)) +
-        initialHeight;
-      vx = initialVelocity * cosTheta;
-      vy = initialVelocity * sinTheta - result.g * t;
-      points.push({
-        x: x * scale + objectSize,
-        y: y * scale + objectSize,
-        vx: vx,
-        vy: vy,
-
-        t: t,
-      });
-    }
-
-    return points;
-  }
-
   // Function to draw the projectile path on the canvas
-  function drawProjectilePath(
-    ctx: CanvasRenderingContext2D,
-    canvas = ctx.canvas,
-    points: { x: number; y: number }[]
-  ) {
-    if (points.length == 0) return;
-    // console.log(points);
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, canvas.height - points[0].y);
+  function drawProjectilePath(ctx: CanvasRenderingContext2D) {
+    if (animatingPoints.length == 0) return;
 
-    for (let i = 1; i < points.length; i++) {
-      ctx.lineTo(points[i].x, canvas.height - points[i].y);
+    ctx.beginPath();
+    ctx.moveTo(animatingPoints[0].x, animatingPoints[0].y);
+    for (let i = 1; i < animatingPoints.length; i++) {
+      ctx.lineTo(animatingPoints[i].x, animatingPoints[i].y);
     }
 
     ctx.stroke();
@@ -176,51 +132,23 @@ const ProjectileMotion = () => {
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawOuterStructure(ctx, canvas);
-    drawBallObject(ctx, values.objectPosition.x, values.objectPosition.y);
-    // drawPath(ctx, canvas);
-    // values.objectSpeed = { ...INITIAL.objectSpeed };
-
-    const pointsCalculated = calculatePoints();
-    drawProjectilePath(ctx, canvas, pointsCalculated);
-    renderAnnotations(
+    render(
       ctx,
-      values.objectPosition.x,
-      values.objectPosition.y,
-      pointsCalculated[0].vx,
-      pointsCalculated[0].vy,
-      pointsCalculated[0].t
+      {
+        ...points[0],
+        x: values.objectPosition.x,
+        y: values.objectPosition.y,
+      },
+      points[0]
     );
   };
 
-  const calculatePoints = () => {
-    // Example usage
-    const initialVelocity = values.objectSpeed.magnitude;
-    const launchAngle = values.objectSpeed.angle; // in radians
-    const initialHeight = values.height / scale; // in meters
-    const timeStep = 0.05; // in seconds
-    const points = simulateProjectileEquation(
-      initialVelocity,
-      launchAngle,
-      initialHeight,
-      timeStep
-    );
-    console.log(points);
-    setPoints(points);
-    return points;
-  };
-  const renderAnnotations = (
+  const renderVelocityArrows = (
     ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number,
+    currentPosition: { x: number; y: number },
     vx: number,
-    vy: number,
-    t: number
+    vy: number
   ) => {
-    const currentPosition = { x, y };
-    // const magnitude = values.objectSpeed.magnitude;
-
     // vx arrow:
     // drawArrowByAngle(ctx, currentPosition, 0, vx, 15, "green");
     drawArrow(
@@ -253,30 +181,21 @@ const ProjectileMotion = () => {
       15,
       "black"
     );
+  };
 
-    // draw dotted line from center of the ball to the end of the canvas
-    ctx.strokeStyle = "black";
-    ctx.beginPath();
-    ctx.setLineDash([5, 5]);
-    ctx.moveTo(values.objectPosition.x, values.objectPosition.y);
-    ctx.lineTo(INITIAL.canvasDimension.x, values.objectPosition.y);
-    ctx.stroke();
-    // draw dotted line to show the ground level for the ball object to fall
-    ctx.moveTo(0, INITIAL.canvasDimension.y - objectSize);
-    ctx.lineTo(
-      INITIAL.canvasDimension.x,
-      INITIAL.canvasDimension.y - objectSize
-    );
-    ctx.stroke();
-    ctx.setLineDash([]);
-
+  const renderArcOfAngle = (
+    ctx: CanvasRenderingContext2D,
+    currentPosition: { x: number; y: number },
+    resultantAngle: number,
+    vx: number
+  ) => {
     // draw arc of angle
     ctx.strokeStyle = "black";
     ctx.beginPath();
     ctx.arc(
       currentPosition.x,
       currentPosition.y,
-      50,
+      Math.min(35, vx),
       resultantAngle > 0 ? 0 : -resultantAngle,
       resultantAngle > 0 ? -resultantAngle : 0,
       true
@@ -294,85 +213,103 @@ const ProjectileMotion = () => {
       textX,
       textY
     );
-
-    // Draw angle annotation
-    ctx.fillStyle = "black";
-    ctx.font = "14px Arial";
-    ctx.fillText(
-      `Angle: ${((values.objectSpeed.angle * 180) / Math.PI).toFixed(2)}°`,
-      20,
-      20
-    );
-
-    // Draw velocity annotation
-    ctx.fillText(`Initial Velocity: ${values.objectSpeed.magnitude}`, 20, 40);
-
-    // ctx.fillText(`g : ${properties.g}m/s^2`, ctx.canvas.width - 160, 20);
-    ctx.fillText(
-      `Radius of Ball : ${objectSize} m`,
-      ctx.canvas.width - 160,
-      40
-    );
-
-    // Draw time annotation
-    ctx.fillText(`Time: ${t.toFixed(2)} s`, ctx.canvas.width - 160, 60);
-    // Draw range annotation
-    ctx.fillText(`x: ${x.toFixed(2)} m`, ctx.canvas.width - 160, 80);
-
-    // Draw height annotation
-    ctx.fillText(
-      `y: ${(ctx.canvas.height - y).toFixed(2)} m`,
-      ctx.canvas.width - 160,
-      100
-    );
-
-    // Draw velocity annotation
-
-    ctx.fillText(`Vx: ${vx.toFixed(2)} m/s`, ctx.canvas.width - 160, 100 + 20);
-    ctx.fillText(`Vy: ${vy.toFixed(2)} m/s`, ctx.canvas.width - 160, 100 + 40);
-    ctx.fillText(
-      `V: ${resultantVelocity.toFixed(2)} m/s`,
-      ctx.canvas.width - 160,
-      160
-    );
   };
 
-  const render = (
-    ctx: CanvasRenderingContext2D,
-    canvas = ctx.canvas,
-    x: number,
-    y: number,
-    vx: number,
-    vy: number,
-    t: number
-  ) => {
-    drawOuterStructure(ctx, canvas);
-    drawBallObject(ctx, x, y);
-    renderAnnotations(ctx, x, y, vx, vy, t);
-    drawProjectilePath(ctx, canvas, points);
+  const renderAnnotations = (ctx: CanvasRenderingContext2D, point: Point) => {
+    const { x, y, vx, vy } = point;
+    const currentPosition = { x, y };
+
+    const resultantAngle = Math.atan(vy / vx);
+
+    renderVelocityArrows(ctx, currentPosition, vx, vy);
+    renderArcOfAngle(ctx, currentPosition, resultantAngle, vx);
+  };
+
+  const renderLegends = (ctx: CanvasRenderingContext2D, point: Point) => {
+    // this point value is the calculated value, not the position in the canvas.
+    // feel safe to use :)
+    const { x, y, vx, vy, t } = point;
+
+    ctx.setLineDash([]);
+    const leftLegends: LegendsType = [
+      {
+        text: "Initial Velocity",
+        value: result.vi,
+        unit: "m/s",
+      },
+      {
+        text: "Initial Angle ",
+        value: result.angle,
+        unit: "°",
+      },
+    ];
+
+    const rightLegends: LegendsType = [
+      {
+        text: "Time",
+        value: t,
+        unit: "s",
+      },
+      {
+        text: "x",
+        value: x,
+        unit: "m",
+      },
+      {
+        text: "y",
+        value: y,
+        unit: "m",
+      },
+      {
+        text: "Vx",
+        value: vx,
+        unit: "m/s",
+      },
+      {
+        text: "Vy",
+        value: vy,
+        unit: "m/s",
+      },
+      {
+        text: "V",
+        value: Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2)),
+        unit: "m/s",
+      },
+    ];
+
+    // Draw annotations
+    ctx.font = "14px Arial";
+    ctx.fillStyle = "black";
+
+    // Draw left annotations
+    leftLegends.forEach(({ text, value, unit }, index) => {
+      ctx.fillText(
+        `${text} :\t${value.toFixed(2)} ${unit}`,
+        20,
+        30 + 20 * index
+      );
+    });
+
+    // Draw right annotations
+    rightLegends.forEach(({ text, value, unit }, index) => {
+      ctx.fillText(
+        `${text} :  ${value.toFixed(2)} ${unit}`,
+        ctx.canvas.width - 160,
+        30 + 20 * index
+      );
+    });
   };
 
   const drawBallObject = (
     ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number
+    { x, y }: { x: number; y: number }
   ) => {
-    ctx.fillStyle = "red";
+    ctx.fillStyle = "black";
     ctx.beginPath();
     ctx.arc(x, y, objectSize, 0, 2 * Math.PI);
     ctx.fill();
   };
-  const drawOuterStructure = (
-    ctx: CanvasRenderingContext2D,
-    canvas = ctx.canvas
-  ) => {
-    // complete canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // ctx.fillStyle = "white";
-    ctx.strokeStyle = "black";
-    ctx.strokeRect(0, 0, canvas.width, canvas.height);
-    // ctx.stroke();
-
+  const drawOuterStructure = (ctx: CanvasRenderingContext2D) => {
     // if initial height available
     ctx.fillStyle = "#c2b280";
     ctx.fillRect(
@@ -382,14 +319,43 @@ const ProjectileMotion = () => {
       values.height
     );
 
-    // Draw angle annotation
-    ctx.fillStyle = "black";
-    ctx.font = "14px Arial";
-    ctx.fillText(
-      `h=${values.height}`,
-      2.5 * objectSize,
-      INITIAL.canvasDimension.y - values.height / 2
+    // draw dotted line to show the ground level for the ball object to fall
+    ctx.strokeStyle = "black";
+    ctx.setLineDash([15, 15]);
+    ctx.moveTo(0, INITIAL.canvasDimension.y - objectSize);
+    ctx.lineTo(
+      INITIAL.canvasDimension.x,
+      INITIAL.canvasDimension.y - objectSize
     );
+    ctx.stroke();
+    ctx.setLineDash([]);
+    // // Draw h=0 annotation
+    // ctx.fillStyle = "black";
+    // ctx.font = "14px Arial";
+    // ctx.fillText(
+    //   `h=${values.height}`,
+    //   15 * objectSize,
+    //   INITIAL.canvasDimension.y - values.height / 2
+    // );
+  };
+
+  const clearCanvas = (ctx: CanvasRenderingContext2D) => {
+    // clear the canvas
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.strokeStyle = "black";
+    ctx.strokeRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  };
+  const render = (
+    ctx: CanvasRenderingContext2D,
+    animatingPoint: Point,
+    point: Point
+  ) => {
+    clearCanvas(ctx);
+    drawOuterStructure(ctx);
+    drawBallObject(ctx, animatingPoint);
+    renderAnnotations(ctx, animatingPoint);
+    renderLegends(ctx, point);
+    drawProjectilePath(ctx);
   };
 
   // utility functions
@@ -407,6 +373,18 @@ const ProjectileMotion = () => {
     }
   };
 
+  const zoomIn = () => {
+    setScale(scale * 1.2);
+  };
+  const zoomOut = () => {
+    setScale(scale / 1.2);
+  };
+
+  //todo : fix this
+  const resetZoom = () => {
+    // setScale(calculateScale());
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <canvas
@@ -415,37 +393,52 @@ const ProjectileMotion = () => {
         height={INITIAL.canvasDimension.y}
       />
       <div className="flex flex-col gap-3">
-        <div className="grid place-items-center">
-          <div className="flex gap-5 items-center">
-            <Button
-              variant="outline"
-              size="icon"
-              disabled={animationSpeed <= 0.25}
-              onClick={() => {
-                if (animationSpeed > 0.25)
-                  setAnimationSpeed((prev) => prev - 0.25);
-                setBufferIndex(currentIndex);
-                setIsAnimating(false);
-              }}
-            >
-              {"<<"}
-            </Button>
-            <label htmlFor="speed">
-              Animation Speed : <b>{animationSpeed}x</b>{" "}
-            </label>
-            <Button
-              variant="outline"
-              size="icon"
-              disabled={animationSpeed >= 2}
-              onClick={() => {
-                if (animationSpeed <= 2)
-                  setAnimationSpeed((prev) => prev + 0.25);
-                setBufferIndex(currentIndex);
-                setIsAnimating(false);
-              }}
-            >
-              {">>"}{" "}
-            </Button>
+        <div className="flex items-center justify-evenly gap-3">
+          <div className="flex items-center gap-3">
+            <button onClick={zoomIn} title="Zoom In">
+              <ZoomInIcon />
+            </button>
+
+            <button onClick={zoomOut} title="Zoom Out">
+              <ZoomOutIcon />
+            </button>
+            {/* <label htmlFor="scale">Zoom : {scale.toFixed(3)}x</label> */}
+            <button onClick={resetZoom} title="Reset Zoom">
+              <RotateCcw />
+            </button>
+          </div>
+          <div className="grid place-items-center">
+            <div className="flex gap-5 items-center">
+              <Button
+                variant="outline"
+                size="icon"
+                disabled={animationSpeed <= 0.25}
+                onClick={() => {
+                  if (animationSpeed > 0.25)
+                    setAnimationSpeed((prev) => prev - 0.25);
+                  setBufferIndex(currentIndex);
+                  setIsAnimating(false);
+                }}
+              >
+                {"<<"}
+              </Button>
+              <label htmlFor="speed">
+                Speed : <b>{animationSpeed}x</b>{" "}
+              </label>
+              <Button
+                variant="outline"
+                size="icon"
+                disabled={animationSpeed >= 2}
+                onClick={() => {
+                  if (animationSpeed <= 2)
+                    setAnimationSpeed((prev) => prev + 0.25);
+                  setBufferIndex(currentIndex);
+                  setIsAnimating(false);
+                }}
+              >
+                {">>"}{" "}
+              </Button>
+            </div>
           </div>
         </div>
         <div className="flex items-stretch gap-6">
