@@ -8,7 +8,28 @@ export interface Point {
   vy: number;
   t: number;
 }
+export type modifiedValues = {
+  objectPosition: {
+    x: number;
+    y: number;
+  };
+  objectSpeed: {
+    magnitude: number;
+    angle: number;
+  };
+  height: number;
+};
 
-export const pointsAtom = atom<Point[]>([]);
-export const animatingPointsAtom = atom<Point[]>([]);
+export type LegendsType = {
+  text: string;
+  value: number;
+  unit?: string;
+}[];
+
+export type INITIAL_CONSTANTS = {
+  canvasDimension: {
+    x: number;
+    y: number;
+  };
+};
 export const projectileAtom = atom<ProjectileOutput | undefined>(undefined);
