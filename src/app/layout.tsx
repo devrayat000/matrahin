@@ -1,24 +1,5 @@
-"use client";
-
 import "../index.css";
 import "~/lib/globals";
-
-import { MathJaxContext } from "better-react-mathjax";
-
-const config = {
-  loader: { load: ["[tex]/html"] },
-  tex: {
-    packages: { "[+]": ["html"] },
-    inlineMath: [
-      ["$", "$"],
-      ["\\(", "\\)"],
-    ],
-    displayMath: [
-      ["$$", "$$"],
-      ["\\[", "\\]"],
-    ],
-  },
-};
 
 export default function RootLayout({
   children,
@@ -31,11 +12,7 @@ export default function RootLayout({
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
-      <body>
-        <MathJaxContext version={3} config={config}>
-          {children}
-        </MathJaxContext>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

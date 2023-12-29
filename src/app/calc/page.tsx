@@ -46,7 +46,7 @@ interface ProjectCardProps {
 
 function ProjectCard(props: ProjectCardProps) {
   return (
-    <Link href={props.to} className="group">
+    <Link href={`/calc/${props.to}`} className="group">
       <figure>
         <Image
           {...props.img}
