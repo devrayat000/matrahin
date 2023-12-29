@@ -1,3 +1,5 @@
+"use client";
+
 import { useAtomValue, useStore } from "jotai";
 import { RESET } from "jotai/utils";
 

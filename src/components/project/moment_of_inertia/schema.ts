@@ -1,3 +1,4 @@
+import { StaticImageData } from "next/image";
 import Circle from "~/assets/images/moment_of_inertia/Circle.png";
 import Cuboid from "~/assets/images/moment_of_inertia/Cuboid.png";
 import HollowCyl from "~/assets/images/moment_of_inertia/HollowCyl.png";
@@ -23,11 +24,11 @@ export type momentOfInertiaSchema = {
   title: string;
   path: string;
   subtitle: string;
-  image: string;
+  image: StaticImageData;
   shape: ShapesOfInertia;
   options: {
     id: ShapesOfInertia;
-    image: string;
+    image: StaticImageData;
     title: string;
     shape: ShapesOfInertia;
     axes: string[];
@@ -44,7 +45,7 @@ export type momentOfInertiaSchema = {
 
 const constants: momentOfInertiaSchema = [
   {
-    path: "point_mass",
+    path: "point-mass",
     shape: ShapesOfInertia.PointMass,
     title: "Point Mass",
     subtitle:
@@ -79,7 +80,7 @@ const constants: momentOfInertiaSchema = [
     ],
   },
   {
-    path: "two_point_mass",
+    path: "two-point-mass",
     title: "Two Point Mass",
     shape: ShapesOfInertia.TwoMass,
     subtitle:
@@ -120,7 +121,7 @@ const constants: momentOfInertiaSchema = [
     ],
   },
   {
-    path: "rectangular_plate",
+    path: "rectangular-plate",
     title: "Rectangular Plate",
     shape: ShapesOfInertia.Plate,
     subtitle:
@@ -204,7 +205,7 @@ const constants: momentOfInertiaSchema = [
     ],
   },
   {
-    path: "solid_cuboid",
+    path: "solid-cuboid",
     title: "Solid Cuboid",
     shape: ShapesOfInertia.Cuboid,
     subtitle:

@@ -1,4 +1,7 @@
-import { Link, To } from "react-router-dom";
+import Link from "next/link";
+import Image, { type StaticImageData } from "next/image";
+import type { Url } from "next/dist/shared/lib/router/router";
+
 import projectile from "~/assets/cards/projectile.png";
 import rain from "~/assets/cards/rain.jpg";
 import vector from "~/assets/cards/vector.jpg";
@@ -16,7 +19,7 @@ const cards = [
   { to: "dynamics", img: dynamics, title: "Dynamics" },
   { to: "electric-force", img: electric, title: "Electric Force" },
   { to: "pendulum", img: pendulum, title: "Pendulum" },
-  { to: "moment-of-inertia", img: inertia, title: "Moment of Inertia" },
+  { to: "moi", img: inertia, title: "Moment of Inertia" },
 ];
 
 export default function HomePage() {
@@ -35,12 +38,18 @@ export default function HomePage() {
   );
 }
 
-function ProjectCard(props: { to: To; img: string; title: string }) {
+interface ProjectCardProps {
+  to: Url;
+  img: StaticImageData;
+  title: string;
+}
+
+function ProjectCard(props: ProjectCardProps) {
   return (
-    <Link to={props.to} className="group">
+    <Link href={props.to} className="group">
       <figure>
-        <img
-          src={props.img}
+        <Image
+          {...props.img}
           alt="projectile"
           className="aspect-video object-fill rounded-md shadow-md hover:shadow-lg transition ease-in-out"
         />

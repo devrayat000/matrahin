@@ -1,3 +1,5 @@
+"use client";
+
 import { Label } from "@radix-ui/react-label";
 import React, { useState } from "react";
 
@@ -16,6 +18,7 @@ import {
   momentOfInertiaResult,
 } from "~/services/Moment_of_inertia";
 import ResultsTable from "./ResultsTable";
+import Image from "next/image";
 
 interface MOI_CasesProps {
   shape: ShapesOfInertia;
@@ -93,8 +96,8 @@ const MOI_Case: React.FC<MOI_CasesProps> = ({ shape }) => {
       <div className="flex w-full flex-col gap-4   p-2 items-center justify-center lg:flex-row   ">
         <div className="flex  flex-col  items-center justify-center md:flex-row   ">
           {/* <figure className="basis-[45%]"> */}
-          <img
-            src={calculationObject[index].image}
+          <Image
+            {...calculationObject[index].image}
             alt={calculationObject[index].title}
             className="w-96 flex-wrap"
           />

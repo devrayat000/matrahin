@@ -1,23 +1,28 @@
-import { FC } from "react";
-import { Link } from "react-router-dom";
+import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
 
 interface OptionsCardProps {
   path: string;
   name: string;
-  image: string;
+  image: StaticImageData;
   imageAlt: string; // Assuming imageAlt is a required prop, adjust accordingly
 }
 
-const OptionsCard: FC<OptionsCardProps> = ({ path, name, image, imageAlt }) => {
+const OptionsCard: React.FC<OptionsCardProps> = ({
+  path,
+  name,
+  image,
+  imageAlt,
+}) => {
   return (
-    <Link to={path}>
-      <div className=" rounded-xl flex flex-col h-full justify-between  border-4 max-w-xs shadow-lg hover:shadow-2xl  transition ease-in-out">
-        <img
-          src={image}
+    <Link href={`/moi/${path}`}>
+      <div className="rounded-xl flex flex-col h-full justify-between border-4 max-w-xs shadow-lg hover:shadow-2xl transition ease-in-out">
+        <Image
+          {...image}
           alt={imageAlt}
           height={200}
           width={200}
-          className="m-auto  rounded-md "
+          className="m-auto rounded-md "
         />
         <figcaption className="text-xl mx-auto font-semibold text-center mb-4">
           {name}

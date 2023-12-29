@@ -1,3 +1,5 @@
+"use client";
+
 import { MathJax } from "better-react-mathjax";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -21,6 +23,7 @@ import {
   ShapesOfInertia,
   momentOfInertiaInput,
 } from "~/services/Moment_of_inertia";
+import Image from "next/image";
 
 interface MOI_BasicProps {
   shape: ShapesOfInertia;
@@ -65,8 +68,8 @@ const MOI_Basic: React.FC<MOI_BasicProps> = ({ shape }) => {
       </h2>
 
       <div className="flex flex-col gap-4 m-4 p-2 items-start justify-center md:flex-row   ">
-        <img
-          src={pointMassObject.image}
+        <Image
+          {...pointMassObject.image}
           alt={pointMassObject.title}
           className="w-96 flex-wrap"
         />

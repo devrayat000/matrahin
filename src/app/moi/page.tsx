@@ -1,5 +1,6 @@
 import OptionsCard from "~/components/project/moment_of_inertia/OptionsCard";
 import constants from "~/components/project/moment_of_inertia/schema";
+
 const Moment_of_inertia = () => {
   return (
     <>

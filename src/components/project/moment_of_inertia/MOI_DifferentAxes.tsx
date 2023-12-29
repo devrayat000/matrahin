@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 
 import { MathJax } from "better-react-mathjax";
@@ -22,6 +24,7 @@ import {
   momentOfInertiaResult,
 } from "~/services/Moment_of_inertia";
 import ResultsTable from "./ResultsTable";
+import Image from "next/image";
 
 interface MOI_DifferentAxesProps {
   shape: ShapesOfInertia;
@@ -68,8 +71,8 @@ const MOI_DifferentAxes: React.FC<MOI_DifferentAxesProps> = ({ shape }) => {
       </h2>
       <div className="flex w-full flex-col gap-4  lg:m-4 p-2 items-center justify-center lg:flex-row   ">
         <div className="flex  flex-col  items-center justify-center md:flex-row   ">
-          <img
-            src={calculationObject.image}
+          <Image
+            {...calculationObject.image}
             alt={calculationObject.title}
             className="w-96 flex-wrap"
           />

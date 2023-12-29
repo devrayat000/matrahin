@@ -2,7 +2,7 @@ import { useAtomValue } from "jotai";
 
 import ResultTable from "./ResultTable";
 import ProjectileMotion from "./MotionCanvas";
-import Graphs from "./Graphs";
+// import Graphs from "./Graphs";
 import { projectileAtom } from "./store";
 
 export default function ResultsContainer() {
@@ -18,9 +18,7 @@ export default function ResultsContainer() {
         <ProjectileMotion />
         <ResultTable />
       </div>
-      <div>
-        <Graphs />
-      </div>
+      <div>{/* <Graphs /> */}</div>
     </div>
   );
 }

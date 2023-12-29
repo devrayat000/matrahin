@@ -1,3 +1,6 @@
+"use client";
+
+import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import pendulum from "~/assets/cards/pendulum.jpg";
@@ -98,7 +101,7 @@ export default function PendulumPage() {
       <h1 className="text-3xl font-bold text-center">Pendulum</h1>
       <div className="mt-12 flex gap-4 mx-auto max-w-4xl">
         <figure className="basis-[45%]">
-          <img src={pendulum} alt="" />
+          <Image {...pendulum} alt="Pendulum physics" />
         </figure>
         <section className="flex-1">
           <Card>

@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo } from "react";
 import { useController, useForm, useWatch } from "react-hook-form";
 import IterableFiels from "~/components/project/electric-force/IterableFields";

@@ -1,7 +1,8 @@
-// import { useState } from "react";
-import { useState } from "react";
+"use client";
 
+import { useState } from "react";
 import { useSetAtom } from "jotai";
+
 import ResultsContainer from "~/components/project/projectile/ResultsContainer";
 import { projectileSchema } from "~/components/project/projectile/schema";
 import { projectileAtom } from "~/components/project/projectile/store";
