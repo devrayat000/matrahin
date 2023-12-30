@@ -2,8 +2,17 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { drawArrowByAngle } from "~/lib/utils/drawArrow";
 
 import { useAtom, useAtomValue } from "jotai";
+import {
+  ChevronsDown,
+  ChevronsUp,
+  Pause,
+  Play,
+  PlayCircle,
+  RotateCcw,
+} from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
+  GROUND_LEVEL_IN_CANVAS,
   INITIAL,
   animatingPointsAtom,
   modifyPoints,
@@ -61,13 +70,10 @@ const ProjectileMotion = () => {
     setContext(ctx);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
-    // console.log("result changed", renderCount);
     setScale(calculateScale(result.xm));
-    // reset();
   }, [result]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    // console.log("scale changed", renderCount);
     reset();
   }, [scale]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -96,7 +102,6 @@ const ProjectileMotion = () => {
         setEnded(true);
       }
     };
-    // drawProjectilePath(ctx);
 
     if (isAnimating) {
       currentIndex = bufferIndex;
@@ -112,7 +117,6 @@ const ProjectileMotion = () => {
   function drawProjectilePath(ctx: CanvasRenderingContext2D) {
     if (!ctx || animatingPoints.length == 0) return;
 
-    // console.log("inProjectilePath");
     ctx.beginPath();
     ctx.moveTo(animatingPoints[0].x, animatingPoints[0].y);
     for (let i = 1; i < animatingPoints.length; i++) {
@@ -215,6 +219,9 @@ const ProjectileMotion = () => {
   };
 
   const renderAnnotations = (ctx: CanvasRenderingContext2D, point: Point) => {
+    // this point is the position in the canvas.
+
+    if (!point) return;
     const { x, y, vx, vy } = point;
     const currentPosition = { x, y };
 
@@ -282,7 +289,7 @@ const ProjectileMotion = () => {
     // Draw left annotations
     leftLegends.forEach(({ text, value, unit }, index) => {
       ctx.fillText(
-        `${text} :\t${value.toFixed(2)} ${unit}`,
+        `${text} :\t${value.toFixed(1)} ${unit}`,
         20,
         30 + 20 * index
       );
@@ -291,7 +298,7 @@ const ProjectileMotion = () => {
     // Draw right annotations
     rightLegends.forEach(({ text, value, unit }, index) => {
       ctx.fillText(
-        `${text} :  ${value.toFixed(2)} ${unit}`,
+        `${text} :  ${value.toFixed(1)} ${unit}`,
         ctx.canvas.width - 160,
         30 + 20 * index
       );
@@ -312,21 +319,20 @@ const ProjectileMotion = () => {
     ctx.fillStyle = "#c2b280";
     ctx.fillRect(
       0,
-      INITIAL.canvasDimension.y - values.height,
+      INITIAL.canvasDimension.y - (values.height + GROUND_LEVEL_IN_CANVAS),
       2 * objectSize,
       values.height
     );
 
+    const offset: number = objectSize + GROUND_LEVEL_IN_CANVAS;
     // draw dotted line to show the ground level for the ball object to fall
     ctx.strokeStyle = "black";
     ctx.setLineDash([15, 15]);
-    ctx.moveTo(0, INITIAL.canvasDimension.y - objectSize);
-    ctx.lineTo(
-      INITIAL.canvasDimension.x,
-      INITIAL.canvasDimension.y - objectSize
-    );
+    ctx.moveTo(0, INITIAL.canvasDimension.y - offset);
+    ctx.lineTo(INITIAL.canvasDimension.x, INITIAL.canvasDimension.y - offset);
     ctx.stroke();
     ctx.setLineDash([]);
+
     // // Draw h=0 annotation
     // ctx.fillStyle = "black";
     // ctx.font = "14px Arial";
@@ -347,7 +353,6 @@ const ProjectileMotion = () => {
   };
   const render = (animatingPoint: Point, point: Point) => {
     if (!ctx) return;
-    // console.log("render function");
     clearCanvas(ctx);
     drawOuterStructure(ctx);
     drawBallObject(ctx, animatingPoint);
@@ -410,14 +415,15 @@ const ProjectileMotion = () => {
         width={INITIAL.canvasDimension.x}
         height={INITIAL.canvasDimension.y}
       />
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-row justify-evenly gap-3">
         <div className="flex items-center justify-evenly gap-3">
           {/* <ZoomControl /> */}
           <div className="grid place-items-center">
             <div className="flex gap-5 items-center">
               <Button
+                title="slower"
                 id="speed"
-                variant="outline"
+                variant="secondary"
                 size="icon"
                 disabled={animationSpeed <= 0.25}
                 onClick={() => {
@@ -427,13 +433,14 @@ const ProjectileMotion = () => {
                   setIsAnimating(false);
                 }}
               >
-                {"<<"}
+                <ChevronsDown color={animationSpeed <= 0.5 ? "red" : "blue"} />
               </Button>
-              <label htmlFor="speed">
-                Speed : <b>{animationSpeed}x</b>{" "}
-              </label>
+              <div className="w-28 text-center">
+                Speed : <b>{animationSpeed}x</b>
+              </div>
               <Button
-                variant="outline"
+                variant="secondary"
+                title="faster"
                 size="icon"
                 disabled={animationSpeed >= 2}
                 onClick={() => {
@@ -443,17 +450,27 @@ const ProjectileMotion = () => {
                   setIsAnimating(false);
                 }}
               >
-                {">>"}{" "}
+                <ChevronsUp color={animationSpeed >= 1.5 ? "red" : "blue"} />
               </Button>
             </div>
           </div>
         </div>
         <div className="flex items-stretch gap-6">
-          <Button onClick={motionControl} disabled={ended} className="flex-1">
-            {started ? (isAnimating ? "Pause" : "Resume") : "Start"}
+          <Button
+            onClick={motionControl}
+            disabled={ended}
+            className="flex-1"
+            title={started ? (isAnimating ? "Pause" : "Resume") : "Start"}
+          >
+            {started ? isAnimating ? <Pause /> : <Play /> : <PlayCircle />}
           </Button>
-          <Button onClick={reset} className="flex-1">
-            Reset
+          <Button
+            onClick={reset}
+            variant="destructive"
+            title="Reset"
+            className="flex-1"
+          >
+            <RotateCcw />
           </Button>
         </div>
       </div>

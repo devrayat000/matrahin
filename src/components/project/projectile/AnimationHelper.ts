@@ -8,8 +8,8 @@ export const INITIAL: INITIAL_CONSTANTS = {
     y: 400,
   },
 };
-export const objectSize = 5; //radius
-
+export const objectSize: number = 5; //radius
+export const GROUND_LEVEL_IN_CANVAS: number = 20; // in pixels
 export const scaleAtom = atom<number>(1);
 // export const scaleAtom = atom(
 //   (get) => {
@@ -78,7 +78,8 @@ export const modifyPoints = (
   y: number,
   scale: number
 ): { x: number; y: number } => {
-  x = x * scale + objectSize;
-  y = INITIAL.canvasDimension.y - y * scale - objectSize;
+  const offset: number = objectSize + GROUND_LEVEL_IN_CANVAS;
+  x = x * scale + offset;
+  y = INITIAL.canvasDimension.y - y * scale - offset;
   return { x, y };
 };
