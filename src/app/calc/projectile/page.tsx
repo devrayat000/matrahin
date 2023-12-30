@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useSetAtom } from "jotai";
+import { useState } from "react";
 
 import ResultsContainer from "~/components/project/projectile/ResultsContainer";
 import { projectileSchema } from "~/components/project/projectile/schema";
@@ -28,7 +28,16 @@ export default function ProjectilePage() {
 
     const projectile = new Projectile(inputs as unknown as ProjectileInput);
     projectile.solve();
-    setProjectileParams({ ...projectile });
+    console.log(projectile);
+    setProjectileParams({
+      yi: projectile.yi,
+      g: projectile.g,
+      vi: projectile.vi,
+      angle: projectile.angle,
+      xm: projectile.xm,
+      ym: projectile.ym,
+      t: projectile.t,
+    });
   }
 
   return (

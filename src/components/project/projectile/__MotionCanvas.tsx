@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { drawArrowByAngle } from "~/lib/utils/drawArrow";
+import drawArrow, { drawArrowByAngle } from "~/lib/utils/drawArrow";
 
 import { useAtom, useAtomValue } from "jotai";
+import { RotateCcw, ZoomInIcon, ZoomOutIcon } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
   INITIAL,
@@ -16,6 +17,7 @@ import { LegendsType, Point, modifiedValues, projectileAtom } from "./store";
 const theta = "θ";
 
 export interface ProjectileMotionProps {}
+
 const ProjectileMotion = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -23,9 +25,6 @@ const ProjectileMotion = () => {
   const [ended, setEnded] = useState(false);
   const [bufferIndex, setBufferIndex] = useState(0);
 
-  const [ctx, setContext] = useState<
-    CanvasRenderingContext2D | null | undefined
-  >(null);
   const result = useAtomValue(projectileAtom)!;
   const [scale, setScale] = useAtom(scaleAtom);
   const points = useAtomValue(pointsAtom);
@@ -36,6 +35,13 @@ const ProjectileMotion = () => {
     () => Math.floor(animationSpeed * 4 + scale * 4 * animationSpeed),
     [scale, animationSpeed]
   );
+
+  useEffect(() => {
+    const updateScale = () => {
+      setScale(calculateScale(result.xm));
+    };
+    updateScale();
+  }, [result.xm, setScale]);
 
   const calculateScale = (maxRange: number) => {
     return (INITIAL.canvasDimension.x - 50) / maxRange;
@@ -56,20 +62,12 @@ const ProjectileMotion = () => {
 
   // initial render
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
-    setContext(ctx);
+    reset();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    // console.log("result changed", renderCount);
-    setScale(calculateScale(result.xm));
-    // reset();
-  }, [result]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    // console.log("scale changed", renderCount);
     reset();
-  }, [scale]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [values, scale]); // eslint-disable-line react-hooks/exhaustive-deps
 
   let currentIndex = bufferIndex;
 
@@ -80,14 +78,17 @@ const ProjectileMotion = () => {
 
   // main animation starts here.
   useEffect(() => {
-    if (!ctx) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+
+    if (!canvas || !ctx) return;
 
     let animationFrameId: number;
     // for storing the values when paused
 
     const animate = () => {
       if (checkNotReachedGround()) {
-        render(animatingPoints[currentIndex], points[currentIndex]);
+        render(ctx, animatingPoints[currentIndex], points[currentIndex]);
         // eslint-disable-next-line react-hooks/exhaustive-deps
         currentIndex += animationSpeedMain;
         animationFrameId = requestAnimationFrame(animate);
@@ -96,10 +97,11 @@ const ProjectileMotion = () => {
         setEnded(true);
       }
     };
-    // drawProjectilePath(ctx);
+    drawProjectilePath(ctx);
 
     if (isAnimating) {
       currentIndex = bufferIndex;
+
       animate();
     }
 
@@ -110,9 +112,8 @@ const ProjectileMotion = () => {
 
   // Function to draw the projectile path on the canvas
   function drawProjectilePath(ctx: CanvasRenderingContext2D) {
-    if (!ctx || animatingPoints.length == 0) return;
+    if (animatingPoints.length == 0) return;
 
-    // console.log("inProjectilePath");
     ctx.beginPath();
     ctx.moveTo(animatingPoints[0].x, animatingPoints[0].y);
     for (let i = 1; i < animatingPoints.length; i++) {
@@ -127,10 +128,12 @@ const ProjectileMotion = () => {
     setIsAnimating(false);
     setStarted(false);
     setBufferIndex(0);
-
-    if (!ctx) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
 
     render(
+      ctx,
       {
         ...points[0],
         x: values.objectPosition.x,
@@ -140,15 +143,6 @@ const ProjectileMotion = () => {
     );
   };
 
-  /**
-   * @brief Renders the velocity arrows on the canvas
-   *        velocity magnitude is scaled by the scale factor of the canvas
-   *
-   * @param ctx context of the canvas
-   * @param currentPosition
-   * @param vx
-   * @param vy
-   */
   const renderVelocityArrows = (
     ctx: CanvasRenderingContext2D,
     currentPosition: { x: number; y: number },
@@ -156,27 +150,34 @@ const ProjectileMotion = () => {
     vy: number
   ) => {
     // vx arrow:
-    drawArrowByAngle(ctx, currentPosition, 0, vx * scale, 15, "green");
-
-    // vy arrow:
-    drawArrowByAngle(
+    // drawArrowByAngle(ctx, currentPosition, 0, vx, 15, "green");
+    drawArrow(
       ctx,
       currentPosition,
-      (Math.PI / 2) * (vy > 0 ? 1 : -1),
-      Math.abs(vy * scale),
-      15,
+      { x: currentPosition.x + vx, y: currentPosition.y },
+      10,
+      "green"
+    );
+
+    // vy arrow:
+    // drawArrowByAngle(ctx, currentPosition, -Math.PI / 2, vy, 15, "blue");
+    drawArrow(
+      ctx,
+      currentPosition,
+      { x: currentPosition.x, y: currentPosition.y - vy },
+      10,
       "blue"
     );
 
     // resultant velocity arrow
     const resultantVelocity = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
     const resultantAngle = Math.atan(vy / vx);
-
+    // console.log(resultantAngle);
     drawArrowByAngle(
       ctx,
       currentPosition,
       resultantAngle,
-      resultantVelocity * scale,
+      resultantVelocity,
       15,
       "black"
     );
@@ -229,6 +230,7 @@ const ProjectileMotion = () => {
     // feel safe to use :)
     const { x, y, vx, vy, t } = point;
 
+    ctx.setLineDash([]);
     const leftLegends: LegendsType = [
       {
         text: "Initial Velocity",
@@ -341,13 +343,13 @@ const ProjectileMotion = () => {
     // clear the canvas
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.strokeStyle = "black";
-    ctx.setLineDash([]);
-
     ctx.strokeRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   };
-  const render = (animatingPoint: Point, point: Point) => {
-    if (!ctx) return;
-    // console.log("render function");
+  const render = (
+    ctx: CanvasRenderingContext2D,
+    animatingPoint: Point,
+    point: Point
+  ) => {
     clearCanvas(ctx);
     drawOuterStructure(ctx);
     drawBallObject(ctx, animatingPoint);
@@ -371,37 +373,17 @@ const ProjectileMotion = () => {
     }
   };
 
-  // const zoomIn = () => {
-  //   setScale((scale) => scale * 1.15);
-  // };
-  // const zoomOut = () => {
-  //   setScale((scale) => scale / 1.15);
-  // };
+  const zoomIn = () => {
+    setScale(scale * 1.2);
+  };
+  const zoomOut = () => {
+    setScale(scale / 1.2);
+  };
 
-  // const resetZoom = () => {
-  //   setScale(calculateScale(result.xm));
-  // };
-
-  // todo: use this later
-
-  // const ZoomControl: React.FC = () => {
-  //   return (
-  //     <>
-  //       <div className="flex items-center  gap-3">
-  //         <button onClick={zoomIn} title="Zoom In">
-  //           <ZoomInIcon />
-  //         </button>
-
-  //         <button onClick={zoomOut} title="Zoom Out">
-  //           <ZoomOutIcon />
-  //         </button>
-  //         <button onClick={resetZoom} title="Reset Zoom">
-  //           <RotateCcw />
-  //         </button>
-  //       </div>
-  //     </>
-  //   );
-  // };
+  //todo : fix this
+  const resetZoom = () => {
+    // setScale(calculateScale());
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -412,11 +394,22 @@ const ProjectileMotion = () => {
       />
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-evenly gap-3">
-          {/* <ZoomControl /> */}
+          <div className="flex items-center gap-3">
+            <button onClick={zoomIn} title="Zoom In">
+              <ZoomInIcon />
+            </button>
+
+            <button onClick={zoomOut} title="Zoom Out">
+              <ZoomOutIcon />
+            </button>
+            {/* <label htmlFor="scale">Zoom : {scale.toFixed(3)}x</label> */}
+            <button onClick={resetZoom} title="Reset Zoom">
+              <RotateCcw />
+            </button>
+          </div>
           <div className="grid place-items-center">
             <div className="flex gap-5 items-center">
               <Button
-                id="speed"
                 variant="outline"
                 size="icon"
                 disabled={animationSpeed <= 0.25}

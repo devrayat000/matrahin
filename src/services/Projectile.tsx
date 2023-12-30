@@ -143,7 +143,7 @@ export default class Projectile<Input extends ProjectileInput>
     this.#solve_vi_angle();
   }
 
-  solve() {
+  solve(): void {
     if (!!this.vi && !!this.angle) {
       this.#solve_vi_angle();
     } else if (!!this.ym && !!this.xm) {
@@ -165,6 +165,7 @@ export default class Projectile<Input extends ProjectileInput>
     } else {
       // do nothing
     }
-    return new Projectile(this);
+
+    // return new Projectile(this);
   }
 }

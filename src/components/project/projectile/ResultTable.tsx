@@ -8,8 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { projectileAtom } from "./store";
 import { resultSchema } from "./schema";
+import { projectileAtom } from "./store";
 
 export default function ResultTable() {
   const projectileParams = useAtomValue(projectileAtom);
