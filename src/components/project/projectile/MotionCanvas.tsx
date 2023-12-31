@@ -1,6 +1,3 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { drawArrowByAngle } from "~/lib/utils/drawArrow";
-
 import { useAtom, useAtomValue } from "jotai";
 import {
   ChevronsDown,
@@ -10,10 +7,13 @@ import {
   PlayCircle,
   RotateCcw,
 } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
+import { drawArrowByAngle } from "~/lib/utils/drawArrow";
 import {
   GROUND_LEVEL_IN_CANVAS,
   INITIAL,
+  MARGIN_X,
   animatingPointsAtom,
   modifyPoints,
   objectSize,
@@ -47,7 +47,7 @@ const ProjectileMotion = () => {
   );
 
   const calculateScale = (maxRange: number) => {
-    return (INITIAL.canvasDimension.x - 50) / maxRange;
+    return (INITIAL.canvasDimension.x - 150) / maxRange;
   };
   // computed values from result
   const values: modifiedValues = useMemo(() => {
@@ -67,6 +67,19 @@ const ProjectileMotion = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
+
+    console.log(ctx.globalAlpha);
+
+    // const devicePixelRatio = window.devicePixelRatio || 1;
+
+    // // // Scale the canvas based on the device pixel ratio
+    // canvas.width = INITIAL.canvasDimension.x * devicePixelRatio;
+    // canvas.height = INITIAL.canvasDimension.y * devicePixelRatio;
+
+    // // Scale the context
+    // ctx.scale(devicePixelRatio, devicePixelRatio);
+    // ctx.imageSmoothingEnabled = false; // or true
+    // ctx.imageSmoothingQuality = "high"; // or low
     setContext(ctx);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -118,6 +131,7 @@ const ProjectileMotion = () => {
     if (!ctx || animatingPoints.length == 0) return;
 
     ctx.beginPath();
+    ctx.setLineDash([4, 4]);
     ctx.moveTo(animatingPoints[0].x, animatingPoints[0].y);
     for (let i = 1; i < animatingPoints.length; i++) {
       ctx.lineTo(animatingPoints[i].x, animatingPoints[i].y);
@@ -290,7 +304,7 @@ const ProjectileMotion = () => {
     leftLegends.forEach(({ text, value, unit }, index) => {
       ctx.fillText(
         `${text} :\t${value.toFixed(1)} ${unit}`,
-        20,
+        120,
         30 + 20 * index
       );
     });
@@ -309,7 +323,7 @@ const ProjectileMotion = () => {
     ctx: CanvasRenderingContext2D,
     { x, y }: { x: number; y: number }
   ) => {
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "#0033ff";
     ctx.beginPath();
     ctx.arc(x, y, objectSize, 0, 2 * Math.PI);
     ctx.fill();
@@ -324,14 +338,7 @@ const ProjectileMotion = () => {
       values.height
     );
 
-    const offset: number = objectSize + GROUND_LEVEL_IN_CANVAS;
-    // draw dotted line to show the ground level for the ball object to fall
-    ctx.strokeStyle = "black";
-    ctx.setLineDash([15, 15]);
-    ctx.moveTo(0, INITIAL.canvasDimension.y - offset);
-    ctx.lineTo(INITIAL.canvasDimension.x, INITIAL.canvasDimension.y - offset);
-    ctx.stroke();
-    ctx.setLineDash([]);
+    drawGroundLevel(ctx);
 
     // // Draw h=0 annotation
     // ctx.fillStyle = "black";
@@ -343,14 +350,96 @@ const ProjectileMotion = () => {
     // );
   };
 
+  const drawGroundLevel = (ctx: CanvasRenderingContext2D) => {
+    const offset: number = objectSize + GROUND_LEVEL_IN_CANVAS;
+    const roadWidth: number = 10;
+    // creating road-like view for the ground level
+    ctx.setLineDash([]);
+    ctx.fillStyle = "#aaaaaa";
+    ctx.fillRect(
+      0,
+      INITIAL.canvasDimension.y - offset - roadWidth,
+      INITIAL.canvasDimension.x,
+      roadWidth * 2
+    );
+
+    ctx.strokeStyle = "#000";
+    // middle dotted line ground level for the ball object to fall
+    ctx.beginPath();
+    ctx.setLineDash([15, 15]);
+    ctx.moveTo(0, INITIAL.canvasDimension.y - offset);
+    ctx.lineTo(INITIAL.canvasDimension.x, INITIAL.canvasDimension.y - offset);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.strokeStyle = "black";
+  };
   const clearCanvas = (ctx: CanvasRenderingContext2D) => {
     // clear the canvas
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = "#000 ";
     ctx.setLineDash([]);
-
-    ctx.strokeRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   };
+
+  const renderScaleX = (ctx: CanvasRenderingContext2D) => {
+    const scaleHeight = 10;
+    const scaleGap = 90;
+    const scaleStart = MARGIN_X;
+    const scaleEnd = ctx.canvas.width;
+    const scaleTextY = ctx.canvas.height - 10;
+    const scaleTextSize = 14;
+
+    ctx.fillStyle = "black";
+    ctx.font = `${scaleTextSize}px "Times New Roman"`;
+
+    ctx.beginPath();
+    ctx.setLineDash([]);
+    ctx.moveTo(scaleStart, scaleTextY);
+    ctx.lineTo(scaleEnd, scaleTextY);
+    ctx.stroke();
+
+    for (let i = scaleStart; i <= scaleEnd; i += scaleGap) {
+      ctx.beginPath();
+      ctx.moveTo(i, scaleTextY);
+      ctx.lineTo(i, scaleTextY - scaleHeight);
+      ctx.stroke();
+      ctx.fillText(
+        `${((i - MARGIN_X) / scale).toFixed(0)}`,
+        i - 5,
+        scaleTextY - scaleHeight - 5
+      );
+    }
+  };
+
+  const renderScaleY = (ctx: CanvasRenderingContext2D) => {
+    const scaleHeight = 10;
+    const scaleGap = 90;
+    const scaleStart = ctx.canvas.height - GROUND_LEVEL_IN_CANVAS - objectSize;
+    const scaleEnd = 0;
+    const scaleTextX = 10;
+    const scaleTextSize = 14;
+
+    ctx.fillStyle = "black";
+    ctx.font = `${scaleTextSize}px "Times New Roman"`;
+
+    ctx.beginPath();
+    ctx.setLineDash([]);
+    ctx.moveTo(scaleTextX, scaleStart);
+    ctx.lineTo(scaleTextX, scaleEnd);
+    ctx.stroke();
+
+    for (let i = scaleStart; i >= scaleEnd; i -= scaleGap) {
+      ctx.beginPath();
+      ctx.moveTo(scaleTextX, i);
+      ctx.lineTo(scaleTextX + scaleHeight, i);
+      ctx.stroke();
+      ctx.fillText(
+        `${((scaleStart - i) / scale).toFixed(0)}`,
+        scaleTextX + scaleHeight + 5,
+        i + 5
+      );
+    }
+  };
+
   const render = (animatingPoint: Point, point: Point) => {
     if (!ctx) return;
     clearCanvas(ctx);
@@ -359,6 +448,8 @@ const ProjectileMotion = () => {
     renderAnnotations(ctx, animatingPoint);
     renderLegends(ctx, point);
     drawProjectilePath(ctx);
+    renderScaleX(ctx);
+    renderScaleY(ctx);
   };
 
   // utility functions
@@ -409,7 +500,7 @@ const ProjectileMotion = () => {
   // };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 mb-2">
       <canvas
         ref={canvasRef}
         width={INITIAL.canvasDimension.x}

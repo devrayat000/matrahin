@@ -74,3 +74,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+canvas {
+  background-color: transparent; /* Ensure there's no background color affecting the canvas */
+  /* border: 1px solid #000; /* Add a border to the canvas */
+  border-radius: 3px; /* Optional: Rounded borders */
+
+  /* Optional: Add a box-shadow to the canvas */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
