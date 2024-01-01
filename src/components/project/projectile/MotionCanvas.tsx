@@ -46,7 +46,10 @@ const ProjectileMotion = () => {
     [scale, animationSpeed]
   );
 
-  const calculateScale = (maxRange: number) => {
+  const calculateScale = (maxRange: number, maxHeight: number): number => {
+    if (maxRange < 10 && maxHeight < 10) return 1;
+    if (maxRange < 10)
+      return (INITIAL.canvasDimension.y - GROUND_LEVEL_IN_CANVAS) / maxHeight;
     return (INITIAL.canvasDimension.x - 150) / maxRange;
   };
   // computed values from result
@@ -67,9 +70,6 @@ const ProjectileMotion = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
-
-    console.log(ctx.globalAlpha);
-
     // const devicePixelRatio = window.devicePixelRatio || 1;
 
     // // // Scale the canvas based on the device pixel ratio
@@ -83,7 +83,7 @@ const ProjectileMotion = () => {
     setContext(ctx);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
-    setScale(calculateScale(result.xm));
+    setScale(calculateScale(result.xm, result.ym));
   }, [result]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -174,17 +174,20 @@ const ProjectileMotion = () => {
     vy: number
   ) => {
     // vx arrow:
-    drawArrowByAngle(ctx, currentPosition, 0, vx * scale, 15, "green");
+    if (Math.abs(vx - 0) >= 0.01)
+      drawArrowByAngle(ctx, currentPosition, 0, vx * scale, 15, "green");
 
     // vy arrow:
-    drawArrowByAngle(
-      ctx,
-      currentPosition,
-      (Math.PI / 2) * (vy > 0 ? 1 : -1),
-      Math.abs(vy * scale),
-      15,
-      "blue"
-    );
+
+    if (Math.abs(vy - 0) >= 0.0001)
+      drawArrowByAngle(
+        ctx,
+        currentPosition,
+        (Math.PI / 2) * (vy > 0 ? 1 : -1),
+        Math.abs(vy * scale),
+        15,
+        "blue"
+      );
 
     // resultant velocity arrow
     const resultantVelocity = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));

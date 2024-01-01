@@ -49,9 +49,7 @@ const calculatePoints = (result: ProjectileOutput, scale: number) => {
   const g = result.g; // Acceleration due to gravity (m/s^2)
   const radians = (result.angle * Math.PI) / 180; // in radians;
   const cosTheta = Math.cos(radians);
-  const tanTheta = Math.tan(radians);
   const sinTheta = Math.sin(radians);
-  const v0squared = Math.pow(initialVelocity, 2);
 
   let x = 0,
     y = 0,
@@ -59,13 +57,10 @@ const calculatePoints = (result: ProjectileOutput, scale: number) => {
     vy = 0;
 
   const points = [];
-
   for (let t = 0; y >= 0; t += timeStep) {
     x = initialVelocity * cosTheta * t;
     y =
-      x * tanTheta -
-      (g * Math.pow(x, 2)) / (2 * v0squared * Math.pow(cosTheta, 2)) +
-      initialHeight;
+      initialVelocity * sinTheta * t - (g * Math.pow(t, 2)) / 2 + initialHeight;
     vx = initialVelocity * cosTheta;
     vy = initialVelocity * sinTheta - g * t;
     points.push({ x, y, vx, vy, t });
