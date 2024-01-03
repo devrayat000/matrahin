@@ -40,7 +40,19 @@ export default function BoatRiverPage() {
       setError(true);
       return;
     }
-    setBoatRiverParams({ ...boatRiverGeneral });
+    console.log(boatRiverGeneral);
+    setBoatRiverParams({
+      vb: boatRiverGeneral.vb,
+      vs: boatRiverGeneral.vs, //stream velocity
+      angle_i: boatRiverGeneral.angle_i, //angle of boat (initial)
+      angle_r: boatRiverGeneral.angle_r, //angle of boat (resultant)
+      v: boatRiverGeneral.v, //resultant velocity
+      t: boatRiverGeneral.t, //time
+      dd: boatRiverGeneral.dd, //distance diagonally
+      dx: boatRiverGeneral.dx, //distance horizontally
+      dy: boatRiverGeneral.dy, //distance vertically
+      width: boatRiverGeneral.width,
+    });
   }
 
   /**

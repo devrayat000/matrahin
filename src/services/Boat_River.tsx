@@ -106,7 +106,7 @@ export class Boat_River_General<Input extends Boat_RiverInput>
     this.dx = Math.abs(this.dx) < THRESHOLD ? 0 : Math.abs(this.dx);
     this.dy = Math.abs(this.dy);
   };
-  solve = (): Boat_River_Output => {
+  solve = (): void => {
     if (!this.checkPossible()) {
       throw new Error("Impossible to solve");
     }
@@ -117,6 +117,5 @@ export class Boat_River_General<Input extends Boat_RiverInput>
     this.solve_dy();
     this.solve_dd();
     this.modifyResults();
-    return this;
   };
 }

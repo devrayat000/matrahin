@@ -9,7 +9,10 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
-import { drawArrowByAngle } from "~/lib/utils/drawArrow";
+import {
+  renderArcOfAngle,
+  renderVelocityArrows,
+} from "~/lib/utils/CanvasUtils";
 import {
   GROUND_LEVEL_IN_CANVAS,
   INITIAL,
@@ -21,8 +24,6 @@ import {
   scaleAtom,
 } from "./AnimationHelper";
 import { LegendsType, Point, modifiedValues, projectileAtom } from "./store";
-
-const theta = "θ";
 
 export interface ProjectileMotionProps {}
 const ProjectileMotion = () => {
@@ -41,6 +42,8 @@ const ProjectileMotion = () => {
   const animatingPoints = useAtomValue(animatingPointsAtom);
 
   const [animationSpeed, setAnimationSpeed] = useState(1); // [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2
+
+  // number of indices to skip while rendering
   const animationSpeedMain = useMemo(
     () => Math.floor(animationSpeed * 4 + scale * 4 * animationSpeed),
     [scale, animationSpeed]
@@ -158,83 +161,6 @@ const ProjectileMotion = () => {
     );
   };
 
-  /**
-   * @brief Renders the velocity arrows on the canvas
-   *        velocity magnitude is scaled by the scale factor of the canvas
-   *
-   * @param ctx context of the canvas
-   * @param currentPosition
-   * @param vx
-   * @param vy
-   */
-  const renderVelocityArrows = (
-    ctx: CanvasRenderingContext2D,
-    currentPosition: { x: number; y: number },
-    vx: number,
-    vy: number
-  ) => {
-    // vx arrow:
-    if (Math.abs(vx - 0) >= 0.01)
-      drawArrowByAngle(ctx, currentPosition, 0, vx * scale, 15, "green");
-
-    // vy arrow:
-
-    if (Math.abs(vy - 0) >= 0.0001)
-      drawArrowByAngle(
-        ctx,
-        currentPosition,
-        (Math.PI / 2) * (vy > 0 ? 1 : -1),
-        Math.abs(vy * scale),
-        15,
-        "blue"
-      );
-
-    // resultant velocity arrow
-    const resultantVelocity = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
-    const resultantAngle = Math.atan(vy / vx);
-
-    drawArrowByAngle(
-      ctx,
-      currentPosition,
-      resultantAngle,
-      resultantVelocity * scale,
-      15,
-      "black"
-    );
-  };
-
-  const renderArcOfAngle = (
-    ctx: CanvasRenderingContext2D,
-    currentPosition: { x: number; y: number },
-    resultantAngle: number,
-    vx: number
-  ) => {
-    // draw arc of angle
-    ctx.strokeStyle = "black";
-    ctx.beginPath();
-    ctx.arc(
-      currentPosition.x,
-      currentPosition.y,
-      Math.min(35, vx),
-      resultantAngle > 0 ? 0 : -resultantAngle,
-      resultantAngle > 0 ? -resultantAngle : 0,
-      true
-    );
-    ctx.stroke();
-
-    // Draw the text (theta) just outside the arc
-
-    const textX = currentPosition.x + 50; // Adjust the X-coordinate as needed
-    const textY = currentPosition.y - (resultantAngle > 0 ? 20 : 10); // Keep it close to the arc
-    ctx.font = "14px Arial"; // Adjust the font size and family as needed
-    ctx.fillStyle = "black"; // Set the text color
-    ctx.fillText(
-      `${theta} : ${((resultantAngle * 180) / Math.PI).toFixed(1)}°`,
-      textX,
-      textY
-    );
-  };
-
   const renderAnnotations = (ctx: CanvasRenderingContext2D, point: Point) => {
     // this point is the position in the canvas.
 
@@ -243,8 +169,21 @@ const ProjectileMotion = () => {
     const currentPosition = { x, y };
 
     const resultantAngle = Math.atan(vy / vx);
-
-    renderVelocityArrows(ctx, currentPosition, vx, vy);
+    const resultantMagnitude = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
+    renderVelocityArrows(ctx, currentPosition, [
+      {
+        magnitude: vx * scale,
+        angle: 0,
+      },
+      {
+        magnitude: Math.abs(vy * scale),
+        angle: 90 * (vy < 0 ? -1 : 1),
+      },
+      {
+        magnitude: resultantMagnitude * scale,
+        angle: resultantAngle * (180 / Math.PI),
+      },
+    ]);
     renderArcOfAngle(ctx, currentPosition, resultantAngle, vx);
   };
 
