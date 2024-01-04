@@ -2511,6 +2511,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@radix-ui/react-separator@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@radix-ui/react-separator@npm:1.0.3"
+  dependencies:
+    "@babel/runtime": "npm:^7.13.10"
+    "@radix-ui/react-primitive": "npm:1.0.3"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0
+    react-dom: ^16.8 || ^17.0 || ^18.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: b5ea8f1996c86d3f9df73c72926f3d1a400a2eb46a482a345d486651c503895af2ccf9d7723f97a4e612f7c1317eb622078ddf014b13e2b26070d8cf0ad0da1d
+  languageName: node
+  linkType: hard
+
 "@radix-ui/react-slot@npm:1.0.2, @radix-ui/react-slot@npm:^1.0.2":
   version: 1.0.2
   resolution: "@radix-ui/react-slot@npm:1.0.2"
@@ -3090,6 +3110,7 @@ __metadata:
     "@radix-ui/react-dropdown-menu": "npm:^2.0.6"
     "@radix-ui/react-label": "npm:^2.0.2"
     "@radix-ui/react-select": "npm:^2.0.0"
+    "@radix-ui/react-separator": "npm:^1.0.3"
     "@radix-ui/react-slot": "npm:^1.0.2"
     "@types/node": "npm:^20.8.2"
     "@types/react": "npm:^18.2.15"
