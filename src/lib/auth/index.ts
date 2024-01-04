@@ -44,10 +44,10 @@ export const authConfig = {
 
         const data = (await res.json()) as TransactionCheck;
         if ("no_of_trans_found" in data) {
-          return null;
+          throw new Error("No valid transactions found!");
         }
         if (data.tranx.status !== "VALID") {
-          return null;
+          throw new Error("No valid transactions found!");
         }
 
         const user = {
@@ -66,6 +66,9 @@ export const authConfig = {
       },
     }),
   ], // rest of your config
+  pages: {
+    error: "/login",
+  },
 } satisfies NextAuthOptions;
 
 // Use it in server contexts
@@ -88,11 +91,16 @@ export function auth(
 }
 
 export async function findOrCreateUser(params: Student) {
-  const student = await findStudent(params.email);
-  console.log({ student });
+  try {
+    const student = await findStudent(params.email);
+    console.log({ student });
 
-  if (!student) {
-    await createStudent(params);
+    if (!student) {
+      await createStudent(params);
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error loging in! Please contact support.");
   }
 }
 
