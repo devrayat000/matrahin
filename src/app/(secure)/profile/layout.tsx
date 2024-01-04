@@ -13,20 +13,16 @@ const sidebarNavItems = [
     href: "/profile",
   },
   {
-    title: "Account",
-    href: "/examples/forms/account",
+    title: "Subscription",
+    href: "/profile/subscription",
   },
   {
-    title: "Appearance",
-    href: "/examples/forms/appearance",
+    title: "History",
+    href: "/profile/history",
   },
   {
-    title: "Notifications",
-    href: "/examples/forms/notifications",
-  },
-  {
-    title: "Display",
-    href: "/examples/forms/display",
+    title: "Newsletter",
+    href: "/profile/newsletter",
   },
 ];
 
