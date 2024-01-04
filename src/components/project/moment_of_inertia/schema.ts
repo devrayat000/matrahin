@@ -44,6 +44,7 @@ export type momentOfInertiaSchema = {
 }[];
 
 const constants: momentOfInertiaSchema = [
+  // point-mass
   {
     path: "point-mass",
     shape: ShapesOfInertia.PointMass,
@@ -79,6 +80,7 @@ const constants: momentOfInertiaSchema = [
       },
     ],
   },
+  // two-point-mass
   {
     path: "two-point-mass",
     title: "Two Point Mass",
@@ -120,6 +122,7 @@ const constants: momentOfInertiaSchema = [
       },
     ],
   },
+  // rectangular-plate
   {
     path: "rectangular-plate",
     title: "Rectangular Plate",
@@ -168,6 +171,7 @@ const constants: momentOfInertiaSchema = [
       },
     ],
   },
+  // rod
   {
     path: "rod",
     title: "Thin Rod",
@@ -204,6 +208,7 @@ const constants: momentOfInertiaSchema = [
       },
     ],
   },
+  // solid-cuboid
   {
     path: "solid-cuboid",
     title: "Solid Cuboid",
@@ -257,6 +262,7 @@ const constants: momentOfInertiaSchema = [
       },
     ],
   },
+  // cylinder
   {
     path: "cylinder",
     title: "Cylinder",
@@ -372,6 +378,7 @@ const constants: momentOfInertiaSchema = [
       },
     ],
   },
+  // sphere
   {
     path: "sphere",
     title: "Sphere",
@@ -465,6 +472,7 @@ const constants: momentOfInertiaSchema = [
       },
     ],
   },
+  // disk
   {
     path: "disk",
     title: "Disk Or Circle",

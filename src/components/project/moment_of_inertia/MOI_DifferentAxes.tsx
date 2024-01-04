@@ -42,7 +42,7 @@ const MOI_DifferentAxes: React.FC<MOI_DifferentAxesProps> = ({ shape }) => {
     for (const [name, values] of Object.entries<any>(data)) {
       inputs[name] = calculationObject.fields
         .filter((e) => e.name == name)[0]
-        .converter.convertDefault(values);
+        ?.converter.convertDefault(values);
     }
 
     const newcalculationObject = new MomentOfInertiaObject(
@@ -64,8 +64,7 @@ const MOI_DifferentAxes: React.FC<MOI_DifferentAxesProps> = ({ shape }) => {
   };
 
   return (
-    <div className="m-4">
-      <h1 className="text-3xl font-bold text-center">Moment of Inertia</h1>
+    <>
       <h2 className="text-2xl font-semibold italic pt-2 text-center">
         {calculationObject.title}
       </h2>
@@ -132,7 +131,7 @@ const MOI_DifferentAxes: React.FC<MOI_DifferentAxesProps> = ({ shape }) => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

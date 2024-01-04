@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import { MathJax } from "better-react-mathjax";
+import { useAtom } from "jotai";
 import { useForm } from "react-hook-form";
+import { caseTypeAtom } from "~/app/calc/moi/store";
 import DynamicUnitInput from "~/components/common/DynamicUnitInput";
 import constants, {
   momentOfInertiaSchema,
@@ -26,7 +28,6 @@ import {
   momentOfInertiaResult,
 } from "~/services/Moment_of_inertia";
 import ResultsTable from "./ResultsTable";
-import Image from "next/image";
 
 interface MOI_CasesProps {
   shape: ShapesOfInertia;
@@ -34,10 +35,20 @@ interface MOI_CasesProps {
 
 const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
   const form = useForm();
-  const [index, setIndex] = useState<number>(0);
+  const [caseOfInertia, setCaseOfInertia] = useAtom(caseTypeAtom);
   const [calculationObject] = useState<momentOfInertiaSchema[0]["options"]>(
     constants.filter((option) => option.shape === shape)[0].options
   );
+
+  const index = useMemo(() => {
+    const foundIndex = constants
+      .filter((option) => option.shape === shape)[0]
+      .options.findIndex((option) => option.case === caseOfInertia);
+    if (foundIndex < 0) {
+      return 0;
+    }
+    return foundIndex;
+  }, [caseOfInertia, shape]);
 
   const [result, setResult] = useState<number[]>([]);
 
@@ -46,7 +57,7 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
     for (const [name, values] of Object.entries<any>(data)) {
       inputs[name] = calculationObject[index].fields
         .filter((e) => e.name == name)[0]
-        .converter.convertDefault(values);
+        ?.converter.convertDefault(values);
     }
 
     if (
@@ -75,9 +86,13 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
     setResult([]);
   };
 
+  const changeCase = (i: number) => {
+    setResult([]);
+    setCaseOfInertia(calculationObject[i].case);
+  };
+
   return (
-    <div className="m-4">
-      <h1 className="text-3xl font-bold text-center">Moment of Inertia</h1>
+    <div>
       <h2 className="text-2xl font-semibold italic pt-2 text-center">
         {calculationObject[index].title}
       </h2>
@@ -92,81 +107,77 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
                 : "bg-green-500 text-white",
               "hover:text-white hover:bg-green-500"
             )}
-            onClick={() => {
-              setIndex(i), setResult([]);
-            }}
+            onClick={() => changeCase(i)}
           >
             {option.title}
           </Button>
         ))}
       </div>
-      <div className="flex w-full flex-col gap-4   p-2 items-center justify-center lg:flex-row   ">
-        <div className="flex  flex-col  items-center justify-center md:flex-row   ">
-          {/* <figure className="basis-[45%]"> */}
-          <Image
+      <div className="flex flex-col sm:flex-row m-2 mx-10 gap-6 items-center justify-center">
+        {/* <figure className="basis-[45%]"> */}
+        {/* <Image
             {...calculationObject[index].image}
             alt={calculationObject[index].title}
             className="w-96 flex-wrap"
-          />
-          {/* </figure> */}
-          <ul className="text-left max-w-lg  text-lg  leading-6 text-gray-800 p-3 ">
-            {calculationObject[index].description.map((line) => (
-              <li key={line}>
-                <MathJax inline hideUntilTypeset={"first"}>
-                  {line}
-                </MathJax>
-              </li>
-            ))}
-          </ul>
-          <div className="flex flex-col gap-2  items-start justify-center">
-            <Card>
-              <CardHeader>
-                <CardTitle>Calculator</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Form {...form}>
-                  <form
-                    className="w-full m-2 rounded-lg border-slate-200 border p-4 "
-                    onSubmit={onSubmit}
-                  >
-                    {calculationObject[index].fields.map((field) => (
-                      // <div
-                      //   className="flex items-center justify-center m-2"
-                      //   key={field.name}
-                      // >
-                      //   <Label
-                      //     className="flex-1"
-                      //     htmlFor={field.name}
-                      //     dangerouslySetInnerHTML={{ __html: field.label }}
-                      //   />
-                      //   <Input
-                      //     id={field.name}
-                      //     name={field.name}
-                      //     className="flex-1 border-slate-950"
-                      //     type={field.type}
-                      //   />
-                      // </div>
-                      <DynamicUnitInput
-                        key={field.name}
-                        label={field.label}
-                        converter={field.converter}
-                        name={field.name}
-                        min={0}
-                      />
-                    ))}
-                  </form>
-                </Form>
-              </CardContent>
-              <CardFooter className="flex justify-between">
-                <Button variant="destructive" type="reset" onClick={reset}>
-                  Reset
-                </Button>
-                <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
-                  Calculate
-                </Button>
-              </CardFooter>
-            </Card>
-          </div>
+          /> */}
+        {/* </figure> */}
+        <ul className="text-left max-w-lg  text-lg  leading-6 text-gray-800 p-3 ">
+          {calculationObject[index].description.map((line) => (
+            <li key={line}>
+              <MathJax inline hideUntilTypeset={"first"}>
+                {line}
+              </MathJax>
+            </li>
+          ))}
+        </ul>
+        <div className="flex flex-col gap-2  items-start justify-center">
+          <Card>
+            <CardHeader>
+              <CardTitle>Calculator</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form
+                  className="w-full m-2 rounded-lg border-slate-200 border p-4 "
+                  onSubmit={onSubmit}
+                >
+                  {calculationObject[index].fields.map((field) => (
+                    // <div
+                    //   className="flex items-center justify-center m-2"
+                    //   key={field.name}
+                    // >
+                    //   <Label
+                    //     className="flex-1"
+                    //     htmlFor={field.name}
+                    //     dangerouslySetInnerHTML={{ __html: field.label }}
+                    //   />
+                    //   <Input
+                    //     id={field.name}
+                    //     name={field.name}
+                    //     className="flex-1 border-slate-950"
+                    //     type={field.type}
+                    //   />
+                    // </div>
+                    <DynamicUnitInput
+                      key={field.name}
+                      label={field.label}
+                      converter={field.converter}
+                      name={field.name}
+                      min={0}
+                    />
+                  ))}
+                </form>
+              </Form>
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              <Button variant="destructive" type="reset" onClick={reset}>
+                Reset
+              </Button>
+              <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
+                Calculate
+              </Button>
+            </CardFooter>
+          </Card>
         </div>
       </div>
       {result.length > 0 && (

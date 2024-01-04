@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "~/components/ui/form";
 
+import Image from "next/image";
 import DynamicUnitInput from "~/components/common/DynamicUnitInput";
 import constants, {
   momentOfInertiaSchema,
@@ -23,7 +24,6 @@ import {
   ShapesOfInertia,
   momentOfInertiaInput,
 } from "~/services/Moment_of_inertia";
-import Image from "next/image";
 
 interface MOI_BasicProps {
   shape: ShapesOfInertia;
@@ -42,7 +42,7 @@ const MOI_Basic: React.FC<MOI_BasicProps> = ({ shape }) => {
     for (const [name, values] of Object.entries<any>(data)) {
       inputs[name] = pointMassObject.fields
         .filter((e) => e.name == name)[0]
-        .converter.convertDefault(values);
+        ?.converter.convertDefault(values);
     }
     const newPointMassObject = new MomentOfInertiaObject(
       inputs as unknown as momentOfInertiaInput,
@@ -54,15 +54,14 @@ const MOI_Basic: React.FC<MOI_BasicProps> = ({ shape }) => {
     setResult(result.inertiaMainAxis);
   }
 
-  console.log(result);
+  // console.log(result);
 
   const reset = () => {
     form.reset();
     setResult(NaN);
   };
   return (
-    <div className="m-4">
-      <h1 className="text-3xl font-bold text-center">Moment of Inertia</h1>
+    <>
       <h2 className="text-2xl font-semibold italic pt-2 text-center">
         {pointMassObject.title}
       </h2>
@@ -141,7 +140,7 @@ const MOI_Basic: React.FC<MOI_BasicProps> = ({ shape }) => {
           </MathJax>
         </p>
       )}
-    </div>
+    </>
   );
 };
 
