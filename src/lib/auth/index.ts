@@ -46,6 +46,9 @@ export const authConfig = {
         if ("no_of_trans_found" in data) {
           return null;
         }
+        if (data.tranx.status !== "VALID") {
+          return null;
+        }
 
         const user = {
           name: data.tranx.Name,
