@@ -23,6 +23,7 @@
     "better-react-mathjax": "^2.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "dayjs": "^1.11.10",
     "framer-motion": "^10.16.5",
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",

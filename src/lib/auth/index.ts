@@ -122,7 +122,7 @@ export async function findStudent(email: string) {
   const { student } = await gqlClient.request<
     FindStudentQuery,
     FindStudentQueryVariables
-  >(FIND_STUDENT, { email });
+  >(FIND_STUDENT, { email }, { next: { tags: ["login"] } });
   console.log("finding...");
 
   return student;
