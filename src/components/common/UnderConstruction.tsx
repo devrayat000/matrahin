@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import underConstruction from "~/assets/under_construction.svg";
+import underConstruction from "~/assets/under_construction.svg?url";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 

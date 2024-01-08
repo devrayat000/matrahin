@@ -3,3 +3,9 @@ declare module "*.svg" {
   const SVG: React.VFC<React.SVGProps<SVGSVGElement>>;
   export default SVG;
 }
+
+declare module "*.svg?url" {
+  import { StaticImageData } from "next/image";
+  const urlString: StaticImageData;
+  export default urlString;
+}
