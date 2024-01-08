@@ -26,7 +26,6 @@
     "dayjs": "^1.11.10",
     "framer-motion": "^10.16.5",
     "graphql": "^16.8.1",
-    "graphql-request": "^6.1.0",
     "jotai": "^2.5.1",
     "jotai-effect": "^0.2.3",
     "lucide-react": "^0.290.0",

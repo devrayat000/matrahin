@@ -1,6 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { gql, GraphQLClient } from "graphql-request";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -14,7 +13,7 @@ export function makeDegree(radian: number) {
   return (radian * 180) / Math.PI;
 }
 
-export { gql };
+export const gql = String.raw;
 
 export class GQLClient {
   constructor(

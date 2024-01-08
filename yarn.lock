@@ -4143,7 +4143,6 @@ __metadata:
     eslint-plugin-react-refresh: "npm:^0.4.3"
     framer-motion: "npm:^10.16.5"
     graphql: "npm:^16.8.1"
-    graphql-request: "npm:^6.1.0"
     jotai: "npm:^2.5.1"
     jotai-effect: "npm:^0.2.3"
     lucide-react: "npm:^0.290.0"
@@ -5979,7 +5978,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-request@npm:^6.0.0, graphql-request@npm:^6.1.0":
+"graphql-request@npm:^6.0.0":
   version: 6.1.0
   resolution: "graphql-request@npm:6.1.0"
   dependencies:
