@@ -10,13 +10,21 @@ export default function MainNav({
   ...props
 }: React.HTMLAttributes<HTMLElement>) {
   const pathname = usePathname();
-  console.log(pathname);
 
   return (
     <nav
       className={cn("flex items-center gap-x-0.5 lg:gap-x-1.5", className)}
       {...props}
     >
+      <Link
+        href="/calc"
+        className={buttonVariants({
+          variant: "ghost",
+          className: pathname !== "/calc" && "text-muted-foreground",
+        })}
+      >
+        Calculators
+      </Link>
       <Link
         href="/register"
         className={buttonVariants({
@@ -25,15 +33,6 @@ export default function MainNav({
         })}
       >
         Pricing
-      </Link>
-      <Link
-        href="/login"
-        className={buttonVariants({
-          variant: "ghost",
-          className: pathname !== "/login" && "text-muted-foreground",
-        })}
-      >
-        Login
       </Link>
       <Link
         href="/feedback"

@@ -3,6 +3,7 @@
 import { forwardRef } from "react";
 import { Button, ButtonProps } from "../ui/button";
 import { signOut } from "next-auth/react";
+import { revalidateTag } from "next/cache";
 
 const LogOutButton = forwardRef<
   HTMLButtonElement,
@@ -10,6 +11,7 @@ const LogOutButton = forwardRef<
 >(({ onClick, ...props }, ref) => {
   function clickHandler(e: React.MouseEvent<HTMLButtonElement>) {
     onClick?.(e);
+    revalidateTag("login");
     return signOut({ callbackUrl: "/login", redirect: true });
   }
 

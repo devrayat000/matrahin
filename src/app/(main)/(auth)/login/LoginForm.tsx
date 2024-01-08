@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import { Button, buttonVariants } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -14,6 +15,8 @@ interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export default function LoginForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const searchParams = useSearchParams();
+  const error = searchParams.has("error") && searchParams.get("error");
 
   async function getAccess(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -48,6 +51,7 @@ export default function LoginForm({ className, ...props }: UserAuthFormProps) {
               name="tran_id"
               disabled={isLoading}
             />
+            {!!error && <p className="text-destructive text-sm">{error}</p>}
           </div>
           <Button disabled={isLoading}>
             {isLoading && <Spinner className="mr-2 h-4 w-4 animate-spin" />}
