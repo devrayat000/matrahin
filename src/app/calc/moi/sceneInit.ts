@@ -18,6 +18,7 @@ export default class SceneInit {
   uniforms: { [uniform: string]: { type: string; value: any } };
   loader: THREE.TextureLoader | undefined;
   directionalLight: THREE.DirectionalLight;
+  axesHelper: THREE.AxesHelper | undefined;
 
   width: number;
   constructor(canvasId: string) {
@@ -41,14 +42,15 @@ export default class SceneInit {
     this.spotLight = undefined;
     this.directionalLight = undefined;
     this.ambientLight = undefined;
-
+    this.axesHelper = undefined;
     // NOTE: for positioning in html page :
     this.width = window.innerWidth;
   }
 
   initialize() {
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x444444);
+    // this.scene.background = new THREE.Color(0x444444);
+    this.scene.background = new THREE.Color(0xffffff);
     this.camera = new THREE.PerspectiveCamera(this.fov, 1, 0.1, 100);
     this.camera.position.z = 30;
     this.camera.position.y = 10;
@@ -75,8 +77,8 @@ export default class SceneInit {
     // this.controls.enableZoom = false; // zoom disabled
 
     // axes helper
-    const axesHelper = new THREE.AxesHelper(500);
-    this.scene.add(axesHelper);
+    this.axesHelper = new THREE.AxesHelper(500);
+    this.scene.add(this.axesHelper);
 
     // NOTE: Add lighting.
 
@@ -118,7 +120,7 @@ export default class SceneInit {
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(
       this.width,
-      this.width / this.camera.aspect
+      this.width
 
       // window.innerHeight / 3
     );

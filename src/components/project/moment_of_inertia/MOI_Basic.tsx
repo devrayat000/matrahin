@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "~/components/ui/form";
 
-import Image from "next/image";
 import DynamicUnitInput from "~/components/common/DynamicUnitInput";
 import constants, {
   momentOfInertiaSchema,
@@ -61,76 +60,68 @@ const MOI_Basic: React.FC<MOI_BasicProps> = ({ shape }) => {
     setResult(NaN);
   };
   return (
-    <>
-      <h2 className="text-2xl font-semibold italic pt-2 text-center">
-        {pointMassObject.title}
-      </h2>
-
-      <div className="flex flex-col gap-4 m-4 p-2 items-start justify-center md:flex-row   ">
-        <Image
-          {...pointMassObject.image}
-          alt={pointMassObject.title}
-          className="w-96 flex-wrap"
-        />
-        <div className="flex flex-col gap-2  items-start justify-center">
-          <ul className="text-left max-w-lg  text-lg  leading-6 text-gray-800 p-3 ">
-            {pointMassObject.description.map((line) => (
-              <li key={line}>
-                <MathJax inline hideUntilTypeset={"first"}>
-                  {line}
-                </MathJax>
-              </li>
-            ))}
-          </ul>
-          <Card>
-            <CardHeader>
-              <CardTitle>Calculator</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Form {...form}>
-                <form
-                  className="w-full m-2 rounded-lg border-slate-200 border p-4 "
-                  onSubmit={onSubmit}
-                >
-                  {pointMassObject.fields.map((field) => (
-                    // <div
-                    //   className="flex items-center justify-center m-2"
-                    //   key={field.name}
-                    // >
-                    //   <Label
-                    //     className="flex-1"
-                    //     htmlFor={field.name}
-                    //     dangerouslySetInnerHTML={{ __html: field.label }}
-                    //   />
-                    //   <Input
-                    //     id={field.name}
-                    //     name={field.name}
-                    //     className="flex-1 border-slate-950"
-                    //     type={field.type}
-                    //     autoFocus={index == 0}
-                    //   />
-                    // </div>
-                    <DynamicUnitInput
-                      key={field.name}
-                      label={field.label}
-                      converter={field.converter}
-                      name={field.name}
-                      min={0}
-                    />
-                  ))}
-                </form>
-              </Form>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="destructive" type="reset" onClick={reset}>
-                Reset
-              </Button>
-              <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
-                Calculate
-              </Button>
-            </CardFooter>
-          </Card>
-        </div>
+    <div className="flex flex-col items-center">
+      <div className="flex flex-col gap-2  items-center justify-center">
+        <h2 className="text-2xl font-semibold italic pt-2 text-center">
+          {pointMassObject.title}
+        </h2>
+        <ul className="text-left max-w-lg  text-lg  leading-6 text-gray-800 p-3 ">
+          {pointMassObject.description.map((line) => (
+            <li key={line}>
+              <MathJax inline hideUntilTypeset={"first"}>
+                {line}
+              </MathJax>
+            </li>
+          ))}
+        </ul>
+        <Card>
+          <CardHeader>
+            <CardTitle>Calculator</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form
+                className="w-full m-2 rounded-lg border-slate-200 border p-4 "
+                onSubmit={onSubmit}
+              >
+                {pointMassObject.fields.map((field) => (
+                  // <div
+                  //   className="flex items-center justify-center m-2"
+                  //   key={field.name}
+                  // >
+                  //   <Label
+                  //     className="flex-1"
+                  //     htmlFor={field.name}
+                  //     dangerouslySetInnerHTML={{ __html: field.label }}
+                  //   />
+                  //   <Input
+                  //     id={field.name}
+                  //     name={field.name}
+                  //     className="flex-1 border-slate-950"
+                  //     type={field.type}
+                  //     autoFocus={index == 0}
+                  //   />
+                  // </div>
+                  <DynamicUnitInput
+                    key={field.name}
+                    label={field.label}
+                    converter={field.converter}
+                    name={field.name}
+                    min={0}
+                  />
+                ))}
+              </form>
+            </Form>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button variant="destructive" type="reset" onClick={reset}>
+              Reset
+            </Button>
+            <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
+              Calculate
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
       {!Number.isNaN(result) && (
         <p className="text-center text-lg leading-6  py-2">
@@ -140,7 +131,7 @@ const MOI_Basic: React.FC<MOI_BasicProps> = ({ shape }) => {
           </MathJax>
         </p>
       )}
-    </>
+    </div>
   );
 };
 

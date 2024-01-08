@@ -114,13 +114,6 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
         ))}
       </div>
       <div className="flex flex-col sm:flex-row m-2 mx-10 gap-6 items-center justify-center">
-        {/* <figure className="basis-[45%]"> */}
-        {/* <Image
-            {...calculationObject[index].image}
-            alt={calculationObject[index].title}
-            className="w-96 flex-wrap"
-          /> */}
-        {/* </figure> */}
         <ul className="text-left max-w-lg  text-lg  leading-6 text-gray-800 p-3 ">
           {calculationObject[index].description.map((line) => (
             <li key={line}>

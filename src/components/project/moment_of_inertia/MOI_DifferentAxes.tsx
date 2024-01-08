@@ -24,7 +24,6 @@ import {
   momentOfInertiaResult,
 } from "~/services/Moment_of_inertia";
 import ResultsTable from "./ResultsTable";
-import Image from "next/image";
 
 interface MOI_DifferentAxesProps {
   shape: ShapesOfInertia;
@@ -64,61 +63,55 @@ const MOI_DifferentAxes: React.FC<MOI_DifferentAxesProps> = ({ shape }) => {
   };
 
   return (
-    <>
+    <div>
       <h2 className="text-2xl font-semibold italic pt-2 text-center">
         {calculationObject.title}
       </h2>
-      <div className="flex w-full flex-col gap-4  lg:m-4 p-2 items-center justify-center lg:flex-row   ">
-        <div className="flex  flex-col  items-center justify-center md:flex-row   ">
-          <Image
-            {...calculationObject.image}
-            alt={calculationObject.title}
-            className="w-96 flex-wrap"
-          />
-          <ul className="text-left max-w-lg  text-lg  leading-6 text-gray-800 p-3 ">
-            {calculationObject.description.map((line) => (
-              <li key={line}>
-                <MathJax inline hideUntilTypeset={"first"}>
-                  {line}
-                </MathJax>
-              </li>
-            ))}
-          </ul>
-          <div className="flex flex-col gap-2  items-start justify-center">
-            <Card>
-              <CardHeader>
-                <CardTitle>Calculator</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Form {...form}>
-                  <form
-                    className="w-full m-2 rounded-lg border-slate-200 border p-4 "
-                    onSubmit={onSubmit}
-                  >
-                    {calculationObject.fields.map((field) => (
-                      <DynamicUnitInput
-                        key={field.name}
-                        label={field.label}
-                        converter={field.converter}
-                        name={field.name}
-                        min={0}
-                      />
-                    ))}
-                  </form>
-                </Form>
-              </CardContent>
-              <CardFooter className="flex justify-between">
-                <Button variant="destructive" type="reset" onClick={reset}>
-                  Reset
-                </Button>
-                <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
-                  Calculate
-                </Button>
-              </CardFooter>
-            </Card>
-          </div>
+      <div className="flex flex-col sm:flex-row m-2 mx-10 gap-6 items-center justify-center">
+        <ul className="text-left max-w-lg  text-lg  leading-6 text-gray-800 p-3 ">
+          {calculationObject.description.map((line) => (
+            <li key={line}>
+              <MathJax inline hideUntilTypeset={"first"}>
+                {line}
+              </MathJax>
+            </li>
+          ))}
+        </ul>
+        <div className="flex flex-col gap-2 mt-2 items-start justify-center">
+          <Card>
+            <CardHeader>
+              <CardTitle>Calculator</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form
+                  className="w-full m-2 rounded-lg border-slate-200 border p-4 "
+                  onSubmit={onSubmit}
+                >
+                  {calculationObject.fields.map((field) => (
+                    <DynamicUnitInput
+                      key={field.name}
+                      label={field.label}
+                      converter={field.converter}
+                      name={field.name}
+                      min={0}
+                    />
+                  ))}
+                </form>
+              </Form>
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              <Button variant="destructive" type="reset" onClick={reset}>
+                Reset
+              </Button>
+              <Button type="submit" onClick={form.handleSubmit(onSubmit)}>
+                Calculate
+              </Button>
+            </CardFooter>
+          </Card>
         </div>
       </div>
+
       {result.length > 0 && (
         <div className="flex justify-center items-center mb-10">
           <div className="max-w-xl border-y-2 pt-2 border-slate-500">
@@ -131,7 +124,7 @@ const MOI_DifferentAxes: React.FC<MOI_DifferentAxesProps> = ({ shape }) => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
