@@ -17,6 +17,8 @@ import {
   PublishStudentMutation,
   PublishStudentMutationVariables,
 } from "~/generated/graphql";
+import { getSession } from "next-auth/react";
+import { cache } from "react";
 
 // You'll need to import and pass this
 // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
@@ -87,7 +89,11 @@ export function auth(
     | [NextApiRequest, NextApiResponse]
     | []
 ) {
-  return getServerSession(...args, authConfig);
+  if (typeof window !== "undefined") {
+    return getSession({ req: args[0] });
+  } else {
+    return getServerSession(...args, authConfig);
+  }
 }
 
 export async function findOrCreateUser(params: Student) {
@@ -117,16 +123,20 @@ const FIND_STUDENT = gql`
   }
 `;
 
-export async function findStudent(email: string) {
+export const findStudent = cache(async (email: string) => {
   console.log("okay");
   const { student } = await gqlClient.request<
     FindStudentQuery,
     FindStudentQueryVariables
-  >(FIND_STUDENT, { email }, { next: { tags: ["login"] } });
+  >(
+    FIND_STUDENT,
+    { email },
+    { cache: "force-cache", next: { tags: ["login"] } }
+  );
   console.log("finding...");
 
   return student;
-}
+});
 
 const CREATE_STUDENT = gql`
   mutation CreateStudent($input: StudentCreateInput!) {

@@ -1,8 +1,9 @@
+import { MoveRight } from "lucide-react";
 import Link from "next/link";
 import { use } from "react";
 import LogOutButton from "~/components/common/LogoutButton";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { auth, findStudent } from "~/lib/auth";
+import { cn } from "~/lib/utils";
 
 function getAvatarLetters(fullName: string): string {
   const words = fullName.split(" ");
@@ -37,6 +39,18 @@ function getLastName(fullName: string) {
 
 export default function UserNav() {
   const session = use(auth());
+
+  if (!session)
+    return (
+      <Link
+        href="/login"
+        className={cn(buttonVariants({ variant: "ghost" }), "flex gap-2")}
+      >
+        Login
+        <MoveRight className="w-4 h-4" />
+      </Link>
+    );
+
   const { name, email } = use(findStudent(session.user.email));
 
   return (

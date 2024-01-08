@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import Link from "next/link";
 import { use } from "react";
 import { getHistories } from "~/services/graphql/history";

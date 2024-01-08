@@ -1,8 +1,6 @@
 "use server";
 
-import { gql } from "graphql-request";
 import { revalidateTag } from "next/cache";
-import { cache } from "react";
 import {
   CreateHistoryMutation,
   CreateHistoryMutationVariables,
@@ -12,7 +10,7 @@ import {
   PublishHistoryMutationVariables,
 } from "~/generated/graphql";
 import { auth, findStudent } from "~/lib/auth";
-import { gqlClient } from "~/lib/utils";
+import { gqlClient, gql } from "~/lib/utils";
 
 const CREATE_HISTORY = gql`
   mutation CreateHistory($pathname: String!, $studentId: ID!) {
