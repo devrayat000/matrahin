@@ -1,11 +1,9 @@
 declare module "*.svg" {
-  import React from "react";
-  const SVG: React.VFC<React.SVGProps<SVGSVGElement>>;
+  const SVG: import("react").VFC<React.SVGProps<SVGSVGElement>>;
   export default SVG;
 }
 
 declare module "*.svg?url" {
-  import { StaticImageData } from "next/image";
-  const urlString: StaticImageData;
-  export default urlString;
+  const content: import("next/image").StaticImageData;
+  export default content;
 }
