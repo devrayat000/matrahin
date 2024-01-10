@@ -19,6 +19,7 @@ import {
 } from "~/generated/graphql";
 import { getSession } from "next-auth/react";
 import { cache } from "react";
+import { revalidateTag } from "next/cache";
 
 // You'll need to import and pass this
 // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
@@ -71,6 +72,12 @@ export const authConfig = {
   pages: {
     error: "/login",
   },
+  events: {
+    signOut(message) {
+      console.log(message);
+      revalidateTag("login");
+    },
+  },
 } satisfies NextAuthOptions;
 
 // Use it in server contexts
@@ -99,7 +106,6 @@ export function auth(
 export async function findOrCreateUser(params: Student) {
   try {
     const student = await findStudent(params.email);
-    console.log({ student });
 
     if (!student) {
       await createStudent(params);
@@ -134,6 +140,7 @@ export const findStudent = cache(async (email: string) => {
     { cache: "force-cache", next: { tags: ["login"] } }
   );
   console.log("finding...");
+  console.log({ student });
 
   return student;
 });
