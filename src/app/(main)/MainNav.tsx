@@ -13,7 +13,10 @@ export default function MainNav({
 
   return (
     <nav
-      className={cn("flex items-center gap-x-0.5 lg:gap-x-1.5", className)}
+      className={cn(
+        "flex flex-col sm:flex-row items-stretch sm:items-center gap-1 lg:gap-x-1.5",
+        className
+      )}
       {...props}
     >
       <Link
@@ -22,6 +25,7 @@ export default function MainNav({
           variant: "ghost",
           className: pathname !== "/calc" && "text-muted-foreground",
         })}
+        title="Explore the latest scientific calculators and simulators"
       >
         Explore
       </Link>
@@ -31,6 +35,7 @@ export default function MainNav({
           variant: "ghost",
           className: pathname !== "/feedback" && "text-muted-foreground",
         })}
+        title="Send us your feedback"
       >
         Feedback
       </Link>
