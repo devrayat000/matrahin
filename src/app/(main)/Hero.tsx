@@ -1,23 +1,21 @@
 import Link from "next/link";
 import MathElements from "~/assets/math_elements.svg";
-import { Button, buttonVariants } from "~/components/ui/button";
-import { cn } from "~/lib/utils";
-
-const dataUrl =
-  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDMzZmYiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jaGVjay1jaXJjbGUtMiI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48cGF0aCBkPSJtOSAxMiAyIDIgNC00Ii8+PC9zdmc+";
+import { buttonVariants } from "~/components/ui/button";
 
 export default function Hero() {
   return (
-    <section id="hero" className="container">
+    <section id="hero" className="container py-12 sm:py-16">
       <div className="flex justify-between gap-16 py-20">
         <div className="flex-1">
-          <h1 className="text-5xl font-black leading-tight">
+          <h1 className="text-6xl font-black leading-tight">
             Take your{" "}
-            <span className="bg-blue-200 rounded-sm py-1 px-3">learning</span>{" "}
+            <span className="bg-blue-200 rounded-sm py-1 px-3 selection:bg-yellow-200">
+              learning
+            </span>{" "}
             <br />
             to new dimensions
           </h1>
-          <p className="text-muted-foreground text-xl tracking-widest mt-8">
+          <p className="text-muted-foreground text-xl tracking-wide mt-8 mr-6">
             Craving knowledge that ignites your curiosity? "Matrahin" fuels your
             mind with hyper-realistic simulations. Master complex concepts,
             solve real-world problems, and prepare for a future beyond limits.
@@ -26,13 +24,13 @@ export default function Hero() {
 
           <div className="flex items-center mt-8 gap-4">
             <Link
-              className={cn(
-                buttonVariants({ size: "lg" }),
-                "rounded-xl flex-1 md:flex-none"
-              )}
+              className={buttonVariants({
+                size: "lg",
+                className: "rounded-xl flex-1 md:flex-none text-xl py-7 px-12",
+              })}
               href="/login"
             >
-              Get started
+              Get started &rarr;
             </Link>
           </div>
         </div>

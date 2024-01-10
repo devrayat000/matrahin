@@ -30,16 +30,16 @@ export default function FAQ() {
         collapsible
         className="w-full mt-4 flex flex-col gap-2"
       >
-        {faqs.map((faq) => [
+        {faqs.map((faq) => (
           <AccordionItem
             key={faq.question}
-            value="item-2"
+            value={faq.question}
             className="px-8 rounded-xl border border-border"
           >
             <AccordionTrigger>{faq.question}</AccordionTrigger>
             <AccordionContent>{faq.answer}</AccordionContent>
-          </AccordionItem>,
-        ])}
+          </AccordionItem>
+        ))}
       </Accordion>
     </section>
   );

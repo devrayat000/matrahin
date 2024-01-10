@@ -36,8 +36,8 @@ const textDir = {
 
 export default function Features() {
   return (
-    <div className="bg-white py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section id="features" className="bg-white py-12 sm:py-16 container">
+      <div className="px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             Everything you need to crack the exam
@@ -48,8 +48,8 @@ export default function Features() {
             In mi viverra elit nunc.
           </p>
         </div>
-        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-          <dl className="flex flex-col gap-y-10 lg:gap-y-16">
+        <div className="mx-auto mt-16 sm:mt-20 lg:mt-24">
+          <dl className="flex flex-col gap-y-12 lg:gap-y-24">
             {features.map((feature, i) => (
               <div
                 key={feature.name}
@@ -57,7 +57,7 @@ export default function Features() {
               >
                 <feature.image
                   aria-hidden="true"
-                  className="h-40 w-auto rounded-lg"
+                  className="h-64 w-auto rounded-lg"
                 />
                 <div className={cn("flex-1", textDir[i % 2])}>
                   <dt className="text-2xl font-semibold leading-7 capitalize text-gray-900">
@@ -72,6 +72,6 @@ export default function Features() {
           </dl>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

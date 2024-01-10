@@ -23,16 +23,7 @@ export default function MainNav({
           className: pathname !== "/calc" && "text-muted-foreground",
         })}
       >
-        Calculators
-      </Link>
-      <Link
-        href="/register"
-        className={buttonVariants({
-          variant: "ghost",
-          className: pathname !== "/register" && "text-muted-foreground",
-        })}
-      >
-        Pricing
+        Explore
       </Link>
       <Link
         href="/feedback"
