@@ -11,7 +11,6 @@ const LogOutButton = forwardRef<
 >(({ onClick, ...props }, ref) => {
   function clickHandler(e: React.MouseEvent<HTMLButtonElement>) {
     onClick?.(e);
-    revalidateTag("login");
     return signOut({ callbackUrl: "/login", redirect: true });
   }
 

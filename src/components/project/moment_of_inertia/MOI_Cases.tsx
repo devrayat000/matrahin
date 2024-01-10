@@ -5,7 +5,7 @@ import React, { useMemo, useState } from "react";
 import { MathJax } from "better-react-mathjax";
 import { useAtom } from "jotai";
 import { useForm } from "react-hook-form";
-import { caseTypeAtom } from "~/app/calc/moi/store";
+import { caseTypeAtom } from "~/app/(secure)/calc/(calculators)/moi/store";
 import DynamicUnitInput from "~/components/common/DynamicUnitInput";
 import constants, {
   momentOfInertiaSchema,

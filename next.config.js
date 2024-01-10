@@ -3,9 +3,6 @@ const nextConfig = {
   typescript: { ignoreBuildErrors: true },
   eslint: { ignoreDuringBuilds: true },
   logging: { fetches: { fullUrl: true } },
-  compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
-  },
   reactStrictMode: false,
   webpack(config) {
     // Grab the existing rule that handles SVG imports
