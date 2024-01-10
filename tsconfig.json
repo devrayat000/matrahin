@@ -25,17 +25,10 @@
   },
   "include": [
     "next-env.d.ts",
-<<<<<<< HEAD
-    ".next/types/**/*.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "src/components/project/projectile/MotionCanvas.bak"
-=======
     "svgr.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
->>>>>>> master
   ],
   "exclude": ["node_modules"]
 }
