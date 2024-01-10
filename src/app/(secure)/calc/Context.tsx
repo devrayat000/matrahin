@@ -17,7 +17,7 @@ const config = {
   },
 };
 
-export default function CalcLayout({
+export default function CalcContext({
   children,
 }: {
   children: React.ReactNode;
