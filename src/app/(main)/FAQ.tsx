@@ -20,7 +20,7 @@ const faqs = [
 
 export default function FAQ() {
   return (
-    <section id="faq" className="container">
+    <section id="faq" className="container py-12 sm:py-16">
       <h3 className="text-center text-3xl font-bold py-10">
         Frequently Asked Questions
       </h3>
