@@ -185,7 +185,7 @@ const constants: momentOfInertiaSchema = [
         image: Rod,
         title: "Thin Rod",
         shape: ShapesOfInertia.Rod,
-        axes: ["central axis", "", "axis at end"],
+        axes: ["Central axis", "", "Axis at end"],
         case: CaseOfInertia.None,
         description: [
           "About central axis \\[I_z = \\frac{1}{12} \\cdot M \\cdot L^2\\]",

@@ -13,7 +13,7 @@ const Chip: React.FC<ChipProps> = ({ label, selected, onClick }) => {
       className={cn(
         "m-auto rounded-full cursor-pointer border-2 text-md px-4 py-1 text-white",
         {
-          "border-blue-500 bg-blue-500  ": selected,
+          "border-green-500 bg-green-500  ": selected,
           "border-gray-500 bg-gray-500 ": !selected,
         }
       )}

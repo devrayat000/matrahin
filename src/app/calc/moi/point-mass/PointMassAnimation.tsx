@@ -68,18 +68,22 @@ const PointMassAnimation = () => {
     animate();
     return () => {
       // Cleanup: remove the mesh from the scene
-      if (PointMassRef.current) {
-        test.scene.remove(PointMassRef.current);
-        PointMassRef.current.children.forEach((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.geometry.dispose();
-            child.material.dispose();
-          }
-        });
+      // if (PointMassRef.current) {
+      //   test.scene.remove(PointMassRef.current);
+      //   PointMassRef.current.children.forEach((child) => {
+      //     if (child instanceof THREE.Mesh) {
+      //       child.geometry.dispose();
+      //       child.material.dispose();
+      //     }
+      //   });
 
-        if (frameIdRef.current !== null) {
-          window.cancelAnimationFrame(frameIdRef.current);
-        }
+      //   if (frameIdRef.current !== null) {
+      //     window.cancelAnimationFrame(frameIdRef.current);
+      //   }
+      // }
+
+      if (PointMassRef.current && frameIdRef.current) {
+        window.cancelAnimationFrame(frameIdRef.current);
       }
     };
   }, []);

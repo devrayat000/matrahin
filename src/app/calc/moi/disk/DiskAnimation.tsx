@@ -30,12 +30,13 @@ const DiskAnimation = () => {
     geometry.setAttribute("position", new THREE.Float32BufferAttribute([], 3));
 
     const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0xffffff,
+      // color: 0xffffff,
+      color: 0x000,
       transparent: true,
       opacity: 0.6,
     });
     const meshMaterial = new THREE.MeshPhongMaterial({
-      color: 0x156289,
+      color: 0x069fec,
       emissive: 0x072534,
       side: THREE.DoubleSide,
       flatShading: true,
@@ -47,18 +48,18 @@ const DiskAnimation = () => {
     test.scene.add(group);
     diskMeshRef.current = group;
 
-    return () => {
-      // Cleanup: remove the mesh from the scene
-      if (diskMeshRef.current) {
-        test.scene.remove(diskMeshRef.current);
-        diskMeshRef.current.children.forEach((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.geometry.dispose();
-            child.material.dispose();
-          }
-        });
-      }
-    };
+    // return () => {
+    //   // Cleanup: remove the mesh from the scene
+    //   if (diskMeshRef.current) {
+    //     test.scene.remove(diskMeshRef.current);
+    //     diskMeshRef.current.children.forEach((child) => {
+    //       if (child instanceof THREE.Mesh) {
+    //         child.geometry.dispose();
+    //         child.material.dispose();
+    //       }
+    //     });
+    //   }
+    // };
   }, []);
 
   const frameIdRef = useRef<number | null>(null);
@@ -112,7 +113,6 @@ const DiskAnimation = () => {
     } else if (caseOfInertia === CaseOfInertia.Thin) {
       const circle = new THREE.RingGeometry(data.radius, data.radius);
       circle.rotateX(Math.PI / 2);
-
       updateGroupGeometry(diskMeshRef.current, circle);
     }
   }, [caseOfInertia]);
@@ -135,16 +135,16 @@ const DiskAnimation = () => {
     );
     (mesh.children[1] as THREE.Mesh).geometry = geometry;
 
-    console.log(mesh.children);
+    //console.log(mesh.children);
     if (toRemove) {
       const newChildren = mesh.children.slice(0, 2);
       mesh.children = [];
       newChildren.forEach((child) => {
         mesh.add(child);
       });
-      console.log("removing");
+      //console.log("removing");
     }
-    console.log(mesh.children);
+    //console.log(mesh.children);
     // these do not update nicely together if shared
   }
   return (

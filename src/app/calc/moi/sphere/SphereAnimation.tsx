@@ -51,18 +51,18 @@ const SphereAnimation = () => {
     };
     animate();
 
-    return () => {
-      // Cleanup: remove the mesh from the scene
-      if (sphereMeshRef.current) {
-        test.current.scene.remove(sphereMeshRef.current);
-        sphereMeshRef.current.children.forEach((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.geometry.dispose();
-            child.material.dispose();
-          }
-        });
-      }
-    };
+    // return () => {
+    //   // Cleanup: remove the mesh from the scene
+    //   if (sphereMeshRef.current) {
+    //     test.current.scene.remove(sphereMeshRef.current);
+    //     sphereMeshRef.current.children.forEach((child) => {
+    //       if (child instanceof THREE.Mesh) {
+    //         child.geometry.dispose();
+    //         child.material.dispose();
+    //       }
+    //     });
+    //   }
+    // };
   }, []);
 
   useEffect(() => {
@@ -160,7 +160,7 @@ const SphereAnimation = () => {
       ((mesh.children[0] as THREE.Mesh).material as THREE.Material).opacity = 0;
     } else {
       const meshMaterial = new THREE.MeshPhongMaterial({
-        color: 0x156289,
+        color: 0x069fec,
         emissive: 0x072534,
         side: THREE.DoubleSide,
         flatShading: true,

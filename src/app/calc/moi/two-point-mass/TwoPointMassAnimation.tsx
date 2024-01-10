@@ -1,3 +1,5 @@
+// not used
+
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -82,22 +84,22 @@ const TwoPointMassAnimation = () => {
       frameIdRef.current = window.requestAnimationFrame(animate);
     };
     animate();
-    return () => {
-      // Cleanup: remove the mesh from the scene
-      if (PointMassRef.current) {
-        test.scene.remove(PointMassRef.current);
-        PointMassRef.current.children.forEach((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.geometry.dispose();
-            child.material.dispose();
-          }
-        });
+    // return () => {
+    //   // Cleanup: remove the mesh from the scene
+    //   if (PointMassRef.current) {
+    //     test.scene.remove(PointMassRef.current);
+    //     PointMassRef.current.children.forEach((child) => {
+    //       if (child instanceof THREE.Mesh) {
+    //         child.geometry.dispose();
+    //         child.material.dispose();
+    //       }
+    //     });
 
-        if (frameIdRef.current !== null) {
-          window.cancelAnimationFrame(frameIdRef.current);
-        }
-      }
-    };
+    //     if (frameIdRef.current !== null) {
+    //       window.cancelAnimationFrame(frameIdRef.current);
+    //     }
+    //   }
+    // };
   }, []);
 
   const frameIdRef = useRef<number | null>(null);

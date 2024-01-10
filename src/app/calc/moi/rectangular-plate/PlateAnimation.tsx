@@ -1,3 +1,5 @@
+// not used
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -47,19 +49,6 @@ const PlateAnimation = () => {
 
     test.scene.add(group);
     diskMeshRef.current = group;
-
-    return () => {
-      // Cleanup: remove the mesh from the scene
-      if (diskMeshRef.current) {
-        test.scene.remove(diskMeshRef.current);
-        diskMeshRef.current.children.forEach((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.geometry.dispose();
-            child.material.dispose();
-          }
-        });
-      }
-    };
   }, []);
 
   const frameIdRef = useRef<number | null>(null);
@@ -68,6 +57,7 @@ const PlateAnimation = () => {
     const group = diskMeshRef.current;
     if (!group) return;
 
+    group.rotation.set(0, 0, 0);
     const animate = () => {
       const rotationSpeed = 0.01;
       if (rotationAxis === "x") {
@@ -75,6 +65,7 @@ const PlateAnimation = () => {
       } else if (rotationAxis === "y") {
         group.rotation.y += rotationSpeed;
       } else if (rotationAxis === "e") {
+        // todo: modify this
         group.rotation.y += rotationSpeed;
       }
       frameIdRef.current = window.requestAnimationFrame(animate);

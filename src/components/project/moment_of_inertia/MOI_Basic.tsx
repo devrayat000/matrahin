@@ -65,7 +65,7 @@ const MOI_Basic: React.FC<MOI_BasicProps> = ({ shape }) => {
         <h2 className="text-2xl font-semibold italic pt-2 text-center">
           {pointMassObject.title}
         </h2>
-        <ul className="text-left max-w-lg  text-lg  leading-6 text-gray-800 p-3 ">
+        <ul className="text-left max-w-lg  text-lg  leading-6 text-gray-800  ">
           {pointMassObject.description.map((line) => (
             <li key={line}>
               <MathJax inline hideUntilTypeset={"first"}>

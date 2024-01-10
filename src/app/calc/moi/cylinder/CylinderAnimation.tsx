@@ -8,7 +8,7 @@ import { useAtomValue } from "jotai";
 import Chip from "~/components/ui/chip";
 import { CaseOfInertia } from "~/services/Moment_of_inertia";
 import SceneInit from "../sceneInit";
-import { caseTypeAtom, rotationSpeed } from "../store";
+import { caseTypeAtom } from "../store";
 
 const CylinderAnimation = () => {
   const caseOfInertia = useAtomValue(caseTypeAtom);
@@ -21,10 +21,6 @@ const CylinderAnimation = () => {
     testRef.current = test;
     test.initialize();
     test.animate();
-
-    // const backGroundTexture = new THREE.TextureLoader().load("/space.jpeg");
-    // test.scene.background = backGroundTexture;
-
     const group = new THREE.Group();
 
     const geometry = new THREE.BufferGeometry();
@@ -36,7 +32,7 @@ const CylinderAnimation = () => {
       opacity: 0.6,
     });
     const meshMaterial = new THREE.MeshPhongMaterial({
-      color: 0x156289,
+      color: 0x069fec,
       emissive: 0x072534,
       side: THREE.DoubleSide,
       flatShading: true,
@@ -48,18 +44,7 @@ const CylinderAnimation = () => {
     test.scene.add(group);
     cylinderMeshRef.current = group;
 
-    return () => {
-      // Cleanup: remove the mesh from the scene
-      if (cylinderMeshRef.current) {
-        test.scene.remove(cylinderMeshRef.current);
-        cylinderMeshRef.current.children.forEach((child) => {
-          if (child instanceof THREE.Mesh) {
-            child.geometry.dispose();
-            child.material.dispose();
-          }
-        });
-      }
-    };
+    return () => {};
   }, []);
 
   const frameIdRef = useRef<number | null>(null);
@@ -70,7 +55,7 @@ const CylinderAnimation = () => {
 
     group.rotation.set(0, 0, 0);
 
-    const speed = rotationSpeed;
+    const speed = 0.01;
     const animate = () => {
       if (rotationAxis === "x") {
         group.rotation.x += speed;
