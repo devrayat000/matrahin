@@ -33,7 +33,7 @@ export default function IterableFiels() {
           control={form.control}
           name={`test.c`}
           render={({ field }) => (
-            <FormItem className="flex-1 flex items-center gap-2 space-y-0">
+            <FormItem className="flex-1 flex items-center gap-2 gap-y-0">
               <FormLabel htmlFor={`test.c`}>charge</FormLabel>
               <FormControl>
                 <Input
@@ -52,7 +52,7 @@ export default function IterableFiels() {
               control={form.control}
               name={`test.x`}
               render={({ field }) => (
-                <FormItem className="basis-[20%] flex items-center gap-2 space-y-0">
+                <FormItem className="basis-[20%] flex items-center gap-2 gap-y-0">
                   <FormLabel htmlFor={`test.c`}>x</FormLabel>
                   <FormControl>
                     <Input
@@ -69,7 +69,7 @@ export default function IterableFiels() {
               control={form.control}
               name={`test.y`}
               render={({ field }) => (
-                <FormItem className="basis-[20%] flex items-center gap-2 space-y-0">
+                <FormItem className="basis-[20%] flex items-center gap-2 gap-y-0">
                   <FormLabel htmlFor={`test.c`}>y</FormLabel>
                   <FormControl>
                     <Input
@@ -104,7 +104,7 @@ export default function IterableFiels() {
                 control={form.control}
                 name={`charges.${i}.c`}
                 render={({ field }) => (
-                  <FormItem className="flex-1 flex items-center gap-2 space-y-0">
+                  <FormItem className="flex-1 flex items-center gap-2 gap-y-0">
                     <FormLabel htmlFor={`charges.${i}.c`}>charge</FormLabel>
                     <FormControl>
                       <Input className="mt-0" type="number" {...field} />
@@ -116,7 +116,7 @@ export default function IterableFiels() {
                 control={form.control}
                 name={`charges.${i}.x`}
                 render={({ field }) => (
-                  <FormItem className="basis-[20%] flex items-center gap-2 space-y-0">
+                  <FormItem className="basis-[20%] flex items-center gap-2 gap-y-0">
                     <FormLabel htmlFor={`charges.${i}.c`}>x</FormLabel>
                     <FormControl>
                       <Input className="mt-0" type="number" {...field} />
@@ -128,7 +128,7 @@ export default function IterableFiels() {
                 control={form.control}
                 name={`charges.${i}.y`}
                 render={({ field }) => (
-                  <FormItem className="basis-[20%] flex items-center gap-2 space-y-0">
+                  <FormItem className="basis-[20%] flex items-center gap-2 gap-y-0">
                     <FormLabel htmlFor={`charges.${i}.c`}>y</FormLabel>
                     <FormControl>
                       <Input className="mt-0" type="number" {...field} />

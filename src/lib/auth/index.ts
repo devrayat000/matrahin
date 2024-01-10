@@ -7,6 +7,18 @@ import type { NextAuthOptions, Session } from "next-auth";
 import { getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { TransactionCheck } from "../types/AccessCode";
+import { Student } from "../types/Student";
+import { gql, gqlClient } from "../utils";
+import {
+  CreateStudentMutation,
+  CreateStudentMutationVariables,
+  FindStudentQuery,
+  FindStudentQueryVariables,
+  PublishStudentMutation,
+  PublishStudentMutationVariables,
+} from "~/generated/graphql";
+import { getSession } from "next-auth/react";
+import { cache } from "react";
 
 // You'll need to import and pass this
 // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
@@ -34,19 +46,31 @@ export const authConfig = {
 
         const data = (await res.json()) as TransactionCheck;
         if ("no_of_trans_found" in data) {
-          return null;
+          throw new Error("No valid transactions found!");
         }
+        if (data.tranx.status !== "VALID") {
+          throw new Error("No valid transactions found!");
+        }
+
+        const user = {
+          name: data.tranx.Name,
+          email: data.tranx.Email,
+          phone: data.tranx.Phone,
+          institution: data.tranx.Institution,
+          hscYear: data.tranx.HSC,
+        };
+        await findOrCreateUser(user);
 
         return {
           id: data.tranx.uid,
-          name: data.tranx.Name,
-          email: data.tranx.Email,
-          sessionkey: data.tranx.sessionkey,
-          tranId: data.tranx.tran_id,
+          ...user,
         };
       },
     }),
   ], // rest of your config
+  pages: {
+    error: "/login",
+  },
 } satisfies NextAuthOptions;
 
 // Use it in server contexts
@@ -65,5 +89,83 @@ export function auth(
     | [NextApiRequest, NextApiResponse]
     | []
 ) {
-  return getServerSession(...args, authConfig);
+  if (typeof window !== "undefined") {
+    return getSession({ req: args[0] });
+  } else {
+    return getServerSession(...args, authConfig);
+  }
+}
+
+export async function findOrCreateUser(params: Student) {
+  try {
+    const student = await findStudent(params.email);
+    console.log({ student });
+
+    if (!student) {
+      await createStudent(params);
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error loging in! Please contact support.");
+  }
+}
+
+const FIND_STUDENT = gql`
+  query FindStudent($email: String!) {
+    student(where: { email: $email }) {
+      id
+      name
+      email
+      phone
+      institution
+      hscYear
+    }
+  }
+`;
+
+export const findStudent = cache(async (email: string) => {
+  console.log("okay");
+  const { student } = await gqlClient.request<
+    FindStudentQuery,
+    FindStudentQueryVariables
+  >(
+    FIND_STUDENT,
+    { email },
+    { cache: "force-cache", next: { tags: ["login"] } }
+  );
+  console.log("finding...");
+
+  return student;
+});
+
+const CREATE_STUDENT = gql`
+  mutation CreateStudent($input: StudentCreateInput!) {
+    createStudent(data: $input) {
+      id
+    }
+  }
+`;
+
+const PUBLISH_STUDENT = gql`
+  mutation PublishStudent($id: ID!) {
+    publishStudent(where: { id: $id }) {
+      id
+    }
+  }
+`;
+
+async function createStudent(params: Student) {
+  const {
+    createStudent: { id },
+  } = await gqlClient.request<
+    CreateStudentMutation,
+    CreateStudentMutationVariables
+  >(CREATE_STUDENT, { input: params });
+  console.log("creating...");
+  console.log(id);
+
+  await gqlClient.request<
+    PublishStudentMutation,
+    PublishStudentMutationVariables
+  >(PUBLISH_STUDENT, { id });
 }
