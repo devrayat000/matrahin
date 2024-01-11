@@ -4,12 +4,12 @@ import { buttonVariants } from "~/components/ui/button";
 
 export default function Hero() {
   return (
-    <section id="hero" className="container py-12 sm:py-16">
-      <div className="flex justify-between gap-16 py-20">
+    <section id="hero" className="container py-8 sm:py-12 md:py-16">
+      <div className="flex flex-col md:flex-row justify-between gap-16">
         <div className="flex-1">
-          <h1 className="text-6xl font-black leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-tight">
             Take your{" "}
-            <span className="bg-blue-200 rounded-sm py-1 px-3 selection:bg-yellow-200">
+            <span className="bg-blue-200/50 rounded-sm py-1 px-3 selection:bg-yellow-200 -z-10">
               learning
             </span>{" "}
             <br />
@@ -26,7 +26,8 @@ export default function Hero() {
             <Link
               className={buttonVariants({
                 size: "lg",
-                className: "rounded-xl flex-1 md:flex-none text-xl py-7 px-12",
+                className:
+                  "rounded-xl w-full sm:w-auto flex-1 md:flex-none text-xl py-7 px-20",
               })}
               href="/login"
             >
@@ -34,7 +35,7 @@ export default function Hero() {
             </Link>
           </div>
         </div>
-        <MathElements className="flex-1 scale-125 -z-10" />
+        <MathElements className="hidden sm:block flex-1 scale-125 sm:scale-110 -z-10" />
       </div>
     </section>
   );

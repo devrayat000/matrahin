@@ -40,28 +40,43 @@ export default function MainDrawer() {
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>{getLastName(session.user.name)}</DrawerTitle>
-          <DrawerDescription>{session.user.email}</DrawerDescription>
+          {!session ? (
+            <Link
+              href="/login"
+              className={buttonVariants({ variant: "outline" })}
+            >
+              Login
+            </Link>
+          ) : (
+            <>
+              <DrawerTitle>{getLastName(session.user.name)}</DrawerTitle>
+              <DrawerDescription>{session.user.email}</DrawerDescription>
+            </>
+          )}
         </DrawerHeader>
         <DrawerFooter>
           <div className="flex flex-col gap-y-2 items-stretch">
             <MainNav />
-            <Separator />
-            <div className="flex flex-col gap-y-1 items-stretch">
-              <Link
-                href="/profile"
-                className={buttonVariants({ variant: "ghost" })}
-              >
-                Profile
-              </Link>
-              <Link
-                href="/profile/subscription"
-                className={buttonVariants({ variant: "ghost" })}
-              >
-                Subscription
-              </Link>
-              <LogOutButton>Logout</LogOutButton>
-            </div>
+            {!!session && (
+              <>
+                <Separator />
+                <div className="flex flex-col gap-y-1 items-stretch">
+                  <Link
+                    href="/profile"
+                    className={buttonVariants({ variant: "ghost" })}
+                  >
+                    Profile
+                  </Link>
+                  <Link
+                    href="/profile/subscription"
+                    className={buttonVariants({ variant: "ghost" })}
+                  >
+                    Subscription
+                  </Link>
+                  <LogOutButton>Logout</LogOutButton>
+                </div>
+              </>
+            )}
           </div>
         </DrawerFooter>
       </DrawerContent>

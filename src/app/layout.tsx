@@ -22,7 +22,6 @@ export const metadata: Metadata = {
     "learning",
     "edu",
   ],
-  colorScheme: "light",
 };
 
 export default async function RootLayout({

@@ -4,14 +4,14 @@ import Calculator2 from "~/assets/calc_2.svg";
 export default function About() {
   return (
     <section id="about" className="py-12 sm:py-16">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 flex items-start gap-16">
-        <Calculator2 className="max-w-xs lg:max-w-sm scale-150" />
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <Calculator2 className="max-w-xs lg:max-w-sm scale-125 sm:scale-150 float-left sm:mr-16 mb-10" />
         <div className="flex-1 text-center md:text-left">
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl md:text-4xl lg:text-5xl">
+          <h2 className="mt-2 font-bold tracking-tight text-gray-900 text-3xl sm:text-4xl md:text-4xl lg:text-5xl">
             What's Matrahin?
           </h2>
 
-          <p className="mt-6 text-lg leading-8 text-gray-600">
+          <p className="mt-6 text-sm sm:text-lg sm:leading-8 text-gray-600">
             Welcome to Matrahin, your academic ally! Based in the vibrant city
             of Dhaka, Bangladesh, we are an edtech startup on a mission to
             simplify students' lives by offering a comprehensive suite of

@@ -24,14 +24,14 @@ const features = [
   },
 ];
 
-const flexDir = {
-  0: "flex-row",
-  1: "flex-row-reverse",
+const textDir = {
+  0: "md:text-left",
+  1: "md:text-right",
 };
 
-const textDir = {
-  0: "text-left",
-  1: "text-right",
+const floatDir = {
+  0: "sm:float-left sm:mr-6",
+  1: "sm:float-right sm:ml-6",
 };
 
 export default function Features() {
@@ -53,17 +53,20 @@ export default function Features() {
             {features.map((feature, i) => (
               <div
                 key={feature.name}
-                className={cn("flex gap-x-10", flexDir[i % 2])}
+                className="flex flex-col sm:block text-justify"
               >
                 <feature.image
                   aria-hidden="true"
-                  className="h-64 w-auto rounded-lg"
+                  className={cn(
+                    "h-64 lg:h-80 w-auto rounded-lg mb-8",
+                    floatDir[i % 2]
+                  )}
                 />
                 <div className={cn("flex-1", textDir[i % 2])}>
-                  <dt className="text-2xl font-semibold leading-7 capitalize text-gray-900">
+                  <dt className="text-lg sm:text-xl md:text-2xl font-semibold leading-7 capitalize text-gray-900">
                     {feature.name}
                   </dt>
-                  <dd className="mt-2 text-base leading-7 text-gray-600">
+                  <dd className="mt-2 text-base md:leading-7 text-gray-600">
                     {feature.description}
                   </dd>
                 </div>
