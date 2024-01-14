@@ -68,7 +68,7 @@ export const getHistories = async () => {
   >(
     GET_HISTORIES,
     { studentId: student.id },
-    { next: { tags: ["histories", "login"] } }
+    { cache: "force-cache", next: { tags: ["histories", "login"] } }
   );
   return histories;
 };

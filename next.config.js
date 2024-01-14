@@ -4,6 +4,9 @@ const nextConfig = {
   eslint: { ignoreDuringBuilds: true },
   logging: { fetches: { fullUrl: true } },
   reactStrictMode: false,
+  images: {
+    remotePatterns: [{ hostname: "media.graphassets.com" }],
+  },
   webpack(config) {
     // Grab the existing rule that handles SVG imports
     const fileLoaderRule = config.module.rules.find((rule) =>

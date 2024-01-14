@@ -13,7 +13,10 @@ export default function MainNav({
 
   return (
     <nav
-      className={cn("flex items-center gap-x-0.5 lg:gap-x-1.5", className)}
+      className={cn(
+        "flex flex-col sm:flex-row items-stretch sm:items-center gap-1 lg:gap-x-1.5",
+        className
+      )}
       {...props}
     >
       <Link
@@ -22,17 +25,9 @@ export default function MainNav({
           variant: "ghost",
           className: pathname !== "/calc" && "text-muted-foreground",
         })}
+        title="Explore the latest scientific calculators and simulators"
       >
-        Calculators
-      </Link>
-      <Link
-        href="/register"
-        className={buttonVariants({
-          variant: "ghost",
-          className: pathname !== "/register" && "text-muted-foreground",
-        })}
-      >
-        Pricing
+        Explore
       </Link>
       <Link
         href="/feedback"
@@ -40,6 +35,7 @@ export default function MainNav({
           variant: "ghost",
           className: pathname !== "/feedback" && "text-muted-foreground",
         })}
+        title="Send us your feedback"
       >
         Feedback
       </Link>
