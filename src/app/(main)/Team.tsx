@@ -17,7 +17,7 @@ const MEMBERS_QUERY = gql`
       image {
         src: url(
           transformation: {
-            image: { resize: { fit: crop, width: 420, height: 504 } }
+            image: { resize: { fit: crop, width: 320, height: 384 } }
           }
         )
         height
@@ -40,6 +40,13 @@ async function getMembers() {
 export default function Team() {
   const members = use(getMembers());
 
+  const imageSize = {
+    width: 320,
+    get height() {
+      return (this.width / 5) * 6;
+    },
+  };
+
   return (
     <section id="team" className="container bg-white py-12 sm:py-16">
       <div className="mx-auto px-12 md:px-16">
@@ -60,8 +67,7 @@ export default function Team() {
                   {...member.image}
                   alt={member.name}
                   aria-hidden="true"
-                  width={420}
-                  height={504}
+                  {...imageSize}
                   className="rounded-lg"
                 />
                 <div className="mt-4">
