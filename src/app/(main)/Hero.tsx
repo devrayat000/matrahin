@@ -5,9 +5,9 @@ import { buttonVariants } from "~/components/ui/button";
 export default function Hero() {
   return (
     <section id="hero" className="container py-8 sm:py-12 md:py-16">
-      <div className="flex flex-col md:flex-row justify-between gap-16">
+      <div className="flex flex-col-reverse md:flex-row justify-between gap-16">
         <div className="flex-1">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black leading-tight">
             Take your{" "}
             <span className="bg-blue-200/50 rounded-sm py-1 px-3 selection:bg-yellow-200 -z-10">
               learning
@@ -15,7 +15,7 @@ export default function Hero() {
             <br />
             to new dimensions
           </h1>
-          <p className="text-muted-foreground text-xl tracking-wide mt-8 mr-6">
+          <p className="text-muted-foreground text-lg sm:text-xl tracking-wide mt-8 mr-6">
             Craving knowledge that ignites your curiosity? "Matrahin" fuels your
             mind with hyper-realistic simulations. Master complex concepts,
             solve real-world problems, and prepare for a future beyond limits.
@@ -35,7 +35,7 @@ export default function Hero() {
             </Link>
           </div>
         </div>
-        <MathElements className="hidden sm:block flex-1 scale-125 sm:scale-110 -z-10" />
+        <MathElements className="flex-1 scale-125 sm:scale-110 -z-10" />
       </div>
     </section>
   );

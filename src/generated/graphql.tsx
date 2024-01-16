@@ -5054,7 +5054,10 @@ export enum _SystemDateTimeFieldVariation {
   Localization = 'localization'
 }
 
-export type GetTeamMembersQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetTeamMembersQueryVariables = Exact<{
+  width?: InputMaybe<Scalars['Int']['input']>;
+  height?: InputMaybe<Scalars['Int']['input']>;
+}>;
 
 
 export type GetTeamMembersQuery = { __typename?: 'Query', members: Array<{ __typename?: 'TeamMember', id: string, name: string, designation: string, image: { __typename?: 'Asset', height?: number | null, width?: number | null, src: string } }> };
