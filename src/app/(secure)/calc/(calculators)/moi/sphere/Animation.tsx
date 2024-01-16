@@ -75,9 +75,8 @@ const SphereComponent = () => {
       {/* thin or hollow */}
       <group
         visible={
-          (caseType === CaseOfInertia.Thin ||
-            caseType === CaseOfInertia.Hollow) &&
-          !isSliced
+          caseType === CaseOfInertia.Thin ||
+          (caseType === CaseOfInertia.Hollow && !isSliced)
         }
       >
         <mesh>
@@ -92,7 +91,7 @@ const SphereComponent = () => {
           <lineBasicMaterial {...wireframeMaterial} />
         </lineSegments>
       </group>
-      <group visible={isSliced}>
+      <group visible={caseType === CaseOfInertia.Hollow && isSliced}>
         <mesh>
           <sphereGeometry args={modifiedSphereArgs} />
           <meshBasicMaterial {...solidMaterial} />

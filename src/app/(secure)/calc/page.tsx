@@ -26,9 +26,11 @@ export default function HomePage() {
   return (
     <main>
       <section className="mt-6 mx-20 p-3">
-        <h1 className="text-center text-3xl font-bold">Physics Calculator</h1>
+        <h1 className="text-center text-3xl font-bold">
+          Tools Available at Matrahin
+        </h1>
 
-        <div className="mt-10 grid grid-cols-3 gap-x-6 gap-y-10">
+        <div className="mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
           {cards.map((card) => (
             <ProjectCard key={card.title} {...card} />
           ))}

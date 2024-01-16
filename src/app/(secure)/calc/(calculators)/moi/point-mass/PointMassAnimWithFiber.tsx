@@ -13,13 +13,13 @@ const PointMass = () => {
   });
   return (
     <group ref={ref}>
-      <mesh position={[1, 1, 0]}>
+      <mesh position={[2, 1, 0]}>
         <sphereGeometry attach={"geometry"} args={[0.05]} />
         <meshPhongMaterial {...solidMaterial} />
       </mesh>
 
       <arrowHelper
-        args={[new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), 1]}
+        args={[new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), 2]}
       />
     </group>
   );

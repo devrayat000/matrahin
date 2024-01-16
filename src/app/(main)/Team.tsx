@@ -1,44 +1,56 @@
-import { Linkedin, Twitter } from "lucide-react";
+// import { Linkedin, Twitter } from "lucide-react";
+// import { buttonVariants } from "~/components/ui/button";
 import Image from "next/image";
-import rain from "~/assets/cards/rain.jpg";
-import { buttonVariants } from "~/components/ui/button";
+import { use } from "react";
+import {
+  GetTeamMembersQuery,
+  GetTeamMembersQueryVariables,
+} from "~/generated/graphql";
+import { gql, gqlClient } from "~/lib/utils";
 
-const members = [
-  {
-    name: "John Doe",
-    designation: "CEO",
-    image: rain,
-    linkedin: "https://www.linkedin.com/",
-    twitter: "https://twitter.com/",
-  },
-  {
-    name: "John Doe",
-    designation: "CEO",
-    image: rain,
-    linkedin: "https://www.linkedin.com/",
-    twitter: "https://twitter.com/",
-  },
-  {
-    name: "John Doe",
-    designation: "CEO",
-    image: rain,
-    linkedin: "https://www.linkedin.com/",
-    twitter: "https://twitter.com/",
-  },
-  {
-    name: "John Doe",
-    designation: "CEO",
-    image: rain,
-    linkedin: "https://www.linkedin.com/",
-    twitter: "https://twitter.com/",
-  },
-];
+const MEMBERS_QUERY = gql`
+  query GetTeamMembers {
+    members: teamMembers(orderBy: publishedAt_ASC) {
+      id
+      name
+      designation
+      image {
+        src: url(
+          transformation: {
+            image: { resize: { fit: crop, width: 320, height: 384 } }
+          }
+        )
+        height
+        width
+      }
+    }
+  }
+`;
+
+async function getMembers() {
+  const { members } = await gqlClient.request<
+    GetTeamMembersQuery,
+    GetTeamMembersQueryVariables
+  >(MEMBERS_QUERY, undefined, {
+    next: { revalidate: 3600 },
+  });
+  return members;
+}
 
 export default function Team() {
+  const members = use(getMembers());
+
+  const imageSize = {
+    width: 320,
+    get height() {
+      return (this.width / 5) * 6;
+    },
+  };
+
   return (
-    <div className="bg-white py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl lg:text-center">
+    <section id="team" className="container bg-white py-12 sm:py-16">
+      <div className="mx-auto px-12 md:px-16">
+        <div className="mx-auto lg:text-center">
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             Our Team
           </h2>
@@ -47,27 +59,30 @@ export default function Team() {
             we do and dedicated to delivering the best results for our clients.
           </p>
         </div>
-        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-          <dl className="grid grid-cols-4 gap-x-8">
+        <div className="mx-auto mt-16 sm:mt-20 lg:mt-24">
+          <dl className="flex flex-wrap justify-center items-start gap-y-4 gap-x-8">
             {members.map((member, i) => (
-              <div key={member.name} className="">
+              <div key={member.name} className="shrink-0">
                 <Image
                   {...member.image}
                   alt={member.name}
                   aria-hidden="true"
-                  width={420}
-                  className="aspect-[5_/_6] rounded-lg"
+                  {...imageSize}
+                  className="rounded-lg"
                 />
                 <div className="mt-4">
                   <dt className="text-xl font-bold leading-7 text-gray-900">
                     {member.name}
                   </dt>
                   <dd>
-                    <p className="text-base leading-7 text-muted-foreground font-medium">
-                      {member.designation}
-                    </p>
+                    <p
+                      className="text-base leading-7 text-muted-foreground font-medium"
+                      dangerouslySetInnerHTML={{
+                        __html: member.designation.replace("\n", "<br/>"),
+                      }}
+                    />
                     <div className="flex gap-4 mt-2">
-                      <a
+                      {/* <a
                         href={member.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -82,7 +97,7 @@ export default function Team() {
                         className="group"
                       >
                         <Twitter className="w-5 h-5 fill-slate-400 group-hover:fill-slate-500 transition-colors stroke-none" />
-                      </a>
+                      </a> */}
                     </div>
                   </dd>
                 </div>
@@ -91,6 +106,6 @@ export default function Team() {
           </dl>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

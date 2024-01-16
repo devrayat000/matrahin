@@ -1,11 +1,19 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
+import VectorDisplay from "~/components/project/vector/VectorDisplay";
 import { Button } from "~/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import {
@@ -16,15 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import {
-  Form,
-  FormControl,
-  FormItem,
-  FormField,
-  FormMessage,
-} from "~/components/ui/form";
 import Vector from "~/lib/vector";
-import VectorDisplay from "~/components/project/vector/VectorDisplay";
 
 const vectorSchema = z.object({
   a: z.tuple([

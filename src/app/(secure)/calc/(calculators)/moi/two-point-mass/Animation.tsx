@@ -13,7 +13,7 @@ const PointMass = () => {
   });
   return (
     <group ref={ref}>
-      <mesh position={[1, 1, 0]}>
+      <mesh position={[2, 1, 0]}>
         <sphereGeometry attach={"geometry"} args={[0.05]} />
         <meshPhongMaterial
           attach={"material"}
@@ -23,7 +23,7 @@ const PointMass = () => {
           flatShading={true}
         />
       </mesh>
-      <mesh position={[-1, 1, 0]}>
+      <mesh position={[-2, 1, 0]}>
         <sphereGeometry attach={"geometry"} args={[0.05]} />
         <meshPhongMaterial
           attach={"material"}
@@ -35,7 +35,7 @@ const PointMass = () => {
       </mesh>
 
       <Line
-        points={[new THREE.Vector3(1, 1, 0), new THREE.Vector3(-1, 1, 0)]}
+        points={[new THREE.Vector3(2, 1, 0), new THREE.Vector3(-2, 1, 0)]}
       />
     </group>
   );
