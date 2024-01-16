@@ -17,9 +17,13 @@ import {
   PublishStudentMutation,
   PublishStudentMutationVariables,
 } from "~/generated/graphql";
-import { getSession } from "next-auth/react";
+import { getSession as getAuthSession } from "next-auth/react";
 import { cache } from "react";
-import { revalidateTag } from "next/cache";
+import { revalidateTag, unstable_cache } from "next/cache";
+
+export const getSession = unstable_cache(getAuthSession, ["login"], {
+  tags: ["login"],
+});
 
 // You'll need to import and pass this
 // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
