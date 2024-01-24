@@ -24,6 +24,7 @@ export default function BoatRiverPage() {
   const [error, setError] = useState<boolean>(false);
   const [angleGiven, setAngleGiven] = useState<boolean>(false);
   const [mode, setMode] = useState<"general" | "min_path">("general");
+  // @ts-ignore
   const setBoatRiverParams = useSetAtom(boatRiverAtom);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {

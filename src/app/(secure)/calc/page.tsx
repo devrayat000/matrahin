@@ -1,29 +1,51 @@
 import Link from "next/link";
-import Image, { type StaticImageData } from "next/image";
+import Image from "next/image";
 import type { Url } from "next/dist/shared/lib/router/router";
 
-import projectile from "~/assets/cards/projectile.png";
-import rain from "~/assets/cards/rain.jpg";
-import vector from "~/assets/cards/vector.jpg";
-import boat from "~/assets/cards/boat.jpg";
-import dynamics from "~/assets/cards/dynamics.webp";
-import electric from "~/assets/cards/electric.png";
-import pendulum from "~/assets/cards/pendulum_card.jpg";
-import inertia from "~/assets/cards/inertia.jpg";
 import { buttonVariants } from "~/components/ui/button";
+import { gql, gqlClient } from "~/lib/utils";
+import {
+  GetCalculatorsQuery,
+  GetCalculatorsQueryVariables,
+} from "~/generated/graphql";
+import { use } from "react";
 
-const cards = [
-  { to: "projectile", img: projectile, title: "Projectile" },
-  { to: "rain", img: rain, title: "Rain" },
-  { to: "vector", img: vector, title: "Vector" },
-  { to: "boat-river", img: boat, title: "Boat River" },
-  { to: "dynamics", img: dynamics, title: "Dynamics" },
-  { to: "electric-force", img: electric, title: "Electric Force" },
-  { to: "pendulum", img: pendulum, title: "Pendulum" },
-  { to: "moi", img: inertia, title: "Moment of Inertia" },
-];
+const CALCULATORS_QUERY = gql`
+  query GetCalculators($width: Int = 320, $height: Int = 180) {
+    products {
+      id
+      title: name
+      to: slug
+      img: coverImage {
+        src: url(
+          transformation: {
+            image: { resize: { height: $height, width: $width, fit: crop } }
+          }
+        )
+        width
+        height
+      }
+    }
+  }
+`;
+
+function getCalculators(variables?: GetCalculatorsQueryVariables) {
+  return gqlClient.request<GetCalculatorsQuery, GetCalculatorsQueryVariables>(
+    CALCULATORS_QUERY,
+    variables,
+    { cache: "no-store" }
+  );
+}
 
 export default function HomePage() {
+  const imageSize = {
+    width: 420,
+    get height() {
+      return Math.round((this.width / 16) * 9);
+    },
+  };
+  const { products: cards } = use(getCalculators(imageSize));
+
   return (
     <main>
       <section className="mt-6 sm:mx-20 p-3">
@@ -48,7 +70,7 @@ export default function HomePage() {
 
         <div className="mt-10 grid md:grid-cols-2 lg:grid-cols-3 place-items-center gap-x-6 gap-y-10">
           {cards.map((card) => (
-            <ProjectCard key={card.title} {...card} />
+            <ProjectCard key={card.id} {...card} />
           ))}
         </div>
       </section>
@@ -58,7 +80,7 @@ export default function HomePage() {
 
 interface ProjectCardProps {
   to: Url;
-  img: StaticImageData;
+  img: { src: string };
   title: string;
 }
 
@@ -67,7 +89,7 @@ function ProjectCard(props: ProjectCardProps) {
     <div className="card rounded-md shadow-md hover:shadow-lg transition ease-in-out overflow-hidden">
       <Image
         {...props.img}
-        width={320}
+        width={420}
         alt="projectile"
         className="aspect-video object-fill"
       />

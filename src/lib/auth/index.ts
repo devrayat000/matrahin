@@ -85,27 +85,31 @@ export const authConfig = {
 } satisfies NextAuthOptions;
 
 // Use it in server contexts
-export function auth(): Promise<Session>;
-export function auth(
-  req: GetServerSidePropsContext["req"],
-  res: GetServerSidePropsContext["res"]
-): Promise<Session>;
-export function auth(
-  req: NextApiRequest,
-  res: NextApiResponse
-): Promise<Session>;
-export function auth(
-  ...args:
-    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
-    | [NextApiRequest, NextApiResponse]
-    | []
-) {
-  if (typeof window !== "undefined") {
-    return getSession({ req: args[0] });
-  } else {
-    return getServerSession(...args, authConfig);
-  }
+interface Auth {
+  (): Promise<Session>;
+  (
+    req: GetServerSidePropsContext["req"],
+    res: GetServerSidePropsContext["res"]
+  ): Promise<Session>;
+  (req: NextApiRequest, res: NextApiResponse): Promise<Session>;
 }
+
+export const auth: Auth = unstable_cache(
+  (
+    ...args:
+      | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
+      | [NextApiRequest, NextApiResponse]
+      | []
+  ) => {
+    if (typeof window !== "undefined") {
+      return getSession({ req: args[0] });
+    } else {
+      return getServerSession(...args, authConfig);
+    }
+  },
+  ["login"],
+  { tags: ["login"] }
+);
 
 export async function findOrCreateUser(params: Student) {
   try {
