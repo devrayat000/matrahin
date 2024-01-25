@@ -22,9 +22,9 @@ export const metadata: Metadata = {
       },
     ],
     title: "Matrahin",
-    url: "https://matrahin.com",
+    url: new URL("https://matrahin.com"),
   },
-  alternates: { canonical: "https://matrahin.com" },
+  alternates: { canonical: new URL("https://matrahin.com") },
   category: "EdTech",
   metadataBase: new URL("https://matrahin.com"),
 };

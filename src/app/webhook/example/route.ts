@@ -1,5 +1,5 @@
 import { verifyWebhookSignature } from "@hygraph/utils";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -14,7 +14,8 @@ export async function POST(request: Request) {
     return new Response("Invalid signature", { status: 401 });
   }
 
-  revalidatePath("/calc", "page");
-  revalidateTag("calculator_count");
+  console.log(body.data);
+
+  revalidateTag(`example:${body.data.slug}`);
   return new Response("OK", { status: 200 });
 }

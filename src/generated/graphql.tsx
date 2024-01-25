@@ -6624,6 +6624,13 @@ export type GetTeamMembersQueryVariables = Exact<{
 
 export type GetTeamMembersQuery = { __typename?: 'Query', members: Array<{ __typename?: 'TeamMember', id: string, name: string, designation: string, image: { __typename?: 'Asset', height?: number | null, width?: number | null, src: string } }> };
 
+export type GetExamplesQueryVariables = Exact<{
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type GetExamplesQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: string, name: string, tutorial?: string | null, examples: Array<{ __typename?: 'Example', id: string, source?: string | null, question: { __typename?: 'Asset', src: string }, answers: Array<{ __typename?: 'Asset', src: string }> }> } | null };
+
 export type GetCalculatorsQueryVariables = Exact<{
   width?: InputMaybe<Scalars['Int']['input']>;
   height?: InputMaybe<Scalars['Int']['input']>;
