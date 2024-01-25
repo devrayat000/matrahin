@@ -12,7 +12,7 @@ export default function drawArrow(
   from: { x: number; y: number },
   to: { x: number; y: number },
   radius: number,
-  color: string,
+  color: string = "black",
   isDotted: boolean = false
 ) {
   context.fillStyle = color;

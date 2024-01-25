@@ -1,0 +1,63 @@
+"use client";
+
+import { useAtom, useSetAtom } from "jotai";
+import InputWithSlider from "~/components/ui/input-with-slider";
+import { inputValuesAtom, rainUmbrellaData, resultAtom } from "./store";
+
+const InputAndResult = () => {
+  const [inputValues, setInputValues] = useAtom(inputValuesAtom);
+  const setResultValues = useSetAtom(resultAtom);
+
+  const handleChangeInput = (id: number, value: string) => {
+    setInputValues((prevVelocities) =>
+      prevVelocities.map((velocity, index) =>
+        index === id ? parseFloat(value) : velocity
+      )
+    );
+  };
+  const handleSubmit = () => {
+    const rainVelocity = inputValues;
+    const v_wind_object = rainVelocity[2] - rainVelocity[1];
+    const v_rain_object_angle =
+      Math.PI - Math.atan(rainVelocity[0] / v_wind_object);
+    const v_rain_object_magnitude = Math.sqrt(
+      rainVelocity[0] ** 2 + v_wind_object ** 2
+    );
+
+    setResultValues({
+      v_rain: rainVelocity[0],
+      v_object: rainVelocity[1],
+      v_wind: rainVelocity[2],
+      v_wind_object,
+      v_rain_object_angle,
+      v_rain_object_magnitude,
+    });
+  };
+  return (
+    <>
+      <div className="flex flex-row flex-wrap justify-center gap-4 items-center">
+        {rainUmbrellaData.map(({ label, helperText }, index) => (
+          <InputWithSlider
+            key={index}
+            id={index}
+            label={label}
+            value={inputValues[index]}
+            helperText={helperText}
+            onChangeInput={handleChangeInput}
+          />
+        ))}
+      </div>
+      <div className="flex flex-row flex-wrap justify-center gap-4 items-center">
+        <button
+          title="Calculate Result"
+          className="bg-primary text-white p-2 rounded-md"
+          onClick={handleSubmit}
+        >
+          Calculate
+        </button>
+      </div>
+    </>
+  );
+};
+
+export default InputAndResult;
