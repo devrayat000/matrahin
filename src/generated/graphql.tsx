@@ -22,6 +22,438 @@ export type Scalars = {
   RichTextAST: { input: any; output: any; }
 };
 
+export type AccessCode = Entity & Node & {
+  __typename?: 'AccessCode';
+  code: Scalars['String']['output'];
+  /** The time the document was created */
+  createdAt: Scalars['DateTime']['output'];
+  /** User that created this document */
+  createdBy?: Maybe<User>;
+  /** Get the document in other stages */
+  documentInStages: Array<AccessCode>;
+  /** List of AccessCode versions */
+  history: Array<Version>;
+  /** The unique identifier */
+  id: Scalars['ID']['output'];
+  /** The time the document was published. Null on documents in draft stage. */
+  publishedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** User that last published this document */
+  publishedBy?: Maybe<User>;
+  scheduledIn: Array<ScheduledOperation>;
+  /** System stage field */
+  stage: Stage;
+  /** The time the document was updated */
+  updatedAt: Scalars['DateTime']['output'];
+  /** User that last updated this document */
+  updatedBy?: Maybe<User>;
+};
+
+
+export type AccessCodeCreatedByArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']['input']>;
+  locales?: InputMaybe<Array<Locale>>;
+};
+
+
+export type AccessCodeDocumentInStagesArgs = {
+  includeCurrent?: Scalars['Boolean']['input'];
+  inheritLocale?: Scalars['Boolean']['input'];
+  stages?: Array<Stage>;
+};
+
+
+export type AccessCodeHistoryArgs = {
+  limit?: Scalars['Int']['input'];
+  skip?: Scalars['Int']['input'];
+  stageOverride?: InputMaybe<Stage>;
+};
+
+
+export type AccessCodePublishedByArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']['input']>;
+  locales?: InputMaybe<Array<Locale>>;
+};
+
+
+export type AccessCodeScheduledInArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  forceParentLocale?: InputMaybe<Scalars['Boolean']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  locales?: InputMaybe<Array<Locale>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<ScheduledOperationWhereInput>;
+};
+
+
+export type AccessCodeUpdatedByArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']['input']>;
+  locales?: InputMaybe<Array<Locale>>;
+};
+
+export type AccessCodeConnectInput = {
+  /** Allow to specify document position in list of connected documents, will default to appending at end of list */
+  position?: InputMaybe<ConnectPositionInput>;
+  /** Document to connect */
+  where: AccessCodeWhereUniqueInput;
+};
+
+/** A connection to a list of items. */
+export type AccessCodeConnection = {
+  __typename?: 'AccessCodeConnection';
+  aggregate: Aggregate;
+  /** A list of edges. */
+  edges: Array<AccessCodeEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+export type AccessCodeCreateInput = {
+  code: Scalars['String']['input'];
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type AccessCodeCreateManyInlineInput = {
+  /** Connect multiple existing AccessCode documents */
+  connect?: InputMaybe<Array<AccessCodeWhereUniqueInput>>;
+  /** Create and connect multiple existing AccessCode documents */
+  create?: InputMaybe<Array<AccessCodeCreateInput>>;
+};
+
+export type AccessCodeCreateOneInlineInput = {
+  /** Connect one existing AccessCode document */
+  connect?: InputMaybe<AccessCodeWhereUniqueInput>;
+  /** Create and connect one AccessCode document */
+  create?: InputMaybe<AccessCodeCreateInput>;
+};
+
+/** An edge in a connection. */
+export type AccessCodeEdge = {
+  __typename?: 'AccessCodeEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: AccessCode;
+};
+
+/** Identifies documents */
+export type AccessCodeManyWhereInput = {
+  /** Logical AND on all given filters. */
+  AND?: InputMaybe<Array<AccessCodeWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: InputMaybe<Array<AccessCodeWhereInput>>;
+  /** Logical OR on all given filters. */
+  OR?: InputMaybe<Array<AccessCodeWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  _search?: InputMaybe<Scalars['String']['input']>;
+  code?: InputMaybe<Scalars['String']['input']>;
+  /** All values containing the given string. */
+  code_contains?: InputMaybe<Scalars['String']['input']>;
+  /** All values ending with the given string. */
+  code_ends_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values that are contained in given list. */
+  code_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Any other value that exists and is not equal to the given value. */
+  code_not?: InputMaybe<Scalars['String']['input']>;
+  /** All values not containing the given string. */
+  code_not_contains?: InputMaybe<Scalars['String']['input']>;
+  /** All values not ending with the given string */
+  code_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values that are not contained in given list. */
+  code_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** All values not starting with the given string. */
+  code_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values starting with the given string. */
+  code_starts_with?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values greater than the given value. */
+  createdAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values greater than or equal the given value. */
+  createdAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values that are contained in given list. */
+  createdAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  /** All values less than the given value. */
+  createdAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values less than or equal the given value. */
+  createdAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Any other value that exists and is not equal to the given value. */
+  createdAt_not?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values that are not contained in given list. */
+  createdAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  createdBy?: InputMaybe<UserWhereInput>;
+  documentInStages_every?: InputMaybe<AccessCodeWhereStageInput>;
+  documentInStages_none?: InputMaybe<AccessCodeWhereStageInput>;
+  documentInStages_some?: InputMaybe<AccessCodeWhereStageInput>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** All values containing the given string. */
+  id_contains?: InputMaybe<Scalars['ID']['input']>;
+  /** All values ending with the given string. */
+  id_ends_with?: InputMaybe<Scalars['ID']['input']>;
+  /** All values that are contained in given list. */
+  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  /** Any other value that exists and is not equal to the given value. */
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  /** All values not containing the given string. */
+  id_not_contains?: InputMaybe<Scalars['ID']['input']>;
+  /** All values not ending with the given string */
+  id_not_ends_with?: InputMaybe<Scalars['ID']['input']>;
+  /** All values that are not contained in given list. */
+  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: InputMaybe<Scalars['ID']['input']>;
+  /** All values starting with the given string. */
+  id_starts_with?: InputMaybe<Scalars['ID']['input']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values greater than the given value. */
+  publishedAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values greater than or equal the given value. */
+  publishedAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values that are contained in given list. */
+  publishedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  /** All values less than the given value. */
+  publishedAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values less than or equal the given value. */
+  publishedAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Any other value that exists and is not equal to the given value. */
+  publishedAt_not?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values that are not contained in given list. */
+  publishedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  publishedBy?: InputMaybe<UserWhereInput>;
+  scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
+  scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
+  scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values greater than the given value. */
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values greater than or equal the given value. */
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values that are contained in given list. */
+  updatedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  /** All values less than the given value. */
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values less than or equal the given value. */
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Any other value that exists and is not equal to the given value. */
+  updatedAt_not?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values that are not contained in given list. */
+  updatedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  updatedBy?: InputMaybe<UserWhereInput>;
+};
+
+export enum AccessCodeOrderByInput {
+  CodeAsc = 'code_ASC',
+  CodeDesc = 'code_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  PublishedAtAsc = 'publishedAt_ASC',
+  PublishedAtDesc = 'publishedAt_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC'
+}
+
+export type AccessCodeUpdateInput = {
+  code?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type AccessCodeUpdateManyInlineInput = {
+  /** Connect multiple existing AccessCode documents */
+  connect?: InputMaybe<Array<AccessCodeConnectInput>>;
+  /** Create and connect multiple AccessCode documents */
+  create?: InputMaybe<Array<AccessCodeCreateInput>>;
+  /** Delete multiple AccessCode documents */
+  delete?: InputMaybe<Array<AccessCodeWhereUniqueInput>>;
+  /** Disconnect multiple AccessCode documents */
+  disconnect?: InputMaybe<Array<AccessCodeWhereUniqueInput>>;
+  /** Override currently-connected documents with multiple existing AccessCode documents */
+  set?: InputMaybe<Array<AccessCodeWhereUniqueInput>>;
+  /** Update multiple AccessCode documents */
+  update?: InputMaybe<Array<AccessCodeUpdateWithNestedWhereUniqueInput>>;
+  /** Upsert multiple AccessCode documents */
+  upsert?: InputMaybe<Array<AccessCodeUpsertWithNestedWhereUniqueInput>>;
+};
+
+export type AccessCodeUpdateManyInput = {
+  /** No fields in updateMany data input */
+  _?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type AccessCodeUpdateManyWithNestedWhereInput = {
+  /** Update many input */
+  data: AccessCodeUpdateManyInput;
+  /** Document search */
+  where: AccessCodeWhereInput;
+};
+
+export type AccessCodeUpdateOneInlineInput = {
+  /** Connect existing AccessCode document */
+  connect?: InputMaybe<AccessCodeWhereUniqueInput>;
+  /** Create and connect one AccessCode document */
+  create?: InputMaybe<AccessCodeCreateInput>;
+  /** Delete currently connected AccessCode document */
+  delete?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Disconnect currently connected AccessCode document */
+  disconnect?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Update single AccessCode document */
+  update?: InputMaybe<AccessCodeUpdateWithNestedWhereUniqueInput>;
+  /** Upsert single AccessCode document */
+  upsert?: InputMaybe<AccessCodeUpsertWithNestedWhereUniqueInput>;
+};
+
+export type AccessCodeUpdateWithNestedWhereUniqueInput = {
+  /** Document to update */
+  data: AccessCodeUpdateInput;
+  /** Unique document search */
+  where: AccessCodeWhereUniqueInput;
+};
+
+export type AccessCodeUpsertInput = {
+  /** Create document if it didn't exist */
+  create: AccessCodeCreateInput;
+  /** Update document if it exists */
+  update: AccessCodeUpdateInput;
+};
+
+export type AccessCodeUpsertWithNestedWhereUniqueInput = {
+  /** Upsert data */
+  data: AccessCodeUpsertInput;
+  /** Unique document search */
+  where: AccessCodeWhereUniqueInput;
+};
+
+/** This contains a set of filters that can be used to compare values internally */
+export type AccessCodeWhereComparatorInput = {
+  /** This field can be used to request to check if the entry is outdated by internal comparison */
+  outdated_to?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Identifies documents */
+export type AccessCodeWhereInput = {
+  /** Logical AND on all given filters. */
+  AND?: InputMaybe<Array<AccessCodeWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: InputMaybe<Array<AccessCodeWhereInput>>;
+  /** Logical OR on all given filters. */
+  OR?: InputMaybe<Array<AccessCodeWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  _search?: InputMaybe<Scalars['String']['input']>;
+  code?: InputMaybe<Scalars['String']['input']>;
+  /** All values containing the given string. */
+  code_contains?: InputMaybe<Scalars['String']['input']>;
+  /** All values ending with the given string. */
+  code_ends_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values that are contained in given list. */
+  code_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** Any other value that exists and is not equal to the given value. */
+  code_not?: InputMaybe<Scalars['String']['input']>;
+  /** All values not containing the given string. */
+  code_not_contains?: InputMaybe<Scalars['String']['input']>;
+  /** All values not ending with the given string */
+  code_not_ends_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values that are not contained in given list. */
+  code_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  /** All values not starting with the given string. */
+  code_not_starts_with?: InputMaybe<Scalars['String']['input']>;
+  /** All values starting with the given string. */
+  code_starts_with?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values greater than the given value. */
+  createdAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values greater than or equal the given value. */
+  createdAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values that are contained in given list. */
+  createdAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  /** All values less than the given value. */
+  createdAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values less than or equal the given value. */
+  createdAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Any other value that exists and is not equal to the given value. */
+  createdAt_not?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values that are not contained in given list. */
+  createdAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  createdBy?: InputMaybe<UserWhereInput>;
+  documentInStages_every?: InputMaybe<AccessCodeWhereStageInput>;
+  documentInStages_none?: InputMaybe<AccessCodeWhereStageInput>;
+  documentInStages_some?: InputMaybe<AccessCodeWhereStageInput>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  /** All values containing the given string. */
+  id_contains?: InputMaybe<Scalars['ID']['input']>;
+  /** All values ending with the given string. */
+  id_ends_with?: InputMaybe<Scalars['ID']['input']>;
+  /** All values that are contained in given list. */
+  id_in?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  /** Any other value that exists and is not equal to the given value. */
+  id_not?: InputMaybe<Scalars['ID']['input']>;
+  /** All values not containing the given string. */
+  id_not_contains?: InputMaybe<Scalars['ID']['input']>;
+  /** All values not ending with the given string */
+  id_not_ends_with?: InputMaybe<Scalars['ID']['input']>;
+  /** All values that are not contained in given list. */
+  id_not_in?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  /** All values not starting with the given string. */
+  id_not_starts_with?: InputMaybe<Scalars['ID']['input']>;
+  /** All values starting with the given string. */
+  id_starts_with?: InputMaybe<Scalars['ID']['input']>;
+  publishedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values greater than the given value. */
+  publishedAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values greater than or equal the given value. */
+  publishedAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values that are contained in given list. */
+  publishedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  /** All values less than the given value. */
+  publishedAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values less than or equal the given value. */
+  publishedAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Any other value that exists and is not equal to the given value. */
+  publishedAt_not?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values that are not contained in given list. */
+  publishedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  publishedBy?: InputMaybe<UserWhereInput>;
+  scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
+  scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
+  scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values greater than the given value. */
+  updatedAt_gt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values greater than or equal the given value. */
+  updatedAt_gte?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values that are contained in given list. */
+  updatedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  /** All values less than the given value. */
+  updatedAt_lt?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values less than or equal the given value. */
+  updatedAt_lte?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Any other value that exists and is not equal to the given value. */
+  updatedAt_not?: InputMaybe<Scalars['DateTime']['input']>;
+  /** All values that are not contained in given list. */
+  updatedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
+  updatedBy?: InputMaybe<UserWhereInput>;
+};
+
+/** The document in stages filter allows specifying a stage entry to cross compare the same document between different stages */
+export type AccessCodeWhereStageInput = {
+  /** Logical AND on all given filters. */
+  AND?: InputMaybe<Array<AccessCodeWhereStageInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  NOT?: InputMaybe<Array<AccessCodeWhereStageInput>>;
+  /** Logical OR on all given filters. */
+  OR?: InputMaybe<Array<AccessCodeWhereStageInput>>;
+  /** This field contains fields which can be set as true or false to specify an internal comparison */
+  compareWithParent?: InputMaybe<AccessCodeWhereComparatorInput>;
+  /** Specify the stage to compare with */
+  stage?: InputMaybe<Stage>;
+};
+
+/** References AccessCode record uniquely */
+export type AccessCodeWhereUniqueInput = {
+  code?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+};
+
 export type Aggregate = {
   __typename?: 'Aggregate';
   count: Scalars['Int']['output'];
@@ -881,6 +1313,7 @@ export type Entity = {
 
 /** This enumeration holds all typenames that implement the Entity interface. Components and models implement the Entity interface. */
 export enum EntityTypeName {
+  AccessCode = 'AccessCode',
   /** Asset system model */
   Asset = 'Asset',
   Example = 'Example',
@@ -1875,6 +2308,8 @@ export type LocationInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Create one accessCode */
+  createAccessCode?: Maybe<AccessCode>;
   /**
    * Create one asset
    * @deprecated Asset mutations will be overhauled soon
@@ -1892,12 +2327,21 @@ export type Mutation = {
   createStudent?: Maybe<Student>;
   /** Create one teamMember */
   createTeamMember?: Maybe<TeamMember>;
+  /** Delete one accessCode from _all_ existing stages. Returns deleted document. */
+  deleteAccessCode?: Maybe<AccessCode>;
   /** Delete one asset from _all_ existing stages. Returns deleted document. */
   deleteAsset?: Maybe<Asset>;
   /** Delete one example from _all_ existing stages. Returns deleted document. */
   deleteExample?: Maybe<Example>;
   /** Delete one history from _all_ existing stages. Returns deleted document. */
   deleteHistory?: Maybe<History>;
+  /**
+   * Delete many AccessCode documents
+   * @deprecated Please use the new paginated many mutation (deleteManyAccessCodesConnection)
+   */
+  deleteManyAccessCodes: BatchPayload;
+  /** Delete many AccessCode documents, return deleted documents */
+  deleteManyAccessCodesConnection: AccessCodeConnection;
   /**
    * Delete many Asset documents
    * @deprecated Please use the new paginated many mutation (deleteManyAssetsConnection)
@@ -1950,12 +2394,21 @@ export type Mutation = {
   deleteStudent?: Maybe<Student>;
   /** Delete one teamMember from _all_ existing stages. Returns deleted document. */
   deleteTeamMember?: Maybe<TeamMember>;
+  /** Publish one accessCode */
+  publishAccessCode?: Maybe<AccessCode>;
   /** Publish one asset */
   publishAsset?: Maybe<Asset>;
   /** Publish one example */
   publishExample?: Maybe<Example>;
   /** Publish one history */
   publishHistory?: Maybe<History>;
+  /**
+   * Publish many AccessCode documents
+   * @deprecated Please use the new paginated many mutation (publishManyAccessCodesConnection)
+   */
+  publishManyAccessCodes: BatchPayload;
+  /** Publish many AccessCode documents */
+  publishManyAccessCodesConnection: AccessCodeConnection;
   /**
    * Publish many Asset documents
    * @deprecated Please use the new paginated many mutation (publishManyAssetsConnection)
@@ -2004,6 +2457,8 @@ export type Mutation = {
   publishStudent?: Maybe<Student>;
   /** Publish one teamMember */
   publishTeamMember?: Maybe<TeamMember>;
+  /** Schedule to publish one accessCode */
+  schedulePublishAccessCode?: Maybe<AccessCode>;
   /** Schedule to publish one asset */
   schedulePublishAsset?: Maybe<Asset>;
   /** Schedule to publish one example */
@@ -2016,6 +2471,8 @@ export type Mutation = {
   schedulePublishStudent?: Maybe<Student>;
   /** Schedule to publish one teamMember */
   schedulePublishTeamMember?: Maybe<TeamMember>;
+  /** Unpublish one accessCode from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
+  scheduleUnpublishAccessCode?: Maybe<AccessCode>;
   /** Unpublish one asset from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   scheduleUnpublishAsset?: Maybe<Asset>;
   /** Unpublish one example from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -2028,12 +2485,21 @@ export type Mutation = {
   scheduleUnpublishStudent?: Maybe<Student>;
   /** Unpublish one teamMember from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   scheduleUnpublishTeamMember?: Maybe<TeamMember>;
+  /** Unpublish one accessCode from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
+  unpublishAccessCode?: Maybe<AccessCode>;
   /** Unpublish one asset from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   unpublishAsset?: Maybe<Asset>;
   /** Unpublish one example from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   unpublishExample?: Maybe<Example>;
   /** Unpublish one history from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   unpublishHistory?: Maybe<History>;
+  /**
+   * Unpublish many AccessCode documents
+   * @deprecated Please use the new paginated many mutation (unpublishManyAccessCodesConnection)
+   */
+  unpublishManyAccessCodes: BatchPayload;
+  /** Find many AccessCode documents that match criteria in specified stage and unpublish from target stages */
+  unpublishManyAccessCodesConnection: AccessCodeConnection;
   /**
    * Unpublish many Asset documents
    * @deprecated Please use the new paginated many mutation (unpublishManyAssetsConnection)
@@ -2082,12 +2548,21 @@ export type Mutation = {
   unpublishStudent?: Maybe<Student>;
   /** Unpublish one teamMember from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   unpublishTeamMember?: Maybe<TeamMember>;
+  /** Update one accessCode */
+  updateAccessCode?: Maybe<AccessCode>;
   /** Update one asset */
   updateAsset?: Maybe<Asset>;
   /** Update one example */
   updateExample?: Maybe<Example>;
   /** Update one history */
   updateHistory?: Maybe<History>;
+  /**
+   * Update many accessCodes
+   * @deprecated Please use the new paginated many mutation (updateManyAccessCodesConnection)
+   */
+  updateManyAccessCodes: BatchPayload;
+  /** Update many AccessCode documents */
+  updateManyAccessCodesConnection: AccessCodeConnection;
   /**
    * Update many assets
    * @deprecated Please use the new paginated many mutation (updateManyAssetsConnection)
@@ -2138,6 +2613,8 @@ export type Mutation = {
   updateStudent?: Maybe<Student>;
   /** Update one teamMember */
   updateTeamMember?: Maybe<TeamMember>;
+  /** Upsert one accessCode */
+  upsertAccessCode?: Maybe<AccessCode>;
   /** Upsert one asset */
   upsertAsset?: Maybe<Asset>;
   /** Upsert one example */
@@ -2150,6 +2627,11 @@ export type Mutation = {
   upsertStudent?: Maybe<Student>;
   /** Upsert one teamMember */
   upsertTeamMember?: Maybe<TeamMember>;
+};
+
+
+export type MutationCreateAccessCodeArgs = {
+  data: AccessCodeCreateInput;
 };
 
 
@@ -2188,6 +2670,11 @@ export type MutationCreateTeamMemberArgs = {
 };
 
 
+export type MutationDeleteAccessCodeArgs = {
+  where: AccessCodeWhereUniqueInput;
+};
+
+
 export type MutationDeleteAssetArgs = {
   where: AssetWhereUniqueInput;
 };
@@ -2200,6 +2687,21 @@ export type MutationDeleteExampleArgs = {
 
 export type MutationDeleteHistoryArgs = {
   where: HistoryWhereUniqueInput;
+};
+
+
+export type MutationDeleteManyAccessCodesArgs = {
+  where?: InputMaybe<AccessCodeManyWhereInput>;
+};
+
+
+export type MutationDeleteManyAccessCodesConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']['input']>;
+  before?: InputMaybe<Scalars['ID']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<AccessCodeManyWhereInput>;
 };
 
 
@@ -2318,6 +2820,12 @@ export type MutationDeleteTeamMemberArgs = {
 };
 
 
+export type MutationPublishAccessCodeArgs = {
+  to?: Array<Stage>;
+  where: AccessCodeWhereUniqueInput;
+};
+
+
 export type MutationPublishAssetArgs = {
   locales?: InputMaybe<Array<Locale>>;
   publishBase?: InputMaybe<Scalars['Boolean']['input']>;
@@ -2336,6 +2844,24 @@ export type MutationPublishExampleArgs = {
 export type MutationPublishHistoryArgs = {
   to?: Array<Stage>;
   where: HistoryWhereUniqueInput;
+};
+
+
+export type MutationPublishManyAccessCodesArgs = {
+  to?: Array<Stage>;
+  where?: InputMaybe<AccessCodeManyWhereInput>;
+};
+
+
+export type MutationPublishManyAccessCodesConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']['input']>;
+  before?: InputMaybe<Scalars['ID']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  from?: InputMaybe<Stage>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  to?: Array<Stage>;
+  where?: InputMaybe<AccessCodeManyWhereInput>;
 };
 
 
@@ -2471,6 +2997,14 @@ export type MutationPublishTeamMemberArgs = {
 };
 
 
+export type MutationSchedulePublishAccessCodeArgs = {
+  releaseAt?: InputMaybe<Scalars['DateTime']['input']>;
+  releaseId?: InputMaybe<Scalars['String']['input']>;
+  to?: Array<Stage>;
+  where: AccessCodeWhereUniqueInput;
+};
+
+
 export type MutationSchedulePublishAssetArgs = {
   locales?: InputMaybe<Array<Locale>>;
   publishBase?: InputMaybe<Scalars['Boolean']['input']>;
@@ -2519,6 +3053,14 @@ export type MutationSchedulePublishTeamMemberArgs = {
   releaseId?: InputMaybe<Scalars['String']['input']>;
   to?: Array<Stage>;
   where: TeamMemberWhereUniqueInput;
+};
+
+
+export type MutationScheduleUnpublishAccessCodeArgs = {
+  from?: Array<Stage>;
+  releaseAt?: InputMaybe<Scalars['DateTime']['input']>;
+  releaseId?: InputMaybe<Scalars['String']['input']>;
+  where: AccessCodeWhereUniqueInput;
 };
 
 
@@ -2572,6 +3114,12 @@ export type MutationScheduleUnpublishTeamMemberArgs = {
 };
 
 
+export type MutationUnpublishAccessCodeArgs = {
+  from?: Array<Stage>;
+  where: AccessCodeWhereUniqueInput;
+};
+
+
 export type MutationUnpublishAssetArgs = {
   from?: Array<Stage>;
   locales?: InputMaybe<Array<Locale>>;
@@ -2589,6 +3137,24 @@ export type MutationUnpublishExampleArgs = {
 export type MutationUnpublishHistoryArgs = {
   from?: Array<Stage>;
   where: HistoryWhereUniqueInput;
+};
+
+
+export type MutationUnpublishManyAccessCodesArgs = {
+  from?: Array<Stage>;
+  where?: InputMaybe<AccessCodeManyWhereInput>;
+};
+
+
+export type MutationUnpublishManyAccessCodesConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']['input']>;
+  before?: InputMaybe<Scalars['ID']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  from?: Array<Stage>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  stage?: InputMaybe<Stage>;
+  where?: InputMaybe<AccessCodeManyWhereInput>;
 };
 
 
@@ -2722,6 +3288,12 @@ export type MutationUnpublishTeamMemberArgs = {
 };
 
 
+export type MutationUpdateAccessCodeArgs = {
+  data: AccessCodeUpdateInput;
+  where: AccessCodeWhereUniqueInput;
+};
+
+
 export type MutationUpdateAssetArgs = {
   data: AssetUpdateInput;
   where: AssetWhereUniqueInput;
@@ -2737,6 +3309,23 @@ export type MutationUpdateExampleArgs = {
 export type MutationUpdateHistoryArgs = {
   data: HistoryUpdateInput;
   where: HistoryWhereUniqueInput;
+};
+
+
+export type MutationUpdateManyAccessCodesArgs = {
+  data: AccessCodeUpdateManyInput;
+  where?: InputMaybe<AccessCodeManyWhereInput>;
+};
+
+
+export type MutationUpdateManyAccessCodesConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']['input']>;
+  before?: InputMaybe<Scalars['ID']['input']>;
+  data: AccessCodeUpdateManyInput;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<AccessCodeManyWhereInput>;
 };
 
 
@@ -2863,6 +3452,12 @@ export type MutationUpdateStudentArgs = {
 export type MutationUpdateTeamMemberArgs = {
   data: TeamMemberUpdateInput;
   where: TeamMemberWhereUniqueInput;
+};
+
+
+export type MutationUpsertAccessCodeArgs = {
+  upsert: AccessCodeUpsertInput;
+  where: AccessCodeWhereUniqueInput;
 };
 
 
@@ -3528,6 +4123,14 @@ export type PublishLocaleInput = {
 
 export type Query = {
   __typename?: 'Query';
+  /** Retrieve a single accessCode */
+  accessCode?: Maybe<AccessCode>;
+  /** Retrieve document version */
+  accessCodeVersion?: Maybe<DocumentVersion>;
+  /** Retrieve multiple accessCodes */
+  accessCodes: Array<AccessCode>;
+  /** Retrieve multiple accessCodes using the Relay connection interface */
+  accessCodesConnection: AccessCodeConnection;
   /** Retrieve a single asset */
   asset?: Maybe<Asset>;
   /** Retrieve document version */
@@ -3598,6 +4201,44 @@ export type Query = {
   users: Array<User>;
   /** Retrieve multiple users using the Relay connection interface */
   usersConnection: UserConnection;
+};
+
+
+export type QueryAccessCodeArgs = {
+  locales?: Array<Locale>;
+  stage?: Stage;
+  where: AccessCodeWhereUniqueInput;
+};
+
+
+export type QueryAccessCodeVersionArgs = {
+  where: VersionWhereInput;
+};
+
+
+export type QueryAccessCodesArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  locales?: Array<Locale>;
+  orderBy?: InputMaybe<AccessCodeOrderByInput>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  stage?: Stage;
+  where?: InputMaybe<AccessCodeWhereInput>;
+};
+
+
+export type QueryAccessCodesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  locales?: Array<Locale>;
+  orderBy?: InputMaybe<AccessCodeOrderByInput>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  stage?: Stage;
+  where?: InputMaybe<AccessCodeWhereInput>;
 };
 
 
@@ -4051,7 +4692,7 @@ export type ScheduledOperationUpdatedByArgs = {
   locales?: InputMaybe<Array<Locale>>;
 };
 
-export type ScheduledOperationAffectedDocument = Asset | Example | History | Product | Student | TeamMember;
+export type ScheduledOperationAffectedDocument = AccessCode | Asset | Example | History | Product | Student | TeamMember;
 
 export type ScheduledOperationConnectInput = {
   /** Allow to specify document position in list of connected documents, will default to appending at end of list */
@@ -6629,7 +7270,7 @@ export type GetExamplesQueryVariables = Exact<{
 }>;
 
 
-export type GetExamplesQuery = { __typename?: 'Query', product?: { __typename?: 'Product', id: string, name: string, tutorial?: string | null, examples: Array<{ __typename?: 'Example', id: string, source?: string | null, question: { __typename?: 'Asset', src: string }, answers: Array<{ __typename?: 'Asset', src: string }> }> } | null };
+export type GetExamplesQuery = { __typename?: 'Query', product?: { __typename?: 'Product', name: string, tutorial?: string | null, examples: Array<{ __typename?: 'Example', id: string, source?: string | null, question: { __typename?: 'Asset', src: string }, answers: Array<{ __typename?: 'Asset', src: string }> }> } | null };
 
 export type GetCalculatorsQueryVariables = Exact<{
   width?: InputMaybe<Scalars['Int']['input']>;
@@ -6681,3 +7322,8 @@ export type GetHistoriesQueryVariables = Exact<{
 
 
 export type GetHistoriesQuery = { __typename?: 'Query', histories: Array<{ __typename?: 'History', id: string, pathname: string, createdAt: any }> };
+
+export type GetAccessCodesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAccessCodesQuery = { __typename?: 'Query', accessCodes: Array<{ __typename?: 'AccessCode', code: string }> };

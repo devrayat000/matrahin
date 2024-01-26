@@ -20,6 +20,7 @@ import {
 import { getSession as getAuthSession } from "next-auth/react";
 import { cache } from "react";
 import { revalidateTag, unstable_cache } from "next/cache";
+import { verifyProductKey } from "~/services/graphql/user";
 
 export const getSession = unstable_cache(getAuthSession, ["login"], {
   tags: ["login"],
@@ -56,6 +57,8 @@ export const authConfig = {
         if (data.tranx.status !== "VALID") {
           throw new Error("No valid transactions found!");
         }
+
+        await verifyProductKey(data.tranx.Product.productName);
 
         const user = {
           name: data.tranx.Name,
