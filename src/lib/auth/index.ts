@@ -80,6 +80,10 @@ export const authConfig = {
     error: "/login",
   },
   events: {
+    signIn(message) {
+      console.log(message);
+      revalidateTag("login");
+    },
     signOut(message) {
       console.log(message);
       revalidateTag("login");
