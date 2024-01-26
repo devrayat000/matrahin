@@ -29,7 +29,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  // const session = await auth();
 
   return (
     <html lang="en">
@@ -38,7 +38,8 @@ export default async function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
       <body>
-        <Session session={session}>{children}</Session>
+        {/* <Session session={session}>{children}</Session> */}
+        {children}
       </body>
     </html>
   );

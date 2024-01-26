@@ -2464,6 +2464,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hygraph/utils@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "@hygraph/utils@npm:1.2.1"
+  checksum: 1f7620dc177a6b0690e0738387555a8173a212c99a682ecd0d01e6181081afabbe32ef4e385310e01749bbe09e9bcb69e8c719227f4afd1128188994cbcddd9c
+  languageName: node
+  linkType: hard
+
 "@img/sharp-darwin-arm64@npm:0.33.1":
   version: 0.33.1
   resolution: "@img/sharp-darwin-arm64@npm:0.33.1"
@@ -4399,6 +4406,7 @@ __metadata:
     "@graphql-codegen/typescript": "npm:^4.0.1"
     "@graphql-codegen/typescript-operations": "npm:^4.0.1"
     "@hookform/resolvers": "npm:^3.3.2"
+    "@hygraph/utils": "npm:^1.2.1"
     "@radix-ui/react-accordion": "npm:^1.1.2"
     "@radix-ui/react-avatar": "npm:^1.0.4"
     "@radix-ui/react-dialog": "npm:^1.0.5"

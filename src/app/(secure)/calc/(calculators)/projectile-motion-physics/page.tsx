@@ -21,6 +21,7 @@ import Projectile, { ProjectileInput } from "~/services/Projectile";
 export default function ProjectilePage() {
   const [initialState, setInitialState] = useState(projectileSchema[0]);
   const [inputs, setInputs] = useState<Record<string, number>>({ g: 9.81 });
+  // @ts-ignore
   const setProjectileParams = useSetAtom(projectileAtom);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
