@@ -9,10 +9,10 @@ const page = () => {
         Rain Umbrella Problem
       </h1>
 
-      <div className="m-auto flex flex-col lg:mx-3 lg:flex-row items-center gap-1 lg:gap-8 justify-center">
+      <div className="m-auto flex flex-col lg:mx-3 lg:flex-row items-center gap-0 lg:gap-8 justify-center">
         <Animation />
 
-        <div className=" self-start my-4">
+        <div className=" self-start lg:my-4">
           <Input />
           <Result />
         </div>

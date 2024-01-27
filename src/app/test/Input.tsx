@@ -18,8 +18,7 @@ const InputAndResult = () => {
   const handleSubmit = () => {
     const rainVelocity = inputValues;
     const v_wind_object = rainVelocity[2] - rainVelocity[1];
-    const v_rain_object_angle =
-      Math.PI - Math.atan(rainVelocity[0] / v_wind_object);
+    const v_rain_object_angle = Math.atan2(-rainVelocity[0], v_wind_object);
     const v_rain_object_magnitude = Math.sqrt(
       rainVelocity[0] ** 2 + v_wind_object ** 2
     );
@@ -44,6 +43,7 @@ const InputAndResult = () => {
             value={inputValues[index]}
             helperText={helperText}
             onChangeInput={handleChangeInput}
+            min={index > 0 ? -10 : 0}
           />
         ))}
       </div>

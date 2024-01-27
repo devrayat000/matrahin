@@ -6,6 +6,7 @@ export type InputWithSliderProps = {
   helperText?: string;
   id: number;
   onChangeInput: (id: number, value: string) => void;
+  min?: number;
 };
 const InputWithSlider: React.FC<InputWithSliderProps> = ({
   label,
@@ -13,6 +14,7 @@ const InputWithSlider: React.FC<InputWithSliderProps> = ({
   helperText = "",
   id,
   onChangeInput,
+  min = -10,
 }) => {
   return (
     <div className="flex flex-col gap-1 items-center mb-2 border p-2 bg-stone-100 ">
@@ -23,7 +25,7 @@ const InputWithSlider: React.FC<InputWithSliderProps> = ({
           className="ml-1 p-2 border"
           type="number"
           step={0.1}
-          min={-10}
+          min={min}
           max={10}
           value={value}
           onChange={(e) => onChangeInput(id, e.target.value)}
@@ -31,7 +33,7 @@ const InputWithSlider: React.FC<InputWithSliderProps> = ({
       </div>
       <input
         type="range"
-        min={-10}
+        min={min}
         max={10}
         step={0.1}
         value={value}

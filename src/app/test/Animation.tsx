@@ -74,7 +74,7 @@ const Animation = () => {
   }, []);
 
   return (
-    <div className="self-start">
+    <div className="lg:self-start">
       {/* <h1 className="text-center text-4xl py-3 text-primary font-bold leading-8 text-gray-900 ">
         Rain
       </h1> */}

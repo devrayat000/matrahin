@@ -6,9 +6,9 @@ type RainVelocityType = {
 };
 
 export const rainUmbrellaData: RainVelocityType[] = [
-  { label: "Rain", helperText: "" },
-  { label: "Object", helperText: "" },
-  { label: "Wind", helperText: "" },
+  { label: "Rain", helperText: "Downwards" },
+  { label: "Object", helperText: "(-) means left direction" },
+  { label: "Wind", helperText: "(-) means left direction" },
 ];
 
 export const inputValuesAtom = atom<number[]>([3, 4, 1]);
