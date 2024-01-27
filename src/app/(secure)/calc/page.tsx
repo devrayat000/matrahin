@@ -1,41 +1,10 @@
 import Link from "next/link";
+import { use } from "react";
 import Image from "next/image";
 import type { Url } from "next/dist/shared/lib/router/router";
 
 import { buttonVariants } from "~/components/ui/button";
-import { gql, gqlClient } from "~/lib/utils";
-import {
-  GetCalculatorsQuery,
-  GetCalculatorsQueryVariables,
-} from "~/generated/graphql";
-import { use } from "react";
-
-const CALCULATORS_QUERY = gql`
-  query GetCalculators($width: Int = 320, $height: Int = 180) {
-    products {
-      id
-      title: name
-      to: slug
-      img: coverImage {
-        src: url(
-          transformation: {
-            image: { resize: { height: $height, width: $width, fit: crop } }
-          }
-        )
-        width
-        height
-      }
-    }
-  }
-`;
-
-function getCalculators(variables?: GetCalculatorsQueryVariables) {
-  return gqlClient.request<GetCalculatorsQuery, GetCalculatorsQueryVariables>(
-    CALCULATORS_QUERY,
-    variables,
-    { cache: "no-store" }
-  );
-}
+import { getCalculators } from "~/services/graphql/calc";
 
 export default function HomePage() {
   const imageSize = {

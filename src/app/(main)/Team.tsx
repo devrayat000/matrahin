@@ -2,40 +2,7 @@
 // import { buttonVariants } from "~/components/ui/button";
 import Image from "next/image";
 import { use } from "react";
-import {
-  GetTeamMembersQuery,
-  GetTeamMembersQueryVariables,
-} from "~/generated/graphql";
-import { gql, gqlClient } from "~/lib/utils";
-
-const MEMBERS_QUERY = gql`
-  query GetTeamMembers($width: Int = 320, $height: Int = 384) {
-    members: teamMembers(orderBy: publishedAt_ASC) {
-      id
-      name
-      designation
-      image {
-        src: url(
-          transformation: {
-            image: { resize: { fit: crop, width: $width, height: $height } }
-          }
-        )
-        height
-        width
-      }
-    }
-  }
-`;
-
-async function getMembers(params?: GetTeamMembersQueryVariables) {
-  const { members } = await gqlClient.request<
-    GetTeamMembersQuery,
-    GetTeamMembersQueryVariables
-  >(MEMBERS_QUERY, params, {
-    next: { revalidate: 3600 },
-  });
-  return members;
-}
+import { getMembers } from "~/services/graphql/team";
 
 export default function Team() {
   const imageSize = {

@@ -20,7 +20,8 @@
     ],
     "baseUrl": "./src",
     "paths": {
-      "~/*": ["*"]
+      "~/*": ["*", "!lib/utils/server-only.ts"],
+      "server-only": ["lib/utils/server-only.ts"]
     }
   },
   "include": [

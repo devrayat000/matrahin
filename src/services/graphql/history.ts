@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidateTag, unstable_cache } from "next/cache";
 import {
   CreateHistoryMutation,
   CreateHistoryMutationVariables,
@@ -9,8 +9,9 @@ import {
   PublishHistoryMutation,
   PublishHistoryMutationVariables,
 } from "~/generated/graphql";
-import { auth, findStudent } from "~/lib/auth";
+import { auth } from "~/lib/auth";
 import { gqlClient, gql } from "~/lib/utils";
+import { findStudent } from "./user";
 
 const CREATE_HISTORY = gql`
   mutation CreateHistory($pathname: String!, $studentId: ID!) {
@@ -59,16 +60,16 @@ const GET_HISTORIES = gql`
   }
 `;
 
-export const getHistories = async () => {
-  const session = await auth();
-  const student = await findStudent(session.user.email);
-  const { histories } = await gqlClient.request<
-    GetHistoriesQuery,
-    GetHistoriesQueryVariables
-  >(
-    GET_HISTORIES,
-    { studentId: student.id },
-    { cache: "force-cache", next: { tags: ["histories", "login"] } }
-  );
-  return histories;
-};
+export const getHistories = unstable_cache(
+  async () => {
+    const session = await auth();
+    const student = await findStudent(session.user.email);
+    const { histories } = await gqlClient.request<
+      GetHistoriesQuery,
+      GetHistoriesQueryVariables
+    >(GET_HISTORIES, { studentId: student.id });
+    return histories;
+  },
+  ["histories", "login"],
+  { tags: ["histories", "login"] }
+);

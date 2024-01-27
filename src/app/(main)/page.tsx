@@ -34,7 +34,7 @@ export default function HomePage() {
     <div>
       <Hero />
       <About />
-      {/* <Stats /> */}
+      <Stats />
       <Features />
       <Team />
       <FAQ />

@@ -14,9 +14,6 @@ export async function POST(request: Request) {
     return new Response("Invalid signature", { status: 401 });
   }
 
-  console.log(body.data);
-
-  revalidateTag("examples");
-  revalidateTag("exampleCount");
+  revalidateTag("studentsCount");
   return new Response("OK", { status: 200 });
 }

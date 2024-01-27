@@ -1,40 +1,7 @@
 import Image from "next/image";
 import { use } from "react";
-import {
-  GetExamplesQuery,
-  GetExamplesQueryVariables,
-} from "~/generated/graphql";
-import { gql, gqlClient } from "~/lib/utils";
 
-const EXAMPLES_QUERY = gql`
-  query GetExamples($slug: String!) {
-    product(where: { slug: $slug }) {
-      name
-      tutorial
-      examples {
-        id
-        source
-        question {
-          src: url
-        }
-        answers {
-          src: url
-        }
-      }
-    }
-  }
-`;
-
-function getExamples(variables: { slug: string }) {
-  return gqlClient.request<GetExamplesQuery, GetExamplesQueryVariables>(
-    EXAMPLES_QUERY,
-    variables,
-    {
-      cache: "force-cache",
-      next: { tags: [`example:${variables.slug}`] },
-    }
-  );
-}
+import { getExamples } from "~/services/graphql/example";
 
 export default function ExamplePage({
   params: { slug },
