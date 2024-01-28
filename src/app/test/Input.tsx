@@ -18,6 +18,31 @@ const InputAndResult = () => {
   const handleSubmit = () => {
     const rainVelocity = inputValues;
     const v_wind_object = rainVelocity[2] - rainVelocity[1];
+
+    if (v_wind_object === 0) {
+      setResultValues({
+        v_rain: rainVelocity[0],
+        v_object: rainVelocity[1],
+        v_wind: rainVelocity[2],
+        v_wind_object,
+        v_rain_object_angle: -Math.PI / 2,
+        v_rain_object_magnitude: rainVelocity[0],
+      });
+      return;
+    }
+    if (rainVelocity[0] === 0) {
+      setResultValues({
+        v_rain: rainVelocity[0],
+        v_object: rainVelocity[1],
+        v_wind: rainVelocity[2],
+        v_wind_object,
+        v_rain_object_angle: 0,
+        v_rain_object_magnitude: rainVelocity[0],
+        helperText: "You don't need an umbrella :)",
+      });
+      return;
+    }
+
     const v_rain_object_angle = Math.atan2(-rainVelocity[0], v_wind_object);
     const v_rain_object_magnitude = Math.sqrt(
       rainVelocity[0] ** 2 + v_wind_object ** 2

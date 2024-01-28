@@ -1,10 +1,7 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { useAtomValue } from "jotai";
-import { useMemo } from "react";
-import * as THREE from "three";
 import { RainVelocityResultsType, resultAtom } from "./store";
 
 const config = {
@@ -21,62 +18,6 @@ const config = {
     ],
   },
 };
-
-// const FinalResult = ({ v_rain, v_wind_object }: RainVelocityResultsType) => {
-//   const resultAngle = (Math.atan2(-v_rain, v_wind_object) * 180) / Math.PI;
-
-//   const vectorSum = () => (
-//     <MathJax>
-//       Velocity of rain relative to object:
-//       {`
-//         $$\\begin{gather}
-//           \\overrightarrow{V}_{ro} = \\overrightarrow{V}_{rain} + \\overrightarrow{V}_{wo}  = ${v_wind_object.toFixed(
-//             2
-//           )}\\hat{i}- ${v_rain}\\hat{j} \\\\
-//         \\end{gather}$$
-//       `}
-//     </MathJax>
-//   );
-//   const MagnitudeAndAngle = () => (
-//     <MathJax>
-//       Magnitude and Angle of rain relative to object:
-//       {`
-//         $$\\begin{gather}
-
-//           \\left|\\overrightarrow{V}_{ro}\\right| = \\sqrt{(${v_wind_object.toFixed(
-//             2
-//           )})^2 + (${v_rain})^2} = ${Math.sqrt(
-//         v_wind_object ** 2 + v_rain ** 2
-//       ).toFixed(2)}\\space unit \\\\
-//           \\theta = tan^{-1}\\left(\\frac{-${v_rain}}{${v_wind_object.toFixed(
-//         2
-//       )}}\\right) = ${resultAngle.toFixed(2)}^\\circ \\ \\\\
-//         \\end{gather}$$
-
-//         `}
-//     </MathJax>
-//   );
-
-//   const UmbrellaPosition = () => (
-//     <MathJax>
-//       So, Umbrella should be tilted at ,{" "}
-//       {`$
-//           \\theta =180^\\circ ${resultAngle.toFixed(2)}^\\circ \\  = ${(
-//         180 + resultAngle
-//       ).toFixed(2)}^\\circ
-//         $`}
-//     </MathJax>
-//   );
-//   return (
-//     <p>
-//       <b>Step: 3</b>
-//       <br />
-//       {vectorSum()}
-//       {MagnitudeAndAngle()}
-//       {UmbrellaPosition()}
-//     </p>
-//   );
-// };
 
 const InitializeVariables = ({
   v_object,
@@ -126,16 +67,17 @@ const WindSpeedModify = ({
   );
 };
 
+const toDegree = (angle: number) => (angle * 180) / Math.PI;
 const Result = () => {
   const result = useAtomValue(resultAtom);
-  const { v_wind_object, v_rain } = result;
-  const resultAngle = useMemo(
-    () => (Math.atan2(-result.v_rain, result.v_wind_object) * 180) / Math.PI,
-    [result.v_rain, result.v_wind_object]
-  );
-  const calculateAndRenderResults = () => {
-    const magnitude = Math.sqrt(v_wind_object ** 2 + v_rain ** 2).toFixed(2);
+  const {
+    v_wind_object,
+    v_rain,
+    v_rain_object_magnitude: magnitude,
+    v_rain_object_angle: resultAngle,
+  } = result;
 
+  const calculateAndRenderResults = () => {
     return (
       <p className="self-start">
         <b>Step: 3</b>
@@ -159,9 +101,9 @@ const Result = () => {
               )})^2 + (${v_rain})^2} = ${magnitude}\\space unit \\\\
               \\theta = tan^{-1}\\left(\\frac{-${
                 v_rain < 0 ? `(${v_rain})` : v_rain
-              }}{${v_wind_object.toFixed(2)}}\\right) = ${resultAngle.toFixed(
-            2
-          )}^\\circ \\\\
+              }}{${v_wind_object.toFixed(2)}}\\right) = ${toDegree(
+            resultAngle
+          ).toFixed(2)}^\\circ \\\\
             \\end{gather}$$
           `}
         </MathJax>
@@ -206,7 +148,7 @@ const Result = () => {
             <WindSpeedModify {...result} />
 
             {calculateAndRenderResults()}
-            {UmbrellaPosition(resultAngle)}
+            {UmbrellaPosition(toDegree(resultAngle))}
           </div>
         </MathJaxContext>
       </div>
@@ -216,67 +158,11 @@ const Result = () => {
 
 export default Result;
 
-const DiagramFirst = () => {
-  const results = useAtomValue(resultAtom);
-
-  return (
-    <div className="flex flex-col gap-2 ">
-      <Canvas>
-        <group>
-          <arrowHelper
-            args={[
-              new THREE.Vector3(
-                results.v_object / Math.abs(results.v_object),
-                0,
-                0
-              ),
-              new THREE.Vector3(0, 0, 0),
-              results.v_object,
-              0xff0000,
-              0.5,
-              0.5,
-            ]}
-          />
-          <arrowHelper
-            args={[
-              new THREE.Vector3(1, 0, 0),
-              new THREE.Vector3(0, 0, 0),
-              results.v_wind,
-              0xff0000,
-              0.5,
-              0.5,
-            ]}
-          />
-          <arrowHelper
-            args={[
-              new THREE.Vector3(1, 0, 0),
-              new THREE.Vector3(0, 0, 0),
-              results.v_wind_object,
-              0xff0000,
-              0.5,
-              0.5,
-            ]}
-          />
-          <arrowHelper
-            args={[
-              new THREE.Vector3(0, -1, 0),
-              new THREE.Vector3(0, 0, 0),
-              results.v_rain,
-              0xff0000,
-              0.5,
-              0.5,
-            ]}
-          />
-        </group>
-      </Canvas>
-    </div>
-  );
-};
-
 const Figure = ({ center }: { center: { x: number; y: number } }) => {
   const results = useAtomValue(resultAtom);
   const scale = 15;
   const modifiedResults = {
+    ...results,
     v_object: results.v_object * scale,
     v_wind: results.v_wind * scale,
     v_rain: results.v_rain * scale * -1,
@@ -365,17 +251,47 @@ const Figure = ({ center }: { center: { x: number; y: number } }) => {
         </text>
 
         {/* umbrella */}
-        <line
-          x1={center.x.toString()}
-          y1={center.y.toString()}
-          x2={(center.x - modifiedResults.v_wind_object).toString()}
-          y2={(center.y + modifiedResults.v_rain).toString()}
-          stroke="black"
-          // dotted line
-          strokeDasharray="5,5"
-          strokeWidth="2"
-        />
+        {modifiedResults.helperText === undefined ? (
+          <g>
+            <line
+              x1={center.x.toString()}
+              y1={center.y.toString()}
+              x2={(center.x - modifiedResults.v_wind_object).toString()}
+              y2={(center.y + modifiedResults.v_rain).toString()}
+              stroke="black"
+              // dotted line
+              strokeDasharray="5,5"
+              strokeWidth="2"
+            />
+            {RotatedUmbrella(
+              Math.abs((modifiedResults.v_rain_object_angle * 180) / Math.PI) -
+                90,
+              getPosition()
+            )}
+            {/* arc for resultant velocity of rain */}
+            {getArc(modifiedResults.v_rain_object_angle, "red", 40, center)}
+            {/* arc for angle to put umbrella */}
+            {getArc(
+              Math.PI - Math.abs(modifiedResults.v_rain_object_angle),
+              "blue",
+              45,
+              center
+            )}
+          </g>
+        ) : (
+          <text x={center.x - 70} y={center.y - 50} fill="red">
+            {modifiedResults.helperText}
+          </text>
+        )}
 
+        {getArrow(center, {
+          endCoords: {
+            x: center.x + modifiedResults.v_wind_object,
+            y: center.y - modifiedResults.v_rain,
+          },
+          label: "Vro",
+          color: "red",
+        })}
         {getArrow(center, {
           length: modifiedResults.v_wind_object,
           axis: "x",
@@ -388,15 +304,6 @@ const Figure = ({ center }: { center: { x: number; y: number } }) => {
           label: "Vr",
         })}
 
-        {/* final resultant */}
-        {getArrow(center, {
-          endCoords: {
-            x: center.x + modifiedResults.v_wind_object,
-            y: center.y - modifiedResults.v_rain,
-          },
-          label: "Vro",
-          color: "red",
-        })}
         {getArrow(center, {
           length: modifiedResults.v_object,
           axis: "x",
@@ -411,19 +318,6 @@ const Figure = ({ center }: { center: { x: number; y: number } }) => {
           x: center.x - modifiedResults.v_wind_object,
           y: center.y + modifiedResults.v_rain,
         })} */}
-        {RotatedUmbrella(
-          Math.abs((modifiedResults.v_rain_object_angle * 180) / Math.PI) - 90,
-          getPosition()
-        )}
-        {/* arc for resultant velocity of rain */}
-        {getArc(modifiedResults.v_rain_object_angle, "red", 40, center)}
-        {/* arc for angle to put umbrella */}
-        {getArc(
-          Math.PI - Math.abs(modifiedResults.v_rain_object_angle),
-          "blue",
-          45,
-          center
-        )}
       </svg>
     </div>
   );

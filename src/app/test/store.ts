@@ -20,6 +20,7 @@ export type RainVelocityResultsType = {
   v_wind_object: number;
   v_rain_object_angle: number;
   v_rain_object_magnitude: number;
+  helperText?: string;
 };
 export const resultAtom = atom<RainVelocityResultsType>({
   // v_rain: 3,
