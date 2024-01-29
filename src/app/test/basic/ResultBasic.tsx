@@ -29,7 +29,7 @@ const ResultBasic = () => {
     v_rain_object_angle: resultAngle,
   } = result;
 
-  const calculateAndRenderResults = () => {
+  const CalculateAndRenderResults = () => {
     return (
       <p className="self-start">
         From the figure, Velocity of rain relative to object:
@@ -77,19 +77,17 @@ const ResultBasic = () => {
 
   return (
     result.v_object && (
-      <div>
-        <MathJaxContext version={3} config={config}>
-          {/* <div className="w-full md:w-1/2 mb-4 md:mb-0 md:mr-4"> */}
-          <div className="flex flex-col ml-4 lg:ml-0 items-center lg:items-start justify-center lg:justify-normal gap-4">
-            <div className="flex flex-col md:flex-row ">
-              {calculateAndRenderResults()}
-              <Figure center={center} />
-            </div>
-
-            {UmbrellaPosition(toDegree(resultAngle))}
+      <MathJaxContext version={3} config={config}>
+        {/* <div className="w-full md:w-1/2 mb-4 md:mb-0 md:mr-4"> */}
+        <div className="flex flex-col ml-4 lg:ml-0 items-center lg:items-start justify-center lg:justify-normal gap-4">
+          <div className="flex flex-col md:flex-row ">
+            <CalculateAndRenderResults />
+            <Figure center={center} />
           </div>
-        </MathJaxContext>
-      </div>
+
+          {UmbrellaPosition(toDegree(resultAngle))}
+        </div>
+      </MathJaxContext>
     )
   );
 };
@@ -137,7 +135,7 @@ const Figure = ({ center }: { center: { x: number; y: number } }) => {
     [modifiedResults.v_rain_object_angle]
   );
   return (
-    <div className="self-start md:w-[180px] md:h-[180px] ">
+    <div className="self-start md:w-[200px] md:h-[200px] ">
       <svg width="350" height={canvasHeight} xmlns="http://www.w3.org/2000/svg">
         {/* <!-- X-axis --> */}
         <line

@@ -7,10 +7,11 @@ const page = ({ children }: { children: React.ReactNode }) => {
         Rain Umbrella Problem
       </h1>
 
-      <div className="m-auto flex flex-col lg:mx-3 lg:flex-row items-center gap-0 lg:gap-8 justify-center">
+      {/* <div className="m-auto flex flex-col  lg:flex-row items-center lg:items-start gap-0 lg:gap-4 justify-center"> */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-4">
         <Animation />
 
-        <div className=" self-start lg:my-4">{children}</div>
+        <div className=" self-start lg:my-3">{children}</div>
       </div>
     </>
   );
