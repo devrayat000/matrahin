@@ -4,7 +4,7 @@ import { useAtom, useSetAtom } from "jotai";
 import InputWithSlider from "~/components/ui/input-with-slider";
 import { inputValuesAtom, rainUmbrellaData, resultAtom } from "./store";
 
-const InputAndResult = () => {
+const RainInput = ({ wind }: { wind: boolean }) => {
   const [inputValues, setInputValues] = useAtom(inputValuesAtom);
   const setResultValues = useSetAtom(resultAtom);
 
@@ -17,13 +17,13 @@ const InputAndResult = () => {
   };
   const handleSubmit = () => {
     const rainVelocity = inputValues;
-    const v_wind_object = rainVelocity[2] - rainVelocity[1];
+    const v_wind_object = (wind ? rainVelocity[2] : 0) - rainVelocity[1];
 
     if (v_wind_object === 0) {
       setResultValues({
         v_rain: rainVelocity[0],
         v_object: rainVelocity[1],
-        v_wind: rainVelocity[2],
+        v_wind: wind ? rainVelocity[2] : 0,
         v_wind_object,
         v_rain_object_angle: -Math.PI / 2,
         v_rain_object_magnitude: rainVelocity[0],
@@ -34,7 +34,7 @@ const InputAndResult = () => {
       setResultValues({
         v_rain: rainVelocity[0],
         v_object: rainVelocity[1],
-        v_wind: rainVelocity[2],
+        v_wind: wind ? rainVelocity[2] : 0,
         v_wind_object,
         v_rain_object_angle: 0,
         v_rain_object_magnitude: rainVelocity[0],
@@ -51,7 +51,7 @@ const InputAndResult = () => {
     setResultValues({
       v_rain: rainVelocity[0],
       v_object: rainVelocity[1],
-      v_wind: rainVelocity[2],
+      v_wind: wind ? rainVelocity[2] : 0,
       v_wind_object,
       v_rain_object_angle,
       v_rain_object_magnitude,
@@ -60,17 +60,21 @@ const InputAndResult = () => {
   return (
     <>
       <div className="flex flex-row flex-wrap justify-center gap-4 items-center">
-        {rainUmbrellaData.map(({ label, helperText }, index) => (
-          <InputWithSlider
-            key={index}
-            id={index}
-            label={label}
-            value={inputValues[index]}
-            helperText={helperText}
-            onChangeInput={handleChangeInput}
-            min={index > 0 ? -10 : 0}
-          />
-        ))}
+        {rainUmbrellaData.map(({ label, helperText }, index) => {
+          if (wind && index === 2) return null;
+
+          return (
+            <InputWithSlider
+              key={index}
+              id={index}
+              label={label}
+              value={inputValues[index]}
+              helperText={helperText}
+              onChangeInput={handleChangeInput}
+              min={index > 0 ? -10 : 0}
+            />
+          );
+        })}
       </div>
       <div className="flex flex-row flex-wrap justify-center gap-4 items-center">
         <button
@@ -85,4 +89,4 @@ const InputAndResult = () => {
   );
 };
 
-export default InputAndResult;
+export default RainInput;

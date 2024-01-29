@@ -2,8 +2,8 @@
 
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import { useAtomValue } from "jotai";
-import { RainVelocityResultsType, resultAtom } from "./store";
-
+import { useMemo } from "react";
+import { resultAtom } from "../store";
 const config = {
   loader: { load: ["[tex]/html"] },
   tex: {
@@ -19,56 +19,8 @@ const config = {
   },
 };
 
-const InitializeVariables = ({
-  v_object,
-  v_wind,
-  v_rain,
-}: RainVelocityResultsType) => {
-  return (
-    <p className="self-start ">
-      <b>Step: 1</b>
-      <br />
-      Initialize variables:
-      <MathJax>
-        {`
-        $\\begin{gather}
-        Velocity\\space of\\space  Rain, \\overrightarrow{V}_{r} = -${v_rain}\\hat{j}\\space unit \\\\ 
-        Velocity\\space of\\space  Object, \\overrightarrow{V}_{o} = ${v_object}\\hat{i}\\space unit \\\\
-        Velocity\\space of\\space  Wind, \\overrightarrow{V}_{w} = ${v_wind}\\hat{i}\\space unit \\\\
-        \\end{gather}$
-      `}
-      </MathJax>
-    </p>
-  );
-};
-
-const WindSpeedModify = ({
-  v_object,
-  v_wind,
-  v_wind_object,
-}: RainVelocityResultsType) => {
-  const v_object_str =
-    v_object < 0 ? `(${v_object}\\hat{i})` : `${v_object}\\hat{i}`;
-  return (
-    <p className="self-start">
-      <b>Step: 2</b>
-      <br />
-      Velocity of wind relative to object:
-      <MathJax>
-        {`
-        $$\\begin{gather}
-        \\overrightarrow{V}_{wo} = \\overrightarrow{V}_{wind} - \\overrightarrow{V}_{object} \\\\ 
-          \\overrightarrow{V}_{wo} = ${v_wind}\\hat{i} - ${v_object_str} \\\\
-          \\overrightarrow{V}_{wo} = ${v_wind_object.toFixed(2)}\\hat{i} \\\\
-        \\end{gather}$$
-      `}
-      </MathJax>
-    </p>
-  );
-};
-
 const toDegree = (angle: number) => (angle * 180) / Math.PI;
-const Result = () => {
+const ResultBasic = () => {
   const result = useAtomValue(resultAtom);
   const {
     v_wind_object,
@@ -80,29 +32,18 @@ const Result = () => {
   const calculateAndRenderResults = () => {
     return (
       <p className="self-start">
-        <b>Step: 3</b>
-        <br />
-        Velocity of rain relative to object:
-        <MathJax>
-          {`
-            $$\\begin{gather}
-              \\overrightarrow{V}_{ro} = \\overrightarrow{V}_{rain} + \\overrightarrow{V}_{wo} = ${v_wind_object.toFixed(
-                2
-              )}\\hat{i}- ${v_rain}\\hat{j} \\\\
-            \\end{gather}$$
-          `}
-        </MathJax>
-        Magnitude and Angle of rain relative to object:
+        From the figure, Velocity of rain relative to object:
         <MathJax>
           {`
             $$\\begin{gather}
               \\left|\\overrightarrow{V}_{ro}\\right| = \\sqrt{(${v_wind_object.toFixed(
                 2
               )})^2 + (${v_rain})^2} = ${magnitude.toFixed(2)}\\space unit \\\\
-              \\theta = tan^{-1}\\left(\\frac{-${
-                v_rain < 0 ? `(${v_rain})` : v_rain
-              }}{${v_wind_object.toFixed(2)}}\\right) = ${toDegree(
-            resultAngle
+              \\theta = tan^{-1}\\left(\\frac{${v_rain}}{${Math.abs(
+            v_wind_object
+          ).toFixed(2)}}\\right) = ${Math.min(
+            180 + toDegree(resultAngle),
+            Math.abs(toDegree(resultAngle))
           ).toFixed(2)}^\\circ \\\\
             \\end{gather}$$
           `}
@@ -138,15 +79,13 @@ const Result = () => {
     result.v_object && (
       <div>
         <MathJaxContext version={3} config={config}>
+          {/* <div className="w-full md:w-1/2 mb-4 md:mb-0 md:mr-4"> */}
           <div className="flex flex-col ml-4 lg:ml-0 items-center lg:items-start justify-center lg:justify-normal gap-4">
             <div className="flex flex-col md:flex-row ">
-              <InitializeVariables {...result} />
+              {calculateAndRenderResults()}
               <Figure center={center} />
             </div>
 
-            <WindSpeedModify {...result} />
-
-            {calculateAndRenderResults()}
             {UmbrellaPosition(toDegree(resultAngle))}
           </div>
         </MathJaxContext>
@@ -155,7 +94,7 @@ const Result = () => {
   );
 };
 
-export default Result;
+export default ResultBasic;
 
 const Figure = ({ center }: { center: { x: number; y: number } }) => {
   const results = useAtomValue(resultAtom);
@@ -170,6 +109,7 @@ const Figure = ({ center }: { center: { x: number; y: number } }) => {
     v_rain_object_magnitude: results.v_rain_object_magnitude * scale,
   };
 
+  // console.log((modifiedResults.v_rain_object_angle * 180) / Math.PI);
   // Offset for the new origin (y = 100)
   const yOriginOffset = 175;
 
@@ -190,6 +130,12 @@ const Figure = ({ center }: { center: { x: number; y: number } }) => {
     };
   };
 
+  const umbrellaAngle = useMemo(
+    () =>
+      Math.abs(modifiedResults.v_rain_object_angle) -
+      (modifiedResults.v_rain_object_angle < -Math.PI / 2 ? Math.PI : 0),
+    [modifiedResults.v_rain_object_angle]
+  );
   return (
     <div className="self-start md:w-[180px] md:h-[180px] ">
       <svg width="350" height={canvasHeight} xmlns="http://www.w3.org/2000/svg">
@@ -229,6 +175,7 @@ const Figure = ({ center }: { center: { x: number; y: number } }) => {
           Y
         </text>
 
+        {/* bottom angle  */}
         <text
           x={170 + 40}
           y="140"
@@ -241,10 +188,18 @@ const Figure = ({ center }: { center: { x: number; y: number } }) => {
           ).toFixed(1)}
           °
         </text>
-        <text x={170 + 50} y="80" fontFamily="Arial" fontSize="12" fill="black">
-          {(
-            180 -
-            Math.abs((modifiedResults.v_rain_object_angle * 180) / Math.PI)
+
+        {/* upper angle */}
+        <text
+          x={175 + (modifiedResults.v_wind_object > 0 ? -50 : 50)}
+          y="80"
+          fontFamily="Arial"
+          fontSize="12"
+          fill="black"
+        >
+          {Math.min(
+            180 + toDegree(modifiedResults.v_rain_object_angle),
+            Math.abs(toDegree(modifiedResults.v_rain_object_angle))
           ).toFixed(1)}
           °
         </text>
@@ -267,13 +222,47 @@ const Figure = ({ center }: { center: { x: number; y: number } }) => {
                 90,
               getPosition()
             )}
-            {/* arc for resultant velocity of rain */}
-            {getArc(modifiedResults.v_rain_object_angle, "red", 40, center)}
+            {/* arc for resultant velocity of rain
+              always negative passed to set the start angle to 180 and clockwise true
+            */}
+            {/* {getArcc(-modifiedResults.v_rain_object_angle, "red", 40, center)} */}
             {/* arc for angle to put umbrella */}
-            {getArc(
+            {/* {getArcc(
               Math.PI - Math.abs(modifiedResults.v_rain_object_angle),
               "blue",
               45,
+              center
+            )} */}
+
+            {/* resultant velocity */}
+            {/* {getArcc(
+              modifiedResults.v_wind_object > 0
+                ? -modifiedResults.v_rain_object_angle
+                : modifiedResults.v_rain_object_angle,
+              "blue",
+              45,
+              center
+            )} */}
+
+            {/* umbrella position
+             */}
+            {getArc(
+              modifiedResults.v_wind_object < 0 ? 0 : Math.PI,
+              modifiedResults.v_wind_object < 0
+                ? -umbrellaAngle
+                : Math.PI - umbrellaAngle,
+              modifiedResults.v_wind_object > 0,
+              "blue",
+              35,
+              center
+            )}
+            {/* rain resultant velocity*/}
+            {getArc(
+              modifiedResults.v_rain_object_angle,
+              modifiedResults.v_wind_object > 0 ? 0 : Math.PI,
+              modifiedResults.v_wind_object < 0,
+              "red",
+              40,
               center
             )}
           </g>
@@ -313,26 +302,25 @@ const Figure = ({ center }: { center: { x: number; y: number } }) => {
           axis: "x",
           label: "Vw",
         })}
-        {/* {getUmbrella(center, {
-          x: center.x - modifiedResults.v_wind_object,
-          y: center.y + modifiedResults.v_rain,
-        })} */}
       </svg>
     </div>
   );
 };
 
 // write a function that takes angle and center as argument and returns an arc of that angle with radius 10
-const getArc = (
+const getArcc = (
   angle: number,
   color: string,
   radius: number,
   center: { x: number; y: number }
 ) => {
   const radiuss = radius || 10;
+  // alert(angle);
+
   const startAngle = 0; // Start angle is always 0
-  const endAngle = angle; // Convert angle to radians
-  const largeArcFlag = angle <= 180 ? "0" : "1"; // Check if the arc is larger than 180 degrees
+
+  const endAngle = Math.abs(angle);
+  // const largeArcFlag = angle <= 0 ? "0" : "1"; // Check if the arc is larger than 180 degrees
   const sweepFlag = angle < 0 ? "1" : "0"; // Always 1 for positive angles
 
   const x1 = center.x + radiuss * Math.cos(startAngle);
@@ -343,7 +331,36 @@ const getArc = (
 
   return (
     <path
-      d={`M ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} ${sweepFlag} ${x2} ${y2}`}
+      d={`M ${x1} ${y1} A ${radius} ${radius} 0 0 ${sweepFlag} ${x2} ${y2}`}
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+    />
+  );
+};
+
+// write a function that takes angle and center as argument and returns an arc of that angle with radius 10
+const getArc = (
+  startAngle: number,
+  endAngle: number,
+  clockwise: boolean,
+  color: string,
+  radius: number,
+  center: { x: number; y: number }
+) => {
+  const radiuss = radius || 10;
+
+  const x1 = center.x + radiuss * Math.cos(startAngle);
+  const y1 = center.y - radiuss * Math.sin(startAngle);
+
+  const x2 = center.x + radiuss * Math.cos(endAngle);
+  const y2 = center.y - radiuss * Math.sin(endAngle);
+
+  return (
+    <path
+      d={`M ${x1} ${y1} A ${radiuss} ${radiuss} 1 0 ${
+        clockwise ? "1" : "0"
+      } ${x2} ${y2}`}
       fill="none"
       stroke={color}
       strokeWidth="2"

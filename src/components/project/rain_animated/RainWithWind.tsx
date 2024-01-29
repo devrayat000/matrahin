@@ -68,7 +68,7 @@ const WindSpeedModify = ({
 };
 
 const toDegree = (angle: number) => (angle * 180) / Math.PI;
-const Result = () => {
+const RainWithWind = () => {
   const result = useAtomValue(resultAtom);
   const {
     v_wind_object,
@@ -155,7 +155,7 @@ const Result = () => {
   );
 };
 
-export default Result;
+export default RainWithWind;
 
 const Figure = ({ center }: { center: { x: number; y: number } }) => {
   const results = useAtomValue(resultAtom);

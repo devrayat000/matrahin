@@ -138,6 +138,7 @@ const Result = () => {
     result.v_object && (
       <div>
         <MathJaxContext version={3} config={config}>
+          {/* <div className="w-full md:w-1/2 mb-4 md:mb-0 md:mr-4"> */}
           <div className="flex flex-col ml-4 lg:ml-0 items-center lg:items-start justify-center lg:justify-normal gap-4">
             <div className="flex flex-col md:flex-row ">
               <InitializeVariables {...result} />
