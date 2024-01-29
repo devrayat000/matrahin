@@ -15,7 +15,7 @@ const OptionsCard: React.FC<OptionsCardProps> = ({
   imageAlt,
 }) => {
   return (
-    <Link href={`/calc/moi/${path}`}>
+    <Link href={`/${path}`}>
       <div className="rounded-xl flex flex-col h-full justify-between border-4 max-w-xs shadow-lg hover:shadow-2xl transition ease-in-out">
         <Image
           {...image}
