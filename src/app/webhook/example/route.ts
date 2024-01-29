@@ -1,0 +1,21 @@
+import { verifyWebhookSignature } from "@hygraph/utils";
+import { revalidateTag } from "next/cache";
+
+export async function POST(request: Request) {
+  const body = await request.json();
+  const signature = request.headers.get("gcms-signature");
+  const isValid = verifyWebhookSignature({
+    body,
+    signature,
+    secret: process.env.WEBHOOK_SECRET,
+  });
+
+  if (!isValid) {
+    return new Response("Invalid signature", { status: 401 });
+  }
+
+  console.log(body.data);
+
+  revalidateTag(`example:${body.data.slug}`);
+  return new Response("OK", { status: 200 });
+}

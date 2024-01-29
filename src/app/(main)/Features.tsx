@@ -19,7 +19,7 @@ const features = [
   {
     name: "Theory Explanation and Examples",
     description:
-      "Never seen before explanation videos on different topics and Compilation of best theory and every possible examples.",
+      "Dust off your curiosity, not your textbooks! Dive into physics like never before with our website, where captivating teachers explode dry lectures with interactive lessons. Experience forces, motion, and energy like they're tangible through mind-blowing simulations. Plus, dive deeper! Find all examples for each topic neatly organized on one page. Contribute the missing gems! Share your own problems and help curate our library. This isn't just a physics website, it's a revolution! Join the excitement and uncover the universe, one click at a time.",
     image: Pillars,
   },
 ];
@@ -40,13 +40,9 @@ export default function Features() {
       <div className="px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Everything you need to crack the exam
+            Unleash your inner explorer - dive into our world of cutting-edge
+            features
           </h2>
-          <p className="mt-6 text-lg leading-8 text-gray-600">
-            Quis tellus eget adipiscing convallis sit sit eget aliquet quis.
-            Suspendisse eget egestas a elementum pulvinar et feugiat blandit at.
-            In mi viverra elit nunc.
-          </p>
         </div>
         <div className="mx-auto mt-16 sm:mt-20 lg:mt-24">
           <dl className="flex flex-col gap-y-12 lg:gap-y-24">

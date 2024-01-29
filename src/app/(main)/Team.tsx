@@ -9,7 +9,7 @@ import {
 import { gql, gqlClient } from "~/lib/utils";
 
 const MEMBERS_QUERY = gql`
-  query GetTeamMembers {
+  query GetTeamMembers($width: Int = 320, $height: Int = 384) {
     members: teamMembers(orderBy: publishedAt_ASC) {
       id
       name
@@ -17,7 +17,7 @@ const MEMBERS_QUERY = gql`
       image {
         src: url(
           transformation: {
-            image: { resize: { fit: crop, width: 320, height: 384 } }
+            image: { resize: { fit: crop, width: $width, height: $height } }
           }
         )
         height
@@ -27,25 +27,25 @@ const MEMBERS_QUERY = gql`
   }
 `;
 
-async function getMembers() {
+async function getMembers(params?: GetTeamMembersQueryVariables) {
   const { members } = await gqlClient.request<
     GetTeamMembersQuery,
     GetTeamMembersQueryVariables
-  >(MEMBERS_QUERY, undefined, {
+  >(MEMBERS_QUERY, params, {
     next: { revalidate: 3600 },
   });
   return members;
 }
 
 export default function Team() {
-  const members = use(getMembers());
-
   const imageSize = {
-    width: 320,
+    width: 280,
     get height() {
       return (this.width / 5) * 6;
     },
   };
+
+  const members = use(getMembers(imageSize));
 
   return (
     <section id="team" className="container bg-white py-12 sm:py-16">
@@ -62,7 +62,7 @@ export default function Team() {
         <div className="mx-auto mt-16 sm:mt-20 lg:mt-24">
           <dl className="flex flex-wrap justify-center items-start gap-y-4 gap-x-8">
             {members.map((member, i) => (
-              <div key={member.name} className="shrink-0">
+              <div key={member.name} className="lg:flex-1">
                 <Image
                   {...member.image}
                   alt={member.name}

@@ -32,4 +32,4 @@ export type INITIAL_CONSTANTS = {
     y: number;
   };
 };
-export const projectileAtom = atom<ProjectileOutput | undefined>(undefined);
+export const projectileAtom = atom<ProjectileOutput>(undefined);

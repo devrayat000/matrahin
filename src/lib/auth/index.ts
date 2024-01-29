@@ -17,9 +17,14 @@ import {
   PublishStudentMutation,
   PublishStudentMutationVariables,
 } from "~/generated/graphql";
-import { getSession } from "next-auth/react";
+import { getSession as getAuthSession } from "next-auth/react";
 import { cache } from "react";
-import { revalidateTag } from "next/cache";
+import { revalidateTag, unstable_cache } from "next/cache";
+import { verifyProductKey } from "~/services/graphql/user";
+
+export const getSession = unstable_cache(getAuthSession, ["login"], {
+  tags: ["login"],
+});
 
 // You'll need to import and pass this
 // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
@@ -53,6 +58,8 @@ export const authConfig = {
           throw new Error("No valid transactions found!");
         }
 
+        await verifyProductKey(data.tranx.Product.productName);
+
         const user = {
           name: data.tranx.Name,
           email: data.tranx.Email,
@@ -73,6 +80,10 @@ export const authConfig = {
     error: "/login",
   },
   events: {
+    signIn(message) {
+      console.log(message);
+      revalidateTag("login");
+    },
     signOut(message) {
       console.log(message);
       revalidateTag("login");
@@ -81,27 +92,31 @@ export const authConfig = {
 } satisfies NextAuthOptions;
 
 // Use it in server contexts
-export function auth(): Promise<Session>;
-export function auth(
-  req: GetServerSidePropsContext["req"],
-  res: GetServerSidePropsContext["res"]
-): Promise<Session>;
-export function auth(
-  req: NextApiRequest,
-  res: NextApiResponse
-): Promise<Session>;
-export function auth(
-  ...args:
-    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
-    | [NextApiRequest, NextApiResponse]
-    | []
-) {
-  if (typeof window !== "undefined") {
-    return getSession({ req: args[0] });
-  } else {
-    return getServerSession(...args, authConfig);
-  }
+interface Auth {
+  (): Promise<Session>;
+  (
+    req: GetServerSidePropsContext["req"],
+    res: GetServerSidePropsContext["res"]
+  ): Promise<Session>;
+  (req: NextApiRequest, res: NextApiResponse): Promise<Session>;
 }
+
+export const auth: Auth = unstable_cache(
+  (
+    ...args:
+      | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
+      | [NextApiRequest, NextApiResponse]
+      | []
+  ) => {
+    if (typeof window !== "undefined") {
+      return getSession({ req: args[0] });
+    } else {
+      return getServerSession(...args, authConfig);
+    }
+  },
+  ["login"],
+  { tags: ["login"] }
+);
 
 export async function findOrCreateUser(params: Student) {
   try {
