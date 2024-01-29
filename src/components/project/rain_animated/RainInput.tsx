@@ -16,14 +16,15 @@ const RainInput = ({ wind }: { wind: boolean }) => {
     );
   };
   const handleSubmit = () => {
+    console.log("in subit", wind);
     const rainVelocity = inputValues;
-    const v_wind_object = rainVelocity[2] - rainVelocity[1];
+    const v_wind_object = (wind ? rainVelocity[2] : 0) - rainVelocity[1];
 
     if (v_wind_object === 0) {
       setResultValues({
         v_rain: rainVelocity[0],
         v_object: rainVelocity[1],
-        v_wind: rainVelocity[2],
+        v_wind: wind ? rainVelocity[2] : 0,
         v_wind_object,
         v_rain_object_angle: -Math.PI / 2,
         v_rain_object_magnitude: rainVelocity[0],
@@ -34,7 +35,7 @@ const RainInput = ({ wind }: { wind: boolean }) => {
       setResultValues({
         v_rain: rainVelocity[0],
         v_object: rainVelocity[1],
-        v_wind: rainVelocity[2],
+        v_wind: wind ? rainVelocity[2] : 0,
         v_wind_object,
         v_rain_object_angle: 0,
         v_rain_object_magnitude: rainVelocity[0],
@@ -51,7 +52,7 @@ const RainInput = ({ wind }: { wind: boolean }) => {
     setResultValues({
       v_rain: rainVelocity[0],
       v_object: rainVelocity[1],
-      v_wind: rainVelocity[2],
+      v_wind: wind ? rainVelocity[2] : 0,
       v_wind_object,
       v_rain_object_angle,
       v_rain_object_magnitude,
@@ -61,7 +62,7 @@ const RainInput = ({ wind }: { wind: boolean }) => {
     <>
       <div className="flex flex-row flex-wrap justify-center gap-4 items-center">
         {rainUmbrellaData.map(({ label, helperText }, index) => {
-          if (wind && index === 2) return null;
+          if (!wind && index === 2) return null;
 
           return (
             <InputWithSlider

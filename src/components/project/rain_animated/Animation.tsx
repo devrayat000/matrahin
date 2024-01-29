@@ -87,7 +87,7 @@ const Animation = () => {
               fov={45}
               aspect={1.5}
               near={1}
-              far={500}
+              far={120}
               position={[8, 3, 0]}
               makeDefault={true}
             />
