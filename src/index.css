@@ -81,6 +81,6 @@ canvas {
   border-radius: 3px; /* Optional: Rounded borders */
 
   /* Optional: Add a box-shadow to the canvas */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  /* color: #069fec */
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); */
+  color: #52010d;
 }

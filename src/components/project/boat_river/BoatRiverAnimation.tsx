@@ -41,7 +41,7 @@ const BoatRiverAnimation = () => {
   const [animationSpeedView, setAnimationSpeedView] = useState<number>(1); //can be 0.25, 0.5, 1,1.25. 1.5, 1.75, 2
 
   const reset = useCallback(() => {
-    console.log("in reset", animatingPoints, currentIndex);
+    // console.log("in reset", animatingPoints, currentIndex);
     if (!ctx) return;
 
     setEnded(false);
