@@ -6,19 +6,10 @@ import type {
 import type { NextAuthOptions, Session } from "next-auth";
 import { getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { TransactionCheck } from "../types/AccessCode";
-import { Student } from "../types/Student";
-import { gql, gqlClient } from "../utils";
-import {
-  CreateStudentMutation,
-  CreateStudentMutationVariables,
-  FindStudentQuery,
-  FindStudentQueryVariables,
-  PublishStudentMutation,
-  PublishStudentMutationVariables,
-} from "~/generated/graphql";
 import { getSession } from "next-auth/react";
 import { revalidateTag, unstable_cache } from "next/cache";
+
+import { TransactionCheck } from "../types/AccessCode";
 import { findOrCreateUser, verifyProductKey } from "~/services/graphql/user";
 
 // You'll need to import and pass this

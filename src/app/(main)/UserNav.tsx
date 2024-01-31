@@ -14,7 +14,8 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { auth, findStudent } from "~/lib/auth";
+import { auth } from "~/lib/auth";
+import { findStudent } from "~/services/graphql/user";
 import { cn } from "~/lib/utils";
 import { getAvatarLetters, getLastName } from "~/lib/utils/name";
 

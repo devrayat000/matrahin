@@ -3,7 +3,8 @@ import { use } from "react";
 import { Label } from "~/components/ui/label";
 import LogOutButton from "~/components/common/LogoutButton";
 import { Input } from "~/components/ui/input";
-import { auth, findStudent } from "~/lib/auth";
+import { auth } from "~/lib/auth";
+import { findStudent } from "~/services/graphql/user";
 
 export default function ProfileForm() {
   const session = use(auth());
