@@ -1,7 +1,4 @@
 import "../index.css";
-import "~/lib/globals";
-import Session from "./Session";
-import { auth } from "~/lib/auth";
 import { Metadata } from "next";
 import logo from "~/assets/logo.png";
 
