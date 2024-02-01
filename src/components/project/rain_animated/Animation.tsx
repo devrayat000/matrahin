@@ -1,6 +1,11 @@
 "use client";
 
-import { Html, OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import {
+  Html,
+  OrbitControls,
+  PerspectiveCamera,
+  useTexture,
+} from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
@@ -59,6 +64,47 @@ const createArrow = (vectors: { label: string; vector: THREE.Vector3 }[]) => {
   );
 };
 
+const Ground = () => {
+  const textureColorPath = useTexture("/paving_color.jpg");
+  textureColorPath.wrapS = THREE.RepeatWrapping;
+  textureColorPath.wrapT = THREE.RepeatWrapping;
+  textureColorPath.repeat.set(100, 10);
+  const textureRoughnessPath = useTexture("/paving_roughness.jpg");
+  textureRoughnessPath.wrapS = THREE.RepeatWrapping;
+  textureRoughnessPath.wrapT = THREE.RepeatWrapping;
+  textureRoughnessPath.repeat.set(100, 10);
+
+  const textureNormalPath = useTexture("/paving_normal.jpg");
+  textureNormalPath.wrapS = THREE.RepeatWrapping;
+  textureNormalPath.wrapT = THREE.RepeatWrapping;
+  textureNormalPath.repeat.set(100, 10);
+
+  const textureAmbientOcclusionPath = useTexture(
+    "/paving_ambient_occlusion.jpg"
+  );
+  textureAmbientOcclusionPath.wrapS = THREE.RepeatWrapping;
+  textureAmbientOcclusionPath.wrapT = THREE.RepeatWrapping;
+  textureAmbientOcclusionPath.repeat.set(100, 10);
+
+  return (
+    <mesh
+      receiveShadow={true}
+      rotation={[-Math.PI / 2, 0, 0]}
+      position={[0, 0, 0]}
+    >
+      <planeGeometry args={[1000, 100]} />
+      <meshStandardMaterial
+        map={textureColorPath}
+        normalMap={textureNormalPath}
+        normalScale={new THREE.Vector2(2, 2)}
+        roughness={1}
+        roughnessMap={textureRoughnessPath}
+        aoMap={textureAmbientOcclusionPath}
+        aoMapIntensity={1}
+      />
+    </mesh>
+  );
+};
 const Animation = () => {
   const directionalLightRef = React.useRef<THREE.DirectionalLight>(null);
 
@@ -91,8 +137,9 @@ const Animation = () => {
               position={[8, 3, 0]}
               makeDefault={true}
             />
+            <Ground />
 
-            <GridSurface />
+            {/* <GridSurface /> */}
             <Object />
             <OrbitControls maxDistance={20} minDistance={5} />
             <hemisphereLight
