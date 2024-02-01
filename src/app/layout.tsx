@@ -1,5 +1,6 @@
 import "../index.css";
 import { Metadata } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import logo from "~/assets/logo.png";
 
 export const metadata: Metadata = {
@@ -37,6 +38,7 @@ export default async function RootLayout({
       <body>
         {/* <Session session={session}>{children}</Session> */}
         {children}
+        <GoogleAnalytics gaId={process.env.GOOGLE_TAG} />
       </body>
     </html>
   );

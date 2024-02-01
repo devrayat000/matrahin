@@ -2793,6 +2793,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@next/third-parties@npm:^14.1.0":
+  version: 14.1.0
+  resolution: "@next/third-parties@npm:14.1.0"
+  dependencies:
+    third-party-capital: "npm:1.0.20"
+  peerDependencies:
+    next: ^13.0.0 || ^14.0.0
+    react: ^18.2.0
+  checksum: 10/5c65829d901cad5ed56432632f374c14e3dbae233553733fc962d63d055fd271a3bdb0209c1c0196887392c6f9625d24d74ee5c7a9fe0a70dc25be4659b46ca5
+  languageName: node
+  linkType: hard
+
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -4404,6 +4416,7 @@ __metadata:
     "@graphql-codegen/typescript-operations": "npm:^4.0.1"
     "@hookform/resolvers": "npm:^3.3.2"
     "@hygraph/utils": "npm:^1.2.1"
+    "@next/third-parties": "npm:^14.1.0"
     "@radix-ui/react-accordion": "npm:^1.1.2"
     "@radix-ui/react-avatar": "npm:^1.0.4"
     "@radix-ui/react-dialog": "npm:^1.0.5"
@@ -9218,6 +9231,13 @@ __metadata:
   dependencies:
     any-promise: "npm:^1.0.0"
   checksum: 10/486e1283a867440a904e36741ff1a177faa827cf94d69506f7e3ae4187b9afdf9ec368b3d8da225c192bfe2eb943f3f0080594156bf39f21b57cd1411e2e7f6d
+  languageName: node
+  linkType: hard
+
+"third-party-capital@npm:1.0.20":
+  version: 1.0.20
+  resolution: "third-party-capital@npm:1.0.20"
+  checksum: 10/40e2531b428a21f05531fc62ef82859c0071211eff09588baf75d4b525096bbdb4f93e17e2d538849db8d4fc3cceb074933d7be59fddc26f86718fbbe852a97f
   languageName: node
   linkType: hard
 
