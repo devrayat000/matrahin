@@ -14,7 +14,7 @@ function Animation({ length }: { length: number }) {
   const stringRef = useRef<THREE.Mesh>(null);
   const bobRef = useRef<THREE.Mesh>(null);
   const frequency = 1;
-  const amplitude = 1.5;
+  const amplitude = 0.15;
   useEffect(() => {
     if (stringRef.current) {
       // stringRef.current.translateY(length);
@@ -40,8 +40,8 @@ function Animation({ length }: { length: number }) {
   return (
     <group ref={pendulumRef}>
       {/* string */}
-      <mesh ref={stringRef} position={[0, length + 1.6, 0]}>
-        <cylinderGeometry args={[0.01, 0.01, length]} />
+      <mesh castShadow={true} ref={stringRef} position={[0, length + 1.6, 0]}>
+        <cylinderGeometry args={[0.008, 0.008, length]} />
         <meshStandardMaterial color={0x222222} roughness={0} metalness={0.2} />
       </mesh>
 
@@ -93,17 +93,25 @@ const Structure = ({ length }: { length: number }) => {
           rotation={[0, 0, Math.PI / 2]}
         >
           <cylinderGeometry args={[0.1, 0.1, length + 4]} />
-          <meshStandardMaterial map={wood_color} />
+          <meshStandardMaterial
+            map={wood_color}
+            roughnessMap={wood_roughness}
+            normalMap={wood_normal}
+          />
         </mesh>
       </group>
       <group>
-        <mesh position={[0, length + 2 - 0.2, 0]} castShadow={true}>
+        <mesh castShadow={true} position={[0, length + 2 - 0.2, 0]}>
           <ringGeometry args={[0.2, 0.3]} />
-          <meshStandardMaterial map={wood_color} roughness={1} />
+          <meshStandardMaterial side={THREE.DoubleSide} map={wood_color} />
         </mesh>
-        <mesh position={[0, length + 2 - 0.4, 0]} castShadow={true}>
+        <mesh
+          castShadow={true}
+          receiveShadow={true}
+          position={[0, length + 2 - 0.4, 0]}
+        >
           <circleGeometry args={[0.1]} />
-          <meshStandardMaterial map={wood_color} />
+          <meshStandardMaterial side={THREE.DoubleSide} map={wood_color} />
         </mesh>
       </group>
     </group>
@@ -155,40 +163,36 @@ export default function Pendulum() {
   const directionalLightRef = useRef<THREE.DirectionalLight>(null);
 
   const length = 4;
-  useEffect(() => {
-    if (directionalLightRef.current) {
-      directionalLightRef.current.shadow.camera.top = 4 * length;
-      directionalLightRef.current.shadow.camera.right = 4 * length;
-      directionalLightRef.current.shadow.camera.bottom = -4 * length;
-      directionalLightRef.current.shadow.camera.left = -4 * length;
-    }
-  }, []);
 
   return (
     <div className="w-[100vh] h-[100vh]">
-      <Canvas shadows>
+      <Canvas shadows="soft">
         <color attach="background" args={[0x87ceeb]} />
         <fog attach="fog" args={[0x87ceeb, 30, 180]} />
         <Animation length={length} />
         <Ground />
         <Structure length={length} />
         <PerspectiveCamera
-          fov={60}
-          aspect={1}
+          fov={75}
+          aspect={1.5}
           near={1}
           far={1000}
-          position={[0, 2, length + 10]}
+          position={[0, 3, length + 10]}
           makeDefault={true}
         />
+        {/* <cameraHelper args={[directionalLightRef.current.shadow.camera]} /> */}
+
         <ambientLight args={[0xdddddd, 0.4]} />
         <directionalLight
           ref={directionalLightRef}
           args={[0xffffff, 3]}
           position={[0, length + 5, length + 5]}
           castShadow={true}
+          shadow-camera-top={length + 6}
+          shadow-camera-left={-length - 6}
         />
 
-        <OrbitControls minDistance={1} maxDistance={50} />
+        <OrbitControls minDistance={1} maxDistance={500} />
       </Canvas>
     </div>
   );
