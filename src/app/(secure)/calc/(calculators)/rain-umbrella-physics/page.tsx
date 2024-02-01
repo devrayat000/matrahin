@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import RainBasic from "~/components/project/rain_animated/RainBasic";
 import RainInput from "~/components/project/rain_animated/RainInput";
 import RainWithWind from "~/components/project/rain_animated/RainWithWind";
@@ -37,4 +38,10 @@ const RiverPage = () => {
   );
 };
 
-export default RiverPage;
+export default function RiverFormPage() {
+  return (
+    <Suspense>
+      <RiverPage />
+    </Suspense>
+  );
+}

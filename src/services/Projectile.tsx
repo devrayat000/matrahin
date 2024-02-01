@@ -62,7 +62,11 @@ export default class Projectile<Input extends ProjectileInput>
     for (const key in input) {
       if (Object.prototype.hasOwnProperty.call(input, key)) {
         const element = input[key];
-        Object.defineProperty(this, key, { value: element });
+        Object.defineProperty(this, key, {
+          value: element,
+          writable: true,
+          configurable: true,
+        });
       }
     }
     this.yi = input.yi || 0;

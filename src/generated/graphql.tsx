@@ -7257,21 +7257,6 @@ export enum _SystemDateTimeFieldVariation {
   Localization = 'localization'
 }
 
-export type GetTeamMembersQueryVariables = Exact<{
-  width?: InputMaybe<Scalars['Int']['input']>;
-  height?: InputMaybe<Scalars['Int']['input']>;
-}>;
-
-
-export type GetTeamMembersQuery = { __typename?: 'Query', members: Array<{ __typename?: 'TeamMember', id: string, name: string, designation: string, image: { __typename?: 'Asset', height?: number | null, width?: number | null, src: string } }> };
-
-export type GetExamplesQueryVariables = Exact<{
-  slug: Scalars['String']['input'];
-}>;
-
-
-export type GetExamplesQuery = { __typename?: 'Query', product?: { __typename?: 'Product', name: string, tutorial?: string | null, examples: Array<{ __typename?: 'Example', id: string, source?: string | null, question: { __typename?: 'Asset', src: string }, answers: Array<{ __typename?: 'Asset', src: string }> }> } | null };
-
 export type GetCalculatorsQueryVariables = Exact<{
   width?: InputMaybe<Scalars['Int']['input']>;
   height?: InputMaybe<Scalars['Int']['input']>;
@@ -7280,26 +7265,22 @@ export type GetCalculatorsQueryVariables = Exact<{
 
 export type GetCalculatorsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', id: string, title: string, to: string, img: { __typename?: 'Asset', width?: number | null, height?: number | null, src: string } }> };
 
-export type FindStudentQueryVariables = Exact<{
-  email: Scalars['String']['input'];
+export type GetCalculatorCountQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCalculatorCountQuery = { __typename?: 'Query', productsConnection: { __typename?: 'ProductConnection', aggregate: { __typename?: 'Aggregate', count: number } } };
+
+export type GetExamplesQueryVariables = Exact<{
+  slug: Scalars['String']['input'];
 }>;
 
 
-export type FindStudentQuery = { __typename?: 'Query', student?: { __typename?: 'Student', id: string, name: string, email: string, phone?: string | null, institution?: string | null, hscYear?: string | null } | null };
+export type GetExamplesQuery = { __typename?: 'Query', product?: { __typename?: 'Product', name: string, tutorial?: string | null, examples: Array<{ __typename?: 'Example', id: string, source?: string | null, question: { __typename?: 'Asset', src: string }, answers: Array<{ __typename?: 'Asset', src: string }> }> } | null };
 
-export type CreateStudentMutationVariables = Exact<{
-  input: StudentCreateInput;
-}>;
+export type GetExampleCountQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CreateStudentMutation = { __typename?: 'Mutation', createStudent?: { __typename?: 'Student', id: string } | null };
-
-export type PublishStudentMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type PublishStudentMutation = { __typename?: 'Mutation', publishStudent?: { __typename?: 'Student', id: string } | null };
+export type GetExampleCountQuery = { __typename?: 'Query', examplesConnection: { __typename?: 'ExampleConnection', aggregate: { __typename?: 'Aggregate', count: number } } };
 
 export type CreateHistoryMutationVariables = Exact<{
   pathname: Scalars['String']['input'];
@@ -7323,7 +7304,46 @@ export type GetHistoriesQueryVariables = Exact<{
 
 export type GetHistoriesQuery = { __typename?: 'Query', histories: Array<{ __typename?: 'History', id: string, pathname: string, createdAt: any }> };
 
+export type GetCountsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCountsQuery = { __typename?: 'Query', studentsConnection: { __typename?: 'StudentConnection', aggregate: { __typename?: 'Aggregate', count: number } }, examplesConnection: { __typename?: 'ExampleConnection', aggregate: { __typename?: 'Aggregate', count: number } }, productsConnection: { __typename?: 'ProductConnection', aggregate: { __typename?: 'Aggregate', count: number } } };
+
+export type GetTeamMembersQueryVariables = Exact<{
+  width?: InputMaybe<Scalars['Int']['input']>;
+  height?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetTeamMembersQuery = { __typename?: 'Query', members: Array<{ __typename?: 'TeamMember', id: string, name: string, designation: string, image: { __typename?: 'Asset', height?: number | null, width?: number | null, src: string } }> };
+
+export type FindStudentQueryVariables = Exact<{
+  email: Scalars['String']['input'];
+}>;
+
+
+export type FindStudentQuery = { __typename?: 'Query', student?: { __typename?: 'Student', id: string, name: string, email: string, phone?: string | null, institution?: string | null, hscYear?: string | null } | null };
+
+export type CreateStudentMutationVariables = Exact<{
+  input: StudentCreateInput;
+}>;
+
+
+export type CreateStudentMutation = { __typename?: 'Mutation', createStudent?: { __typename?: 'Student', id: string } | null };
+
+export type PublishStudentMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type PublishStudentMutation = { __typename?: 'Mutation', publishStudent?: { __typename?: 'Student', id: string } | null };
+
 export type GetAccessCodesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAccessCodesQuery = { __typename?: 'Query', accessCodes: Array<{ __typename?: 'AccessCode', code: string }> };
+
+export type GetStudentsCountQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetStudentsCountQuery = { __typename?: 'Query', studentsConnection: { __typename?: 'StudentConnection', aggregate: { __typename?: 'Aggregate', count: number } } };

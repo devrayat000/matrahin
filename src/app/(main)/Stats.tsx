@@ -1,10 +1,6 @@
+import { use } from "react";
 import { cn } from "~/lib/utils";
-
-const stats = [
-  { id: 1, name: "Transactions every 24 hours", value: "44 million" },
-  { id: 2, name: "Assets under holding", value: "$119 trillion" },
-  { id: 3, name: "New users annually", value: "46,000" },
-];
+import { getCounts } from "~/services/graphql/stat";
 
 const gridCols = {
   1: "md:grid-cols-1",
@@ -14,17 +10,17 @@ const gridCols = {
 };
 
 export default function Stats() {
+  const { students, examples, calculators } = use(getCounts());
+
+  const stats = [
+    { id: 1, name: "Students", value: students },
+    { id: 2, name: "Simulators", value: calculators },
+    { id: 3, name: "Examples", value: examples },
+  ];
+
   return (
     <div className="bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div>
-          <h2 className="text-3xl md:text-4xl font-bold leading-tight text-center">
-            Trusted by creators worldwide
-          </h2>
-          <p className="text-base md:text-lg text-muted-foreground mt-3 text-center">
-            Lorem ipsum dolor sit amet consect adipisicing possimus.
-          </p>
-        </div>
         <dl
           className={cn("mt-16 grid grid-cols-1 gap-1", gridCols[stats.length])}
         >

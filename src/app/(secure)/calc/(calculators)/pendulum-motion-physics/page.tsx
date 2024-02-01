@@ -28,6 +28,7 @@ import {
   massConverter,
 } from "~/lib/UnitConverter";
 import UnitValue, { IUnitValue } from "~/lib/UnitValue";
+import "~/lib/globals";
 
 type PendulumParams = {
   aMax: IUnitValue<any>;

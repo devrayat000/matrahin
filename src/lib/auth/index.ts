@@ -6,25 +6,11 @@ import type {
 import type { NextAuthOptions, Session } from "next-auth";
 import { getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { TransactionCheck } from "../types/AccessCode";
-import { Student } from "../types/Student";
-import { gql, gqlClient } from "../utils";
-import {
-  CreateStudentMutation,
-  CreateStudentMutationVariables,
-  FindStudentQuery,
-  FindStudentQueryVariables,
-  PublishStudentMutation,
-  PublishStudentMutationVariables,
-} from "~/generated/graphql";
-import { getSession as getAuthSession } from "next-auth/react";
-import { cache } from "react";
+import { getSession } from "next-auth/react";
 import { revalidateTag, unstable_cache } from "next/cache";
-import { verifyProductKey } from "~/services/graphql/user";
 
-export const getSession = unstable_cache(getAuthSession, ["login"], {
-  tags: ["login"],
-});
+import { TransactionCheck } from "../types/AccessCode";
+import { findOrCreateUser, verifyProductKey } from "~/services/graphql/user";
 
 // You'll need to import and pass this
 // to `NextAuth` in `app/api/auth/[...nextauth]/route.ts`
@@ -114,80 +100,6 @@ export const auth: Auth = unstable_cache(
       return getServerSession(...args, authConfig);
     }
   },
-  ["login"],
-  { tags: ["login"] }
+  ["session", "login"],
+  { tags: ["session", "login"] }
 );
-
-export async function findOrCreateUser(params: Student) {
-  try {
-    const student = await findStudent(params.email);
-
-    if (!student) {
-      await createStudent(params);
-    }
-  } catch (error) {
-    console.log(error);
-    throw new Error("Error loging in! Please contact support.");
-  }
-}
-
-const FIND_STUDENT = gql`
-  query FindStudent($email: String!) {
-    student(where: { email: $email }) {
-      id
-      name
-      email
-      phone
-      institution
-      hscYear
-    }
-  }
-`;
-
-export const findStudent = cache(async (email: string) => {
-  console.log("okay");
-  const { student } = await gqlClient.request<
-    FindStudentQuery,
-    FindStudentQueryVariables
-  >(
-    FIND_STUDENT,
-    { email },
-    { cache: "force-cache", next: { tags: ["login"] } }
-  );
-  console.log("finding...");
-  console.log({ student });
-
-  return student;
-});
-
-const CREATE_STUDENT = gql`
-  mutation CreateStudent($input: StudentCreateInput!) {
-    createStudent(data: $input) {
-      id
-    }
-  }
-`;
-
-const PUBLISH_STUDENT = gql`
-  mutation PublishStudent($id: ID!) {
-    publishStudent(where: { id: $id }) {
-      id
-    }
-  }
-`;
-
-async function createStudent(params: Student) {
-  const {
-    createStudent: { id },
-  } = await gqlClient.request<
-    CreateStudentMutation,
-    CreateStudentMutationVariables
-  >(CREATE_STUDENT, { input: params });
-  console.log("creating...");
-  console.log(id);
-
-  await gqlClient.request<
-    PublishStudentMutation,
-    PublishStudentMutationVariables
-  >(PUBLISH_STUDENT, { id });
-}
