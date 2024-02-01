@@ -8,13 +8,20 @@ import {
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import Pendulum from "./Pendulum";
 
-function Animation({ length }: { length: number }) {
+function Animation({
+  pendulum,
+  angle,
+  length,
+}: {
+  pendulum: Pendulum;
+  angle: number;
+  length: number;
+}) {
   const pendulumRef = useRef<THREE.Group>(null);
   const stringRef = useRef<THREE.Mesh>(null);
   const bobRef = useRef<THREE.Mesh>(null);
-  const frequency = 1;
-  const amplitude = 0.15;
   useEffect(() => {
     if (stringRef.current) {
       // stringRef.current.translateY(length);
@@ -25,16 +32,18 @@ function Animation({ length }: { length: number }) {
       bobRef.current.geometry.translate(0, -length - 0.5, 0);
     }
   }, []);
-  function update(totalTime: number) {
-    stringRef.current.rotation.z = Math.cos(totalTime * frequency) * amplitude;
-    bobRef.current.rotation.z = Math.cos(totalTime * frequency) * amplitude;
+  function update(dt: number) {
+    const theta = pendulum.step(0.01);
+    console.log(dt * 1000);
+    stringRef.current.rotation.z = theta;
+    bobRef.current.rotation.z = theta;
   }
 
   const bobColor = useTexture("/marble_color.jpg");
   const bobRoughness = useTexture("/marble_roughness.jpg");
   useFrame(({ clock }) => {
     if (pendulumRef.current) {
-      update(clock.getElapsedTime());
+      update(clock.getDelta());
     }
   });
   return (
@@ -86,13 +95,24 @@ const Structure = ({ length }: { length: number }) => {
             roughnessMap={wood_roughness}
           />
         </mesh>
+        <mesh
+          castShadow={true}
+          position={[length + 2, length / 2 + 2, 0]}
+          rotation={[0, Math.PI / 4, 0]}
+        >
+          <cylinderGeometry args={[0.3, 0.3, length + 4]} />
+          <meshStandardMaterial
+            map={wood_color}
+            roughnessMap={wood_roughness}
+          />
+        </mesh>
 
         <mesh
           castShadow={true}
-          position={[-length / 2, length + 2, 0]}
+          position={[0, length + 2, 0]}
           rotation={[0, 0, Math.PI / 2]}
         >
-          <cylinderGeometry args={[0.1, 0.1, length + 4]} />
+          <cylinderGeometry args={[0.1, 0.1, 2 * length + 4]} />
           <meshStandardMaterial
             map={wood_color}
             roughnessMap={wood_roughness}
@@ -159,17 +179,28 @@ const Ground = () => {
     </mesh>
   );
 };
-export default function Pendulum() {
+export default function PendulumAnimation() {
   const directionalLightRef = useRef<THREE.DirectionalLight>(null);
 
-  const length = 4;
+  const angle = 60;
+  const length = 2;
+
+  const p: Pendulum = new Pendulum(
+    (angle * Math.PI) / 180,
+    0,
+    length,
+    1.5,
+    9.8,
+    0,
+    0
+  );
 
   return (
     <div className="w-[100vh] h-[100vh]">
       <Canvas shadows="soft">
         <color attach="background" args={[0x87ceeb]} />
         <fog attach="fog" args={[0x87ceeb, 30, 180]} />
-        <Animation length={length} />
+        <Animation pendulum={p} angle={angle} length={length} />
         <Ground />
         <Structure length={length} />
         <PerspectiveCamera
@@ -190,6 +221,8 @@ export default function Pendulum() {
           castShadow={true}
           shadow-camera-top={length + 6}
           shadow-camera-left={-length - 6}
+          shadow-camera-right={length + 6}
+          shadow-camera-bottom={-length - 6}
         />
 
         <OrbitControls minDistance={1} maxDistance={500} />
