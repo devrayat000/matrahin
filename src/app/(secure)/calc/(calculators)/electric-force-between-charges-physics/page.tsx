@@ -42,6 +42,17 @@ export default function ElectricForcePage() {
     }
   }, [initialParams]);
 
+  const onSubmit = form.handleSubmit((data) => {
+    switch (data.initialParams) {
+      case "f_net":
+        return;
+      // case "f_neut":
+      //   return <IterableFiels key={initialParams} />;
+      default:
+        return <StaticFields />;
+    }
+  });
+
   return (
     <div className="min-h-screen flex flex-col items-center gap-4">
       <Form {...form}>
