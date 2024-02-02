@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Environment,
   OrbitControls,
   PerspectiveCamera,
   useTexture,
@@ -49,12 +50,16 @@ function Animation({ pendulum }: { pendulum: Pendulum }) {
   const pendulumRef = useRef<THREE.Group>(null);
   const stringRef = useRef<THREE.Mesh>(null);
   const bobRef = useRef<THREE.Mesh>(null);
-
   const bobColor = useTexture("/marble_color.jpg");
   const bobRoughness = useTexture("/marble_roughness.jpg");
-  useFrame(() => {
+
+  // const timeRef = useRef(0);
+  // const timeElapsed = useMemo(() => () => timeRef.current, []);
+
+  useFrame(({ clock }) => {
     if (pendulumRef.current) {
       const theta = pendulum.step(0.01);
+      // timeRef.current += 0.01;
       pendulumRef.current.rotation.z = theta;
     }
   });
@@ -76,6 +81,16 @@ function Animation({ pendulum }: { pendulum: Pendulum }) {
           metalness={0.6}
         />
       </mesh>
+
+      {/* <Html>
+        <div className="absolute bottom-0 right-0 m-4 bg-slate-100 p-4 shadow-lg rounded-lg">
+          <h1 className="text-2xl font-bold">Pendulum</h1>
+          <p>Length: {length} m</p>
+          <p>Angle:&nbsp;{((angle * 180) / Math.PI).toFixed(1)}&nbsp;degrees</p>
+          <p>Time:&nbsp;{timeElapsed().toFixed(5)}&nbsp;</p>
+          
+        </div>
+      </Html> */}
     </group>
   );
 }
@@ -109,13 +124,14 @@ const Structure = ({ length }: { length: number }) => {
         </mesh> */}
         <mesh
           castShadow={true}
-          position={[2, length / 2 + 2, 0]}
+          position={[3, length / 2 + 2, 0]}
           rotation={[0, Math.PI / 4, 0]}
         >
-          <cylinderGeometry args={[0.3, 0.3, length + 4]} />
+          <cylinderGeometry args={[1, 1, 200]} />
           <meshStandardMaterial
             map={wood_color}
             roughnessMap={wood_roughness}
+            normalMap={wood_normal}
           />
         </mesh>
 
@@ -204,7 +220,6 @@ const Ground = () => {
   );
 };
 export default function PendulumAnimation() {
-  const directionalLightRef = useRef<THREE.DirectionalLight>(null);
   const [length, setLength] = useState(4);
   const [angle, setAngle] = useState(60);
 
@@ -227,10 +242,11 @@ export default function PendulumAnimation() {
       />
       <div className="w-[100vh] h-[100vh] ">
         <Canvas shadows="soft">
-          <color attach="background" args={[0x87ceeb]} />
-          <fog attach="fog" args={[0x87ceeb, 30, 180]} />
+          <Environment background blur={0} preset="apartment" />
+          {/* <color attach="background" args={[0x87ceeb]} /> */}
+          {/* <fog attach="fog" args={[0x87ceeb, 30, 180]} /> */}
           <Animation pendulum={p} />
-          <Ground />
+          {/* <Ground /> */}
           <Structure length={length} />
           <PerspectiveCamera
             fov={75}
@@ -243,7 +259,7 @@ export default function PendulumAnimation() {
           />
 
           <ambientLight args={[0xdddddd, 0.4]} />
-          <directionalLight
+          {/* <directionalLight
             ref={directionalLightRef}
             args={[0xffffff, 3]}
             position={[length, length + 1, length + 1]}
@@ -252,14 +268,14 @@ export default function PendulumAnimation() {
             shadow-camera-left={-length - 25}
             shadow-camera-right={length + 25}
             shadow-camera-bottom={-length - 25}
-          />
+          /> */}
           {/* <cameraHelper args={[directionalLightRef.current.shadow.camera]} /> */}
           {/* to see positioning */}
           {/* <gridHelper
             args={[100, 100, 0x000000, 0x000000]}
             rotation={[Math.PI / 2, 0, 0]}
           /> */}
-          <OrbitControls minDistance={1} maxDistance={500} />
+          <OrbitControls minDistance={1} maxDistance={45} />
         </Canvas>
       </div>
     </div>

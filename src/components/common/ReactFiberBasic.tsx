@@ -18,7 +18,7 @@ const AxesNotation = () => (
     </Html>
   </>
 );
-const ReactFiberBasic = ({ children }) => {
+const ReactFiberBasic = ({ children }: { children: React.ReactNode }) => {
   return (
     <Canvas>
       <color attach="background" args={["#444444"]} />

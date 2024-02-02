@@ -37,7 +37,6 @@ class Pendulum {
    */
   step(dt: number) {
     let theta = this.angle;
-
     let omega = this.angularVelocity;
 
     const numSteps = Math.max(7, dt * 120);

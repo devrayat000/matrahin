@@ -297,9 +297,7 @@ const Object = () => {
 
 const AnimationWithSuspense = () => {
   return (
-    <React.Suspense
-      fallback={<div className="lg:self-center m-auto">Loading </div>}
-    >
+    <React.Suspense fallback={<p> loading ...</p>}>
       <Animation />
     </React.Suspense>
   );
