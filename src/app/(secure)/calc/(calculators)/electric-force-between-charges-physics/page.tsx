@@ -71,7 +71,7 @@ export default function ElectricForcePage() {
 
             <Button
               className="justify-self-end"
-              //   disabled={Object.keys(inputs).length < 3}
+              // disabled={Object.keys(inputs).length < 3}
             >
               Calculate
             </Button>
