@@ -3,6 +3,7 @@
 import { useAtom, useSetAtom } from "jotai";
 import InputWithSlider from "~/components/ui/input-with-slider";
 import { inputValuesAtom, rainUmbrellaData, resultAtom } from "./store";
+import { Button } from "~/components/ui/button";
 
 const RainInput = ({ wind }: { wind: boolean }) => {
   const [inputValues, setInputValues] = useAtom(inputValuesAtom);
@@ -78,13 +79,13 @@ const RainInput = ({ wind }: { wind: boolean }) => {
         })}
       </div>
       <div className="flex flex-row flex-wrap justify-center gap-4 items-center">
-        <button
+        <Button
           title="Calculate Result"
-          className="bg-primary text-white p-2 rounded-md"
+          className="bg-primary"
           onClick={handleSubmit}
         >
           Calculate
-        </button>
+        </Button>
       </div>
     </>
   );

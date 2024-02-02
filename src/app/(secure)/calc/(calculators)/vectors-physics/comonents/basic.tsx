@@ -1,7 +1,7 @@
 "use client";
 
 import { Html } from "@react-three/drei";
-import React, { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import * as THREE from "three";
 import ReactFiberBasic from "~/components/common/ReactFiberBasic";
 
@@ -37,7 +37,7 @@ const createArrow = (vectors: { label: string; vector: THREE.Vector3 }[]) => {
           colors[index],
         ];
         return (
-          <React.Fragment key={index}>
+          <Fragment key={index}>
             <arrowHelper args={arrow} />
             <Html position={v.toArray()}>
               <p
@@ -50,7 +50,7 @@ const createArrow = (vectors: { label: string; vector: THREE.Vector3 }[]) => {
                 {label}
               </p>
             </Html>
-          </React.Fragment>
+          </Fragment>
         );
       })}
     </group>
@@ -108,7 +108,7 @@ const Parallelogram = ({ vector1, vector2 }) => {
   return <mesh geometry={geometry} material={material} />;
 };
 
-const Animation = () => {
+const BasicVectorCalcultor = () => {
   const v = new THREE.Vector3();
   const initial = {
     A: {
@@ -158,74 +158,69 @@ const Animation = () => {
     }
   };
   return (
-    <>
-      <h1 className="text-center text-4xl py-3 text-primary font-bold leading-8 text-gray-900 ">
-        Vector Calculation
-      </h1>
-      <div className="flex flex-col md:flex-row items-center justify-center">
-        <div className="m-auto md:mx-0 my-4 h-[50vh] w-[40vh] md:w-[100vh] md:h-[80vh]">
-          <ReactFiberBasic>
-            <group>
-              {createArrow([
-                { label: "A", vector: A },
-                { label: "B", vector: B },
-                { label: "AxB", vector: cross },
-                { label: "AxB", vector: cross.clone().negate() },
-                { label: "A+B", vector: add },
-                { label: "A-B", vector: sub },
-              ])}
-              <Parallelogram vector1={A} vector2={B} />
-            </group>
-          </ReactFiberBasic>
+    <div className="flex flex-col md:flex-row items-center justify-center">
+      <div className="m-auto md:mx-0 my-4 h-[50vh] w-[40vh] md:w-[100vh] md:h-[80vh]">
+        <ReactFiberBasic>
+          <group>
+            {createArrow([
+              { label: "A", vector: A },
+              { label: "B", vector: B },
+              { label: "AxB", vector: cross },
+              { label: "AxB", vector: cross.clone().negate() },
+              { label: "A+B", vector: add },
+              { label: "A-B", vector: sub },
+            ])}
+            <Parallelogram vector1={A} vector2={B} />
+          </group>
+        </ReactFiberBasic>
+      </div>
+
+      <div className="m-auto mx-2 flex flex-row items-center gap-2 md:gap-2 text-center justify-center p-2">
+        <div className=" border p-2 bg-stone-100">
+          <VectorInput
+            label={"Ax"}
+            value={A.x}
+            onChangeInput={handleValueChange}
+          />
+
+          <hr className="my-2 border-t border-gray-300" />
+          <VectorInput
+            label={"Ay"}
+            value={A.y}
+            onChangeInput={handleValueChange}
+          />
+          <hr className="my-2 border-t border-gray-300" />
+          <VectorInput
+            label={"Az"}
+            value={A.z}
+            onChangeInput={handleValueChange}
+          />
         </div>
-
-        <div className="m-auto mx-2 flex flex-row items-center gap-2 md:gap-2 text-center justify-center p-2">
-          <div className=" border p-2 bg-stone-100">
-            <VectorInput
-              label={"Ax"}
-              value={A.x}
-              onChangeInput={handleValueChange}
-            />
-
-            <hr className="my-2 border-t border-gray-300" />
-            <VectorInput
-              label={"Ay"}
-              value={A.y}
-              onChangeInput={handleValueChange}
-            />
-            <hr className="my-2 border-t border-gray-300" />
-            <VectorInput
-              label={"Az"}
-              value={A.z}
-              onChangeInput={handleValueChange}
-            />
-          </div>
-          <div className="border p-2 bg-stone-100">
-            <VectorInput
-              label={"Bx"}
-              value={B.x}
-              onChangeInput={handleValueChange}
-            />
-            <hr className="my-2 border-t border-gray-300" />
-            <VectorInput
-              label={"By"}
-              value={B.y}
-              onChangeInput={handleValueChange}
-            />
-            <hr className="my-2 border-t border-gray-300" />
-            <VectorInput
-              label={"Bz"}
-              value={B.z}
-              onChangeInput={handleValueChange}
-            />
-          </div>
+        <div className="border p-2 bg-stone-100">
+          <VectorInput
+            label={"Bx"}
+            value={B.x}
+            onChangeInput={handleValueChange}
+          />
+          <hr className="my-2 border-t border-gray-300" />
+          <VectorInput
+            label={"By"}
+            value={B.y}
+            onChangeInput={handleValueChange}
+          />
+          <hr className="my-2 border-t border-gray-300" />
+          <VectorInput
+            label={"Bz"}
+            value={B.z}
+            onChangeInput={handleValueChange}
+          />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default Animation;
+export default BasicVectorCalcultor;
 interface VectorInputProps {
   label: string;
   value: number;
