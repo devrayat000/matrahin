@@ -1,72 +1,9 @@
 "use client";
 
-import { MathJax, MathJaxContext } from "better-react-mathjax";
+import { MathJax } from "better-react-mathjax";
 import { useAtomValue } from "jotai";
 import { RotatedUmbrella, getArrow } from "./SVGUtils";
 import { RainVelocityResultsType, resultAtom } from "./store";
-
-const config = {
-  loader: { load: ["[tex]/html"] },
-  tex: {
-    packages: { "[+]": ["html"] },
-    inlineMath: [
-      ["$", "$"],
-      ["\\(", "\\)"],
-    ],
-    displayMath: [
-      ["$$", "$$"],
-      ["\\[", "\\]"],
-    ],
-  },
-};
-
-const InitializeVariables = ({
-  v_object,
-  v_wind,
-  v_rain,
-}: RainVelocityResultsType) => {
-  return (
-    <p className="self-start ">
-      <b>Step: 1</b>
-      <br />
-      Initialize variables:
-      <MathJax>
-        {`
-        $\\begin{gather}
-        Velocity\\space of\\space  Rain, \\overrightarrow{V}_{r} = -${v_rain}\\hat{j}\\space unit \\\\ 
-        Velocity\\space of\\space  Object, \\overrightarrow{V}_{o} = ${v_object}\\hat{i}\\space unit \\\\
-        Velocity\\space of\\space  Wind, \\overrightarrow{V}_{w} = ${v_wind}\\hat{i}\\space unit \\\\
-        \\end{gather}$
-      `}
-      </MathJax>
-    </p>
-  );
-};
-
-const WindSpeedModify = ({
-  v_object,
-  v_wind,
-  v_wind_object,
-}: RainVelocityResultsType) => {
-  const v_object_str =
-    v_object < 0 ? `(${v_object}\\hat{i})` : `${v_object}\\hat{i}`;
-  return (
-    <p className="self-start">
-      <b>Step: 2</b>
-      <br />
-      Velocity of wind <b> relative to object:</b>
-      <MathJax>
-        {`
-        $$\\begin{gather}
-        \\overrightarrow{V}_{wo} = \\overrightarrow{V}_{wind} - \\overrightarrow{V}_{object} \\\\ 
-          \\overrightarrow{V}_{wo} = ${v_wind}\\hat{i} - ${v_object_str} \\\\
-          \\overrightarrow{V}_{wo} = ${v_wind_object.toFixed(2)}\\hat{i} \\\\
-        \\end{gather}$$
-      `}
-      </MathJax>
-    </p>
-  );
-};
 
 const toDegree = (angle: number) => (angle * 180) / Math.PI;
 const RainWithWind = () => {
@@ -78,6 +15,52 @@ const RainWithWind = () => {
     v_rain_object_angle: resultAngle,
   } = result;
 
+  const InitializeVariables = ({
+    v_object,
+    v_wind,
+    v_rain,
+  }: RainVelocityResultsType) => {
+    return (
+      <p className="self-start ">
+        <b>Step: 1</b>
+        <br />
+        Initialize variables:
+        <MathJax>
+          {`
+        $\\begin{gather}
+        Velocity\\space of\\space  Rain, \\overrightarrow{V}_{r} = -${v_rain}\\hat{j}\\space unit \\\\ 
+        Velocity\\space of\\space  Object, \\overrightarrow{V}_{o} = ${v_object}\\hat{i}\\space unit \\\\
+        Velocity\\space of\\space  Wind, \\overrightarrow{V}_{w} = ${v_wind}\\hat{i}\\space unit \\\\
+        \\end{gather}$
+      `}
+        </MathJax>
+      </p>
+    );
+  };
+  const WindSpeedModify = ({
+    v_object,
+    v_wind,
+    v_wind_object,
+  }: RainVelocityResultsType) => {
+    const v_object_str =
+      v_object < 0 ? `(${v_object}\\hat{i})` : `${v_object}\\hat{i}`;
+    return (
+      <p className="self-start">
+        <b>Step: 2</b>
+        <br />
+        Velocity of wind <b> relative to object:</b>
+        <MathJax>
+          {`
+        $$\\begin{gather}
+        \\overrightarrow{V}_{wo} = \\overrightarrow{V}_{wind} - \\overrightarrow{V}_{object} \\\\ 
+          \\overrightarrow{V}_{wo} = ${v_wind}\\hat{i} - ${v_object_str} \\\\
+          \\overrightarrow{V}_{wo} = ${v_wind_object.toFixed(2)}\\hat{i} \\\\
+        \\end{gather}$$
+      `}
+        </MathJax>
+      </p>
+    );
+  };
   const CalculateAndRenderResults = () => {
     return (
       <p className="self-start">
@@ -138,19 +121,17 @@ const RainWithWind = () => {
   return (
     result.v_object && (
       <div>
-        <MathJaxContext version={3} config={config}>
-          <div className="flex flex-col ml-4 lg:ml-0 items-center lg:items-start justify-center lg:justify-normal gap-4">
-            <div className="flex flex-col md:flex-row ">
-              <InitializeVariables {...result} />
-              <Figure center={center} results={result} />
-            </div>
-
-            <WindSpeedModify {...result} />
-
-            <CalculateAndRenderResults />
-            <UmbrellaPosition angle={toDegree(resultAngle)} />
+        <div className="flex flex-col ml-4 lg:ml-0 items-center lg:items-start justify-center lg:justify-normal gap-4">
+          <div className="flex flex-col md:flex-row ">
+            <InitializeVariables {...result} />
+            <Figure center={center} results={result} />
           </div>
-        </MathJaxContext>
+
+          <WindSpeedModify {...result} />
+
+          <CalculateAndRenderResults />
+          <UmbrellaPosition angle={toDegree(resultAngle)} />
+        </div>
       </div>
     )
   );

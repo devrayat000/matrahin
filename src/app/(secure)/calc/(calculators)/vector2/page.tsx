@@ -164,19 +164,22 @@ const Animation = () => {
       </h1>
       <div className="flex flex-col md:flex-row items-center justify-center">
         <div className="m-auto md:mx-0 my-4 h-[50vh] w-[40vh] md:w-[100vh] md:h-[80vh]">
-          <ReactFiberBasic>
-            <group>
-              {createArrow([
-                { label: "A", vector: A },
-                { label: "B", vector: B },
-                { label: "AxB", vector: cross },
-                { label: "AxB", vector: cross.clone().negate() },
-                { label: "A+B", vector: add },
-                { label: "A-B", vector: sub },
-              ])}
-              <Parallelogram vector1={A} vector2={B} />
-            </group>
-          </ReactFiberBasic>
+          <React.Suspense fallback={<center>Loading...</center>}>
+            <ReactFiberBasic>
+              <group>
+                {createArrow([
+                  { label: "A", vector: A },
+                  { label: "B", vector: B },
+                  { label: "AxB", vector: cross },
+                  { label: "AxB", vector: cross.clone().negate() },
+                  { label: "A+B", vector: add },
+                  { label: "A-B", vector: sub },
+                ])}
+                <Parallelogram vector1={A} vector2={B} />
+              </group>
+              <gridHelper args={[100, 100, 0x666666, 0x666666]} />
+            </ReactFiberBasic>
+          </React.Suspense>
         </div>
 
         <div className="m-auto mx-2 flex flex-row items-center gap-2 md:gap-2 text-center justify-center p-2">
