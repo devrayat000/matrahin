@@ -1,4 +1,5 @@
 import React from "react";
+import { Slider } from "./slider";
 
 export type InputWithSliderProps = {
   label: string;
@@ -17,7 +18,7 @@ const InputWithSlider: React.FC<InputWithSliderProps> = ({
   min = -10,
 }) => {
   return (
-    <div className="flex flex-col gap-1 items-center mb-2 border p-2 bg-stone-100 ">
+    <div className="flex flex-col gap-1 items-center mb-2 border px-6 py-3 bg-stone-50 ">
       <div className="flex flex-row justify-between  w-full  gap-1 items-center">
         <label style={{ marginRight: "5px" }}>{label}</label>
 
@@ -31,13 +32,13 @@ const InputWithSlider: React.FC<InputWithSliderProps> = ({
           onChange={(e) => onChangeInput(id, e.target.value)}
         />
       </div>
-      <input
-        type="range"
+      <Slider
         min={min}
         max={10}
         step={0.1}
-        value={value}
-        onChange={(e) => onChangeInput(id, e.target.value)}
+        value={[value]}
+        onValueChange={([val]) => onChangeInput(id, val.toString())}
+        className="mt-2"
       />
       <div className="text-xs text-gray-500">{helperText}</div>
     </div>
