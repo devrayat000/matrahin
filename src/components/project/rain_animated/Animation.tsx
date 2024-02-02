@@ -1,6 +1,11 @@
 "use client";
 
-import { Html, OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import {
+  Html,
+  OrbitControls,
+  PerspectiveCamera,
+  useTexture,
+} from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
@@ -59,6 +64,53 @@ const createArrow = (vectors: { label: string; vector: THREE.Vector3 }[]) => {
   );
 };
 
+const Ground = () => {
+  const gridSurfaceRef = React.useRef<THREE.Group>(null);
+  useFrame(({ clock }) => {
+    const time = clock.getElapsedTime();
+    gridSurfaceRef.current?.position.set(0, 0, -1800 + time * 2);
+  });
+  const textureColorPath = useTexture("/paving_color.jpg");
+  textureColorPath.wrapS = THREE.RepeatWrapping;
+  textureColorPath.wrapT = THREE.RepeatWrapping;
+  textureColorPath.repeat.set(1000, 1000);
+  const textureRoughnessPath = useTexture("/paving_roughness.jpg");
+  textureRoughnessPath.wrapS = THREE.RepeatWrapping;
+  textureRoughnessPath.wrapT = THREE.RepeatWrapping;
+  textureRoughnessPath.repeat.set(1000, 1000);
+
+  const textureNormalPath = useTexture("/paving_normal.jpg");
+  textureNormalPath.wrapS = THREE.RepeatWrapping;
+  textureNormalPath.wrapT = THREE.RepeatWrapping;
+  textureNormalPath.repeat.set(1000, 1000);
+
+  const textureAmbientOcclusionPath = useTexture(
+    "/paving_ambient_occlusion.jpg"
+  );
+  textureAmbientOcclusionPath.wrapS = THREE.RepeatWrapping;
+  textureAmbientOcclusionPath.wrapT = THREE.RepeatWrapping;
+  textureAmbientOcclusionPath.repeat.set(1000, 1000);
+
+  return (
+    <mesh
+      ref={gridSurfaceRef}
+      receiveShadow={true}
+      rotation={[-Math.PI / 2, 0, 0]}
+      position={[0, 0, 0]}
+    >
+      <planeGeometry args={[4000, 4000]} />
+      <meshStandardMaterial
+        map={textureColorPath}
+        normalMap={textureNormalPath}
+        normalScale={new THREE.Vector2(2, 2)}
+        roughness={1}
+        roughnessMap={textureRoughnessPath}
+        aoMap={textureAmbientOcclusionPath}
+        aoMapIntensity={1}
+      />
+    </mesh>
+  );
+};
 const Animation = () => {
   const directionalLightRef = React.useRef<THREE.DirectionalLight>(null);
 
@@ -75,10 +127,6 @@ const Animation = () => {
 
   return (
     <div className="lg:self-start">
-      {/* <h1 className="text-center text-4xl py-3 text-primary font-bold leading-8 text-gray-900 ">
-        Rain
-      </h1> */}
-
       <div className="flex flex-col md:flex-row items-center justify-center">
         <div className="m-auto md:mx-0 my-4 h-[50vh] w-[40vh] md:w-[100vh] md:h-[90vh]">
           <Canvas shadows>
@@ -91,8 +139,10 @@ const Animation = () => {
               position={[8, 3, 0]}
               makeDefault={true}
             />
+            <Ground />
+            <fog attach="fog" args={["#a4a4a4", 30, 180]} />
 
-            <GridSurface />
+            {/* <GridSurface /> */}
             <Object />
             <OrbitControls maxDistance={20} minDistance={5} />
             <hemisphereLight
@@ -138,7 +188,7 @@ const Object = () => {
   const clockRef = useRef<THREE.Clock>(new THREE.Clock());
 
   const N = 20000; // number of snowflakes
-  const vector = new THREE.Vector3(0, -2, 0);
+  const vector = new THREE.Vector3(0, -1, 0);
   const speed = 0.75;
 
   useFrame(() => {
@@ -212,7 +262,8 @@ const Object = () => {
     snowflakes.setFromPoints(points);
 
     const pointMaterial = new THREE.PointsMaterial({
-      color: 0x0f5faf,
+      // color: 0x0f5faf,
+      color: 0xafafaf,
       clipShadows: true,
       size: 0.05, // Adjust the size as needed
       transparent: false,
@@ -233,15 +284,24 @@ const Object = () => {
       {groupRef.current &&
         createArrow([
           { label: "V(rain)", vector: vector },
-          { label: "V(object)", vector: vector.clone().set(0, 0, -2) },
-          { label: "-V (object)", vector: vector.clone().set(0, 0, 2) },
+          { label: "V(object)", vector: vector.clone().set(0, 0, -1) },
+          { label: "-V (object)", vector: vector.clone().set(0, 0, 1) },
           {
             label: "V(relative)",
-            vector: vector.clone().set(0, -2, 2),
+            vector: vector.clone().set(0, -1, 1),
           },
         ])}
     </>
   );
 };
 
-export default Animation;
+const AnimationWithSuspense = () => {
+  return (
+    <React.Suspense
+      fallback={<div className="lg:self-center m-auto">Loading </div>}
+    >
+      <Animation />
+    </React.Suspense>
+  );
+};
+export default AnimationWithSuspense;

@@ -1,6 +1,6 @@
+import Link from "next/link";
 import OptionsCard from "~/components/project/moment_of_inertia/OptionsCard";
 import constants from "~/components/project/moment_of_inertia/schema";
-
 const Moment_of_inertia = () => {
   return (
     <>
@@ -22,13 +22,14 @@ const Moment_of_inertia = () => {
       </div> */}
       <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:px-40 m-2 mx-10">
         {constants.map((option, index) => (
-          <OptionsCard
-            key={index}
-            image={option.image}
-            imageAlt={option.title}
-            name={option.title}
-            path={option.path}
-          />
+          <Link href={`moment-of-inertia-physics/${option.path}`} key={index}>
+            <OptionsCard
+              image={option.image}
+              imageAlt={option.title}
+              name={option.title}
+              path={option.path}
+            />
+          </Link>
         ))}
       </div>
     </>
