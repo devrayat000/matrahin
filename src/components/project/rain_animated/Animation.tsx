@@ -65,7 +65,7 @@ const createArrow = (vectors: { label: string; vector: THREE.Vector3 }[]) => {
 };
 
 const Ground = () => {
-  const gridSurfaceRef = React.useRef<THREE.Group>(null);
+  const gridSurfaceRef = React.useRef<THREE.Mesh>(null);
   useFrame(({ clock }) => {
     const time = clock.getElapsedTime();
     gridSurfaceRef.current?.position.set(0, 0, -1800 + time * 2);

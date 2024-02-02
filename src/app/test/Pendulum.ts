@@ -1,7 +1,7 @@
 const TWO_PI = 2 * Math.PI;
 
 class Pendulum {
-  angle: number = Math.PI / 6;
+  angle: number = 0;
   angularVelocity: number = 0;
   length: number = 1;
   mass: number = 1;
@@ -27,6 +27,7 @@ class Pendulum {
     this.friction = friction;
     this.damping = damping;
   }
+
   /**
    * Stepper function for the pendulum model.
    * It uses a Runge-Kutta approach to solve the angular differential equation
@@ -79,7 +80,7 @@ class Pendulum {
     this.angle = theta;
     this.angularVelocity = omega;
 
-    return theta;
+    return this.angle;
 
     // update the derived variables, taking into account the transfer to thermal energy if friction is present
     // this.updateDerivedVariables( this.frictionProperty.value > 0 );
@@ -159,6 +160,23 @@ class Pendulum {
    */
   omegaDerivative(theta: number): number {
     return -(this.gravity / this.length) * Math.sin(theta);
+  }
+
+  setLength(length: number) {
+    this.reset();
+    this.length = length;
+    return this;
+  }
+
+  reset() {
+    this.angle = 0;
+    this.angularVelocity = 0;
+    this.length = 1;
+    this.mass = 1;
+
+    this.gravity = 9.8;
+    this.friction = 0;
+    this.damping = 0;
   }
 }
 
