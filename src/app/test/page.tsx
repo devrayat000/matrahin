@@ -94,9 +94,9 @@ const Structure = ({ length }: { length: number }) => {
   wood_normal.wrapT = THREE.RepeatWrapping;
   wood_normal.repeat.set(100, 10);
   return (
-    <group>
+    <group rotation={[0, Math.PI / 2, 0]}>
       <group>
-        <mesh
+        {/* <mesh
           castShadow={true}
           position={[-length - 2, length / 2 + 2, 0]}
           rotation={[0, Math.PI / 4, 0]}
@@ -106,10 +106,10 @@ const Structure = ({ length }: { length: number }) => {
             map={wood_color}
             roughnessMap={wood_roughness}
           />
-        </mesh>
+        </mesh> */}
         <mesh
           castShadow={true}
-          position={[length + 2, length / 2 + 2, 0]}
+          position={[2, length / 2 + 2, 0]}
           rotation={[0, Math.PI / 4, 0]}
         >
           <cylinderGeometry args={[0.3, 0.3, length + 4]} />
@@ -124,13 +124,25 @@ const Structure = ({ length }: { length: number }) => {
           position={[0, length + 2, 0]}
           rotation={[0, 0, Math.PI / 2]}
         >
-          <cylinderGeometry args={[0.1, 0.1, 2 * length + 4]} />
+          <cylinderGeometry args={[0.1, 0.1, 4]} />
           <meshStandardMaterial
             map={wood_color}
             roughnessMap={wood_roughness}
             normalMap={wood_normal}
           />
         </mesh>
+        {/* <mesh
+          castShadow={true}
+          position={[0, length + 2, 0]}
+          rotation={[0, 0, Math.PI / 2]}
+        >
+          <cylinderGeometry args={[0.1, 0.1, 2 * length + 4]} />
+          <meshStandardMaterial
+            map={wood_color}
+            roughnessMap={wood_roughness}
+            normalMap={wood_normal}
+          />
+        </mesh> */}
       </group>
       <group>
         <mesh castShadow={true} position={[0, length + 2 - 0.2, 0]}>
@@ -225,7 +237,8 @@ export default function PendulumAnimation() {
             aspect={1.5}
             near={1}
             far={1000}
-            position={[0, 3, length + 10]}
+            position={[0, length + 1.6, length + 8]}
+            // lookAt={() => new THREE.Vector3(0, length + 1.6, 0)}
             makeDefault={true}
           />
 
@@ -233,7 +246,7 @@ export default function PendulumAnimation() {
           <directionalLight
             ref={directionalLightRef}
             args={[0xffffff, 3]}
-            position={[0, length + 5, length + 5]}
+            position={[length, length + 1, length + 1]}
             castShadow={true}
             shadow-camera-top={length + 25}
             shadow-camera-left={-length - 25}
