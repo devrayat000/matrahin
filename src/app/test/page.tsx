@@ -46,73 +46,9 @@ function rotateAboutPoint(
 function Animation({ pendulum }: { pendulum: Pendulum }) {
   const length = useMemo(() => pendulum.length, [pendulum.length]);
   const angle = useMemo(() => pendulum.angle, [pendulum.angle]);
-  // const initialPositionBob = useMemo(
-  //   () => ({
-  //     x: Math.abs(length * Math.sin(angle)),
-  //     y: Math.abs(length * Math.cos(angle)) + 1.6,
-  //   }),
-  //   [pendulum.length, pendulum.angle]
-  // );
-  // const initialPositionString = useMemo(
-  //   () => ({
-  //     x: Math.abs((length / 2) * Math.sin(angle)),
-  //     y: Math.abs((length / 2) * Math.cos(angle)) + length / 2 + 1.6,
-  //   }),
-  //   [pendulum.length, pendulum.angle]
-  // );
   const pendulumRef = useRef<THREE.Group>(null);
   const stringRef = useRef<THREE.Mesh>(null);
   const bobRef = useRef<THREE.Mesh>(null);
-  // useEffect(() => {
-  //   // if (bobRef.current) {
-  //   //   // pivot point of swing
-  //   //   bobRef.current.position.y = length + 1.6;
-  //   //   // bobRef.current.translateY(length);
-  //   //   // bobRef.current.geometry.translate(0, -length - 0.5, 0);
-  //   //   bobRef.current.geometry.applyMatrix4(
-  //   //     new THREE.Matrix4().makeTranslation(0, -length - 0.5, 0)
-  //   //   );
-  //   // }
-  //   // if (bobRef.current) {
-  //   //   bobRef.current.position.x = initialPositionBob.x;
-  //   //   bobRef.current.position.y = initialPositionBob.y;
-  //   // }
-  //   // if (stringRef.current) {
-  //   //   stringRef.current.position.x = initialPositionString.x;
-  //   //   stringRef.current.position.y = initialPositionString.y;
-  //   //   // stringRef.current.rotateZ(angle);
-  //   // }
-  //   // if (pendulumRef.current) {
-  //   //   pendulumRef.current.rotation.z = angle;
-  //   //   pendulumRef.current.position.y = length + 1.6;
-  //   // }
-  //   // if (stringRef.current) {
-  //   //   // pivot point of swing
-  //   //   stringRef.current.position.y = length + 1.6;
-  //   //   // stringRef.current.translateY(length);
-  //   //   stringRef.current.geometry.translate(0, -length / 2, 0);
-  //   // }
-  //   // if (bobRef.current) {
-  //   //   bobRef.current.position.x = 0;
-  //   //   bobRef.current.position.z = 0;
-  //   //   bobRef.current.position.y = length + 1.6;
-  //   //   // bobRef.current.geometry.translate(0, length + 1.6, 0);
-  //   //   const currentCenterOfBobGeometryY: number | null | undefined =
-  //   //     bobRef.current.geometry?.boundingSphere?.center.y;
-  //   //   console.log(currentCenterOfBobGeometryY);
-  //   //   if (
-  //   //     currentCenterOfBobGeometryY !== null &&
-  //   //     currentCenterOfBobGeometryY !== undefined
-  //   //   ) {
-  //   //     bobRef.current.geometry.translate(
-  //   //       0,
-  //   //       -currentCenterOfBobGeometryY + length + 1.6,
-  //   //       0
-  //   //     );
-  //   //   }
-  //   //   bobRef.current.geometry.translate(0, -(length + 0.5), 0);
-  //   // }
-  // }, [pendulum.length, pendulum.angle]);
 
   const bobColor = useTexture("/marble_color.jpg");
   const bobRoughness = useTexture("/marble_roughness.jpg");
@@ -140,12 +76,6 @@ function Animation({ pendulum }: { pendulum: Pendulum }) {
           metalness={0.6}
         />
       </mesh>
-
-      {/* to see positioning */}
-      {/* <gridHelper
-        args={[100, 100, 0x000000, 0x000000]}
-        rotation={[Math.PI / 2, 0, 0]}
-      /> */}
     </group>
   );
 }
@@ -263,7 +193,6 @@ const Ground = () => {
 };
 export default function PendulumAnimation() {
   const directionalLightRef = useRef<THREE.DirectionalLight>(null);
-
   const [length, setLength] = useState(4);
   const [angle, setAngle] = useState(60);
 
@@ -306,12 +235,17 @@ export default function PendulumAnimation() {
             args={[0xffffff, 3]}
             position={[0, length + 5, length + 5]}
             castShadow={true}
-            shadow-camera-top={length + 6}
-            shadow-camera-left={-length - 6}
-            shadow-camera-right={length + 6}
-            shadow-camera-bottom={-length - 6}
+            shadow-camera-top={length + 25}
+            shadow-camera-left={-length - 25}
+            shadow-camera-right={length + 25}
+            shadow-camera-bottom={-length - 25}
           />
-
+          {/* <cameraHelper args={[directionalLightRef.current.shadow.camera]} /> */}
+          {/* to see positioning */}
+          {/* <gridHelper
+            args={[100, 100, 0x000000, 0x000000]}
+            rotation={[Math.PI / 2, 0, 0]}
+          /> */}
           <OrbitControls minDistance={1} maxDistance={500} />
         </Canvas>
       </div>
