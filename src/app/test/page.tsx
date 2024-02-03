@@ -1,13 +1,14 @@
 "use client";
 
 import {
+  CubeCamera,
   Environment,
   OrbitControls,
-  PerspectiveCamera,
   useTexture,
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useMemo, useRef, useState } from "react";
+import { GUI } from "dat.gui";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import Pendulum from "./Pendulum";
 
@@ -44,27 +45,66 @@ function rotateAboutPoint(
   obj.rotateOnAxis(axis, theta); // rotate the OBJECT
 }
 
-function Animation({ pendulum }: { pendulum: Pendulum }) {
+function Animation({
+  pendulumRef,
+  guiRef,
+}: {
+  pendulumRef: React.RefObject<Pendulum> | null;
+  guiRef: React.RefObject<GUI>;
+}) {
+  const pendulum = useMemo(() => pendulumRef?.current, [pendulumRef.current]);
+  const [animating, setAnimating] = useState(true);
   const length = useMemo(() => pendulum.length, [pendulum.length]);
-  const angle = useMemo(() => pendulum.angle, [pendulum.angle]);
-  const pendulumRef = useRef<THREE.Group>(null);
+
   const stringRef = useRef<THREE.Mesh>(null);
   const bobRef = useRef<THREE.Mesh>(null);
+  const animationRef = useRef<THREE.Group>(null);
   const bobColor = useTexture("/marble_color.jpg");
   const bobRoughness = useTexture("/marble_roughness.jpg");
 
+  const angleRef = useRef<HTMLElement>(null);
+  const timeRef = useRef<HTMLElement>(null);
+  const resultObj = {
+    pause_resume: function () {
+      setAnimating((prev) => !prev);
+    },
+    angle: (pendulum.angle * 180) / Math.PI,
+    time: 0,
+  };
+
+  useEffect(() => {
+    if (guiRef.current) {
+      guiRef.current.add(resultObj, "pause_resume").name("Pause / Resume");
+      angleRef.current = guiRef.current
+        .add(resultObj, "angle", -180, 180)
+        .name("Angle").domElement;
+      timeRef.current = guiRef.current
+        .add(resultObj, "time")
+        .name("Elapsed Time").domElement;
+    }
+  }, []);
   // const timeRef = useRef(0);
   // const timeElapsed = useMemo(() => () => timeRef.current, []);
-
+  let timeCounter = 0;
+  let previousTime = -1;
   useFrame(({ clock }) => {
-    if (pendulumRef.current) {
-      const theta = pendulum.step(0.01);
-      // timeRef.current += 0.01;
-      pendulumRef.current.rotation.z = theta;
+    clock.autoStart = false;
+    if (animationRef.current && animating) {
+      if (!clock.running) clock.start();
+      const deltaTime = clock.elapsedTime - timeCounter;
+      const theta = pendulum.step(deltaTime);
+      timeCounter += deltaTime;
+      timeRef.current.textContent = `${clock.elapsedTime.toFixed(4)}s`;
+      angleRef.current.textContent = ((pendulum.angle * 180) / Math.PI).toFixed(
+        4
+      );
+      animationRef.current.rotation.z = theta;
+    } else {
+      if (clock.running) clock.stop();
     }
   });
   return (
-    <group ref={pendulumRef} position={[0, 1.6 + length, 0]}>
+    <group ref={animationRef} position={[0, 0.6, 0]}>
       {/* string */}
       <mesh castShadow={true} position={[0, -length / 2, 0]} ref={stringRef}>
         <cylinderGeometry args={[0.008, 0.008, length]} />
@@ -81,16 +121,6 @@ function Animation({ pendulum }: { pendulum: Pendulum }) {
           metalness={0.6}
         />
       </mesh>
-
-      {/* <Html>
-        <div className="absolute bottom-0 right-0 m-4 bg-slate-100 p-4 shadow-lg rounded-lg">
-          <h1 className="text-2xl font-bold">Pendulum</h1>
-          <p>Length: {length} m</p>
-          <p>Angle:&nbsp;{((angle * 180) / Math.PI).toFixed(1)}&nbsp;degrees</p>
-          <p>Time:&nbsp;{timeElapsed().toFixed(5)}&nbsp;</p>
-          
-        </div>
-      </Html> */}
     </group>
   );
 }
@@ -111,17 +141,6 @@ const Structure = ({ length }: { length: number }) => {
   return (
     <group rotation={[0, Math.PI / 2, 0]}>
       <group>
-        {/* <mesh
-          castShadow={true}
-          position={[-length - 2, length / 2 + 2, 0]}
-          rotation={[0, Math.PI / 4, 0]}
-        >
-          <cylinderGeometry args={[0.3, 0.3, length + 4]} />
-          <meshStandardMaterial
-            map={wood_color}
-            roughnessMap={wood_roughness}
-          />
-        </mesh> */}
         <mesh
           castShadow={true}
           position={[3, length / 2 + 2, 0]}
@@ -137,7 +156,7 @@ const Structure = ({ length }: { length: number }) => {
 
         <mesh
           castShadow={true}
-          position={[0, length + 2, 0]}
+          position={[0, 1, 0]}
           rotation={[0, 0, Math.PI / 2]}
         >
           <cylinderGeometry args={[0.1, 0.1, 4]} />
@@ -147,134 +166,117 @@ const Structure = ({ length }: { length: number }) => {
             normalMap={wood_normal}
           />
         </mesh>
-        {/* <mesh
-          castShadow={true}
-          position={[0, length + 2, 0]}
-          rotation={[0, 0, Math.PI / 2]}
-        >
-          <cylinderGeometry args={[0.1, 0.1, 2 * length + 4]} />
-          <meshStandardMaterial
-            map={wood_color}
-            roughnessMap={wood_roughness}
-            normalMap={wood_normal}
-          />
-        </mesh> */}
       </group>
       <group>
-        <mesh castShadow={true} position={[0, length + 2 - 0.2, 0]}>
+        <mesh castShadow={true} position={[0, 1 - 0.2, 0]}>
           <ringGeometry args={[0.2, 0.3]} />
           <meshStandardMaterial side={THREE.DoubleSide} map={wood_color} />
         </mesh>
-        <mesh
-          castShadow={true}
-          receiveShadow={true}
-          position={[0, length + 2 - 0.4, 0]}
-        >
+        <mesh castShadow={true} receiveShadow={true} position={[0, 1 - 0.4, 0]}>
           <circleGeometry args={[0.1]} />
           <meshStandardMaterial side={THREE.DoubleSide} map={wood_color} />
         </mesh>
       </group>
+      {/* <mesh>
+        
+      </mesh> */}
     </group>
   );
 };
 
-const Ground = () => {
-  const textureColorPath = useTexture("/paving_color.jpg");
-  textureColorPath.wrapS = THREE.RepeatWrapping;
-  textureColorPath.wrapT = THREE.RepeatWrapping;
-  textureColorPath.repeat.set(100, 10);
-  const textureRoughnessPath = useTexture("/paving_roughness.jpg");
-  textureRoughnessPath.wrapS = THREE.RepeatWrapping;
-  textureRoughnessPath.wrapT = THREE.RepeatWrapping;
-  textureRoughnessPath.repeat.set(100, 10);
-
-  const textureNormalPath = useTexture("/paving_normal.jpg");
-  textureNormalPath.wrapS = THREE.RepeatWrapping;
-  textureNormalPath.wrapT = THREE.RepeatWrapping;
-  textureNormalPath.repeat.set(100, 10);
-
-  const textureAmbientOcclusionPath = useTexture(
-    "/paving_ambient_occlusion.jpg"
-  );
-  textureAmbientOcclusionPath.wrapS = THREE.RepeatWrapping;
-  textureAmbientOcclusionPath.wrapT = THREE.RepeatWrapping;
-  textureAmbientOcclusionPath.repeat.set(100, 10);
-
-  return (
-    <mesh
-      receiveShadow={true}
-      rotation={[-Math.PI / 2, 0, 0]}
-      position={[0, 0, 0]}
-    >
-      <planeGeometry args={[1000, 100]} />
-      <meshStandardMaterial
-        map={textureColorPath}
-        normalMap={textureNormalPath}
-        normalScale={new THREE.Vector2(2, 2)}
-        roughness={1}
-        roughnessMap={textureRoughnessPath}
-        aoMap={textureAmbientOcclusionPath}
-        aoMapIntensity={1}
-      />
-    </mesh>
-  );
-};
 export default function PendulumAnimation() {
-  const [length, setLength] = useState(4);
-  const [angle, setAngle] = useState(60);
+  const [props, setProps] = useState<{
+    length: number;
+    angle: number;
+    gravity: number;
+    mass: number;
+  }>({
+    length: 2,
+    angle: 30,
+    gravity: 9.81,
+    mass: 2,
+  });
+  const guiRef = useRef<GUI>(null);
+  const pendululmRef = useRef<Pendulum>(null);
 
-  const p: Pendulum = useMemo(
-    () => new Pendulum((angle * Math.PI) / 180, 0, length, 1.5, 9.8, 0, 0),
-    [length, angle]
-  );
+  useEffect(() => {
+    if (!pendululmRef.current) {
+      pendululmRef.current = new Pendulum(
+        (props.angle * Math.PI) / 180,
+        props.length,
+        props.mass,
+        props.gravity,
+        0,
+        0
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    const gui = new GUI({ autoPlace: false });
+
+    guiRef.current = gui;
+    gui.domElement.style.width = "100%";
+    const obj = {
+      title: "Pendulum Simulation",
+      length: props.length,
+      angle: props.angle,
+    };
+
+    const resultDom = gui.add(obj, "title").name("Title").domElement;
+    resultDom.style.pointerEvents = "none";
+    resultDom.style.fontSize = "14px";
+    resultDom.textContent = "Pendulum Simulation";
+    // gui.__controllers[0].domElement.style.pointerEvents = "none";
+    gui
+      .add(obj, "length", 1, 10)
+      .onChange((v) => {
+        setProps((prev) => ({ ...prev, length: v }));
+        pendululmRef.current.setLength(v);
+      })
+      .name("Length");
+    gui
+      .add(obj, "angle", -180, 180)
+      .onChange((v) => {
+        setProps((prev) => ({ ...prev, angle: v }));
+        pendululmRef.current.setAngle((v * Math.PI) / 180);
+      })
+      .name("Initial Angle (degree)");
+
+    var customContainer = document.getElementById("gui");
+    customContainer.appendChild(gui.domElement);
+
+    return () => {
+      gui.destroy();
+    };
+  }, []);
 
   return (
-    <div className="flex-row">
-      <input
-        type="number"
-        defaultValue={length}
-        onChange={(e) => setLength(Number(e.target.value))}
-      />
-      <input
-        type="number"
-        defaultValue={angle}
-        onChange={(e) => setAngle(Number(e.target.value))}
-      />
-      <div className="w-[100vh] h-[100vh] ">
+    <div className="grid md:grid-cols-3 gap-0 justify-evenly items-center">
+      <div id="gui" className="self-end w-[80vh] h-[80vh]"></div>
+      <div className="w-[80vh] h-[80vh] ">
         <Canvas shadows="soft">
-          <Environment background blur={0} preset="apartment" />
-          {/* <color attach="background" args={[0x87ceeb]} /> */}
-          {/* <fog attach="fog" args={[0x87ceeb, 30, 180]} /> */}
-          <Animation pendulum={p} />
-          {/* <Ground /> */}
-          <Structure length={length} />
-          <PerspectiveCamera
-            fov={75}
-            aspect={1.5}
+          <CubeCamera
+            position={[0, 1.6, length + 1]}
             near={1}
-            far={1000}
-            position={[0, length + 1.6, length + 8]}
-            // lookAt={() => new THREE.Vector3(0, length + 1.6, 0)}
-            makeDefault={true}
+            far={50}
+            children={function (tex: THREE.Texture): ReactNode {
+              return <primitive object={tex} />;
+            }}
           />
+          <Environment
+            near={0.2}
+            far={100}
+            background
+            blur={0}
+            preset="apartment"
+          />
+          <Animation pendulumRef={pendululmRef} guiRef={guiRef} />
+          {/* <Ground /> */}
+          <Structure length={props.length} />
 
-          <ambientLight args={[0xdddddd, 0.4]} />
-          {/* <directionalLight
-            ref={directionalLightRef}
-            args={[0xffffff, 3]}
-            position={[length, length + 1, length + 1]}
-            castShadow={true}
-            shadow-camera-top={length + 25}
-            shadow-camera-left={-length - 25}
-            shadow-camera-right={length + 25}
-            shadow-camera-bottom={-length - 25}
-          /> */}
-          {/* <cameraHelper args={[directionalLightRef.current.shadow.camera]} /> */}
-          {/* to see positioning */}
-          {/* <gridHelper
-            args={[100, 100, 0x000000, 0x000000]}
-            rotation={[Math.PI / 2, 0, 0]}
-          /> */}
+          {/* <ambientLight args={[0xdddddd, 0.4]} /> */}
+
           <OrbitControls minDistance={1} maxDistance={45} />
         </Canvas>
       </div>

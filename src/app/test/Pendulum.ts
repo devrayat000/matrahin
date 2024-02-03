@@ -1,6 +1,7 @@
 const TWO_PI = 2 * Math.PI;
 
 class Pendulum {
+  initialAngle: number = 0;
   angle: number = 0;
   angularVelocity: number = 0;
   length: number = 1;
@@ -12,7 +13,6 @@ class Pendulum {
 
   constructor(
     angle: number,
-    angularVelocity: number,
     length: number,
     mass: number,
     gravity: number,
@@ -20,7 +20,7 @@ class Pendulum {
     damping: number
   ) {
     this.angle = angle;
-    this.angularVelocity = angularVelocity;
+    this.initialAngle = angle;
     this.length = length;
     this.mass = mass;
     this.gravity = gravity;
@@ -36,6 +36,7 @@ class Pendulum {
    * @param {number} dt
    */
   step(dt: number) {
+    if (this.angle === null) this.angle = this.initialAngle;
     let theta = this.angle;
     let omega = this.angularVelocity;
 
@@ -154,7 +155,6 @@ class Pendulum {
    * @private
    *
    * @param {number} theta - angular position
-   * @param {number} omega - angular velocity
    * @returns {number}
    */
   omegaDerivative(theta: number): number {
@@ -162,20 +162,32 @@ class Pendulum {
   }
 
   setLength(length: number) {
-    this.reset();
+    // this.reset();
+    this.resetAnimation();
     this.length = length;
     return this;
   }
+  setAngle(angle: number) {
+    this.resetAnimation();
+    this.angle = angle;
+    return this;
+  }
 
-  reset() {
-    this.angle = 0;
+  setMass(mass: number) {
+    // this.reset();
+    this.mass = mass;
+    return this;
+  }
+
+  setGravity(gravity: number) {
+    // this.reset();
+    this.resetAnimation();
+    this.gravity = gravity;
+    return this;
+  }
+  resetAnimation() {
+    this.angle = null;
     this.angularVelocity = 0;
-    this.length = 1;
-    this.mass = 1;
-
-    this.gravity = 9.8;
-    this.friction = 0;
-    this.damping = 0;
   }
 }
 
