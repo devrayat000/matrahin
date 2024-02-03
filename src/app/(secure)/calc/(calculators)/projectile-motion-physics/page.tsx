@@ -1,7 +1,7 @@
 "use client";
 
 import { useSetAtom } from "jotai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import ResultsContainer from "~/components/project/projectile/ResultsContainer";
 import { projectileSchema } from "~/components/project/projectile/schema";
@@ -40,6 +40,12 @@ export default function ProjectilePage() {
       t: projectile.t,
     });
   }
+
+  useEffect(() => {
+    return () => {
+      setProjectileParams(undefined);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center gap-4">
