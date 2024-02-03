@@ -212,8 +212,9 @@ export default function PendulumAnimation() {
     }
   }, []);
 
-  useEffect(() => {
-    const gui = new GUI({ autoPlace: false });
+  const init = async () => {
+    const dat = await import("dat.gui");
+    const gui = new dat.GUI({ autoPlace: false });
 
     guiRef.current = gui;
     gui.domElement.style.width = "100%";
@@ -245,9 +246,13 @@ export default function PendulumAnimation() {
 
     var customContainer = document.getElementById("gui");
     customContainer.appendChild(gui.domElement);
+  };
+
+  useEffect(() => {
+    init();
 
     return () => {
-      gui.destroy();
+      guiRef.current?.destroy();
     };
   }, []);
 
@@ -257,7 +262,7 @@ export default function PendulumAnimation() {
       <div className="w-[80vh] h-[80vh] ">
         <Canvas shadows="soft">
           <CubeCamera
-            position={[0, 1.6, length + 1]}
+            position={[0, 1.6, props.length + 1]}
             near={1}
             far={50}
             children={function (tex: THREE.Texture): ReactNode {
