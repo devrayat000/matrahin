@@ -47,9 +47,11 @@ function rotateAboutPoint(
 
 function Animation({
   pendulumRef,
+  textRef,
   guiRef,
 }: {
   pendulumRef: React.RefObject<Pendulum> | null;
+  textRef: React.RefObject<HTMLElement>;
   guiRef: React.RefObject<GUI>;
 }) {
   const pendulum = useMemo(() => pendulumRef?.current, [pendulumRef.current]);
@@ -83,10 +85,7 @@ function Animation({
         .name("Elapsed Time").domElement;
     }
   }, []);
-  // const timeRef = useRef(0);
-  // const timeElapsed = useMemo(() => () => timeRef.current, []);
   let timeCounter = 0;
-  let previousTime = -1;
   useFrame(({ clock }) => {
     clock.autoStart = false;
     if (animationRef.current && animating) {
@@ -94,10 +93,16 @@ function Animation({
       const deltaTime = clock.elapsedTime - timeCounter;
       const theta = pendulum.step(deltaTime);
       timeCounter += deltaTime;
-      timeRef.current.textContent = `${clock.elapsedTime.toFixed(4)}s`;
-      angleRef.current.textContent = ((pendulum.angle * 180) / Math.PI).toFixed(
-        4
-      );
+      if (timeRef.current && angleRef.current) {
+        timeRef.current.textContent = `${clock.elapsedTime.toFixed(4)}s`;
+        angleRef.current.textContent = (
+          (pendulum.angle * 180) /
+          Math.PI
+        ).toFixed(4);
+      }
+      if (textRef.current) {
+        textRef.current.innerText = `${clock.elapsedTime.toFixed(4)}`;
+      }
       animationRef.current.rotation.z = theta;
     } else {
       if (clock.running) clock.stop();
@@ -116,9 +121,8 @@ function Animation({
         <sphereGeometry args={[0.5]} />
         <meshStandardMaterial
           map={bobColor}
-          roughness={1}
           roughnessMap={bobRoughness}
-          metalness={0.6}
+          metalness={1}
         />
       </mesh>
     </group>
@@ -177,14 +181,23 @@ const Structure = ({ length }: { length: number }) => {
           <meshStandardMaterial side={THREE.DoubleSide} map={wood_color} />
         </mesh>
       </group>
-      {/* <mesh>
-        
-      </mesh> */}
     </group>
   );
 };
 
+const AdaptiveCamera = ({ length }: { length: number }) => (
+  <CubeCamera
+    position={[0, 1.6, length + 1]}
+    near={1}
+    far={50}
+    children={function (tex: THREE.Texture): ReactNode {
+      return <primitive object={tex} />;
+    }}
+  />
+);
+
 export default function PendulumAnimation() {
+  const textRef = useRef<HTMLElement>(null);
   const [props, setProps] = useState<{
     length: number;
     angle: number;
@@ -230,14 +243,14 @@ export default function PendulumAnimation() {
     resultDom.textContent = "Pendulum Simulation";
     // gui.__controllers[0].domElement.style.pointerEvents = "none";
     gui
-      .add(obj, "length", 1, 10)
+      .add(obj, "length", 1, 10, 0.1)
       .onChange((v) => {
         setProps((prev) => ({ ...prev, length: v }));
         pendululmRef.current.setLength(v);
       })
       .name("Length");
     gui
-      .add(obj, "angle", -180, 180)
+      .add(obj, "angle", -180, 180, 0.1)
       .onChange((v) => {
         setProps((prev) => ({ ...prev, angle: v }));
         pendululmRef.current.setAngle((v * Math.PI) / 180);
@@ -257,10 +270,29 @@ export default function PendulumAnimation() {
   }, []);
 
   return (
-    <div className="grid md:grid-cols-3 gap-0 justify-evenly items-center">
-      <div id="gui" className="self-end w-[80vh] h-[80vh]"></div>
-      <div className="w-[80vh] h-[80vh] ">
+    <div className="grid md:grid-cols-4 gap-0 justify-evenly items-center">
+      <div id="gui" className="self-end w-[80vh] h-[80vh]">
+        <div>
+          <table>
+            <tbody>
+              <tr>
+                <td>Time elapsed:</td>
+                <td contentEditable ref={textRef}>
+                  0s
+                </td>
+              </tr>
+              <tr>
+                <td>Angle:</td>
+                <td>0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div className="h-[90vh] col-span-2 m-2">
         <Canvas shadows="soft">
+          {/* <AdaptiveCamera length={props.length} /> */}
           <CubeCamera
             position={[0, 1.6, props.length + 1]}
             near={1}
@@ -276,7 +308,11 @@ export default function PendulumAnimation() {
             blur={0}
             preset="apartment"
           />
-          <Animation pendulumRef={pendululmRef} guiRef={guiRef} />
+          <Animation
+            pendulumRef={pendululmRef}
+            textRef={textRef}
+            guiRef={guiRef}
+          />
           {/* <Ground /> */}
           <Structure length={props.length} />
 
