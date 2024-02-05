@@ -7,7 +7,6 @@ import {
   useTexture,
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { GUI } from "dat.gui";
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import Pendulum from "./Pendulum";
@@ -47,12 +46,8 @@ function rotateAboutPoint(
 
 function Animation({
   pendulumRef,
-  textRef,
-  guiRef,
 }: {
   pendulumRef: React.RefObject<Pendulum> | null;
-  textRef: React.RefObject<HTMLElement>;
-  guiRef: React.RefObject<GUI>;
 }) {
   const pendulum = useMemo(() => pendulumRef?.current, [pendulumRef.current]);
   const [animating, setAnimating] = useState(true);
@@ -64,27 +59,6 @@ function Animation({
   const bobColor = useTexture("/marble_color.jpg");
   const bobRoughness = useTexture("/marble_roughness.jpg");
 
-  const angleRef = useRef<HTMLElement>(null);
-  const timeRef = useRef<HTMLElement>(null);
-  const resultObj = {
-    pause_resume: function () {
-      setAnimating((prev) => !prev);
-    },
-    angle: (pendulum.angle * 180) / Math.PI,
-    time: 0,
-  };
-
-  useEffect(() => {
-    if (guiRef.current) {
-      guiRef.current.add(resultObj, "pause_resume").name("Pause / Resume");
-      angleRef.current = guiRef.current
-        .add(resultObj, "angle", -180, 180)
-        .name("Angle").domElement;
-      timeRef.current = guiRef.current
-        .add(resultObj, "time")
-        .name("Elapsed Time").domElement;
-    }
-  }, []);
   let timeCounter = 0;
   useFrame(({ clock }) => {
     clock.autoStart = false;
@@ -93,16 +67,7 @@ function Animation({
       const deltaTime = clock.elapsedTime - timeCounter;
       const theta = pendulum.step(deltaTime);
       timeCounter += deltaTime;
-      if (timeRef.current && angleRef.current) {
-        timeRef.current.textContent = `${clock.elapsedTime.toFixed(4)}s`;
-        angleRef.current.textContent = (
-          (pendulum.angle * 180) /
-          Math.PI
-        ).toFixed(4);
-      }
-      if (textRef.current) {
-        textRef.current.innerText = `${clock.elapsedTime.toFixed(4)}`;
-      }
+
       animationRef.current.rotation.z = theta;
     } else {
       if (clock.running) clock.stop();
@@ -185,19 +150,7 @@ const Structure = ({ length }: { length: number }) => {
   );
 };
 
-const AdaptiveCamera = ({ length }: { length: number }) => (
-  <CubeCamera
-    position={[0, 1.6, length + 1]}
-    near={1}
-    far={50}
-    children={function (tex: THREE.Texture): ReactNode {
-      return <primitive object={tex} />;
-    }}
-  />
-);
-
 export default function PendulumAnimation() {
-  const textRef = useRef<HTMLElement>(null);
   const [props, setProps] = useState<{
     length: number;
     angle: number;
@@ -209,7 +162,6 @@ export default function PendulumAnimation() {
     gravity: 9.81,
     mass: 2,
   });
-  const guiRef = useRef<GUI>(null);
   const pendululmRef = useRef<Pendulum>(null);
 
   useEffect(() => {
@@ -225,102 +177,69 @@ export default function PendulumAnimation() {
     }
   }, []);
 
-  const init = async () => {
-    const dat = await import("dat.gui");
-    const gui = new dat.GUI({ autoPlace: false });
-
-    guiRef.current = gui;
-    gui.domElement.style.width = "100%";
-    const obj = {
-      title: "Pendulum Simulation",
-      length: props.length,
-      angle: props.angle,
-    };
-
-    const resultDom = gui.add(obj, "title").name("Title").domElement;
-    resultDom.style.pointerEvents = "none";
-    resultDom.style.fontSize = "14px";
-    resultDom.textContent = "Pendulum Simulation";
-    // gui.__controllers[0].domElement.style.pointerEvents = "none";
-    gui
-      .add(obj, "length", 1, 10, 0.1)
-      .onChange((v) => {
-        setProps((prev) => ({ ...prev, length: v }));
-        pendululmRef.current.setLength(v);
-      })
-      .name("Length");
-    gui
-      .add(obj, "angle", -180, 180, 0.1)
-      .onChange((v) => {
-        setProps((prev) => ({ ...prev, angle: v }));
-        pendululmRef.current.setAngle((v * Math.PI) / 180);
-      })
-      .name("Initial Angle (degree)");
-
-    var customContainer = document.getElementById("gui");
-    customContainer.appendChild(gui.domElement);
+  const Results = () => {
+    return <>results</>;
   };
 
-  useEffect(() => {
-    init();
+  const Inputs = () => {
+    return <center>Inputs</center>;
+  };
 
-    return () => {
-      guiRef.current?.destroy();
-    };
-  }, []);
+  const PeriodTimer = () => {
+    return <div>PeriodTimer</div>;
+  };
+
+  const PauseButton = () => {
+    return <div>PauseButton</div>;
+  };
+  const ResetButton = () => {
+    return <div>ResetButton</div>;
+  };
 
   return (
-    <div className="grid md:grid-cols-4 gap-0 justify-evenly items-center">
-      <div id="gui" className="self-end w-[80vh] h-[80vh]">
-        <div>
-          <table>
-            <tbody>
-              <tr>
-                <td>Time elapsed:</td>
-                <td contentEditable ref={textRef}>
-                  0s
-                </td>
-              </tr>
-              <tr>
-                <td>Angle:</td>
-                <td>0</td>
-              </tr>
-            </tbody>
-          </table>
+    <>
+      <div className="grid md:grid-cols-4 grid-cols-1 gap-2 mx-2 justify-center items-center">
+        <div className="order-3 md:order-1 ">
+          <Results />
+        </div>
+        <div className=" h-[40vh] md:col-span-2 my-2 order-1 md:order-2 ">
+          <Canvas shadows="soft">
+            {/* <AdaptiveCamera length={props.length} /> */}
+            <CubeCamera
+              position={[0, 1.6, props.length + 1]}
+              near={1}
+              far={50}
+              children={function (tex: THREE.Texture): ReactNode {
+                return <primitive object={tex} />;
+              }}
+            />
+            <Environment
+              near={0.2}
+              far={100}
+              background
+              blur={0}
+              preset="apartment"
+            />
+            <Animation pendulumRef={pendululmRef} />
+            {/* <Ground /> */}
+            <Structure length={props.length} />
+
+            {/* <ambientLight args={[0xdddddd, 0.4]} /> */}
+
+            <OrbitControls minDistance={1} maxDistance={45} />
+          </Canvas>
+        </div>
+        <div className="order-2 md:order-4  ">
+          <Inputs />
         </div>
       </div>
-
-      <div className="h-[90vh] col-span-2 m-2">
-        <Canvas shadows="soft">
-          {/* <AdaptiveCamera length={props.length} /> */}
-          <CubeCamera
-            position={[0, 1.6, props.length + 1]}
-            near={1}
-            far={50}
-            children={function (tex: THREE.Texture): ReactNode {
-              return <primitive object={tex} />;
-            }}
-          />
-          <Environment
-            near={0.2}
-            far={100}
-            background
-            blur={0}
-            preset="apartment"
-          />
-          <Animation
-            pendulumRef={pendululmRef}
-            textRef={textRef}
-            guiRef={guiRef}
-          />
-          {/* <Ground /> */}
-          <Structure length={props.length} />
-
-          {/* <ambientLight args={[0xdddddd, 0.4]} /> */}
-
-          <OrbitControls minDistance={1} maxDistance={45} />
-        </Canvas>
-      </div>
-    </div>
+      <center>
+        <div className="flex flex-row items-center justify-center gap-8 ">
+          <PeriodTimer />
+          <PauseButton />
+          <ResetButton />
+        </div>
+      </center>
+    </>
   );
 }
