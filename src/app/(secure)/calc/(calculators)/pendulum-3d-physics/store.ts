@@ -49,7 +49,7 @@ export const inputOptions: {
   {
     id: 1,
     label: "Angle (°)",
-    helperText: "Angle of Release from Vertical (0° to 180°)",
+    helperText: "Angle of Release from Vertical",
     min: -180,
     max: 180,
     valueText: "angle", //to change in Pendulum object

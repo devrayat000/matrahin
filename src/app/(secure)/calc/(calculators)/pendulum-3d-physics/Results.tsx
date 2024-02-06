@@ -1,6 +1,7 @@
 "use client";
 
 import { useAtom, useAtomValue } from "jotai";
+import { MinusSquare, PlusSquare } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
@@ -109,7 +110,8 @@ const PendulumResults = ({
     [potentialEnergyAtAngle, kineticEnergyAtAngle]
   );
   return (
-    <div className="w-full lg:w-5/6  flex-col border-2 rounded-lg bg-[#b4dfe5]  items-center border-gray-950">
+    <div className="w-full lg:w-5/6  flex-col  rounded-lg   items-center border-gray-950">
+      {/* <div className="w-full lg:w-5/6  flex-col border-2 rounded-lg bg-[#42b6c5]  items-center border-gray-950"> */}
       <p className="text-center text-3xl pt-3">Results</p>
       <div className="flex flex-row items-center pt-2 justify-between gap-2 px-4">
         {/* result options goes here */}
@@ -117,9 +119,9 @@ const PendulumResults = ({
           onClick={() => setResultShowingLive(true)}
           className={cn(
             resultShowingLive
-              ? "bg-green-500 text-white"
+              ? "bg-[#2f4454] text-white"
               : "bg-slate-100 text-black",
-            "hover:text-black hover:bg-green-300"
+            "hover:text-black hover:shadow-2xl hover:bg-[#a1c6e2] rounded-xl"
           )}
         >
           Live
@@ -128,9 +130,9 @@ const PendulumResults = ({
           onClick={() => setResultShowingLive(false)}
           className={cn(
             !resultShowingLive
-              ? "bg-green-500 text-white"
+              ? "bg-[#2f4454] text-white"
               : "bg-slate-100 text-black",
-            "hover:text-black hover:bg-green-300"
+            "hover:text-black hover:shadow-2xl hover:bg-[#a1c6e2] rounded-xl"
           )}
         >
           At Angle (°)
@@ -153,15 +155,15 @@ const PendulumResults = ({
           ) : (
             <div className="flex flex-row items-center justify-between gap-1">
               <button
-                disabled={currentAngle === Math.abs(angle)}
-                onClick={() => {
-                  setCurrentAngle((prev) => prev + 1);
+                disabled={currentAngle === -Math.abs(angle)}
+                onMouseDown={() => {
+                  setCurrentAngle((prev) => prev - 1);
                 }}
-                className="bg-green-500 px-2 text-white p-1 rounded-xl  disabled:opacity-50 "
+                // className="bg-red-500 px-3 text-white p-1 rounded-xl"
+                className="  disabled:opacity-50 "
               >
-                +
+                <MinusSquare />
               </button>
-
               <input
                 onChange={(e) => {
                   setCurrentAngle(Number(e.target.value));
@@ -173,13 +175,14 @@ const PendulumResults = ({
                 value={currentAngle}
               />
               <button
-                disabled={currentAngle === -Math.abs(angle)}
-                onMouseDown={() => {
-                  setCurrentAngle((prev) => prev - 1);
+                disabled={currentAngle === Math.abs(angle)}
+                onClick={() => {
+                  setCurrentAngle((prev) => prev + 1);
                 }}
-                className="bg-red-500 px-2 text-white p-1 rounded-xl"
+                // className="bg-green-500 px-3 text-white p-1 rounded-xl  disabled:opacity-50 "
+                className="  disabled:opacity-50 "
               >
-                -
+                <PlusSquare />
               </button>
             </div>
           )}

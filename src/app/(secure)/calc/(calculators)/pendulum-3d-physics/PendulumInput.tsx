@@ -58,7 +58,9 @@ const PendulumInputs = ({
   };
 
   return (
-    <div className="w-full lg:w-5/6 mx-auto self-start">
+    <div className="w-full lg:w-5/6 p-2 flex-col rounded-lg   items-center border-gray-950">
+      {/* <div className="w-full lg:w-5/6 mx-auto self-start"> */}
+
       {inputOptions &&
         inputOptions.map((option, index) => (
           <InputWithSlider
@@ -73,19 +75,16 @@ const PendulumInputs = ({
           />
         ))}
 
-      <div className="flex flex-col gap-1 items-center mb-2 border px-6 py-3 bg-stone-50 ">
+      <div className="flex flex-row justify-between flex-wrap items-center gap-1 m-3 font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454] p-3 px-4">
         {/* <div className="text-xs mt-1 self-start text-gray-500">
           Gravity {"("}where the experiment is being conducted{")"}
         </div> */}
 
-        <div className="flex flex-row justify-between  w-full  gap-1 items-center">
-          <label style={{ marginRight: "5px" }}>
-            Gravity {"("}m/s<sup>2</sup>
-            {")"}
-          </label>
+        <div className="flex flex-row justify-between  w-full  gap-0 items-center">
+          <label className="mr-2 text-lg font-bold">Gravity</label>
 
           <input
-            className="ml-1 p-2 border w-[9ch] disabled:bg-gray-100 disabled:cursor-not-allowed"
+            className="ml-1 px-2 py-1 rounded-xl border text-white text-lg  bg-[#2f4454] w-[9ch] disabled:cursor-not-allowed"
             type="number"
             step={0.1}
             min={1}
@@ -97,7 +96,7 @@ const PendulumInputs = ({
         </div>
 
         <select
-          className="p-2 border"
+          className="p-2 border text-white text-lg  bg-[#2f4454] rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
           onChange={(e) => {
             if (e.target.value === "-1") {
               setCustomGravitySelected(true);
