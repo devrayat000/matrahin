@@ -1,19 +1,29 @@
 "use client";
 
 import { useAtom, useAtomValue } from "jotai";
-import {
-  forwardRef,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useMemo, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
-import { PendulumResultRefs, pendulumStore } from "./store";
+import { pendulumStore } from "./store";
 
-const PendulumResults = forwardRef<PendulumResultRefs>(({}, ref) => {
-  const [animating, setAnimating] = useAtom(pendulumStore.isPlayingAtom);
+// const PendulumResults = forwardRef<PendulumResultRefs>(({}, ref) => {
+const PendulumResults = ({
+  angleResultRef,
+  velocityResultRef,
+  accelarationResultRef,
+  heightResultRef,
+  potentialEnergyResultRef,
+  kineticEnergyResultRef,
+  totalEnergyResultRef,
+}: {
+  angleResultRef: React.RefObject<HTMLParagraphElement>;
+  velocityResultRef: React.RefObject<HTMLParagraphElement>;
+  accelarationResultRef: React.RefObject<HTMLParagraphElement>;
+  heightResultRef: React.RefObject<HTMLParagraphElement>;
+  potentialEnergyResultRef: React.RefObject<HTMLParagraphElement>;
+  kineticEnergyResultRef: React.RefObject<HTMLParagraphElement>;
+  totalEnergyResultRef: React.RefObject<HTMLParagraphElement>;
+}) => {
   const [resultShowingLive, setResultShowingLive] = useAtom(
     pendulumStore.resultShowingLiveAtom
   );
@@ -23,23 +33,23 @@ const PendulumResults = forwardRef<PendulumResultRefs>(({}, ref) => {
   const mass = useAtomValue(pendulumStore.massAtom);
   const gravity = useAtomValue(pendulumStore.gravityAtom);
 
-  const angleResultRef = useRef<HTMLParagraphElement>(null);
-  const velocityResultRef = useRef<HTMLParagraphElement>(null);
-  const accelarationResultRef = useRef<HTMLParagraphElement>(null);
-  const heightResultRef = useRef<HTMLParagraphElement>(null);
-  const potentialEnergyResultRef = useRef<HTMLParagraphElement>(null);
-  const kineticEnergyResultRef = useRef<HTMLParagraphElement>(null);
-  const totalEnergyResultRef = useRef<HTMLParagraphElement>(null);
+  //   const angleResultRef = useRef<HTMLParagraphElement>(null);
+  //   const velocityResultRef = useRef<HTMLParagraphElement>(null);
+  //   const accelarationResultRef = useRef<HTMLParagraphElement>(null);
+  //   const heightResultRef = useRef<HTMLParagraphElement>(null);
+  //   const potentialEnergyResultRef = useRef<HTMLParagraphElement>(null);
+  //   const kineticEnergyResultRef = useRef<HTMLParagraphElement>(null);
+  //   const totalEnergyResultRef = useRef<HTMLParagraphElement>(null);
 
-  useImperativeHandle(ref, () => ({
-    angleResultRef,
-    velocityResultRef,
-    accelarationResultRef,
-    heightResultRef,
-    potentialEnergyResultRef,
-    kineticEnergyResultRef,
-    totalEnergyResultRef,
-  }));
+  //   useImperativeHandle(ref, () => ({
+  //     angleResultRef,
+  //     velocityResultRef,
+  //     accelarationResultRef,
+  //     heightResultRef,
+  //     potentialEnergyResultRef,
+  //     kineticEnergyResultRef,
+  //     totalEnergyResultRef,
+  //   }));
   const [currentAngle, setCurrentAngle] = useState(angle);
   /**
    * chosen colors:
@@ -100,14 +110,11 @@ const PendulumResults = forwardRef<PendulumResultRefs>(({}, ref) => {
   );
   return (
     <div className="w-full lg:w-5/6  flex-col border-2 rounded-lg bg-[#b4dfe5]  items-center border-gray-950">
-      <p className="text-center text-xl pt-3">Results</p>
+      <p className="text-center text-3xl pt-3">Results</p>
       <div className="flex flex-row items-center pt-2 justify-between gap-2 px-4">
         {/* result options goes here */}
         <Button
-          onClick={() => {
-            setResultShowingLive(true);
-            if (!animating) setAnimating(true);
-          }}
+          onClick={() => setResultShowingLive(true)}
           className={cn(
             resultShowingLive
               ? "bg-green-500 text-white"
@@ -118,10 +125,7 @@ const PendulumResults = forwardRef<PendulumResultRefs>(({}, ref) => {
           Live
         </Button>
         <Button
-          onClick={() => {
-            setResultShowingLive(false);
-            if (animating) setAnimating(false);
-          }}
+          onClick={() => setResultShowingLive(false)}
           className={cn(
             !resultShowingLive
               ? "bg-green-500 text-white"
@@ -272,6 +276,6 @@ const PendulumResults = forwardRef<PendulumResultRefs>(({}, ref) => {
       {/* results done */}
     </div>
   );
-});
+};
 
 export default PendulumResults;

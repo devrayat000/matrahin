@@ -9,16 +9,10 @@ import {
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useAtom, useAtomValue } from "jotai";
 import { Pause, Play, RotateCcw } from "lucide-react";
-import {
-  ReactNode,
-  forwardRef,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-} from "react";
+import { ReactNode, useMemo, useRef } from "react";
 import * as THREE from "three";
 import Pendulum from "./Pendulum";
-import { PendulumAnimationRefs, pendulumStore } from "./store";
+import { pendulumStore } from "./store";
 
 /**
  * takes an object and rotates it about a point
@@ -53,39 +47,49 @@ function rotateAboutPoint(
   obj.rotateOnAxis(axis, theta); // rotate the OBJECT
 }
 
-const PendulumAnimation = forwardRef<PendulumAnimationRefs>(({}, refs) => {
-  const pendulumRef = useRef<Pendulum>(null);
+// const PendulumAnimation = forwardRef<PendulumAnimationRefs>(({}, refs) => {
+const PendulumAnimation = ({
+  pendulumRef,
+  angleResultRef,
+  velocityResultRef,
+  accelarationResultRef,
+  heightResultRef,
+  potentialEnergyResultRef,
+  kineticEnergyResultRef,
+  totalEnergyResultRef,
+}: {
+  pendulumRef: React.RefObject<Pendulum>;
+  angleResultRef: React.RefObject<HTMLParagraphElement>;
+  velocityResultRef: React.RefObject<HTMLParagraphElement>;
+  accelarationResultRef: React.RefObject<HTMLParagraphElement>;
+  heightResultRef: React.RefObject<HTMLParagraphElement>;
+  potentialEnergyResultRef: React.RefObject<HTMLParagraphElement>;
+  kineticEnergyResultRef: React.RefObject<HTMLParagraphElement>;
+  totalEnergyResultRef: React.RefObject<HTMLParagraphElement>;
+}) => {
+  //   const pendulumRef = useRef<Pendulum>(null);
 
-  // refs for showing results live
-  const angleResultRef = useRef<HTMLParagraphElement>(null);
-  const velocityResultRef = useRef<HTMLParagraphElement>(null);
-  const accelarationResultRef = useRef<HTMLParagraphElement>(null);
-  const heightResultRef = useRef<HTMLParagraphElement>(null);
-  const potentialEnergyResultRef = useRef<HTMLParagraphElement>(null);
-  const kineticEnergyResultRef = useRef<HTMLParagraphElement>(null);
-  const totalEnergyResultRef = useRef<HTMLParagraphElement>(null);
+  //   // refs for showing results live
+  //   const angleResultRef = useRef<HTMLParagraphElement>(null);
+  //   const velocityResultRef = useRef<HTMLParagraphElement>(null);
+  //   const accelarationResultRef = useRef<HTMLParagraphElement>(null);
+  //   const heightResultRef = useRef<HTMLParagraphElement>(null);
+  //   const potentialEnergyResultRef = useRef<HTMLParagraphElement>(null);
+  //   const kineticEnergyResultRef = useRef<HTMLParagraphElement>(null);
+  //   const totalEnergyResultRef = useRef<HTMLParagraphElement>(null);
 
-  useImperativeHandle(refs, () => ({
-    angleResultRef,
-    velocityResultRef,
-    accelarationResultRef,
-    heightResultRef,
-    potentialEnergyResultRef,
-    kineticEnergyResultRef,
-    totalEnergyResultRef,
-    pendulumRef,
-  }));
+  //   const pendulumAnimationRefs = useRef<PendulumAnimationRefs>({
+  //     angleResultRef,
+  //     velocityResultRef,
+  //     accelarationResultRef,
+  //     heightResultRef,
+  //     potentialEnergyResultRef,
+  //     kineticEnergyResultRef,
+  //     totalEnergyResultRef,
+  //     pendulumRef,
+  //   });
 
-  const pendulumAnimationRefs = useRef<PendulumAnimationRefs>({
-    angleResultRef,
-    velocityResultRef,
-    accelarationResultRef,
-    heightResultRef,
-    potentialEnergyResultRef,
-    kineticEnergyResultRef,
-    totalEnergyResultRef,
-    pendulumRef,
-  });
+  console.log("PendulumAnimation", angleResultRef.current);
   return (
     <>
       <div className=" h-[40vh] w-full  md:h-[80vh] ">
@@ -113,7 +117,19 @@ const PendulumAnimation = forwardRef<PendulumAnimationRefs>(({}, refs) => {
             blur={0}
             preset="apartment"
           />
-          <Animation ref={pendulumAnimationRefs} />
+          {/* <Animation ref={pendulumAnimationRefs} /> */}
+          <Animation
+            {...{
+              pendulumRef,
+              angleResultRef,
+              velocityResultRef,
+              accelarationResultRef,
+              heightResultRef,
+              potentialEnergyResultRef,
+              kineticEnergyResultRef,
+              totalEnergyResultRef,
+            }}
+          />
           {/* <Ground /> */}
           <Structure length={length} />
 
@@ -126,7 +142,8 @@ const PendulumAnimation = forwardRef<PendulumAnimationRefs>(({}, refs) => {
       <PauseResumeControl />
     </>
   );
-});
+};
+// });
 
 const PauseResumeControl = () => {
   const [animating, setAnimating] = useAtom(pendulumStore.isPlayingAtom);
@@ -152,30 +169,49 @@ const PauseResumeControl = () => {
   );
 };
 
-const Animation = forwardRef<PendulumAnimationRefs>(({}, refs) => {
+// const Animation = forwardRef<PendulumAnimationRefs>(({}, refs) => {
+const Animation = ({
+  pendulumRef,
+  angleResultRef,
+  velocityResultRef,
+  accelarationResultRef,
+  heightResultRef,
+  potentialEnergyResultRef,
+  kineticEnergyResultRef,
+  totalEnergyResultRef,
+}: {
+  pendulumRef: React.RefObject<Pendulum>;
+  angleResultRef: React.RefObject<HTMLParagraphElement>;
+  velocityResultRef: React.RefObject<HTMLParagraphElement>;
+  accelarationResultRef: React.RefObject<HTMLParagraphElement>;
+  heightResultRef: React.RefObject<HTMLParagraphElement>;
+  potentialEnergyResultRef: React.RefObject<HTMLParagraphElement>;
+  kineticEnergyResultRef: React.RefObject<HTMLParagraphElement>;
+  totalEnergyResultRef: React.RefObject<HTMLParagraphElement>;
+}) => {
   const animating = useAtomValue(pendulumStore.isPlayingAtom);
 
-  const pendulumRef = useRef<Pendulum>(null);
+  //   const pendulumRef = useRef<Pendulum>(null);
 
-  const angleResultRef = useRef<HTMLParagraphElement>(null);
-  const velocityResultRef = useRef<HTMLParagraphElement>(null);
-  const accelarationResultRef = useRef<HTMLParagraphElement>(null);
-  const heightResultRef = useRef<HTMLParagraphElement>(null);
-  const potentialEnergyResultRef = useRef<HTMLParagraphElement>(null);
-  const kineticEnergyResultRef = useRef<HTMLParagraphElement>(null);
-  const totalEnergyResultRef = useRef<HTMLParagraphElement>(null);
+  //   const angleResultRef = useRef<HTMLParagraphElement>(null);
+  //   const velocityResultRef = useRef<HTMLParagraphElement>(null);
+  //   const accelarationResultRef = useRef<HTMLParagraphElement>(null);
+  //   const heightResultRef = useRef<HTMLParagraphElement>(null);
+  //   const potentialEnergyResultRef = useRef<HTMLParagraphElement>(null);
+  //   const kineticEnergyResultRef = useRef<HTMLParagraphElement>(null);
+  //   const totalEnergyResultRef = useRef<HTMLParagraphElement>(null);
 
-  useImperativeHandle(refs, () => ({
-    angleResultRef,
-    velocityResultRef,
-    accelarationResultRef,
-    heightResultRef,
-    potentialEnergyResultRef,
-    kineticEnergyResultRef,
-    totalEnergyResultRef,
-    pendulumRef,
-  }));
-  console.log("pendulumRef", pendulumRef.current);
+  //   useImperativeHandle(refs, () => ({
+  //     angleResultRef,
+  //     velocityResultRef,
+  //     accelarationResultRef,
+  //     heightResultRef,
+  //     potentialEnergyResultRef,
+  //     kineticEnergyResultRef,
+  //     totalEnergyResultRef,
+  //     pendulumRef,
+  //   }));
+
   const pendulum = useMemo(() => pendulumRef?.current, [pendulumRef?.current]);
 
   const length = useMemo(() => pendulum?.length, [pendulum?.length]);
@@ -262,7 +298,8 @@ const Animation = forwardRef<PendulumAnimationRefs>(({}, refs) => {
       </group>
     )
   );
-});
+};
+// });
 
 const Structure = ({ length }: { length: number }) => {
   const wood_color = useTexture("/wood_color.jpg");

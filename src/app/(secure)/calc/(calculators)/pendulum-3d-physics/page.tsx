@@ -5,11 +5,7 @@ import Pendulum from "./Pendulum";
 import PendulumAnimation from "./PendulumAnimation";
 import PendulumInputs from "./PendulumInput";
 import PendulumResults from "./Results";
-import {
-  INITIAL_VALUES,
-  PendulumAnimationRefs,
-  PendulumResultRefs,
-} from "./store";
+import { INITIAL_VALUES, PendulumResultRefs } from "./store";
 
 export default function PendulumAnimationPage() {
   const pendulumRef = useRef<Pendulum>(null);
@@ -23,7 +19,7 @@ export default function PendulumAnimationPage() {
   const kineticEnergyResultRef = useRef<HTMLParagraphElement>(null);
   const totalEnergyResultRef = useRef<HTMLParagraphElement>(null);
 
-  const PendulumRefs = useRef<PendulumResultRefs>({
+  const resultRefs = {
     angleResultRef,
     velocityResultRef,
     accelarationResultRef,
@@ -31,20 +27,8 @@ export default function PendulumAnimationPage() {
     potentialEnergyResultRef,
     kineticEnergyResultRef,
     totalEnergyResultRef,
-  });
+  };
 
-  const pendulumAnimationRefs = useRef<PendulumAnimationRefs>({
-    angleResultRef,
-    velocityResultRef,
-    accelarationResultRef,
-    heightResultRef,
-    potentialEnergyResultRef,
-    kineticEnergyResultRef,
-    totalEnergyResultRef,
-    pendulumRef,
-  });
-
-  console.log(angleResultRef?.current);
   useEffect(() => {
     if (!pendulumRef.current) {
       pendulumRef.current = new Pendulum(
@@ -67,11 +51,24 @@ export default function PendulumAnimationPage() {
       <div className="grid md:grid-cols-4 grid-cols-1 gap-2 m-4 justify-center items-center md:items-start">
         {/* Results */}
         <center className="order-3 md:order-1 ">
-          <PendulumResults ref={PendulumRefs} />
+          {/* <PendulumResults ref={PendulumRefs} /> */}
+          <PendulumResults {...resultRefs} />
         </center>
         {/* Canvas */}
         <div className="md:col-span-2  order-1 md:order-2 flex flex-col gap-3 items-center justify-between  ">
-          <PendulumAnimation ref={pendulumAnimationRefs} />
+          {/* <PendulumAnimation ref={pendulumAnimationRefs} /> */}
+          <PendulumAnimation
+            {...{
+              pendulumRef,
+              angleResultRef,
+              velocityResultRef,
+              accelarationResultRef,
+              heightResultRef,
+              potentialEnergyResultRef,
+              kineticEnergyResultRef,
+              totalEnergyResultRef,
+            }}
+          />
         </div>
         <div className="order-2 md:order-4  ">
           {/* Inputs */}

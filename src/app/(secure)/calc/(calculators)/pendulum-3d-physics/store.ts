@@ -12,7 +12,7 @@ const lengthAtom = atom(INITIAL_VALUES.length);
 const massAtom = atom(INITIAL_VALUES.mass);
 const gravityAtom = atom(INITIAL_VALUES.gravity);
 const angleAtom = atom(INITIAL_VALUES.angle);
-const isPlayingAtom = atom(false);
+const isPlayingAtom = atom(true);
 const resultShowingLiveAtom = atom(true);
 
 export const pendulumStore = {
