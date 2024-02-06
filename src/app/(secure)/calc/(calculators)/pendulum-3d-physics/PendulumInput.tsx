@@ -1,9 +1,10 @@
 import { useAtom } from "jotai";
+import { RotateCcw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Button } from "~/components/ui/button";
 import InputWithSlider from "~/components/ui/input-with-slider";
 import Pendulum from "./Pendulum";
-import { inputOptions, pendulumStore } from "./store";
+import { INITIAL_VALUES, inputOptions, pendulumStore } from "./store";
 
 const PendulumInputs = ({
   pendulumRef,
@@ -79,7 +80,7 @@ const PendulumInputs = ({
 
         <div className="flex flex-row justify-between  w-full  gap-1 items-center">
           <label style={{ marginRight: "5px" }}>
-            Gravity {"("} m/s<sup>2</sup>
+            Gravity {"("}m/s<sup>2</sup>
             {")"}
           </label>
 
@@ -122,17 +123,35 @@ const PendulumInputs = ({
         </select>
       </div>
 
-      <center>
+      <center className="flex flex-row items-center justify-around">
         <Button
           disabled={isPlaying}
           onClick={() => {
             calculateResults(angle, length, mass, gravity);
             setIsPlaying(true);
           }}
-          className="w-[100px]"
+          className="w-[100px] hover:scale-125 transition-transform duration-300 transform hover:shadow-2xl "
         >
           Calculate
         </Button>
+        <div
+          className="bg-cyan-300  self-end cursor-pointer hover:shadow-xl hover:scale-125 transition-transform duration-300 transform  p-4   rounded-full "
+          onClick={() => {
+            setLength(INITIAL_VALUES.length);
+            setMass(INITIAL_VALUES.mass);
+            setGravity(INITIAL_VALUES.gravity);
+            setAngle(INITIAL_VALUES.angle);
+            calculateResults(
+              INITIAL_VALUES.angle,
+              INITIAL_VALUES.length,
+              INITIAL_VALUES.mass,
+              INITIAL_VALUES.gravity
+            );
+            setIsPlaying(false);
+          }}
+        >
+          <RotateCcw size={25} />
+        </div>
       </center>
     </div>
   );

@@ -8,8 +8,8 @@ import {
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useAtom, useAtomValue } from "jotai";
-import { Pause, Play, RotateCcw } from "lucide-react";
-import { ReactNode, useMemo, useRef } from "react";
+import { Pause, Play } from "lucide-react";
+import { ReactNode, useRef } from "react";
 import * as THREE from "three";
 import Pendulum from "./Pendulum";
 import { pendulumStore } from "./store";
@@ -67,29 +67,8 @@ const PendulumAnimation = ({
   kineticEnergyResultRef: React.RefObject<HTMLParagraphElement>;
   totalEnergyResultRef: React.RefObject<HTMLParagraphElement>;
 }) => {
-  //   const pendulumRef = useRef<Pendulum>(null);
+  const length = useAtomValue(pendulumStore.lengthAtom);
 
-  //   // refs for showing results live
-  //   const angleResultRef = useRef<HTMLParagraphElement>(null);
-  //   const velocityResultRef = useRef<HTMLParagraphElement>(null);
-  //   const accelarationResultRef = useRef<HTMLParagraphElement>(null);
-  //   const heightResultRef = useRef<HTMLParagraphElement>(null);
-  //   const potentialEnergyResultRef = useRef<HTMLParagraphElement>(null);
-  //   const kineticEnergyResultRef = useRef<HTMLParagraphElement>(null);
-  //   const totalEnergyResultRef = useRef<HTMLParagraphElement>(null);
-
-  //   const pendulumAnimationRefs = useRef<PendulumAnimationRefs>({
-  //     angleResultRef,
-  //     velocityResultRef,
-  //     accelarationResultRef,
-  //     heightResultRef,
-  //     potentialEnergyResultRef,
-  //     kineticEnergyResultRef,
-  //     totalEnergyResultRef,
-  //     pendulumRef,
-  //   });
-
-  console.log("PendulumAnimation", angleResultRef.current);
   return (
     <>
       <div className=" h-[40vh] w-full  md:h-[80vh] ">
@@ -117,7 +96,6 @@ const PendulumAnimation = ({
             blur={0}
             preset="apartment"
           />
-          {/* <Animation ref={pendulumAnimationRefs} /> */}
           <Animation
             {...{
               pendulumRef,
@@ -150,20 +128,10 @@ const PauseResumeControl = () => {
   return (
     <div className="flex flex-row gap-4 items-center justify-center">
       <div
-        className="bg-green-500 cursor-pointer shadow-xl p-5  rounded-full "
+        className="bg-green-500 cursor-pointer shadow-xl p-5  rounded-full hover:scale-125 transition-transform duration-300 transform "
         onClick={() => setAnimating(!animating)}
       >
         {animating ? <Pause size={40} /> : <Play size={40} />}
-      </div>
-      <div
-        className="bg-cyan-700 cursor-pointer shadow-xl p-4   rounded-full "
-        onClick={() => {
-          // setProps({ ...INITIAL_VALUES });
-          // calculateResults({ ...INITIAL_VALUES });
-          // setAnimating(false);
-        }}
-      >
-        <RotateCcw size={36} />
       </div>
     </div>
   );
@@ -191,30 +159,9 @@ const Animation = ({
 }) => {
   const animating = useAtomValue(pendulumStore.isPlayingAtom);
 
-  //   const pendulumRef = useRef<Pendulum>(null);
-
-  //   const angleResultRef = useRef<HTMLParagraphElement>(null);
-  //   const velocityResultRef = useRef<HTMLParagraphElement>(null);
-  //   const accelarationResultRef = useRef<HTMLParagraphElement>(null);
-  //   const heightResultRef = useRef<HTMLParagraphElement>(null);
-  //   const potentialEnergyResultRef = useRef<HTMLParagraphElement>(null);
-  //   const kineticEnergyResultRef = useRef<HTMLParagraphElement>(null);
-  //   const totalEnergyResultRef = useRef<HTMLParagraphElement>(null);
-
-  //   useImperativeHandle(refs, () => ({
-  //     angleResultRef,
-  //     velocityResultRef,
-  //     accelarationResultRef,
-  //     heightResultRef,
-  //     potentialEnergyResultRef,
-  //     kineticEnergyResultRef,
-  //     totalEnergyResultRef,
-  //     pendulumRef,
-  //   }));
-
-  const pendulum = useMemo(() => pendulumRef?.current, [pendulumRef?.current]);
-
-  const length = useMemo(() => pendulum?.length, [pendulum?.length]);
+  const pendulum = pendulumRef.current;
+  const length = useAtomValue(pendulumStore.lengthAtom);
+  const initialAngle = useAtomValue(pendulumStore.angleAtom) * (Math.PI / 180);
 
   const stringRef = useRef<THREE.Mesh>(null);
   const bobRef = useRef<THREE.Mesh>(null);
@@ -242,7 +189,7 @@ const Animation = ({
     if (pendulumRef.current) {
       if (angleResultRef.current)
         angleResultRef.current.innerText = (
-          ((pendulum.angle ?? pendulum.initialAngle) * 180) /
+          (pendulum.angle * 180) /
           Math.PI
         ).toFixed(4);
 
@@ -273,7 +220,7 @@ const Animation = ({
     pendulumRef.current && (
       <group
         ref={animationRef}
-        rotation={[0, 0, pendulum.initialAngle]}
+        rotation={[0, 0, initialAngle]}
         position={[0, 0.6, 0]}
       >
         {/* string */}
