@@ -5,7 +5,7 @@ import Pendulum from "./Pendulum";
 import PendulumAnimation from "./PendulumAnimation";
 import PendulumInputs from "./PendulumInput";
 import PendulumResults from "./Results";
-import { INITIAL_VALUES, PendulumResultRefs } from "./store";
+import { INITIAL_VALUES } from "./store";
 
 export default function PendulumAnimationPage() {
   const pendulumRef = useRef<Pendulum>(null);
@@ -43,7 +43,7 @@ export default function PendulumAnimationPage() {
   }, []);
 
   const PeriodTimer = () => {
-    return <div>PeriodTimer</div>;
+    return <div></div>;
   };
 
   return (

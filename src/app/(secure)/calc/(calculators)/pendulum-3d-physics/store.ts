@@ -49,7 +49,7 @@ export const inputOptions: {
   {
     id: 1,
     label: "Angle (°)",
-    helperText: "Initial angle of the pendulum",
+    helperText: "Angle of Release from Vertical (0° to 180°)",
     min: -180,
     max: 180,
     valueText: "angle", //to change in Pendulum object
@@ -65,17 +65,9 @@ export const inputOptions: {
   {
     id: 3,
     label: "Mass",
-    helperText: "Mass of the pendulum",
+    helperText: "Mass of Bob",
     min: 0.1,
     max: 250,
     valueText: "mass", //to change in Pendulum object
-  },
-  {
-    id: 4,
-    label: "Gravity",
-    helperText: "Gravity",
-    min: 1,
-    max: 100,
-    valueText: "gravity", //to change in Pendulum object
   },
 ];

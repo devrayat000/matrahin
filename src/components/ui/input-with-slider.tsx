@@ -21,6 +21,7 @@ const InputWithSlider: React.FC<InputWithSliderProps> = ({
   min = -10,
   max = 1000,
 }) => {
+  const maxChars = Math.max(max.toString().length, min.toString().length) + 5;
   return (
     <div className="flex flex-col gap-1 items-center mb-2 border px-6 py-3 bg-stone-50 ">
       <div className="text-xs mt-1 self-start text-gray-500">{helperText}</div>
@@ -29,6 +30,9 @@ const InputWithSlider: React.FC<InputWithSliderProps> = ({
 
         <input
           className="ml-1 p-2 border"
+          style={{
+            width: `${maxChars}ch`,
+          }}
           type="number"
           step={0.1}
           min={min}
