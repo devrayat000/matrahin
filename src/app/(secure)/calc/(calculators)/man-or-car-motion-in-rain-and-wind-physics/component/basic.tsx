@@ -6,38 +6,48 @@ import RainInput from "~/components/project/rain_animated/RainInput";
 import RainWithWind from "~/components/project/rain_animated/RainWithWind";
 import TabSelection from "~/components/project/rain_animated/TabSelection";
 import Animation from "~/components/project/rain_animated/Animation";
+import { Suspense } from "react";
+import Spinner from "~/components/common/Spinner";
 
-const BasicRainCalculator = () => {
+function RainCalculatorInput() {
   const searchParams = useSearchParams();
   const Option = searchParams.get("case");
   const activeCase = Option === "with-wind" ? Option : "basic";
 
   return (
+    <div>
+      <div className="flex flex-row gap-3 justify-evenly items-center mb-2">
+        <TabSelection
+          activeCase={"basic"}
+          currentCase={activeCase}
+          text={"Normal"}
+        />
+        <TabSelection
+          activeCase={"with-wind"}
+          currentCase={activeCase}
+          text={"With Wind"}
+        />
+      </div>
+
+      <div>
+        <RainInput wind={activeCase === "with-wind"} />
+        <div className="mt-2">
+          {activeCase === "basic" && <RainBasic />}
+          {activeCase === "with-wind" && <RainWithWind />}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const BasicRainCalculator = () => {
+  return (
     <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-4">
       <Animation />
       <div className=" self-start lg:my-3">
-        <div>
-          <div className="flex flex-row gap-3 justify-evenly items-center mb-2">
-            <TabSelection
-              activeCase={"basic"}
-              currentCase={activeCase}
-              text={"Normal"}
-            />
-            <TabSelection
-              activeCase={"with-wind"}
-              currentCase={activeCase}
-              text={"With Wind"}
-            />
-          </div>
-
-          <div>
-            <RainInput wind={activeCase === "with-wind"} />
-            <div className="mt-2">
-              {activeCase === "basic" && <RainBasic />}
-              {activeCase === "with-wind" && <RainWithWind />}
-            </div>
-          </div>
-        </div>
+        <Suspense fallback={<Spinner />}>
+          <RainCalculatorInput />
+        </Suspense>
       </div>
     </div>
   );
