@@ -11,6 +11,13 @@ class Pendulum {
   friction: number = 0;
   damping: number = 0;
 
+  height: number = 0;
+  accelaration: number = 0;
+  velocity: number = 0;
+  kineticEnergy: number = 0;
+  potentialEnergy: number = 0;
+  totalEnergy: number = 0;
+
   constructor(
     angle: number,
     length: number,
@@ -19,7 +26,7 @@ class Pendulum {
     friction: number,
     damping: number
   ) {
-    this.angle = angle;
+    this.angle = null;
     this.initialAngle = angle;
     this.length = length;
     this.mass = mass;
@@ -36,7 +43,10 @@ class Pendulum {
    * @param {number} dt
    */
   step(dt: number) {
-    if (this.angle === null) this.angle = this.initialAngle;
+    if (this.angle === null) {
+      this.angle = this.initialAngle;
+      //console.log("initial angle", (this.angle * 180) / Math.PI);
+    }
     let theta = this.angle;
     let omega = this.angularVelocity;
 
@@ -79,6 +89,8 @@ class Pendulum {
     // update the angular variables
     this.angle = theta;
     this.angularVelocity = omega;
+
+    this.calculateResults(theta);
 
     return this.angle;
 
@@ -161,15 +173,41 @@ class Pendulum {
     return -(this.gravity / this.length) * Math.sin(theta);
   }
 
+  // a function that sets the value by its argument
+  setValue(string: string, value: number) {
+    switch (string) {
+      case "angle":
+        this.setAngle(value);
+        //console.log("angle", value);
+        break;
+      case "length":
+        this.setLength(value);
+        break;
+      case "mass":
+        this.setMass(value);
+        break;
+      case "gravity":
+        this.setGravity(value);
+        break;
+    }
+  }
+
   setLength(length: number) {
     // this.reset();
-    this.resetAnimation();
+    // this.resetAnimation();
     this.length = length;
     return this;
   }
   setAngle(angle: number) {
     this.resetAnimation();
-    this.angle = angle;
+    // this.angle = angle;
+    //console.log(" in setANgleangle", angle);
+    this.initialAngle = angle;
+
+    this.height = this.length * (1 - Math.cos(angle));
+    this.potentialEnergy = this.mass * this.gravity * this.height;
+    this.kineticEnergy = 0;
+    this.totalEnergy = this.potentialEnergy;
     return this;
   }
 
@@ -188,6 +226,19 @@ class Pendulum {
   resetAnimation() {
     this.angle = null;
     this.angularVelocity = 0;
+    this.velocity = 0;
+    this.accelaration = 0;
+    this.kineticEnergy = 0;
+  }
+
+  calculateResults(theta: number) {
+    this.height = this.length * (1 - Math.cos(theta));
+    this.accelaration = this.gravity * Math.sin(theta);
+    // this.velocity = this.length * this.angularVelocity;
+    this.velocity = Math.sqrt(2 * this.gravity * this.height);
+    this.kineticEnergy = 0.5 * this.mass * this.velocity ** 2;
+    this.potentialEnergy = this.mass * this.gravity * this.height;
+    this.totalEnergy = this.kineticEnergy + this.potentialEnergy;
   }
 }
 
