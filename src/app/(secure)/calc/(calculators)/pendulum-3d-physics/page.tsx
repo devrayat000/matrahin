@@ -7,11 +7,12 @@ import {
   useTexture,
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Pause, Play } from "lucide-react";
+import { Pause, Play, RotateCcw } from "lucide-react";
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { Button } from "~/components/ui/button";
 import InputWithSlider from "~/components/ui/input-with-slider";
+import { cn } from "~/lib/utils";
 import Pendulum from "./Pendulum";
 
 /**
@@ -72,6 +73,7 @@ function Animation({
 
   const length = useMemo(() => pendulum.length, [pendulum.length]);
 
+  console.log("in Animation");
   const stringRef = useRef<THREE.Mesh>(null);
   const bobRef = useRef<THREE.Mesh>(null);
   const animationRef = useRef<THREE.Group>(null);
@@ -94,6 +96,7 @@ function Animation({
     /**
      * update results
      */
+
     if (angleResultRef.current)
       angleResultRef.current.innerText = (
         ((pendulum.angle ?? pendulum.initialAngle) * 180) /
@@ -237,10 +240,13 @@ const inputOptions = [
 ];
 
 export default function PendulumAnimation() {
+  // state to show results live or at particular angle
+  const [resultShowingLive, setResultShowingLive] = useState(true);
   const [props, setProps] = useState(INITIAL_VALUES);
   const currentLength = useMemo(() => props.length, [props.length]);
 
   const [animating, setAnimating] = useState(true);
+  const [currentAngle, setCurrentAngle] = useState(props.angle);
   const pendulumRef = useRef<Pendulum>(null);
 
   // refs for showing results live
@@ -251,6 +257,53 @@ export default function PendulumAnimation() {
   const potentialEnergyResultRef = useRef<HTMLParagraphElement>(null);
   const kineticEnergyResultRef = useRef<HTMLParagraphElement>(null);
   const totalEnergyResultRef = useRef<HTMLParagraphElement>(null);
+
+  const velocityAtAngle = useMemo(
+    () =>
+      // √(2gl(1-cos(θ))
+      Math.sqrt(
+        2 *
+          props.gravity *
+          props.length *
+          (Math.cos((currentAngle * Math.PI) / 180) -
+            Math.cos((props.angle * Math.PI) / 180))
+      ),
+    [props.length, currentAngle, props.angle, props.gravity]
+  );
+  const accelarationAtAngle = useMemo(
+    () =>
+      // gsin(θ)
+      props.gravity * Math.sin((currentAngle * Math.PI) / 180),
+    [currentAngle, props.gravity]
+  );
+
+  const heightAtAngle = useMemo(
+    () =>
+      // l(1-cos(θ))
+      props.length * (1 - Math.cos((currentAngle * Math.PI) / 180)),
+    [props.length, currentAngle]
+  );
+
+  const potentialEnergyAtAngle = useMemo(
+    () =>
+      // mgh
+      props.mass * props.gravity * heightAtAngle,
+    [props.mass, props.gravity, heightAtAngle]
+  );
+
+  const kineticEnergyAtAngle = useMemo(
+    () =>
+      // 1/2mv^2
+      0.5 * props.mass * velocityAtAngle ** 2,
+    [props.mass, velocityAtAngle]
+  );
+
+  const totalEnergyAtAngle = useMemo(
+    () =>
+      // mgh + 1/2mv^2
+      potentialEnergyAtAngle + kineticEnergyAtAngle,
+    [potentialEnergyAtAngle, kineticEnergyAtAngle]
+  );
 
   useEffect(() => {
     if (!pendulumRef.current) {
@@ -265,7 +318,12 @@ export default function PendulumAnimation() {
     }
   }, []);
 
-  const calculateResults = () => {
+  const calculateResults = (props: {
+    angle: number;
+    length: number;
+    mass: number;
+    gravity: number;
+  }) => {
     pendulumRef.current?.setValue(
       "angle",
       Number((props.angle * Math.PI) / 180)
@@ -273,18 +331,10 @@ export default function PendulumAnimation() {
     pendulumRef.current?.setValue("length", Number(props.length));
     pendulumRef.current?.setValue("mass", Number(props.mass));
     pendulumRef.current?.setValue("gravity", Number(props.gravity));
-    setAnimating(true);
   };
 
   const PeriodTimer = () => {
     return <div>PeriodTimer</div>;
-  };
-
-  const PauseButton = () => {
-    return <div>PauseButton</div>;
-  };
-  const ResetButton = () => {
-    return <div>ResetButton</div>;
   };
 
   /**
@@ -296,40 +346,121 @@ export default function PendulumAnimation() {
    * #a1c3d1
    */
   const resultStyle =
-    "flex flex-row justify-between items-center gap-1 m-3 font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454] p-3 px-4";
+    "flex flex-row justify-between flex-wrap items-center gap-1 m-3 font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454] p-3 px-4";
 
   return (
     <>
       <div className="grid md:grid-cols-4 grid-cols-1 gap-2 m-4 justify-center items-center md:items-start">
         {/* Results */}
         <center className="order-3 md:order-1 ">
-          <div className="w-5/6  flex-col border-2 rounded-lg bg-[#b4dfe5]  items-center border-gray-950">
+          <div className="w-full lg:w-5/6  flex-col border-2 rounded-lg bg-[#b4dfe5]  items-center border-gray-950">
             <p className="text-center text-xl pt-3">Results</p>
-            {/* result options goes here */}
-
+            <div className="flex flex-row items-center pt-2 justify-between gap-2 px-4">
+              {/* result options goes here */}
+              <Button
+                onClick={() => {
+                  setResultShowingLive(true);
+                  if (!animating) setAnimating(true);
+                }}
+                className={cn(
+                  resultShowingLive
+                    ? "bg-green-500 text-white"
+                    : "bg-slate-100 text-black",
+                  "hover:text-black hover:bg-green-300"
+                )}
+              >
+                Live
+              </Button>
+              <Button
+                onClick={() => {
+                  setResultShowingLive(false);
+                  if (animating) setAnimating(false);
+                }}
+                className={cn(
+                  !resultShowingLive
+                    ? "bg-green-500 text-white"
+                    : "bg-slate-100 text-black",
+                  "hover:text-black hover:bg-green-300"
+                )}
+              >
+                At Angle (°)
+              </Button>
+            </div>
             {/* angle */}
             <div className={resultStyle}>
-              <p>Angle: </p>
-              <div className="flex flex-row items-center justify-between">
-                <p ref={angleResultRef}>{props.angle}</p>
+              <p>Angle </p>
+              <div className="flex flex-row items-center justify-between gap-1">
+                {resultShowingLive ? (
+                  <p
+                    className={cn(
+                      "font-bold",
+                      !resultShowingLive ? "hidden" : "visible"
+                    )}
+                    ref={angleResultRef}
+                  >
+                    {props.angle}
+                  </p>
+                ) : (
+                  <div className="flex flex-row items-center justify-between gap-1">
+                    <button
+                      disabled={currentAngle === Math.abs(props.angle)}
+                      onClick={() => {
+                        setCurrentAngle((prev) => prev + 1);
+                      }}
+                      className="bg-green-500 px-2 text-white p-1 rounded-xl  disabled:opacity-50 "
+                    >
+                      +
+                    </button>
+
+                    <input
+                      onChange={(e) => {
+                        setCurrentAngle(Number(e.target.value));
+                      }}
+                      className="text-black w-[4em] px-2 h-8 border rounded-xl disabled:opacity-50 "
+                      min={-Math.abs(props.angle)}
+                      max={Math.abs(props.angle)}
+                      type="number"
+                      value={currentAngle}
+                    />
+                    <button
+                      disabled={currentAngle === -Math.abs(props.angle)}
+                      onMouseDown={() => {
+                        setCurrentAngle((prev) => prev - 1);
+                      }}
+                      className="bg-red-500 px-2 text-white p-1 rounded-xl"
+                    >
+                      -
+                    </button>
+                  </div>
+                )}
                 <p>°</p>
               </div>
             </div>
 
             {/* velocity  */}
             <div className={resultStyle}>
-              <p>Velocity: </p>
+              <p>Velocity </p>
               <div className="flex flex-row items-center justify-between gap-1">
-                <p ref={velocityResultRef}>0</p>
+                <p
+                  className="font-bold"
+                  ref={resultShowingLive ? velocityResultRef : undefined}
+                >
+                  {velocityAtAngle.toFixed(4)}
+                </p>
                 <p>m/s</p>
               </div>
             </div>
 
             {/* accelaration */}
             <div className={resultStyle}>
-              <p>Accelaration: </p>
+              <p>Acceleration </p>
               <div className="flex flex-row items-center justify-between gap-1">
-                <p ref={accelarationResultRef}>{0}</p>
+                <p
+                  className="font-bold"
+                  ref={resultShowingLive ? accelarationResultRef : undefined}
+                >
+                  {accelarationAtAngle.toFixed(4)}
+                </p>
                 <p>
                   m/s<sup>2</sup>
                 </p>
@@ -338,13 +469,13 @@ export default function PendulumAnimation() {
 
             {/* height */}
             <div className={resultStyle}>
-              <p>Height: </p>
+              <p>Height </p>
               <div className="flex flex-row items-center justify-between gap-1">
-                <p ref={heightResultRef}>
-                  {(
-                    props.length *
-                    (1 - Math.cos((props.angle * Math.PI) / 180))
-                  ).toFixed(4)}
+                <p
+                  className="font-bold"
+                  ref={resultShowingLive ? heightResultRef : undefined}
+                >
+                  {heightAtAngle.toFixed(4)}
                 </p>
                 <p>m</p>
               </div>
@@ -352,15 +483,13 @@ export default function PendulumAnimation() {
 
             {/* Potential Energy */}
             <div className={resultStyle}>
-              <p className="text-left">Potential Energy: </p>
+              <p className="text-left">Potential Energy </p>
               <div className="flex flex-row items-center justify-between gap-1">
-                <p ref={potentialEnergyResultRef}>
-                  {(
-                    props.mass *
-                    props.gravity *
-                    props.length *
-                    (1 - Math.cos((props.angle * Math.PI) / 180))
-                  ).toFixed(4)}
+                <p
+                  className="font-bold"
+                  ref={resultShowingLive ? potentialEnergyResultRef : undefined}
+                >
+                  {potentialEnergyAtAngle.toFixed(4)}
                 </p>
                 <p>J</p>
               </div>
@@ -368,24 +497,27 @@ export default function PendulumAnimation() {
 
             {/* Kinetic Energy */}
             <div className={resultStyle}>
-              <p>Kinetic Energy: </p>
+              <p>Kinetic Energy </p>
               <div className="flex flex-row items-center justify-between gap-1">
-                <p ref={kineticEnergyResultRef}>0</p>
+                <p
+                  className="font-bold"
+                  ref={resultShowingLive ? kineticEnergyResultRef : undefined}
+                >
+                  {kineticEnergyAtAngle.toFixed(4)}
+                </p>
                 <p>m</p>
               </div>
             </div>
 
             {/* Total Energy */}
             <div className={resultStyle}>
-              <p>Total Energy: </p>
+              <p>Total Energy </p>
               <div className="flex flex-row items-center justify-between gap-1">
-                <p ref={totalEnergyResultRef}>
-                  {(
-                    props.mass *
-                    props.gravity *
-                    props.length *
-                    (1 - Math.cos((props.angle * Math.PI) / 180))
-                  ).toFixed(4)}
+                <p
+                  className="font-bold"
+                  ref={resultShowingLive ? totalEnergyResultRef : undefined}
+                >
+                  {totalEnergyAtAngle.toFixed(4)}
                 </p>
                 <p>J</p>
               </div>
@@ -395,49 +527,69 @@ export default function PendulumAnimation() {
           </div>
         </center>
         {/* Canvas */}
-        <div className=" h-[40vh] md:h-[70vh] md:col-span-2  order-1 md:order-2 ">
-          <Canvas shadows="soft">
-            {/* <AdaptiveCamera length={props.length} /> */}
-            <CubeCamera
-              position={[0, 0, currentLength + 1]}
-              near={1}
-              far={50}
-              children={function (tex: THREE.Texture): ReactNode {
-                return <primitive object={tex} />;
-              }}
-            />
-            {/* <PerspectiveCamera
+        <div className="md:col-span-2  order-1 md:order-2 flex flex-col gap-3 items-center justify-between  ">
+          <div className=" h-[40vh] w-full  md:h-[80vh] ">
+            <Canvas shadows="soft">
+              {/* <AdaptiveCamera length={props.length} /> */}
+              <CubeCamera
+                position={[0, 0, currentLength + 1]}
+                near={1}
+                far={50}
+                children={function (tex: THREE.Texture): ReactNode {
+                  return <primitive object={tex} />;
+                }}
+              />
+              {/* <PerspectiveCamera
               makeDefault
               position={[0, 0.6, currentLength + 1]}
               fov={75}
               near={0.1}
               far={100}
             /> */}
-            <Environment
-              near={0.2}
-              far={100}
-              background
-              blur={0}
-              preset="apartment"
-            />
-            <Animation
-              pendulumRef={pendulumRef}
-              animating={animating}
-              angleResultRef={angleResultRef}
-              velocityResultRef={velocityResultRef}
-              accelarationResultRef={accelarationResultRef}
-              heightResultRef={heightResultRef}
-              potentialEnergyResultRef={potentialEnergyResultRef}
-              kineticEnergyResultRef={kineticEnergyResultRef}
-              totalEnergyResultRef={totalEnergyResultRef}
-            />
-            {/* <Ground /> */}
-            <Structure length={currentLength} />
+              <Environment
+                near={0.2}
+                far={100}
+                background
+                blur={0}
+                preset="apartment"
+              />
+              <Animation
+                pendulumRef={pendulumRef}
+                animating={animating}
+                angleResultRef={angleResultRef}
+                velocityResultRef={velocityResultRef}
+                accelarationResultRef={accelarationResultRef}
+                heightResultRef={heightResultRef}
+                potentialEnergyResultRef={potentialEnergyResultRef}
+                kineticEnergyResultRef={kineticEnergyResultRef}
+                totalEnergyResultRef={totalEnergyResultRef}
+              />
+              {/* <Ground /> */}
+              <Structure length={currentLength} />
 
-            {/* <ambientLight args={[0xdddddd, 0.4]} /> */}
+              {/* <ambientLight args={[0xdddddd, 0.4]} /> */}
 
-            <OrbitControls minDistance={1} maxDistance={45} />
-          </Canvas>
+              <OrbitControls minDistance={1} maxDistance={45} />
+            </Canvas>
+          </div>
+          <div className="flex flex-row gap-4 items-center justify-center">
+            <div
+              className="bg-green-500 cursor-pointer shadow-xl p-5  rounded-full "
+              onClick={() => setAnimating(!animating)}
+            >
+              {animating ? <Pause size={40} /> : <Play size={40} />}
+            </div>
+            <div
+              className="bg-cyan-700 cursor-pointer shadow-xl p-4   rounded-full "
+              onClick={() => {
+                setProps({ ...INITIAL_VALUES });
+                calculateResults({ ...INITIAL_VALUES });
+                setAnimating(false);
+              }}
+            >
+              <RotateCcw size={36} />
+            </div>
+          </div>
         </div>
         <div className="order-2 md:order-4  ">
           {/* inputs */}
@@ -467,7 +619,10 @@ export default function PendulumAnimation() {
           <center>
             <Button
               disabled={animating}
-              onClick={calculateResults}
+              onClick={() => {
+                calculateResults(props);
+                setAnimating(true);
+              }}
               className="w-[100px] "
             >
               Calculate
@@ -478,14 +633,6 @@ export default function PendulumAnimation() {
       <center>
         <div className="flex flex-row items-center justify-center gap-8 ">
           <PeriodTimer />
-          {/* pause button */}
-          <div
-            className="bg-green-500 cursor-pointer shadow-xl p-5  rounded-full "
-            onClick={() => setAnimating(!animating)}
-          >
-            {animating ? <Pause size={40} /> : <Play size={40} />}
-          </div>
-          <ResetButton />
         </div>
       </center>
     </>
