@@ -36,6 +36,7 @@ const PendulumInputs = ({
     pendulumRef.current?.setValue("length", Number(length));
     pendulumRef.current?.setValue("mass", Number(mass));
     pendulumRef.current?.setValue("gravity", Number(gravity));
+    pendulumRef.current?.resetSwingCount();
   };
 
   const handleChangeInput = (id: number, value: string) => {

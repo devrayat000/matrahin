@@ -6,6 +6,7 @@ import PendulumAnimation from "./PendulumAnimation";
 import PendulumInputs from "./PendulumInput";
 import PendulumResults from "./Results";
 import { INITIAL_VALUES } from "./store";
+import FormulaAndProcedures from "./FormulaAndProcedures";
 
 export default function PendulumAnimationPage() {
   const pendulumRef = useRef<Pendulum>(null);
@@ -44,10 +45,6 @@ export default function PendulumAnimationPage() {
     }
   }, []);
 
-  const PeriodTimer = () => {
-    return <div></div>;
-  };
-
   return (
     <>
       <div className="grid md:grid-cols-4 grid-cols-1 gap-2 m-4 justify-center items-center md:items-start">
@@ -78,10 +75,10 @@ export default function PendulumAnimationPage() {
           <PendulumInputs pendulumRef={pendulumRef} />
         </div>
       </div>
+
       <center>
-        <div className="flex flex-row items-center justify-center gap-8 ">
-          <PeriodTimer />
-        </div>
+        {/* Formula and procedures */}
+        <FormulaAndProcedures />
       </center>
     </>
   );

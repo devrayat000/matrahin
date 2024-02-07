@@ -196,6 +196,9 @@ class Pendulum {
     }
   }
 
+  resetSwingCount() {
+    this.swingCount = 0;
+  }
   setLength(length: number) {
     // this.reset();
     // this.resetAnimation();
