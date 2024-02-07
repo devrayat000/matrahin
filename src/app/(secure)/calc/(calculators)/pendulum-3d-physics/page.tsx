@@ -56,7 +56,7 @@ export default function PendulumAnimationPage() {
           <PendulumResults {...resultRefs} />
         </center>
         {/* Canvas */}
-        <div className="md:col-span-5   order-1 md:order-2  ">
+        <center className="md:col-span-5   order-1 md:order-2  ">
           {/* <PendulumAnimation ref={pendulumAnimationRefs} /> */}
           <PendulumAnimation
             {...{
@@ -71,7 +71,7 @@ export default function PendulumAnimationPage() {
               periodCounterRef,
             }}
           />
-        </div>
+        </center>
         <center className="order-2 col-span-2 md:order-4  ">
           {/* Inputs */}
           <PendulumInputs pendulumRef={pendulumRef} />

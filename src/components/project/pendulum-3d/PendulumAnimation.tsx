@@ -9,7 +9,7 @@ import {
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useAtom, useAtomValue } from "jotai";
 import { Pause, Play } from "lucide-react";
-import { ReactNode, useRef } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import * as THREE from "three";
 import Pendulum from "./Pendulum";
 import { pendulumStore } from "./store";
@@ -71,19 +71,23 @@ const PendulumAnimation = ({
 }) => {
   const length = useAtomValue(pendulumStore.lengthAtom);
 
+  const Camera = ({ length }: { length: number }) => (
+    <CubeCamera
+      position={[0, 0, length + 1]}
+      near={1}
+      far={50}
+      children={function (tex: THREE.Texture): ReactNode {
+        return <primitive object={tex} />;
+      }}
+    />
+  );
+
   return (
     <>
-      <center className="mx-auto w-5/6 w lg:w-full  h-[40vh] md:h-[70vh] mb-2">
+      <div className=" w-5/6  lg:w-full  h-[40vh] md:h-[70vh] mb-2">
         <Canvas shadows="soft">
           {/* <AdaptiveCamera length={length} /> */}
-          <CubeCamera
-            position={[0, 0, length + 1]}
-            near={1}
-            far={50}
-            children={function (tex: THREE.Texture): ReactNode {
-              return <primitive object={tex} />;
-            }}
-          />
+          <Camera length={length} />
           {/* <PerspectiveCamera
                 makeDefault
                 position={[0, 0.6, currentLength + 1]}
@@ -118,21 +122,59 @@ const PendulumAnimation = ({
 
           <OrbitControls minDistance={1} maxDistance={45} />
         </Canvas>
-      </center>
+      </div>
 
       <PauseResumeControl />
     </>
   );
 };
-// });
+
+const StopWatch = () => {
+  const animating = useAtomValue(pendulumStore.isPlayingAtom);
+
+  const timeRef = useRef<HTMLParagraphElement>(null);
+  const timeCounter = useRef(0);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (animating) {
+      interval = setInterval(() => {
+        timeCounter.current += 0.01;
+        if (timeRef.current)
+          timeRef.current.innerText = timeCounter.current.toFixed(2);
+      }, 10);
+    } else {
+      clearInterval(interval);
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [animating]);
+
+  return (
+    <div className="flex flex-row items-center justify-between gap-2 border-2 p-3 ">
+      <strong className="text-lg md:text-2xl">Stopwatch</strong>
+      <p
+        ref={timeRef}
+        className="text-xl md:text-3xl text-right font-mono w-[7ch]"
+      >
+        0
+      </p>
+      <strong className="text-xl">s</strong>
+    </div>
+  );
+};
 
 const PauseResumeControl = () => {
   const [animating, setAnimating] = useAtom(pendulumStore.isPlayingAtom);
 
   return (
-    <div className="flex flex-row gap-4 items-center justify-center">
+    <div className="flex flex-row gap-1 md:gap-4 items-center justify-around">
+      {/* add stopwatch */}
+      <StopWatch />
       <div
-        className="bg-green-500 cursor-pointer shadow-xl p-5  rounded-full hover:scale-125 transition-transform duration-300 transform "
+        className="bg-green-500 cursor-pointer shadow-xl p-3 md:p-5 self-start  rounded-full hover:scale-125 transition-transform duration-300 transform "
         onClick={() => setAnimating(!animating)}
       >
         {animating ? <Pause size={40} /> : <Play size={40} />}
