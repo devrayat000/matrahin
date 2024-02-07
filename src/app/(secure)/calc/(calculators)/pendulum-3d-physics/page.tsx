@@ -47,7 +47,7 @@ export default function PendulumAnimationPage() {
   }, []);
 
   return (
-    <>
+    <div className="mb-8">
       <p className="text-center text-4xl pt-3">Simple Pendulum</p>
       <div className="grid md:grid-cols-10 grid-cols-1 gap-2 my-2 justify-center items-center md:items-start">
         {/* Results */}
@@ -85,6 +85,6 @@ export default function PendulumAnimationPage() {
       <center>
         <TimePeriodCalcProcedure />
       </center>
-    </>
+    </div>
   );
 }
