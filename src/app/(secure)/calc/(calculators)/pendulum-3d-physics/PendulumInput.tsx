@@ -64,62 +64,66 @@ const PendulumInputs = ({
 
       {inputOptions &&
         inputOptions.map((option, index) => (
-          <InputWithSlider
-            key={index}
-            label={option.label}
-            value={values[option.valueText]}
-            id={option.id}
-            helperText={option.helperText}
-            onChangeInput={handleChangeInput}
-            min={option.min}
-            max={option.max}
-          />
+          <div className="w-64 mb-2 mx-auto" key={index}>
+            <InputWithSlider
+              label={option.label}
+              value={values[option.valueText]}
+              id={option.id}
+              helperText={option.helperText}
+              onChangeInput={handleChangeInput}
+              min={option.min}
+              max={option.max}
+            />
+          </div>
         ))}
 
-      <div className="flex flex-row justify-between flex-wrap items-center gap-1 m-3 font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454] p-3 px-4">
-        {/* <div className="text-xs mt-1 self-start text-gray-500">
+      {/* <div className="flex flex-row w-64 justify-between flex-wrap items-center gap-1 m-3 font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454] p-3 px-4"> */}
+      <div className="w-64  mx-auto mb-2 ">
+        <div className="flex flex-row justify-between flex-wrap items-center gap-1 m-1 font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454] p-3 px-4">
+          {/* <div className="text-xs mt-1 self-start text-gray-500">
           Gravity {"("}where the experiment is being conducted{")"}
         </div> */}
 
-        <div className="flex flex-row justify-between  w-full  gap-0 items-center">
-          <label className="mr-2 text-lg font-bold">Gravity</label>
+          <div className="flex flex-row justify-between  w-full  gap-0 items-center">
+            <label className="mr-2 text-lg font-bold">Gravity</label>
 
-          <input
-            className="ml-1 px-2 py-1 rounded-xl border text-white text-lg  bg-[#2f4454] w-[9ch] disabled:cursor-not-allowed"
-            type="number"
-            step={0.1}
-            min={1}
-            max={100}
-            value={gravity}
-            disabled={!customGravitySelected}
-            onChange={(e) => handleChangeInput(4, e.target.value)}
-          />
+            <input
+              className="ml-1 px-2 py-1 rounded-xl border text-white text-lg  bg-[#2f4454] w-[9ch] disabled:cursor-not-allowed"
+              type="number"
+              step={0.1}
+              min={1}
+              max={100}
+              value={gravity}
+              disabled={!customGravitySelected}
+              onChange={(e) => handleChangeInput(4, e.target.value)}
+            />
+          </div>
+
+          <select
+            className="p-2 border w-[16ch] text-white   bg-[#2f4454] rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            onChange={(e) => {
+              if (e.target.value === "-1") {
+                setCustomGravitySelected(true);
+              } else {
+                handleChangeInput(4, e.target.value);
+                setCustomGravitySelected(false);
+              }
+            }}
+            defaultValue={9.8}
+          >
+            <option value="-1">Custom</option>
+            <option value="9.8">Earth (9.8)</option>
+            <option value="1.6">Moon (1.6)</option>
+            <option value="24.8">Jupiter (24.8)</option>
+            <option value="8.9">Mars (8.9)</option>
+            <option value="10.4">Venus (10.4)</option>
+            <option value="24.8">Saturn (24.8)</option>
+            <option value="8.9">Mercury (3.7)</option>
+            <option value="10.4">Uranus (8.7)</option>
+            <option value="24.8">Neptune (11.2)</option>
+            <option value="8.9">Pluto (0.6)</option>
+          </select>
         </div>
-
-        <select
-          className="p-2 border w-[16ch] text-white   bg-[#2f4454] rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
-          onChange={(e) => {
-            if (e.target.value === "-1") {
-              setCustomGravitySelected(true);
-            } else {
-              handleChangeInput(4, e.target.value);
-              setCustomGravitySelected(false);
-            }
-          }}
-          defaultValue={9.8}
-        >
-          <option value="-1">Custom</option>
-          <option value="9.8">Earth (9.8)</option>
-          <option value="1.6">Moon (1.6)</option>
-          <option value="24.8">Jupiter (24.8)</option>
-          <option value="8.9">Mars (8.9)</option>
-          <option value="10.4">Venus (10.4)</option>
-          <option value="24.8">Saturn (24.8)</option>
-          <option value="8.9">Mercury (3.7)</option>
-          <option value="10.4">Uranus (8.7)</option>
-          <option value="24.8">Neptune (11.2)</option>
-          <option value="8.9">Pluto (0.6)</option>
-        </select>
       </div>
 
       <center className="flex flex-row items-center justify-around">

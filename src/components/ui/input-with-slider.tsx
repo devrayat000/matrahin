@@ -22,12 +22,12 @@ const InputWithSlider: React.FC<InputWithSliderProps> = ({
   max = 1000,
 }) => {
   const maxChars = Math.max(max.toString().length, min.toString().length) + 5;
-  const resultStyle =
-    "flex flex-row justify-between flex-wrap items-center gap-1 m-3 font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454] p-3 px-4";
+  const inputStyle =
+    "flex flex-row justify-between flex-wrap items-center gap-1 m-1 font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454] p-3 px-4";
 
   return (
     // <div className="flex flex-col gap-1 items-center mb-2 border px-6 py-3 bg-stone-50 ">
-    <div className={resultStyle}>
+    <div className={inputStyle}>
       <div className="flex flex-row justify-between  w-full  gap-1 items-center">
         <label className="mr-2 text-lg font-bold">{label}</label>
 
