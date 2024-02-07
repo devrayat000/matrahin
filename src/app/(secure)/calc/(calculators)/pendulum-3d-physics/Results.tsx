@@ -1,7 +1,18 @@
 "use client";
 
 import { useAtom, useAtomValue } from "jotai";
-import { MinusSquare, PlusSquare } from "lucide-react";
+import {
+  DatabaseZap,
+  DraftingCompass,
+  Gauge,
+  GaugeCircle,
+  LineChart,
+  MinusSquare,
+  MoveUp,
+  PlusSquare,
+  Timer,
+  Zap,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
@@ -16,6 +27,7 @@ const PendulumResults = ({
   potentialEnergyResultRef,
   kineticEnergyResultRef,
   totalEnergyResultRef,
+  periodCounterRef,
 }: {
   angleResultRef: React.RefObject<HTMLParagraphElement>;
   velocityResultRef: React.RefObject<HTMLParagraphElement>;
@@ -24,6 +36,7 @@ const PendulumResults = ({
   potentialEnergyResultRef: React.RefObject<HTMLParagraphElement>;
   kineticEnergyResultRef: React.RefObject<HTMLParagraphElement>;
   totalEnergyResultRef: React.RefObject<HTMLParagraphElement>;
+  periodCounterRef: React.RefObject<HTMLParagraphElement>;
 }) => {
   const [resultShowingLive, setResultShowingLive] = useAtom(
     pendulumStore.resultShowingLiveAtom
@@ -110,7 +123,7 @@ const PendulumResults = ({
     [potentialEnergyAtAngle, kineticEnergyAtAngle]
   );
   return (
-    <div className="w-full lg:w-5/6  flex-col  rounded-lg   items-center border-gray-950">
+    <div className="w-full   flex-col  rounded-lg   items-center border-gray-950">
       {/* <div className="w-full lg:w-5/6  flex-col border-2 rounded-lg bg-[#42b6c5]  items-center border-gray-950"> */}
       <p className="text-center text-3xl pt-3">Results</p>
       <div className="flex flex-row items-center pt-2 justify-between gap-2 px-4">
@@ -140,12 +153,13 @@ const PendulumResults = ({
       </div>
       {/* angle */}
       <div className={resultStyle}>
+        <DraftingCompass />
         <p>Angle </p>
         <div className="flex flex-row items-center justify-between gap-1">
           {resultShowingLive ? (
             <p
               className={cn(
-                "font-bold",
+                "font-bold w-[5ch] text-center",
                 !resultShowingLive ? "hidden" : "visible"
               )}
               ref={angleResultRef}
@@ -192,10 +206,11 @@ const PendulumResults = ({
 
       {/* velocity  */}
       <div className={resultStyle}>
+        <Gauge />
         <p>Velocity </p>
         <div className="flex flex-row items-center justify-between gap-1">
           <p
-            className="font-bold"
+            className="font-bold w-[5ch]"
             ref={resultShowingLive ? velocityResultRef : undefined}
           >
             {velocityAtAngle.toFixed(4)}
@@ -206,10 +221,11 @@ const PendulumResults = ({
 
       {/* accelaration */}
       <div className={resultStyle}>
+        <GaugeCircle />
         <p>Acceleration </p>
         <div className="flex flex-row items-center justify-between gap-1">
           <p
-            className="font-bold"
+            className="font-bold w-[5ch]"
             ref={resultShowingLive ? accelarationResultRef : undefined}
           >
             {accelarationAtAngle.toFixed(4)}
@@ -222,24 +238,26 @@ const PendulumResults = ({
 
       {/* height */}
       <div className={resultStyle}>
+        <MoveUp />
         <p>Height </p>
         <div className="flex flex-row items-center justify-between gap-1">
           <p
-            className="font-bold"
+            className="font-bold w-[5ch]"
             ref={resultShowingLive ? heightResultRef : undefined}
           >
             {heightAtAngle.toFixed(4)}
           </p>
-          <p>m</p>
+          <p>cm</p>
         </div>
       </div>
 
       {/* Potential Energy */}
       <div className={resultStyle}>
+        <DatabaseZap />
         <p className="text-left">Potential Energy </p>
         <div className="flex flex-row items-center justify-between gap-1">
           <p
-            className="font-bold"
+            className="font-bold w-[8ch]"
             ref={resultShowingLive ? potentialEnergyResultRef : undefined}
           >
             {potentialEnergyAtAngle.toFixed(4)}
@@ -250,10 +268,11 @@ const PendulumResults = ({
 
       {/* Kinetic Energy */}
       <div className={resultStyle}>
+        <LineChart />
         <p>Kinetic Energy </p>
         <div className="flex flex-row items-center justify-between gap-1">
           <p
-            className="font-bold"
+            className="font-bold  w-[8ch]"
             ref={resultShowingLive ? kineticEnergyResultRef : undefined}
           >
             {kineticEnergyAtAngle.toFixed(4)}
@@ -264,10 +283,11 @@ const PendulumResults = ({
 
       {/* Total Energy */}
       <div className={resultStyle}>
+        <Zap />
         <p>Total Energy </p>
         <div className="flex flex-row items-center justify-between gap-1">
           <p
-            className="font-bold"
+            className="font-bold w-[8ch]"
             ref={resultShowingLive ? totalEnergyResultRef : undefined}
           >
             {totalEnergyAtAngle.toFixed(4)}
@@ -276,6 +296,21 @@ const PendulumResults = ({
         </div>
       </div>
 
+      {resultShowingLive && (
+        <div className="flex flex-row justify-between flex-wrap items-center gap-1 m-3 font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454] p-3 px-4">
+          <Timer />
+          <p>Time Period </p>
+          <div className="flex flex-row items-center justify-between gap-1">
+            <p
+              className="font-bold w-[4ch]"
+              ref={resultShowingLive ? periodCounterRef : undefined}
+            >
+              0
+            </p>
+            <p>s</p>
+          </div>
+        </div>
+      )}
       {/* results done */}
     </div>
   );

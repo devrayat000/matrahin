@@ -18,6 +18,7 @@ export default function PendulumAnimationPage() {
   const potentialEnergyResultRef = useRef<HTMLParagraphElement>(null);
   const kineticEnergyResultRef = useRef<HTMLParagraphElement>(null);
   const totalEnergyResultRef = useRef<HTMLParagraphElement>(null);
+  const periodCounterRef = useRef<HTMLParagraphElement>(null);
 
   const resultRefs = {
     angleResultRef,
@@ -27,6 +28,7 @@ export default function PendulumAnimationPage() {
     potentialEnergyResultRef,
     kineticEnergyResultRef,
     totalEnergyResultRef,
+    periodCounterRef,
   };
 
   useEffect(() => {
@@ -67,6 +69,7 @@ export default function PendulumAnimationPage() {
               potentialEnergyResultRef,
               kineticEnergyResultRef,
               totalEnergyResultRef,
+              periodCounterRef,
             }}
           />
         </div>

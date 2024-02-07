@@ -57,6 +57,7 @@ const PendulumAnimation = ({
   potentialEnergyResultRef,
   kineticEnergyResultRef,
   totalEnergyResultRef,
+  periodCounterRef,
 }: {
   pendulumRef: React.RefObject<Pendulum>;
   angleResultRef: React.RefObject<HTMLParagraphElement>;
@@ -66,6 +67,7 @@ const PendulumAnimation = ({
   potentialEnergyResultRef: React.RefObject<HTMLParagraphElement>;
   kineticEnergyResultRef: React.RefObject<HTMLParagraphElement>;
   totalEnergyResultRef: React.RefObject<HTMLParagraphElement>;
+  periodCounterRef: React.RefObject<HTMLParagraphElement>;
 }) => {
   const length = useAtomValue(pendulumStore.lengthAtom);
 
@@ -106,6 +108,7 @@ const PendulumAnimation = ({
               potentialEnergyResultRef,
               kineticEnergyResultRef,
               totalEnergyResultRef,
+              periodCounterRef,
             }}
           />
           {/* <Ground /> */}
@@ -125,6 +128,7 @@ const PendulumAnimation = ({
 
 const PauseResumeControl = () => {
   const [animating, setAnimating] = useAtom(pendulumStore.isPlayingAtom);
+
   return (
     <div className="flex flex-row gap-4 items-center justify-center">
       <div
@@ -147,6 +151,7 @@ const Animation = ({
   potentialEnergyResultRef,
   kineticEnergyResultRef,
   totalEnergyResultRef,
+  periodCounterRef,
 }: {
   pendulumRef: React.RefObject<Pendulum>;
   angleResultRef: React.RefObject<HTMLParagraphElement>;
@@ -156,6 +161,7 @@ const Animation = ({
   potentialEnergyResultRef: React.RefObject<HTMLParagraphElement>;
   kineticEnergyResultRef: React.RefObject<HTMLParagraphElement>;
   totalEnergyResultRef: React.RefObject<HTMLParagraphElement>;
+  periodCounterRef: React.RefObject<HTMLParagraphElement>;
 }) => {
   const animating = useAtomValue(pendulumStore.isPlayingAtom);
 
@@ -170,14 +176,29 @@ const Animation = ({
   const bobRoughness = useTexture("/marble_roughness.jpg");
 
   let timeCounter = 0;
+  const precision = 2;
+  let periodCounter = 0;
   useFrame(({ clock }) => {
     clock.autoStart = false;
     if (animationRef.current && animating) {
       if (!clock.running) clock.start();
+      // if(pendulum.swingCount%2 == 1) {
+      //   periodCounter = 0;
+      // }
+
       const deltaTime = clock.elapsedTime - timeCounter;
       const theta = pendulum.step(deltaTime);
       timeCounter += deltaTime;
 
+      if (pendulum.swingCount == 2) {
+        periodCounter += deltaTime;
+        if (periodCounterRef.current)
+          periodCounterRef.current.innerText = periodCounter.toFixed(precision);
+      }
+      if (pendulum.swingCount == 3) {
+        periodCounter = 0;
+        pendulum.swingCount = 1;
+      }
       animationRef.current.rotation.z = theta;
     } else {
       if (clock.running) clock.stop();
@@ -191,29 +212,32 @@ const Animation = ({
         angleResultRef.current.innerText = (
           (pendulum.angle * 180) /
           Math.PI
-        ).toFixed(4);
+        ).toFixed(precision);
 
       if (velocityResultRef.current)
-        velocityResultRef.current.innerText = pendulum.velocity.toFixed(4);
+        velocityResultRef.current.innerText =
+          pendulum.velocity.toFixed(precision);
 
       if (accelarationResultRef.current)
         accelarationResultRef.current.innerText =
-          pendulum.accelaration.toFixed(4);
+          pendulum.accelaration.toFixed(precision);
 
       if (heightResultRef.current)
-        heightResultRef.current.innerText = pendulum.height.toFixed(4);
+        heightResultRef.current.innerText = (pendulum.height * 100).toFixed(
+          precision
+        );
 
       if (potentialEnergyResultRef.current)
         potentialEnergyResultRef.current.innerText =
-          pendulum.potentialEnergy.toFixed(4);
+          pendulum.potentialEnergy.toFixed(precision);
 
       if (kineticEnergyResultRef.current)
         kineticEnergyResultRef.current.innerText =
-          pendulum.kineticEnergy.toFixed(4);
+          pendulum.kineticEnergy.toFixed(precision);
 
       if (totalEnergyResultRef.current)
         totalEnergyResultRef.current.innerText =
-          pendulum.totalEnergy.toFixed(4);
+          pendulum.totalEnergy.toFixed(precision);
     }
   });
   return (

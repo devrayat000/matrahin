@@ -96,7 +96,7 @@ const PendulumInputs = ({
         </div>
 
         <select
-          className="p-2 border text-white text-lg  bg-[#2f4454] rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+          className="p-2 border w-[16ch] text-white   bg-[#2f4454] rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
           onChange={(e) => {
             if (e.target.value === "-1") {
               setCustomGravitySelected(true);
@@ -105,36 +105,26 @@ const PendulumInputs = ({
               setCustomGravitySelected(false);
             }
           }}
+          defaultValue={9.8}
         >
           <option value="-1">Custom</option>
-          <option selected value="9.8">
-            Earth (9.8 m/s²)
-          </option>
-          <option value="1.6">Moon (1.6 m/s²)</option>
-          <option value="24.8">Jupiter (24.8 m/s²)</option>
-          <option value="8.9">Mars (8.9 m/s²)</option>
-          <option value="10.4">Venus (10.4 m/s²)</option>
-          <option value="24.8">Saturn (24.8 m/s²)</option>
-          <option value="8.9">Mercury (3.7 m/s²)</option>
-          <option value="10.4">Uranus (8.7 m/s²)</option>
-          <option value="24.8">Neptune (11.2 m/s²)</option>
-          <option value="8.9">Pluto (0.6 m/s²)</option>
+          <option value="9.8">Earth (9.8)</option>
+          <option value="1.6">Moon (1.6)</option>
+          <option value="24.8">Jupiter (24.8)</option>
+          <option value="8.9">Mars (8.9)</option>
+          <option value="10.4">Venus (10.4)</option>
+          <option value="24.8">Saturn (24.8)</option>
+          <option value="8.9">Mercury (3.7)</option>
+          <option value="10.4">Uranus (8.7)</option>
+          <option value="24.8">Neptune (11.2)</option>
+          <option value="8.9">Pluto (0.6)</option>
         </select>
       </div>
 
       <center className="flex flex-row items-center justify-around">
-        <Button
-          disabled={isPlaying}
-          onClick={() => {
-            calculateResults(angle, length, mass, gravity);
-            setIsPlaying(true);
-          }}
-          className="w-[100px] hover:scale-125 transition-transform duration-300 transform hover:shadow-2xl "
-        >
-          Calculate
-        </Button>
         <div
-          className="bg-cyan-300  self-end cursor-pointer hover:shadow-xl hover:scale-125 transition-transform duration-300 transform  p-4   rounded-full "
+          title="reset"
+          className="bg-cyan-300  self-start cursor-pointer hover:shadow-xl hover:scale-125 transition-transform duration-300 transform  p-4   rounded-full "
           onClick={() => {
             setLength(INITIAL_VALUES.length);
             setMass(INITIAL_VALUES.mass);
@@ -151,6 +141,16 @@ const PendulumInputs = ({
         >
           <RotateCcw size={25} />
         </div>
+        <Button
+          disabled={isPlaying}
+          onClick={() => {
+            calculateResults(angle, length, mass, gravity);
+            setIsPlaying(true);
+          }}
+          className="w-[100px] hover:scale-125 transition-transform duration-300 transform hover:shadow-2xl "
+        >
+          Calculate
+        </Button>
       </center>
     </div>
   );

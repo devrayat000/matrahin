@@ -1,3 +1,5 @@
+// import { EventEmitter } from "node:stream";
+
 const TWO_PI = 2 * Math.PI;
 
 class Pendulum {
@@ -18,6 +20,7 @@ class Pendulum {
   potentialEnergy: number = 0;
   totalEnergy: number = 0;
 
+  swingCount: number = 0;
   constructor(
     angle: number,
     length: number,
@@ -96,8 +99,6 @@ class Pendulum {
 
     // update the derived variables, taking into account the transfer to thermal energy if friction is present
     // this.updateDerivedVariables( this.frictionProperty.value > 0 );
-
-    // this.stepEmitter.emit( dt );
   }
 
   /**
@@ -140,6 +141,9 @@ class Pendulum {
         ? Math.max(oldTheta, newTheta)
         : Math.min(oldTheta, newTheta);
     // this.peakEmitter.emit( turningAngle );
+    if (turningAngle > 0) {
+      this.swingCount++;
+    }
   }
 
   /**
@@ -223,6 +227,7 @@ class Pendulum {
     return this;
   }
   resetAnimation() {
+    this.swingCount = 0;
     this.angle = null;
     this.angularVelocity = 0;
     this.velocity = 0;
