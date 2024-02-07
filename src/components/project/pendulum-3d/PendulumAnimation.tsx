@@ -73,7 +73,7 @@ const PendulumAnimation = ({
 
   return (
     <>
-      <div className=" h-[40vh] w-full  md:h-[80vh] ">
+      <center className="mx-auto w-5/6 w lg:w-full  h-[40vh] md:h-[70vh] mb-2">
         <Canvas shadows="soft">
           {/* <AdaptiveCamera length={length} /> */}
           <CubeCamera
@@ -118,7 +118,7 @@ const PendulumAnimation = ({
 
           <OrbitControls minDistance={1} maxDistance={45} />
         </Canvas>
-      </div>
+      </center>
 
       <PauseResumeControl />
     </>

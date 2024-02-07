@@ -47,23 +47,6 @@ const PendulumResults = ({
   const mass = useAtomValue(pendulumStore.massAtom);
   const gravity = useAtomValue(pendulumStore.gravityAtom);
 
-  //   const angleResultRef = useRef<HTMLParagraphElement>(null);
-  //   const velocityResultRef = useRef<HTMLParagraphElement>(null);
-  //   const accelarationResultRef = useRef<HTMLParagraphElement>(null);
-  //   const heightResultRef = useRef<HTMLParagraphElement>(null);
-  //   const potentialEnergyResultRef = useRef<HTMLParagraphElement>(null);
-  //   const kineticEnergyResultRef = useRef<HTMLParagraphElement>(null);
-  //   const totalEnergyResultRef = useRef<HTMLParagraphElement>(null);
-
-  //   useImperativeHandle(ref, () => ({
-  //     angleResultRef,
-  //     velocityResultRef,
-  //     accelarationResultRef,
-  //     heightResultRef,
-  //     potentialEnergyResultRef,
-  //     kineticEnergyResultRef,
-  //     totalEnergyResultRef,
-  //   }));
   const [currentAngle, setCurrentAngle] = useState(angle);
   /**
    * chosen colors:
@@ -74,7 +57,7 @@ const PendulumResults = ({
    * #a1c3d1
    */
   const resultStyle =
-    "flex flex-row justify-between flex-wrap items-center gap-1 m-3 font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454] p-3 px-4";
+    "flex flex-row justify-between   mx-3 p-3 px-4 my-2 flex-wrap items-center lg:gap-1   font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454]";
 
   const velocityAtAngle = useMemo(
     () =>
@@ -125,8 +108,8 @@ const PendulumResults = ({
   return (
     <div className="w-full   flex-col  rounded-lg   items-center border-gray-950">
       {/* <div className="w-full lg:w-5/6  flex-col border-2 rounded-lg bg-[#42b6c5]  items-center border-gray-950"> */}
-      <p className="text-center text-3xl pt-3">Results</p>
-      <div className="flex flex-row items-center pt-2 justify-between gap-2 px-4">
+      <p className="text-center text-3xl ">Results</p>
+      <div className="flex flex-row items-center pt-2 mx-5  lg:mx-4 justify-between gap-2 lg:px-4">
         {/* result options goes here */}
         <Button
           onClick={() => setResultShowingLive(true)}
@@ -159,7 +142,7 @@ const PendulumResults = ({
           {resultShowingLive ? (
             <p
               className={cn(
-                "font-bold w-[5ch] text-center",
+                "font-bold w-[7ch] text-center",
                 !resultShowingLive ? "hidden" : "visible"
               )}
               ref={angleResultRef}
@@ -204,6 +187,21 @@ const PendulumResults = ({
         </div>
       </div>
 
+      {/* height */}
+      <div className={resultStyle}>
+        <MoveUp />
+        <p>Height </p>
+        <div className="flex flex-row items-center justify-between gap-1">
+          <p
+            className="font-bold w-[7ch]"
+            ref={resultShowingLive ? heightResultRef : undefined}
+          >
+            {heightAtAngle.toFixed(4)}
+          </p>
+          <p>cm</p>
+        </div>
+      </div>
+
       {/* velocity  */}
       <div className={resultStyle}>
         <Gauge />
@@ -233,21 +231,6 @@ const PendulumResults = ({
           <p>
             m/s<sup>2</sup>
           </p>
-        </div>
-      </div>
-
-      {/* height */}
-      <div className={resultStyle}>
-        <MoveUp />
-        <p>Height </p>
-        <div className="flex flex-row items-center justify-between gap-1">
-          <p
-            className="font-bold w-[5ch]"
-            ref={resultShowingLive ? heightResultRef : undefined}
-          >
-            {heightAtAngle.toFixed(4)}
-          </p>
-          <p>cm</p>
         </div>
       </div>
 
@@ -297,12 +280,12 @@ const PendulumResults = ({
       </div>
 
       {resultShowingLive && (
-        <div className="flex flex-row justify-between flex-wrap items-center gap-1 m-3 font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454] p-3 px-4">
+        <div className="flex flex-row justify-between mx-3 p-3 px-4  my-2 flex-wrap items-center lg:gap-1 m-1   font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454]">
           <Timer />
           <p>Time Period </p>
           <div className="flex flex-row items-center justify-between gap-1">
             <p
-              className="font-bold w-[4ch]"
+              className="font-bold w-[6ch]"
               ref={resultShowingLive ? periodCounterRef : undefined}
             >
               0

@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Pendulum from "./Pendulum";
-import PendulumAnimation from "./PendulumAnimation";
-import PendulumInputs from "./PendulumInput";
-import PendulumResults from "./Results";
-import { INITIAL_VALUES } from "./store";
-import FormulaAndProcedures from "./FormulaAndProcedures";
+import FormulaAndProcedures from "~/components/project/pendulum-3d/FormulaAndProcedures";
+import Pendulum from "~/components/project/pendulum-3d/Pendulum";
+import PendulumAnimation from "~/components/project/pendulum-3d/PendulumAnimation";
+import PendulumInputs from "~/components/project/pendulum-3d/PendulumInput";
+import PendulumResults from "~/components/project/pendulum-3d/Results";
+import TimePeriodCalcProcedure from "~/components/project/pendulum-3d/TimePeriodCalcProcedure";
+import { INITIAL_VALUES } from "~/components/project/pendulum-3d/store";
 
 export default function PendulumAnimationPage() {
   const pendulumRef = useRef<Pendulum>(null);
@@ -47,14 +48,15 @@ export default function PendulumAnimationPage() {
 
   return (
     <>
-      <div className="grid md:grid-cols-4 grid-cols-1 gap-2 m-4 justify-center items-center md:items-start">
+      <p className="text-center text-4xl pt-3">Simple Pendulum</p>
+      <div className="grid md:grid-cols-10 grid-cols-1 gap-2 my-2 justify-center items-center md:items-start">
         {/* Results */}
-        <center className="order-3 md:order-1 ">
+        <center className="order-3 md:col-span-3 md:order-1 ">
           {/* <PendulumResults ref={PendulumRefs} /> */}
           <PendulumResults {...resultRefs} />
         </center>
         {/* Canvas */}
-        <div className="md:col-span-2  order-1 md:order-2 flex flex-col gap-3 items-center justify-between  ">
+        <div className="md:col-span-5   order-1 md:order-2  ">
           {/* <PendulumAnimation ref={pendulumAnimationRefs} /> */}
           <PendulumAnimation
             {...{
@@ -70,15 +72,18 @@ export default function PendulumAnimationPage() {
             }}
           />
         </div>
-        <div className="order-2 md:order-4  ">
+        <center className="order-2 col-span-2 md:order-4  ">
           {/* Inputs */}
           <PendulumInputs pendulumRef={pendulumRef} />
-        </div>
+        </center>
       </div>
 
+      {/* Formula and procedures */}
       <center>
-        {/* Formula and procedures */}
         <FormulaAndProcedures />
+      </center>
+      <center>
+        <TimePeriodCalcProcedure />
       </center>
     </>
   );

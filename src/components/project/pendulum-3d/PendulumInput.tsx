@@ -59,9 +59,10 @@ const PendulumInputs = ({
   };
 
   return (
-    <div className="w-full lg:w-5/6 p-2 flex-col rounded-lg   items-center border-gray-950">
+    <div className="w-full lg:w-5/6 flex-col  rounded-lg   items-center border-gray-950">
       {/* <div className="w-full lg:w-5/6 mx-auto self-start"> */}
 
+      {/* <div className="flex flex-row md:flex-col gap-2 items-center justify-center w-full mx-auto"> */}
       {inputOptions &&
         inputOptions.map((option, index) => (
           <div className="w-64 mb-2 mx-auto" key={index}>
@@ -125,6 +126,7 @@ const PendulumInputs = ({
           </select>
         </div>
       </div>
+      {/* </div> */}
 
       <center className="flex flex-row items-center justify-around">
         <div

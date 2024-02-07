@@ -1,5 +1,4 @@
 import { atom } from "jotai";
-import Pendulum from "./Pendulum";
 
 export const INITIAL_VALUES = {
   angle: 45,
@@ -24,20 +23,6 @@ export const pendulumStore = {
   resultShowingLiveAtom,
 };
 
-export interface PendulumResultRefs {
-  angleResultRef: React.RefObject<HTMLParagraphElement>;
-  velocityResultRef: React.RefObject<HTMLParagraphElement>;
-  accelarationResultRef: React.RefObject<HTMLParagraphElement>;
-  heightResultRef: React.RefObject<HTMLParagraphElement>;
-  potentialEnergyResultRef: React.RefObject<HTMLParagraphElement>;
-  kineticEnergyResultRef: React.RefObject<HTMLParagraphElement>;
-  totalEnergyResultRef: React.RefObject<HTMLParagraphElement>;
-}
-
-export interface PendulumAnimationRefs extends PendulumResultRefs {
-  pendulumRef: React.RefObject<Pendulum>;
-}
-
 export const inputOptions: {
   id: number;
   label: string;
@@ -50,8 +35,8 @@ export const inputOptions: {
     id: 1,
     label: "Angle (°)",
     helperText: "Angle of Release from Vertical",
-    min: -180,
-    max: 180,
+    min: -179.9,
+    max: 179.9,
     valueText: "angle", //to change in Pendulum object
   },
   {
@@ -67,7 +52,7 @@ export const inputOptions: {
     label: "Mass",
     helperText: "Mass of Bob",
     min: 0.1,
-    max: 250,
+    max: 200,
     valueText: "mass", //to change in Pendulum object
   },
 ];
