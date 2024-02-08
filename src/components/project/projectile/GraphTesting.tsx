@@ -87,26 +87,30 @@ const DataVisualization = () => {
   const height = 350;
   const padding = 80;
 
+  const ceilToHundred = (value: number) => {
+    return Math.ceil(value / 100) * 100;
+  };
   // Calculate the ticks for the axes
   const xTicks = useMemo(
     () => [
       minX,
       ...Array.from(
-        { length: 5 },
-        (_, i) => minX + ((maxX - minX) / 4) * (i + 1)
+        { length: 10 },
+        (_, i) => minX + ((ceilToHundred(maxX) - minX) / 10) * (i + 1)
       ),
     ],
-    [minX, maxX]
+    [minX, ceilToHundred(maxX)]
   );
+
   const yTicks = useMemo(
     () => [
       minY,
       ...Array.from(
-        { length: 5 },
-        (_, i) => minY + ((maxY - minY) / 4) * (i + 1)
+        { length: 10 },
+        (_, i) => minY + ((ceilToHundred(maxY) - minY) / 10) * (i + 1)
       ),
     ],
-    [minY, maxY]
+    [minY, ceilToHundred(maxY)]
   );
 
   return (
@@ -194,7 +198,7 @@ const DataVisualization = () => {
           alignmentBaseline="middle"
           fontWeight="bold"
         >
-          X-axis Label
+          Time (s)
         </text>
         {/* Y-axis label */}
         <text
@@ -205,7 +209,7 @@ const DataVisualization = () => {
           alignmentBaseline="middle"
           fontWeight="bold"
         >
-          Y-axis Label
+          Height (m)
         </text>
         {/* X-axis */}
         <line

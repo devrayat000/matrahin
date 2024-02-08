@@ -76,7 +76,7 @@ export const modifyPoints = (
 
 export const INITIAL: INITIAL_CONSTANTS = {
   canvasDimension: {
-    x: window.innerWidth < 768 ? window.innerWidth * 0.9 : 600,
+    x: window.innerWidth < 512 ? 400 : 600,
     y: 300,
   },
 };

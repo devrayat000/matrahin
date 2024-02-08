@@ -4508,6 +4508,7 @@ __metadata:
     postcss: "npm:^8.4.31"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
+    react-google-charts: "npm:^4.0.1"
     react-helmet-async: "npm:^1.3.0"
     react-hook-form: "npm:^7.48.2"
     react-hooks-worker: "npm:^1.0.4"
@@ -8249,6 +8250,16 @@ __metadata:
   version: 3.2.2
   resolution: "react-fast-compare@npm:3.2.2"
   checksum: 10/a6826180ba75cefba1c8d3ac539735f9b627ca05d3d307fe155487f5d0228d376dac6c9708d04a283a7b9f9aee599b637446635b79c8c8753d0b4eece56c125c
+  languageName: node
+  linkType: hard
+
+"react-google-charts@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "react-google-charts@npm:4.0.1"
+  peerDependencies:
+    react: ">=16.3.0"
+    react-dom: ">=16.3.0"
+  checksum: 10/826ddb853250cee147c2cb7a5a3a52cd0bbe1699ca18f6074867ba00527b398136f11a8c382422f03d156872fae173d92a4f5454a37f17e89c5001507efad9ff
   languageName: node
   linkType: hard
 

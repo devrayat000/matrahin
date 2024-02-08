@@ -520,7 +520,7 @@ const ProjectileMotion = () => {
             title="Reset"
             className="bg-cyan-300 flex-1  self-start cursor-pointer hover:shadow-xl hover:scale-125 transition-transform duration-300 transform  p-4   rounded-full "
           >
-            <RotateCcw size={40} />
+            <RotateCcw size={30} />
           </button>
         </div>
       </div>
