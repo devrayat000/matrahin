@@ -29,7 +29,7 @@ export default function ProjectilePage() {
 
     const projectile = new Projectile(inputs as unknown as ProjectileInput);
     projectile.solve();
-    console.log(projectile);
+    // console.log(projectile);
     setProjectileParams({
       yi: projectile.yi,
       g: projectile.g,

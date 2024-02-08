@@ -3,8 +3,8 @@ import { Boat_River_Output } from "~/services/Boat_River";
 import { boatRiverAtom, boatSpeedType, pointType } from "./store";
 
 const CONFIG = {
-  canvasWidth: 600,
-  canvasHeight: 400,
+  canvasWidth: 400,
+  canvasHeight: 300,
   boatWidth: 60,
   boatHeight: 60,
   timeStep: 0.01,
