@@ -2,6 +2,7 @@ import { useAtomValue } from "jotai";
 
 import ResultTable from "./ResultTable";
 // import Graphs from "./Graphs";
+import Chart from "./GraphTesting";
 import ProjectileMotion from "./MotionCanvas";
 import { projectileAtom } from "./store";
 
@@ -13,14 +14,14 @@ export default function ResultsContainer() {
   }
 
   return (
-    <div>
-      <div className="flex gap-10 items-start">
+    <div className="">
+      <div className="flex flex-col lg:flex-row gap-10 items-center justify-around lg:items-start">
         <ProjectileMotion />
         <ResultTable />
       </div>
-      {/* <div>
-        <Graphs />
-      </div> */}
+      <div>
+        <Chart />
+      </div>
     </div>
   );
 }

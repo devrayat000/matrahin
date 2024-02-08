@@ -27,6 +27,13 @@ import { LegendsType, Point, modifiedValues, projectileAtom } from "./store";
 
 export interface ProjectileMotionProps {}
 const ProjectileMotion = () => {
+  // const INITIAL = {
+  //   canvasDimension: {
+  //     x: window.innerWidth * 0.6,
+  //     y: window.innerWidth * 0.6,
+  //   },
+  // };
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [started, setStarted] = useState(false);

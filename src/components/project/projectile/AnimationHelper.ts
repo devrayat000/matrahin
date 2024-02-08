@@ -4,8 +4,8 @@ import { INITIAL_CONSTANTS, Point, projectileAtom } from "./store";
 
 export const INITIAL: INITIAL_CONSTANTS = {
   canvasDimension: {
-    x: 700,
-    y: 400,
+    x: 400,
+    y: 300,
   },
 };
 export const objectSize: number = 5; //radius
