@@ -6,9 +6,8 @@ const DataVisualization = () => {
   const points = useAtomValue(pointsAtom);
   const verticalDottedLineRef = useRef<SVGLineElement>(null);
   const horizontalDottedLineRef = useRef<SVGLineElement>(null);
+  const [positionValue, setPositionValue] = useState({ x: 0, y: 0 });
 
-  const [dottedLineX, setDottedLineX] = useState(-1);
-  const [dottedLineY, setDottedLineY] = useState(-1);
   const [enableTooltip, setEnableTooltip] = useState(false);
 
   // const points = data.filter()
@@ -111,15 +110,9 @@ const DataVisualization = () => {
   );
 
   return (
-    <div>
-      {enableTooltip && (
-        // <div className="flex absolute bottom-10 left-10 justify-left ">
-        <div className="relative z">
-          <p>x : </p>
-          <p>y : </p>
-        </div>
-      )}
+    <>
       <svg
+        className="cols-span-2 border-2 border-gray-500"
         width={width}
         height={height}
         onMouseEnter={() => setEnableTooltip(true)}
@@ -129,11 +122,10 @@ const DataVisualization = () => {
 
           const x = e.clientX - svgRect.left;
           const y = e.clientY - svgRect.top;
-          console.log(
-            scalePointReverse(x - padding, minX, maxX, width - padding),
-
-            maxY - scalePointReverse(y, minY, maxY, height - padding)
-          );
+          setPositionValue({
+            x: scalePointReverse(x - padding, minX, maxX, width - padding),
+            y: maxY - scalePointReverse(y, minY, maxY, height - padding),
+          });
           verticalDottedLineRef.current?.setAttribute("x1", x.toString());
           verticalDottedLineRef.current?.setAttribute("x2", x.toString());
 
@@ -334,7 +326,15 @@ const DataVisualization = () => {
           return null;
         })}
       </svg>
-    </div>
+      {enableTooltip && (
+        // <div className="flex absolute bottom-10 left-10 justify-left ">
+        <div className=" bg-white w-fit p-2 rounded-md shadow-md text-sm">
+          <p>
+            x : {positionValue.x.toFixed(1)}, y : {positionValue.y.toFixed(1)}
+          </p>
+        </div>
+      )}
+    </>
   );
 };
 
