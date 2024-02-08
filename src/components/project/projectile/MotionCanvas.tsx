@@ -15,10 +15,7 @@ import {
 } from "~/lib/utils/CanvasUtils";
 import {
   GROUND_LEVEL_IN_CANVAS,
-  INITIAL,
   MARGIN_X,
-  animatingPointsAtom,
-  modifyPoints,
   objectSize,
   pointsAtom,
   scaleAtom,
@@ -27,6 +24,11 @@ import { LegendsType, Point, modifiedValues, projectileAtom } from "./store";
 
 export interface ProjectileMotionProps {}
 const ProjectileMotion = () => {
+  const dimension = {
+    x: window.innerWidth < 512 ? 400 : 600,
+    y: window.innerWidth < 512 ? 300 : 400,
+  };
+  // const [dimension, setDimension] = useState(INITIAL.canvasDimension);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [started, setStarted] = useState(false);
@@ -39,7 +41,31 @@ const ProjectileMotion = () => {
   const result = useAtomValue(projectileAtom)!;
   const [scale, setScale] = useAtom(scaleAtom);
   const points = useAtomValue(pointsAtom);
-  const animatingPoints = useAtomValue(animatingPointsAtom);
+
+  const modifyPoints = (
+    x: number,
+    y: number,
+    scale: number
+  ): { x: number; y: number } => {
+    const offset: number = objectSize + GROUND_LEVEL_IN_CANVAS;
+    x = x * scale + MARGIN_X;
+    y = dimension.y - y * scale - offset;
+    return { x, y };
+  };
+
+  // const animatingPoints = useAtomValue(animatingPointsAtom);
+  const animatingPoints = useMemo(
+    () =>
+      points.map((p) => {
+        const point = modifyPoints(p.x, p.y, scale);
+        return {
+          ...p,
+          x: point.x,
+          y: point.y,
+        };
+      }),
+    [points, scale]
+  );
 
   const [animationSpeed, setAnimationSpeed] = useState(1); // [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2
 
@@ -52,8 +78,8 @@ const ProjectileMotion = () => {
   const calculateScale = (maxRange: number, maxHeight: number): number => {
     if (maxRange < 10 && maxHeight < 10) return 1;
     if (maxRange < 10)
-      return (INITIAL.canvasDimension.y - GROUND_LEVEL_IN_CANVAS) / maxHeight;
-    return (INITIAL.canvasDimension.x - 150) / maxRange;
+      return (dimension.y - GROUND_LEVEL_IN_CANVAS) / maxHeight;
+    return (dimension.x - 150) / maxRange;
   };
   // computed values from result
   const values: modifiedValues = useMemo(() => {
@@ -73,16 +99,7 @@ const ProjectileMotion = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
-    // const devicePixelRatio = window.devicePixelRatio || 1;
 
-    // // // Scale the canvas based on the device pixel ratio
-    // canvas.width = INITIAL.canvasDimension.x * devicePixelRatio;
-    // canvas.height = INITIAL.canvasDimension.y * devicePixelRatio;
-
-    // // Scale the context
-    // ctx.scale(devicePixelRatio, devicePixelRatio);
-    // ctx.imageSmoothingEnabled = false; // or true
-    // ctx.imageSmoothingQuality = "high"; // or low
     setContext(ctx);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -246,7 +263,7 @@ const ProjectileMotion = () => {
     leftLegends.forEach(({ text, value, unit }, index) => {
       ctx.fillText(
         `${text} :\t${value.toFixed(1)} ${unit}`,
-        INITIAL.canvasDimension.x / 10,
+        dimension.x / 5,
         30 + 20 * index
       );
     });
@@ -255,7 +272,7 @@ const ProjectileMotion = () => {
     rightLegends.forEach(({ text, value, unit }, index) => {
       ctx.fillText(
         `${text} :  ${value.toFixed(1)} ${unit}`,
-        (INITIAL.canvasDimension.x * 7) / 10,
+        (dimension.x * 7) / 10,
         30 + 20 * index
       );
     });
@@ -275,7 +292,7 @@ const ProjectileMotion = () => {
     ctx.fillStyle = "#c2b280";
     ctx.fillRect(
       0,
-      INITIAL.canvasDimension.y - (values.height + GROUND_LEVEL_IN_CANVAS),
+      dimension.y - (values.height + GROUND_LEVEL_IN_CANVAS),
       2 * objectSize,
       values.height
     );
@@ -288,7 +305,7 @@ const ProjectileMotion = () => {
     // ctx.fillText(
     //   `h=${values.height}`,
     //   15 * objectSize,
-    //   INITIAL.canvasDimension.y - values.height / 2
+    //   dimension.y - values.height / 2
     // );
   };
 
@@ -300,8 +317,8 @@ const ProjectileMotion = () => {
     ctx.fillStyle = "#aaaaaa";
     ctx.fillRect(
       0,
-      INITIAL.canvasDimension.y - offset - roadWidth,
-      INITIAL.canvasDimension.x,
+      dimension.y - offset - roadWidth,
+      dimension.x,
       roadWidth * 2
     );
 
@@ -309,8 +326,8 @@ const ProjectileMotion = () => {
     // middle dotted line ground level for the ball object to fall
     ctx.beginPath();
     ctx.setLineDash([15, 15]);
-    ctx.moveTo(0, INITIAL.canvasDimension.y - offset);
-    ctx.lineTo(INITIAL.canvasDimension.x, INITIAL.canvasDimension.y - offset);
+    ctx.moveTo(0, dimension.y - offset);
+    ctx.lineTo(dimension.x, dimension.y - offset);
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.strokeStyle = "black";
@@ -322,9 +339,12 @@ const ProjectileMotion = () => {
     ctx.setLineDash([]);
   };
 
+  const ceilToHundred = (value: number) => {
+    return Math.ceil(value / 100) * 100;
+  };
+
   const renderScaleX = (ctx: CanvasRenderingContext2D) => {
     const scaleHeight = 10;
-    const scaleGap = 90;
     const scaleStart = MARGIN_X;
     const scaleEnd = ctx.canvas.width;
     const scaleTextY = ctx.canvas.height - 10;
@@ -333,23 +353,35 @@ const ProjectileMotion = () => {
     ctx.fillStyle = "black";
     ctx.font = `${scaleTextSize}px "Times New Roman"`;
 
+    // horizontal line
     ctx.beginPath();
     ctx.setLineDash([]);
     ctx.moveTo(scaleStart, scaleTextY);
     ctx.lineTo(scaleEnd, scaleTextY);
     ctx.stroke();
 
-    for (let i = scaleStart; i <= scaleEnd; i += scaleGap) {
+    const minX = scaleStart;
+    const maxX = ceilToHundred(scaleEnd);
+    const ticks = [
+      minX,
+      ...Array.from(
+        { length: 10 },
+        (_, i) => minX + ((maxX - minX) / 10) * (i + 1)
+      ),
+    ];
+
+    ticks.forEach((element) => {
       ctx.beginPath();
-      ctx.moveTo(i, scaleTextY);
-      ctx.lineTo(i, scaleTextY - scaleHeight);
+      ctx.moveTo(element, scaleTextY);
+      ctx.lineTo(element, scaleTextY - scaleHeight);
       ctx.stroke();
+
       ctx.fillText(
-        `${((i - MARGIN_X) / scale).toFixed(0)}`,
-        i - 5,
+        `${((element - MARGIN_X) / scale).toFixed(0)}`,
+        element - 5,
         scaleTextY - scaleHeight - 5
       );
-    }
+    });
   };
 
   const renderScaleY = (ctx: CanvasRenderingContext2D) => {
@@ -369,17 +401,40 @@ const ProjectileMotion = () => {
     ctx.lineTo(scaleTextX, scaleEnd);
     ctx.stroke();
 
-    for (let i = scaleStart; i >= scaleEnd; i -= scaleGap) {
+    const minY = scaleStart;
+    const maxY = ceilToHundred(scaleEnd);
+
+    const ticks = [
+      minY,
+      ...Array.from(
+        { length: 10 },
+        (_, i) => minY - ((minY - maxY) / 10) * (i + 1)
+      ),
+    ];
+
+    ticks.forEach((element) => {
       ctx.beginPath();
-      ctx.moveTo(scaleTextX, i);
-      ctx.lineTo(scaleTextX + scaleHeight, i);
+      ctx.moveTo(scaleTextX, element);
+      ctx.lineTo(scaleTextX + scaleHeight, element);
       ctx.stroke();
       ctx.fillText(
-        `${((scaleStart - i) / scale).toFixed(0)}`,
+        `${((scaleStart - element) / scale).toFixed(0)}`,
         scaleTextX + scaleHeight + 5,
-        i + 5
+        element + 5
       );
-    }
+    });
+
+    // for (let i = scaleStart; i >= scaleEnd; i -= scaleGap) {
+    //   ctx.beginPath();
+    //   ctx.moveTo(scaleTextX, i);
+    //   ctx.lineTo(scaleTextX + scaleHeight, i);
+    //   ctx.stroke();
+    //   ctx.fillText(
+    //     `${((scaleStart - i) / scale).toFixed(0)}`,
+    //     scaleTextX + scaleHeight + 5,
+    //     i + 5
+    //   );
+    // }
   };
 
   const render = (animatingPoint: Point, point: Point) => {
@@ -443,11 +498,7 @@ const ProjectileMotion = () => {
 
   return (
     <div className="flex flex-col gap-4 mb-2">
-      <canvas
-        ref={canvasRef}
-        width={INITIAL.canvasDimension.x}
-        height={INITIAL.canvasDimension.y}
-      />
+      <canvas ref={canvasRef} width={dimension.x} height={dimension.y} />
       <div className="flex flex-row justify-evenly gap-3">
         <div className="flex items-center justify-evenly gap-3">
           {/* <ZoomControl /> */}
