@@ -27,13 +27,6 @@ import { LegendsType, Point, modifiedValues, projectileAtom } from "./store";
 
 export interface ProjectileMotionProps {}
 const ProjectileMotion = () => {
-  // const INITIAL = {
-  //   canvasDimension: {
-  //     x: window.innerWidth * 0.6,
-  //     y: window.innerWidth * 0.6,
-  //   },
-  // };
-
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [started, setStarted] = useState(false);
@@ -253,7 +246,7 @@ const ProjectileMotion = () => {
     leftLegends.forEach(({ text, value, unit }, index) => {
       ctx.fillText(
         `${text} :\t${value.toFixed(1)} ${unit}`,
-        120,
+        INITIAL.canvasDimension.x / 10,
         30 + 20 * index
       );
     });
@@ -262,7 +255,7 @@ const ProjectileMotion = () => {
     rightLegends.forEach(({ text, value, unit }, index) => {
       ctx.fillText(
         `${text} :  ${value.toFixed(1)} ${unit}`,
-        ctx.canvas.width - 160,
+        (INITIAL.canvasDimension.x * 7) / 10,
         30 + 20 * index
       );
     });
@@ -496,22 +489,39 @@ const ProjectileMotion = () => {
           </div>
         </div>
         <div className="flex items-stretch gap-6">
-          <Button
+          {/* <Button
             onClick={motionControl}
             disabled={ended}
             className="flex-1"
             title={started ? (isAnimating ? "Pause" : "Resume") : "Start"}
           >
             {started ? isAnimating ? <Pause /> : <Play /> : <PlayCircle />}
-          </Button>
-          <Button
-            onClick={reset}
-            variant="destructive"
-            title="Reset"
-            className="flex-1"
+          </Button> */}
+
+          <button
+            className="bg-green-500 flex-1 cursor-pointer shadow-xl p-3 md:p-5 self-start  rounded-full hover:scale-125 transition-transform duration-300 transform "
+            onClick={motionControl}
+            disabled={ended}
+            title={started ? (isAnimating ? "Pause" : "Resume") : "Start"}
           >
-            <RotateCcw />
-          </Button>
+            {started ? (
+              isAnimating ? (
+                <Pause size={40} />
+              ) : (
+                <Play size={40} />
+              )
+            ) : (
+              <PlayCircle size={40} />
+            )}
+          </button>
+
+          <button
+            onClick={reset}
+            title="Reset"
+            className="bg-cyan-300 flex-1  self-start cursor-pointer hover:shadow-xl hover:scale-125 transition-transform duration-300 transform  p-4   rounded-full "
+          >
+            <RotateCcw size={40} />
+          </button>
         </div>
       </div>
     </div>

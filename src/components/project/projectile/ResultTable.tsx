@@ -19,8 +19,11 @@ export default function ResultTable() {
   }
 
   return (
-    <div className="w-[32rem] p-5 rounded-lg border-slate-200 border">
+    <div className="w-5/6 lg:w-[32rem] p-5 rounded-lg border-slate-200 border">
       <Table>
+        <caption className="caption-top text-2xl border-b-2 pb-2">
+          Results
+        </caption>
         {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
         <TableHeader>
           <TableRow>

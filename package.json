@@ -10,7 +10,6 @@
     "codegen": "env-cmd graphql-codegen --config .graphqlrc.yml"
   },
   "dependencies": {
-    "@amcharts/amcharts5": "^5.8.0",
     "@canvasjs/charts": "^3.7.26",
     "@canvasjs/react-charts": "^1.0.0",
     "@hookform/resolvers": "^3.3.2",

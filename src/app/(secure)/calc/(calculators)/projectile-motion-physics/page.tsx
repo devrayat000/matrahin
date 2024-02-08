@@ -48,9 +48,9 @@ export default function ProjectilePage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center gap-4">
+    <div className="min-h-screen flex flex-col items-center gap-4 mb-4">
       <form
-        className="w-[32rem] p-5 rounded-lg border-slate-200 border"
+        className="w-5/6 lg:w-[32rem] p-2 lg:p-5 rounded-lg border-slate-200 border"
         onSubmit={onSubmit}
       >
         <Select
@@ -83,11 +83,13 @@ export default function ProjectilePage() {
               Gravity
             </Label>
             <Input
+              required
               id="g"
               name="g"
-              className="flex-[16rem]"
+              className=" w-[20ch]"
               type="number"
               value={inputs.g}
+              max={30}
               onChange={(e) =>
                 setInputs({ ...inputs, g: +e.currentTarget.value })
               }
@@ -101,9 +103,10 @@ export default function ProjectilePage() {
                 dangerouslySetInnerHTML={{ __html: field.label }}
               />
               <Input
+                required
                 id={field.name}
                 name={field.name}
-                className="flex-[16rem]"
+                className=" w-[20ch]"
                 type={field.type}
                 max={field.name == "angle" ? 90 : Infinity}
                 value={inputs[field.name] || 0}

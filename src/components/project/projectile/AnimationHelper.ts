@@ -2,12 +2,6 @@ import { atom } from "jotai";
 import { ProjectileOutput } from "~/services/Projectile";
 import { INITIAL_CONSTANTS, Point, projectileAtom } from "./store";
 
-export const INITIAL: INITIAL_CONSTANTS = {
-  canvasDimension: {
-    x: 400,
-    y: 300,
-  },
-};
 export const objectSize: number = 5; //radius
 export const GROUND_LEVEL_IN_CANVAS: number = 50; // in pixels
 export const MARGIN_X: number = 50; // in pixels
@@ -78,4 +72,11 @@ export const modifyPoints = (
   x = x * scale + MARGIN_X;
   y = INITIAL.canvasDimension.y - y * scale - offset;
   return { x, y };
+};
+
+export const INITIAL: INITIAL_CONSTANTS = {
+  canvasDimension: {
+    x: window.innerWidth < 768 ? window.innerWidth * 0.9 : 600,
+    y: 300,
+  },
 };
