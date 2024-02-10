@@ -5,12 +5,24 @@ import { atom, useAtom, useAtomValue } from "jotai";
 import { useRef } from "react";
 import * as THREE from "three";
 import ReactFiberBasic from "~/components/common/ReactFiberBasic";
+import {
+  moiCasesInputsAtom,
+  moiCasesInputsType,
+} from "~/components/project/moment_of_inertia/store";
 import Chip from "~/components/ui/chip";
 import { CaseOfInertia } from "~/services/Moment_of_inertia";
 import { caseTypeAtom, solidMaterial, wireframeMaterial } from "../store";
 const axisAtom = atom<"x" | "y">("y");
 
-const createRing = (visible: boolean, innerRadius: number, radius: number) => (
+const Ring = ({
+  visible,
+  innerRadius,
+  radius,
+}: {
+  visible: boolean;
+  innerRadius: number;
+  radius: number;
+}) => (
   <group visible={visible}>
     <mesh rotation={[Math.PI / 2, 0, 0]}>
       <ringGeometry args={[innerRadius, radius]} />
@@ -43,20 +55,28 @@ const DiskComponent = () => {
       ref.current.rotation[axis] = clock.getElapsedTime();
     }
   });
-  const data = {
-    radius: 3,
-    innerRadius: 1.5,
-    radialSegments: 32,
-  };
+
+  const { radius, height, innerRadius }: moiCasesInputsType =
+    useAtomValue(moiCasesInputsAtom);
+
   return (
     <group ref={ref}>
-      {createRing(caseType === CaseOfInertia.Solid, 0, data.radius)}
-      {createRing(
-        caseType === CaseOfInertia.Hollow,
-        data.innerRadius,
-        data.radius
-      )}
-      {createRing(caseType === CaseOfInertia.Thin, data.radius, data.radius)}
+      <Ring
+        visible={caseType === CaseOfInertia.Solid}
+        innerRadius={0}
+        radius={radius}
+      />
+      <Ring
+        visible={caseType === CaseOfInertia.Hollow}
+        innerRadius={innerRadius}
+        radius={radius}
+      />
+
+      <Ring
+        visible={caseType === CaseOfInertia.Thin}
+        innerRadius={radius}
+        radius={radius}
+      />
     </group>
   );
 };

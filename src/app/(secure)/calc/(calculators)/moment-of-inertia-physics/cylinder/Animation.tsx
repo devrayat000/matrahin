@@ -14,55 +14,6 @@ import { CaseOfInertia } from "~/services/Moment_of_inertia";
 import { caseTypeAtom, solidMaterial, wireframeMaterial } from "../store";
 const axisAtom = atom<"x" | "y">("y");
 
-const data = {
-  radius: 3,
-  height: 5,
-  innerRadius: 1.5,
-  radialSegments: 32,
-};
-
-const RingData: [
-  innerRadius?: number,
-  outerRadius?: number,
-  thetaSegments?: number,
-  phiSegments?: number,
-  thetaStart?: number,
-  thetaLength?: number
-] = [data.innerRadius, data.radius, 32, 1, 0, Math.PI * 2];
-
-const createCylinder = (
-  visible: boolean,
-  radius: number,
-  openEnded: boolean = true
-) => {
-  const geometryArgs: [
-    radiusTop?: number,
-    radiusBottom?: number,
-    height?: number,
-    radialSegments?: number,
-    heightSegments?: number,
-    openEnded?: boolean,
-    thetaStart?: number,
-    thetaLength?: number
-  ] = [radius, radius, data.height, data.radialSegments, 1, openEnded];
-
-  return (
-    <mesh position={[0, 0, 0]} rotation={[0, 0, 0]} visible={visible}>
-      <cylinderGeometry args={geometryArgs} />
-      <meshPhongMaterial {...solidMaterial} />
-      <lineSegments
-        geometry={
-          new THREE.WireframeGeometry(
-            new THREE.CylinderGeometry(...geometryArgs)
-          )
-        }
-      >
-        <lineBasicMaterial {...wireframeMaterial} />
-      </lineSegments>
-    </mesh>
-  );
-};
-
 const Ring = (props: {
   radius: number;
   innerRadius: number;
@@ -99,25 +50,6 @@ const Ring = (props: {
     </group>
   );
 };
-
-// const createRing = (height: number) => (
-//   <>
-//     <mesh position={[0, height, 0]} rotation={[Math.PI / 2, 0, 0]}>
-//       <ringGeometry args={RingData} />
-//       <meshPhongMaterial {...solidMaterial} />
-//     </mesh>
-//     <lineSegments
-//       position={[0, height, 0]}
-//       geometry={
-//         new THREE.WireframeGeometry(
-//           new THREE.RingGeometry(...RingData).rotateX(Math.PI / 2)
-//         )
-//       }
-//     >
-//       <lineBasicMaterial {...wireframeMaterial} />
-//     </lineSegments>
-//   </>
-// );
 
 const Cylinder = (props: {
   radius: number;
@@ -156,6 +88,8 @@ const CylinderComponent = () => {
   const caseType = useAtomValue(caseTypeAtom);
   const ref = useRef<THREE.Group<THREE.Object3DEventMap>>();
   const axis = useAtomValue(axisAtom);
+
+  // to get the input values
   const inputValues: moiCasesInputsType = useAtomValue(moiCasesInputsAtom);
 
   const { radius, height, innerRadius } = inputValues;
@@ -179,22 +113,16 @@ const CylinderComponent = () => {
         <Cylinder radius={radius} height={height} openEnded={true} />
       </group>
 
-      {/* {createCylinder(caseType === CaseOfInertia.Thin, data.radius)} */}
       {
         <group visible={caseType === CaseOfInertia.Hollow}>
           <Cylinder radius={radius} height={height} openEnded={true} />
           <Cylinder radius={innerRadius} height={height} openEnded={true} />
-          {/* {createCylinder(caseType === CaseOfInertia.Hollow, data.radius)}
-          {createCylinder(caseType === CaseOfInertia.Hollow, data.innerRadius)} */}
           <Ring innerRadius={innerRadius} radius={radius} height={height / 2} />
           <Ring
             innerRadius={innerRadius}
             radius={radius}
             height={-height / 2}
           />
-
-          {/* {createRing(data.height / 2)}
-          {createRing(-data.height / 2)} */}
         </group>
       }
     </group>

@@ -1,7 +1,7 @@
 /**
  * this component is used in the following components:
  *
- * Cylinder
+ * Cylinder  //refactor done
  * Disk
  * Sphere
  *
