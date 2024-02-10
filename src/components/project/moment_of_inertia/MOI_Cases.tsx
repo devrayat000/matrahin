@@ -50,6 +50,7 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
 
   //to update the input fields value in the animation :
   const setMoiCasesInputs = useSetAtom(moiCasesInputsAtom);
+
   const [caseOfInertia, setCaseOfInertia] = useAtom(caseTypeAtom);
   const [calculationObject] = useState<momentOfInertiaSchema[0]["options"]>(
     constants.filter((option) => option.shape === shape)[0].options
