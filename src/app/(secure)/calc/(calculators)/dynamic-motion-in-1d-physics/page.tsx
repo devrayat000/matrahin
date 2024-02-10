@@ -2,10 +2,8 @@
 
 import { useAtomValue, useStore } from "jotai";
 import { RESET } from "jotai/utils";
+import MotionGraphs1D from "~/components/project/dynamics/MotionGraphs1D";
 
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { Button } from "~/components/ui/button";
 import {
   accelerationAtom,
   completedAtom,
@@ -16,6 +14,9 @@ import {
   useAtomChanger,
   useRoundedAtomValue,
 } from "~/components/project/dynamics/store";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 
 export default function DynamicsPage() {
   const completed = useAtomValue(completedAtom);
@@ -31,10 +32,10 @@ export default function DynamicsPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center gap-4">
-      <form className="w-[32rem] p-2 rounded-lg border-slate-200 border flex flex-col gap-2">
+      <form className="w-5/6 lg:w-[32rem] p-2 lg:p-5 rounded-lg border-slate-200 border flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <Label htmlFor="displacement" className="flex-1">
-            Displacement
+          <Label htmlFor="displacement" className="flex-2">
+            Displacement (সরণ), s
           </Label>
           <Input
             className="basis-[70%]"
@@ -46,7 +47,7 @@ export default function DynamicsPage() {
         </div>
         <div className="flex items-center gap-2">
           <Label htmlFor="initialVelocity" className="flex-1">
-            Initial Velocity
+            Initial Velocity (আদি বেগ), u
           </Label>
           <Input
             className="basis-[70%]"
@@ -58,7 +59,7 @@ export default function DynamicsPage() {
         </div>
         <div className="flex items-center gap-2">
           <Label htmlFor="finalVelocity" className="flex-1">
-            Final Velocity
+            Final Velocity (শেষ বেগ), v
           </Label>
           <Input
             className="basis-[70%]"
@@ -70,7 +71,7 @@ export default function DynamicsPage() {
         </div>
         <div className="flex items-center gap-2">
           <Label htmlFor="acceleration" className="flex-1">
-            Acceleration
+            Acceleration (ত্বরণ), a
           </Label>
           <Input
             className="basis-[70%]"
@@ -82,7 +83,7 @@ export default function DynamicsPage() {
         </div>
         <div className="flex items-center gap-2">
           <Label htmlFor="time" className="flex-1">
-            Time
+            Time (সময়), t
           </Label>
           <Input
             className="basis-[70%]"
@@ -101,6 +102,15 @@ export default function DynamicsPage() {
           Reset
         </Button>
       </form>
+      {completed ? (
+        <MotionGraphs1D />
+      ) : (
+        <div className="w-5/6 lg:w-[32rem] p-2 lg:p-5 rounded-lg border-slate-200 border flex flex-col gap-2">
+          <div className="text-center text-slate-500">
+            Please fill all the fields to see the results
+          </div>
+        </div>
+      )}
     </div>
   );
 }

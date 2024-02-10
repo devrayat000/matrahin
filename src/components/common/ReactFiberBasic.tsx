@@ -6,22 +6,22 @@ const AxesNotation = () => (
   <>
     {/* Labels for X, Y, Z axes */}
     <Html position={[axisLength / 2, 0, 0]}>
-      <div style={{ color: "#ffddaa" }}>X</div>
+      <div style={{ color: "#553311" }}>X</div>
     </Html>
 
     <Html position={[0, axisLength / 2, 0]}>
-      <div style={{ color: "#00ffaa" }}>Y</div>
+      <div style={{ color: "#004411" }}>Y</div>
     </Html>
 
     <Html position={[0, 0, axisLength / 2]}>
-      <div style={{ color: "#aaddff" }}>Z</div>
+      <div style={{ color: "#000000" }}>Z</div>
     </Html>
   </>
 );
-const ReactFiberBasic = ({ children }) => {
+const ReactFiberBasic = ({ children }: { children: React.ReactNode }) => {
   return (
     <Canvas>
-      <color attach="background" args={["#444444"]} />
+      <color attach="background" args={["#dddddd"]} />
       <PerspectiveCamera
         makeDefault
         position={[30, 10, 30]}

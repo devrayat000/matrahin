@@ -1,6 +1,6 @@
 import { atom } from "jotai";
-import { CaseOfInertia } from "~/services/Moment_of_inertia";
 import * as THREE from "three";
+import { CaseOfInertia } from "~/services/Moment_of_inertia";
 
 export const caseTypeAtom = atom<CaseOfInertia>(CaseOfInertia.Solid);
 
@@ -12,7 +12,7 @@ export const solidMaterial = new THREE.MeshPhongMaterial({
 });
 
 export const wireframeMaterial = new THREE.LineBasicMaterial({
-  color: new THREE.Color(0xffffff),
+  color: new THREE.Color(0x000000),
   transparent: true,
   opacity: 0.6,
 });

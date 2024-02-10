@@ -1,9 +1,9 @@
 "use client";
 
 import { useAtom, useSetAtom } from "jotai";
+import { Button } from "~/components/ui/button";
 import InputWithSlider from "~/components/ui/input-with-slider";
 import { inputValuesAtom, rainUmbrellaData, resultAtom } from "./store";
-import { Button } from "~/components/ui/button";
 
 const RainInput = ({ wind }: { wind: boolean }) => {
   const [inputValues, setInputValues] = useAtom(inputValuesAtom);
@@ -61,20 +61,23 @@ const RainInput = ({ wind }: { wind: boolean }) => {
   };
   return (
     <>
-      <div className="flex flex-row flex-wrap justify-center gap-4 items-center">
+      <div className="flex flex-row justify-center gap-4 items-center">
         {rainUmbrellaData.map(({ label, helperText }, index) => {
           if (!wind && index === 2) return null;
 
           return (
-            <InputWithSlider
-              key={index}
-              id={index}
-              label={label}
-              value={inputValues[index]}
-              helperText={helperText}
-              onChangeInput={handleChangeInput}
-              min={index > 0 ? -10 : 0}
-            />
+            <div className="w-64" key={index}>
+              <InputWithSlider
+                key={index}
+                id={index}
+                label={label}
+                value={inputValues[index]}
+                helperText={helperText}
+                onChangeInput={handleChangeInput}
+                min={index > 0 ? -10 : 0}
+                max={10}
+              />
+            </div>
           );
         })}
       </div>
