@@ -1,9 +1,20 @@
+/**
+ * this component is used in the following components:
+ *
+ * Cylinder
+ * Disk
+ * Sphere
+ *
+ *
+ * inputs can be mass, radius, innerRadius height
+ */
+
 "use client";
 
 import React, { useMemo, useState } from "react";
 
 import { MathJax } from "better-react-mathjax";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useForm } from "react-hook-form";
 import { caseTypeAtom } from "~/app/(secure)/calc/(calculators)/moment-of-inertia-physics/store";
 import DynamicUnitInput from "~/components/common/DynamicUnitInput";
@@ -28,6 +39,7 @@ import {
   momentOfInertiaResult,
 } from "~/services/Moment_of_inertia";
 import ResultsTable from "./ResultsTable";
+import { moiCasesInputDefaults, moiCasesInputsAtom } from "./store";
 
 interface MOI_CasesProps {
   shape: ShapesOfInertia;
@@ -35,6 +47,9 @@ interface MOI_CasesProps {
 
 const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
   const form = useForm();
+
+  //to update the input fields value in the animation :
+  const setMoiCasesInputs = useSetAtom(moiCasesInputsAtom);
   const [caseOfInertia, setCaseOfInertia] = useAtom(caseTypeAtom);
   const [calculationObject] = useState<momentOfInertiaSchema[0]["options"]>(
     constants.filter((option) => option.shape === shape)[0].options
@@ -68,6 +83,14 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
       return;
     }
 
+    // update the input fields that used in the animation :
+    setMoiCasesInputs({
+      mass: inputs["mass"] ?? moiCasesInputDefaults.mass,
+      radius: inputs["radius"] ?? moiCasesInputDefaults.radius,
+      innerRadius: inputs["innerRadius"] ?? moiCasesInputDefaults.innerRadius,
+      height: inputs["height"] ?? moiCasesInputDefaults.height,
+    });
+
     const newcalculationObject = new MomentOfInertiaObject(
       inputs as unknown as momentOfInertiaInput,
       calculationObject[index].shape,
@@ -84,6 +107,7 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
   const reset = () => {
     form.reset();
     setResult([]);
+    setMoiCasesInputs(moiCasesInputDefaults);
   };
 
   const changeCase = (i: number) => {

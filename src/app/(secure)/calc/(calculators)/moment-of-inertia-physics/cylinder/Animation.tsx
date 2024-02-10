@@ -5,6 +5,10 @@ import { atom, useAtom, useAtomValue } from "jotai";
 import { useRef } from "react";
 import * as THREE from "three";
 import ReactFiberBasic from "~/components/common/ReactFiberBasic";
+import {
+  moiCasesInputsAtom,
+  moiCasesInputsType,
+} from "~/components/project/moment_of_inertia/store";
 import Chip from "~/components/ui/chip";
 import { CaseOfInertia } from "~/services/Moment_of_inertia";
 import { caseTypeAtom, solidMaterial, wireframeMaterial } from "../store";
@@ -77,10 +81,48 @@ const createRing = (height: number) => (
     </lineSegments>
   </>
 );
+
+const Cylinder = (props: {
+  radius: number;
+  height: number;
+  openEnded: boolean;
+}) => {
+  const { radius, height, openEnded } = props;
+  const geometryArgs: [
+    radiusTop?: number,
+    radiusBottom?: number,
+    height?: number,
+    radialSegments?: number,
+    heightSegments?: number,
+    openEnded?: boolean,
+    thetaStart?: number,
+    thetaLength?: number
+  ] = [radius, radius, height, 32, 1, openEnded];
+
+  return (
+    <mesh position={[0, 0, 0]} rotation={[0, 0, 0]}>
+      <cylinderGeometry args={geometryArgs} />
+      <meshPhongMaterial {...solidMaterial} />
+      <lineSegments
+        geometry={
+          new THREE.WireframeGeometry(
+            new THREE.CylinderGeometry(...geometryArgs)
+          )
+        }
+      >
+        <lineBasicMaterial {...wireframeMaterial} />
+      </lineSegments>
+    </mesh>
+  );
+};
 const CylinderComponent = () => {
   const caseType = useAtomValue(caseTypeAtom);
   const ref = useRef<THREE.Group<THREE.Object3DEventMap>>();
   const axis = useAtomValue(axisAtom);
+  const inputValues: moiCasesInputsType = useAtomValue(moiCasesInputsAtom);
+
+  const { radius, height, innerRadius } = inputValues;
+
   const prevAxis = useRef(axis);
   useFrame(({ clock }) => {
     if (prevAxis.current !== axis) {
@@ -92,7 +134,10 @@ const CylinderComponent = () => {
   });
   return (
     <group ref={ref}>
-      {createCylinder(caseType === CaseOfInertia.Solid, data.radius, false)}
+      <group visible={caseType === CaseOfInertia.Solid}>
+        <Cylinder radius={radius} height={height} openEnded={false} />
+      </group>
+      {/* {createCylinder(caseType === CaseOfInertia.Solid, data.radius, false)} */}
       {createCylinder(caseType === CaseOfInertia.Thin, data.radius)}
       {
         <group visible={caseType === CaseOfInertia.Hollow}>

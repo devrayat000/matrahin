@@ -1,3 +1,10 @@
+/**
+ * This component is used in the following components:
+ *
+ * point mass
+ * two point mass
+ */
+
 "use client";
 
 import { MathJax } from "better-react-mathjax";
