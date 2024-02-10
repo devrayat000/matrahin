@@ -2,7 +2,7 @@
  * this component is used in the following components:
  *
  * Cylinder  //refactor done
- * Disk
+ * Disk   //refactor done
  * Sphere
  *
  *
