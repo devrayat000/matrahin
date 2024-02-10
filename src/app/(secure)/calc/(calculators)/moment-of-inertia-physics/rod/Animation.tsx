@@ -7,12 +7,17 @@ import * as THREE from "three";
 import ReactFiberBasic from "~/components/common/ReactFiberBasic";
 import Chip from "~/components/ui/chip";
 import { solidMaterial } from "../store";
+import { moiDifferentAxesInputsAtom } from "~/components/project/moment_of_inertia/store";
 
 const axisAtom = atom<"x" | "y" | "e">("y");
 const Rod = () => {
   const ref = useRef<THREE.Group<THREE.Object3DEventMap>>();
   const meshRef = useRef<THREE.Mesh<THREE.BufferGeometry>>();
   const axis = useAtomValue(axisAtom);
+
+  // to update animation with inputs;
+
+  const { length } = useAtomValue(moiDifferentAxesInputsAtom);
   const prevAxis = useRef(axis);
   useFrame(({ clock }) => {
     if (prevAxis.current !== axis) {
@@ -29,7 +34,7 @@ const Rod = () => {
   return (
     <group ref={ref}>
       <mesh ref={meshRef} position={[0, 0.5, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.05, 0.05, 3]} />
+        <cylinderGeometry args={[0.05, 0.05, length]} />
         <meshPhongMaterial {...solidMaterial} />
       </mesh>
     </group>

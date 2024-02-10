@@ -5,6 +5,7 @@ import { atom, useAtom, useAtomValue } from "jotai";
 import { useRef } from "react";
 import * as THREE from "three";
 import ReactFiberBasic from "~/components/common/ReactFiberBasic";
+import { moiDifferentAxesInputsAtom } from "~/components/project/moment_of_inertia/store";
 import Chip from "~/components/ui/chip";
 import { solidMaterial, wireframeMaterial } from "../store";
 
@@ -13,6 +14,8 @@ const Cuboid = () => {
   const ref = useRef<THREE.Group<THREE.Object3DEventMap>>();
   const axis = useAtomValue(axisAtom);
   const prevAxis = useRef(axis);
+
+  const { height, width, depth } = useAtomValue(moiDifferentAxesInputsAtom);
   useFrame(({ clock }) => {
     if (prevAxis.current !== axis) {
       ref.current.rotation.set(0, 0, 0);
@@ -24,11 +27,15 @@ const Cuboid = () => {
   return (
     <group ref={ref}>
       <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[2, 1.5, 1]} />
+        <boxGeometry args={[width, height, depth]} />
         <meshPhongMaterial {...solidMaterial} />
       </mesh>
       <lineSegments
-        geometry={new THREE.WireframeGeometry(new THREE.BoxGeometry(2, 1.5, 1))}
+        geometry={
+          new THREE.WireframeGeometry(
+            new THREE.BoxGeometry(width, height, depth)
+          )
+        }
       >
         <lineBasicMaterial {...wireframeMaterial} />
       </lineSegments>
