@@ -63,24 +63,61 @@ const createCylinder = (
   );
 };
 
-const createRing = (height: number) => (
-  <>
-    <mesh position={[0, height, 0]} rotation={[Math.PI / 2, 0, 0]}>
-      <ringGeometry args={RingData} />
-      <meshPhongMaterial {...solidMaterial} />
-    </mesh>
-    <lineSegments
-      position={[0, height, 0]}
-      geometry={
-        new THREE.WireframeGeometry(
-          new THREE.RingGeometry(...RingData).rotateX(Math.PI / 2)
-        )
-      }
-    >
-      <lineBasicMaterial {...wireframeMaterial} />
-    </lineSegments>
-  </>
-);
+const Ring = (props: {
+  radius: number;
+  innerRadius: number;
+  height: number;
+}) => {
+  const { radius, innerRadius, height } = props;
+
+  const RingData: [
+    innerRadius?: number,
+    outerRadius?: number,
+    thetaSegments?: number,
+    phiSegments?: number,
+    thetaStart?: number,
+    thetaLength?: number
+  ] = [innerRadius, radius, 32, 1, 0, Math.PI * 2];
+
+  return (
+    <group>
+      <mesh position={[0, height, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <ringGeometry args={RingData} />
+        <meshPhongMaterial {...solidMaterial} />
+      </mesh>
+
+      <lineSegments
+        position={[0, height, 0]}
+        geometry={
+          new THREE.WireframeGeometry(
+            new THREE.RingGeometry(...RingData).rotateX(Math.PI / 2)
+          )
+        }
+      >
+        <lineBasicMaterial {...wireframeMaterial} />
+      </lineSegments>
+    </group>
+  );
+};
+
+// const createRing = (height: number) => (
+//   <>
+//     <mesh position={[0, height, 0]} rotation={[Math.PI / 2, 0, 0]}>
+//       <ringGeometry args={RingData} />
+//       <meshPhongMaterial {...solidMaterial} />
+//     </mesh>
+//     <lineSegments
+//       position={[0, height, 0]}
+//       geometry={
+//         new THREE.WireframeGeometry(
+//           new THREE.RingGeometry(...RingData).rotateX(Math.PI / 2)
+//         )
+//       }
+//     >
+//       <lineBasicMaterial {...wireframeMaterial} />
+//     </lineSegments>
+//   </>
+// );
 
 const Cylinder = (props: {
   radius: number;
@@ -137,14 +174,27 @@ const CylinderComponent = () => {
       <group visible={caseType === CaseOfInertia.Solid}>
         <Cylinder radius={radius} height={height} openEnded={false} />
       </group>
-      {/* {createCylinder(caseType === CaseOfInertia.Solid, data.radius, false)} */}
-      {createCylinder(caseType === CaseOfInertia.Thin, data.radius)}
+
+      <group visible={caseType === CaseOfInertia.Thin}>
+        <Cylinder radius={radius} height={height} openEnded={true} />
+      </group>
+
+      {/* {createCylinder(caseType === CaseOfInertia.Thin, data.radius)} */}
       {
         <group visible={caseType === CaseOfInertia.Hollow}>
-          {createCylinder(caseType === CaseOfInertia.Hollow, data.radius)}
-          {createCylinder(caseType === CaseOfInertia.Hollow, data.innerRadius)}
-          {createRing(data.height / 2)}
-          {createRing(-data.height / 2)}
+          <Cylinder radius={radius} height={height} openEnded={true} />
+          <Cylinder radius={innerRadius} height={height} openEnded={true} />
+          {/* {createCylinder(caseType === CaseOfInertia.Hollow, data.radius)}
+          {createCylinder(caseType === CaseOfInertia.Hollow, data.innerRadius)} */}
+          <Ring innerRadius={innerRadius} radius={radius} height={height / 2} />
+          <Ring
+            innerRadius={innerRadius}
+            radius={radius}
+            height={-height / 2}
+          />
+
+          {/* {createRing(data.height / 2)}
+          {createRing(-data.height / 2)} */}
         </group>
       }
     </group>
@@ -175,7 +225,7 @@ const AxisControl = () => {
 
 const Animation = () => {
   return (
-    <div className="h-[30vh] w-[40vh] md:w-[70vh] md:h-[70vh]">
+    <div className="h-[30vh] w-[40vh] md:w-[70vh] md:h-[70vh] md:self-start">
       <AxisControl />
       <ReactFiberBasic>
         <CylinderComponent />
