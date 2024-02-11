@@ -163,7 +163,7 @@ const Animation = () => {
               {/* <GridSurface /> */}
               <Object
                 v_object={Math.abs(v_object)}
-                v_wind_object={v_wind_object * -1}
+                v_wind_object={Math.abs(v_wind_object)}
                 v_rain={v_rain}
               />
               <OrbitControls maxDistance={20} minDistance={5} />
@@ -259,7 +259,7 @@ const Object = ({
 
           // this will work, but the snowflakes will not be random.
           v.y = THREE.MathUtils.randFloat(1, 25);
-          v.z = THREE.MathUtils.randFloat(25, -25);
+          v.z = THREE.MathUtils.randFloatSpread(25);
         }
 
         positions[i * 3] = v.x;
