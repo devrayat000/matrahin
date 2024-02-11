@@ -259,7 +259,7 @@ const Object = ({
 
           // this will work, but the snowflakes will not be random.
           v.y = THREE.MathUtils.randFloat(1, 25);
-          v.z = THREE.MathUtils.randFloatSpread(25);
+          v.z = THREE.MathUtils.randFloatSpread(15);
         }
 
         positions[i * 3] = v.x;
@@ -299,7 +299,7 @@ const Object = ({
     for (var i = 0; i < N; i++) {
       points.push(
         new THREE.Vector3(
-          THREE.MathUtils.randFloatSpread(25),
+          THREE.MathUtils.randFloatSpread(15),
           THREE.MathUtils.randFloat(0, 25),
           THREE.MathUtils.randFloatSpread(25)
         )
