@@ -1,3 +1,5 @@
+//TODO:for negative v_object, rain is not working properly
+
 "use client";
 
 import {
@@ -8,7 +10,7 @@ import {
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useAtomValue } from "jotai";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { resultAtom } from "./store";
@@ -39,7 +41,7 @@ const createArrow = (vectors: { label: string; vector: THREE.Vector3 }[]) => {
           color: THREE.ColorRepresentation
         ] = [
           v.clone().normalize(),
-          new THREE.Vector3(0, 1, 0),
+          new THREE.Vector3(0, 1, 1),
           v.length(),
           colors[index],
         ];
@@ -66,15 +68,18 @@ const createArrow = (vectors: { label: string; vector: THREE.Vector3 }[]) => {
   );
 };
 
-const Ground = () => {
+const Ground = ({ v_object }: { v_object: number }) => {
   const gridSurfaceRef = React.useRef<THREE.Mesh>(null);
-  const { v_object } = useAtomValue(resultAtom);
+  // const { v_object } = useAtomValue(resultAtom);
 
   const speed = 2 + (v_object ?? 4) / 100;
+
+  const nonZero = v_object === 0 ? 0 : 1;
   // updating the position of the ground
+
   useFrame(({ clock }) => {
     const time = clock.getElapsedTime();
-    gridSurfaceRef.current?.position.set(0, 0, -1800 + time * speed);
+    gridSurfaceRef.current?.position.set(0, 0, -1800 + time * speed * nonZero);
   });
   const textureColorPath = useTexture("/paving_color.jpg");
   textureColorPath.wrapS = THREE.RepeatWrapping;
@@ -120,6 +125,11 @@ const Ground = () => {
 const Animation = () => {
   const directionalLightRef = React.useRef<THREE.DirectionalLight>(null);
 
+  const inputs = useAtomValue(resultAtom);
+  // console.log(inputs);
+  const v_wind_object = inputs.v_wind_object ?? -4;
+  const v_rain = inputs.v_rain ?? 3;
+  const v_object = inputs.v_object ?? 4;
   useEffect(() => {
     if (directionalLightRef.current) {
       directionalLightRef.current.shadow.camera.top = 2;
@@ -143,15 +153,19 @@ const Animation = () => {
                 aspect={1.5}
                 near={1}
                 far={120}
-                position={[-8, 3, 0]}
+                position={[4 * (v_object < 0 ? -1 : 1), 2, 0]}
                 makeDefault={true}
               />
-              <Ground />
+              <Ground v_object={Math.abs(v_object)} />
               {/* <axesHelper args={[10]} /> */}
               <fog attach="fog" args={["#a4a4a4", 30, 180]} />
 
               {/* <GridSurface /> */}
-              <Object />
+              <Object
+                v_object={Math.abs(v_object)}
+                v_wind_object={v_wind_object * -1}
+                v_rain={v_rain}
+              />
               <OrbitControls maxDistance={20} minDistance={5} />
               <hemisphereLight
                 args={[new THREE.Color(0xbbbbbb), new THREE.Color(0x00ffff), 3]}
@@ -190,21 +204,35 @@ const GridSurface = () => {
   );
 };
 
-const Object = () => {
+const Object = ({
+  v_object,
+  v_wind_object,
+  v_rain,
+}: {
+  v_object: number;
+  v_wind_object: number;
+  v_rain: number;
+}) => {
   const groupRef = useRef<THREE.Group>(new THREE.Group());
   const mixerRef = useRef<THREE.AnimationMixer>(null);
   const rainRef = useRef<THREE.Points>(null);
+
+  const [animations, setAnimations] = useState<THREE.AnimationClip[]>([]);
 
   const clockRef = useRef<THREE.Clock>(new THREE.Clock());
 
   const N = 20000; // number of snowflakes
   const vector = new THREE.Vector3(0, -1, 0);
 
-  const { v_object } = useAtomValue(resultAtom);
-
   const actualSpeed = 1 + (v_object ?? 4) / 50;
   const speed = 0.75 * actualSpeed;
 
+  useEffect(() => {
+    if (rainRef.current) {
+      if (v_rain === 0) rainRef.current.visible = false;
+      else rainRef.current.visible = true;
+    }
+  }, [v_rain]);
   useFrame(() => {
     const delta = clockRef.current.getDelta();
     if (groupRef.current && mixerRef.current) {
@@ -218,7 +246,12 @@ const Object = () => {
         const v = vector
           .clone()
           .set(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
-        v.add(vector.clone().set(0, -2, 0).multiplyScalar(delta));
+        v.add(
+          vector
+            .clone()
+            .set(0, -v_rain * 0.6, v_wind_object)
+            .multiplyScalar(delta)
+        );
 
         if (v.y <= 0) {
           // this will not work, because the randomization is not done.
@@ -226,6 +259,7 @@ const Object = () => {
 
           // this will work, but the snowflakes will not be random.
           v.y = THREE.MathUtils.randFloat(1, 25);
+          v.z = THREE.MathUtils.randFloat(25, -25);
         }
 
         positions[i * 3] = v.x;
@@ -248,12 +282,14 @@ const Object = () => {
       });
 
       const animations = gltf.animations;
+
       const mixer = new THREE.AnimationMixer(model);
       const action = mixer.clipAction(animations[1]);
       action.enabled = true;
       action.setEffectiveTimeScale(1);
       action.setEffectiveWeight(1);
 
+      setAnimations(animations);
       mixerRef.current = mixer;
       action.play();
     });
@@ -292,19 +328,41 @@ const Object = () => {
     groupRef.current?.add(point);
   }, []);
 
+  useEffect(() => {
+    if (animations.length !== 0 && mixerRef.current) {
+      if (v_object == 0) {
+        mixerRef.current.stopAllAction();
+
+        const action = mixerRef.current?.clipAction(animations[0]);
+        action.enabled = true;
+        action.setEffectiveTimeScale(1);
+        action.setEffectiveWeight(1);
+        action.play();
+      } else {
+        // console.log(mixerRef.current.existingAction(animations[0]));
+        mixerRef.current.existingAction(animations[0])?.stop();
+        mixerRef.current
+          .existingAction(animations[1])
+          ?.setEffectiveTimeScale(1)
+          .setEffectiveWeight(1)
+          .play();
+      }
+    }
+  }, [v_object]);
+
   return (
     <>
       <primitive object={groupRef.current} />
-      {groupRef.current &&
+      {/* {groupRef.current &&
         createArrow([
-          { label: "V(rain)", vector: vector },
+          { label: "V(rain)", vector: vector.clone().set(0, -v_rain / 10, 0) },
           { label: "V(object)", vector: vector.clone().set(0, 0, -1) },
           { label: "-V (object)", vector: vector.clone().set(0, 0, 1) },
           {
             label: "V(relative)",
             vector: vector.clone().set(0, -1, 1),
           },
-        ])}
+        ])} */}
     </>
   );
 };

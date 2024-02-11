@@ -9,20 +9,19 @@ const InitializeVariables = ({
   v_wind,
   v_rain,
 }: RainVelocityResultsType) => {
+  console.log(" in init");
   return (
     <p className="self-start ">
       <b>Step: 1</b>
       <br />
-      Initialize variables:
-      <MathJax>
-        {`
-        $\\begin{gather}
-        Velocity\\space of\\space  Rain, \\overrightarrow{V}_{r} = -${v_rain}\\hat{j}\\space unit \\\\ 
-        Velocity\\space of\\space  Object, \\overrightarrow{V}_{o} = ${v_object}\\hat{i}\\space unit \\\\
-        Velocity\\space of\\space  Wind, \\overrightarrow{V}_{w} = ${v_wind}\\hat{i}\\space unit \\\\
-        \\end{gather}$
-      `}
-      </MathJax>
+      Initialize variables: Velocity of Rain,{" "}
+      <MathJax>{`\\overrightarrow{V}_{r} = -${v_rain}\\hat{j}`}</MathJax> unit
+      <br />
+      Velocity of Object,{" "}
+      <MathJax>{`\\overrightarrow{V}_{o} = ${v_object}\\hat{i}`}</MathJax> unit
+      <br />
+      Velocity of Wind,{" "}
+      <MathJax>{`\\overrightarrow{V}_{w} = ${v_wind}\\hat{i}`}</MathJax> unit //{" "}
     </p>
   );
 };

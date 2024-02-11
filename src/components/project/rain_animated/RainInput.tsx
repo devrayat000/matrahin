@@ -1,9 +1,15 @@
 "use client";
 
 import { useAtom, useSetAtom } from "jotai";
+import { useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import InputWithSlider from "~/components/ui/input-with-slider";
-import { inputValuesAtom, rainUmbrellaData, resultAtom } from "./store";
+import {
+  defaultInputValues,
+  inputValuesAtom,
+  rainUmbrellaData,
+  resultAtom,
+} from "./store";
 
 const RainInput = ({ wind }: { wind: boolean }) => {
   const [inputValues, setInputValues] = useAtom(inputValuesAtom);
@@ -16,9 +22,21 @@ const RainInput = ({ wind }: { wind: boolean }) => {
       )
     );
   };
-  const handleSubmit = () => {
-    console.log("in subit", wind);
+
+  useEffect(() => {
+    handleSubmit();
+  }, []);
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e?.preventDefault();
     const rainVelocity = inputValues;
+
+    const checkInputs = rainVelocity.some(
+      (velocity) => velocity > 10 || isNaN(velocity)
+    );
+    // const checkObjectVelocity = rainVelocity[1] === 0;
+    // console.log(checkInputs, checkObjectVelocity);
+
+    if (checkInputs) return;
     const v_wind_object = (wind ? rainVelocity[2] : 0) - rainVelocity[1];
 
     if (v_wind_object === 0) {
@@ -60,7 +78,7 @@ const RainInput = ({ wind }: { wind: boolean }) => {
     });
   };
   return (
-    <>
+    <form onSubmit={handleSubmit}>
       <div className="flex flex-row justify-center gap-4 items-center">
         {rainUmbrellaData.map(({ label, helperText }, index) => {
           if (!wind && index === 2) return null;
@@ -81,16 +99,19 @@ const RainInput = ({ wind }: { wind: boolean }) => {
           );
         })}
       </div>
-      <div className="flex flex-row flex-wrap justify-center gap-4 items-center">
+      <div className="flex flex-row flex-wrap justify-around gap-4 items-center">
         <Button
-          title="Calculate Result"
-          className="bg-primary"
-          onClick={handleSubmit}
+          title="Reset to Default"
+          className="bg-red-700"
+          onClick={() => setInputValues(defaultInputValues)}
         >
+          Reset
+        </Button>
+        <Button title="Calculate Result" className="bg-primary" type="submit">
           Calculate
         </Button>
       </div>
-    </>
+    </form>
   );
 };
 

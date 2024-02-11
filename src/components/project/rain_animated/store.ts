@@ -11,7 +11,8 @@ export const rainUmbrellaData: RainVelocityType[] = [
   { label: "Wind", helperText: "(-) means left direction" },
 ];
 
-export const inputValuesAtom = atom<number[]>([3, 4, 0]);
+export const defaultInputValues = [3, 4, 0];
+export const inputValuesAtom = atom<number[]>(defaultInputValues);
 
 export const STORE = {
   withWind: 0,

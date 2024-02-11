@@ -6,13 +6,16 @@ import { RainVelocityResultsType, resultAtom } from "./store";
 
 const RainBasic = () => {
   const result = useAtomValue(resultAtom);
-  console.log(result);
+  // console.log(result);
   const {
-    v_wind_object,
+    v_object,
     v_rain,
     v_rain_object_magnitude: magnitude,
     v_rain_object_angle: resultAngle,
   } = result;
+
+  const v_wind_object = v_object;
+
   const center = { x: 175, y: 100 };
 
   const CalculateAndRenderResults = () => {
@@ -58,18 +61,22 @@ const RainBasic = () => {
     );
   };
 
-  return (
-    result.v_object && (
-      <>
-        <div className="flex flex-col ml-4 lg:ml-0 items-center lg:items-start justify-center lg:justify-normal gap-4">
-          <div className="flex flex-col md:flex-row ">
-            <CalculateAndRenderResults />
-            <Figure center={center} results={result} />
-          </div>
-          <UmbrellaPosition angle={toDegree(resultAngle)} />
+  return result.v_object && result.v_rain ? (
+    <>
+      <div className="flex flex-col ml-4 lg:ml-0 items-center lg:items-start justify-center lg:justify-normal gap-4">
+        <div className="flex flex-col md:flex-row ">
+          <CalculateAndRenderResults />
+          <Figure center={center} results={result} />
         </div>
-      </>
-    )
+        <UmbrellaPosition angle={toDegree(resultAngle)} />
+      </div>
+    </>
+  ) : (
+    <div className="md:self-start self-center pt-2  ">
+      <p className="self-center text-center">
+        Please enter valid inputs to see the results
+      </p>
+    </div>
   );
 };
 
