@@ -129,33 +129,35 @@ const Animation = () => {
     <div className="lg:self-start">
       <div className="flex flex-col md:flex-row items-center justify-center">
         <div className="m-auto md:mx-0 my-4 h-[50vh] w-[40vh] md:w-[100vh] md:h-[90vh]">
-          <Canvas shadows>
-            <color attach="background" args={["#a4a4a4"]} />
-            <PerspectiveCamera
-              fov={45}
-              aspect={1.5}
-              near={1}
-              far={120}
-              position={[8, 3, 0]}
-              makeDefault={true}
-            />
-            <Ground />
-            <fog attach="fog" args={["#a4a4a4", 30, 180]} />
+          <React.Suspense fallback={<p> loading ...</p>}>
+            <Canvas shadows>
+              <color attach="background" args={["#a4a4a4"]} />
+              <PerspectiveCamera
+                fov={45}
+                aspect={1.5}
+                near={1}
+                far={120}
+                position={[8, 3, 0]}
+                makeDefault={true}
+              />
+              <Ground />
+              <fog attach="fog" args={["#a4a4a4", 30, 180]} />
 
-            {/* <GridSurface /> */}
-            <Object />
-            <OrbitControls maxDistance={20} minDistance={5} />
-            <hemisphereLight
-              args={[new THREE.Color(0xbbbbbb), new THREE.Color(0x00ffff), 3]}
-              position={[0, 20, 0]}
-            />
-            <directionalLight
-              ref={directionalLightRef}
-              args={[new THREE.Color(0xaaaaaa), 4]}
-              position={[8, 8, -10]}
-              castShadow={true}
-            />
-          </Canvas>
+              {/* <GridSurface /> */}
+              <Object />
+              <OrbitControls maxDistance={20} minDistance={5} />
+              <hemisphereLight
+                args={[new THREE.Color(0xbbbbbb), new THREE.Color(0x00ffff), 3]}
+                position={[0, 20, 0]}
+              />
+              <directionalLight
+                ref={directionalLightRef}
+                args={[new THREE.Color(0xaaaaaa), 4]}
+                position={[8, 8, -10]}
+                castShadow={true}
+              />
+            </Canvas>
+          </React.Suspense>
         </div>
       </div>
     </div>
@@ -201,17 +203,17 @@ const Object = () => {
       const positions = rainRef.current.geometry.attributes.position
         .array as Float32Array;
       for (var i = 0; i < N; i++) {
-        const v = new THREE.Vector3(
-          positions[i * 3],
-          positions[i * 3 + 1],
-          positions[i * 3 + 2]
-        );
-        v.add(new THREE.Vector3(0, -2, 0).clone().multiplyScalar(delta));
+        const v = vector
+          .clone()
+          .set(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
+        v.add(vector.clone().set(0, -2, 0).multiplyScalar(delta));
 
         if (v.y <= 0) {
           // this will not work, because the randomization is not done.
           // v.y = 25;
-          v.y = THREE.MathUtils.randFloat(1, 25);
+
+          // this will work, but the snowflakes will not be random.
+          v.y = THREE.MathUtils.randFloat(10, 25);
         }
 
         positions[i * 3] = v.x;
