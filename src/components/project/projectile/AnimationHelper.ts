@@ -1,13 +1,7 @@
 import { atom } from "jotai";
 import { ProjectileOutput } from "~/services/Projectile";
-import { INITIAL_CONSTANTS, Point, projectileAtom } from "./store";
+import { Point, projectileAtom } from "./store";
 
-export const INITIAL: INITIAL_CONSTANTS = {
-  canvasDimension: {
-    x: 700,
-    y: 400,
-  },
-};
 export const objectSize: number = 5; //radius
 export const GROUND_LEVEL_IN_CANVAS: number = 50; // in pixels
 export const MARGIN_X: number = 50; // in pixels
@@ -31,16 +25,17 @@ export const pointsAtom = atom<Point[]>((get) => {
   return calculatePoints(result, scale);
 });
 
-export const animatingPointsAtom = atom<Point[]>((get) => {
-  return get(pointsAtom).map((p) => {
-    const point = modifyPoints(p.x, p.y, get(scaleAtom));
-    return {
-      ...p,
-      x: point.x,
-      y: point.y,
-    };
-  });
-});
+// export const animatingPointsAtom = atom<Point[]>((get) => {
+//   return get(pointsAtom).map((p) => {
+//     const point = modifyPoints(p.x, p.y, get(scaleAtom));
+//     return {
+//       ...p,
+//       x: point.x,
+//       y: point.y,
+//     };
+//   });
+// });
+
 const calculatePoints = (result: ProjectileOutput, scale: number) => {
   const initialVelocity = result.vi;
   const initialHeight = result.yi / scale; // in meters
@@ -69,13 +64,13 @@ const calculatePoints = (result: ProjectileOutput, scale: number) => {
 };
 
 // an utility function to modify the points to show in the canvas
-export const modifyPoints = (
-  x: number,
-  y: number,
-  scale: number
-): { x: number; y: number } => {
-  const offset: number = objectSize + GROUND_LEVEL_IN_CANVAS;
-  x = x * scale + MARGIN_X;
-  y = INITIAL.canvasDimension.y - y * scale - offset;
-  return { x, y };
-};
+// export const modifyPoints = (
+//   x: number,
+//   y: number,
+//   scale: number
+// ): { x: number; y: number } => {
+//   const offset: number = objectSize + GROUND_LEVEL_IN_CANVAS;
+//   x = x * scale + MARGIN_X;
+//   y = INITIAL.canvasDimension.y - y * scale - offset;
+//   return { x, y };
+// };

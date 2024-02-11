@@ -13,7 +13,7 @@ export default function ResultsContainer() {
 
   return (
     <div>
-      <div className="flex gap-10 items-start flex-col lg:flex-row justify-center">
+      <div className="flex gap-10 items-center lg:items-start flex-col lg:flex-row justify-center">
         <BoatRiverAnimation />
         <ResultTable />
       </div>

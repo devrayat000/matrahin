@@ -172,6 +172,7 @@ const BasicVectorCalcultor = () => {
             ])}
             <Parallelogram vector1={A} vector2={B} />
           </group>
+          <gridHelper args={[100, 100, 0x666666, 0x666666]} />
         </ReactFiberBasic>
       </div>
 

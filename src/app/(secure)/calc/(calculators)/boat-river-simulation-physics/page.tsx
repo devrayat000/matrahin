@@ -41,7 +41,7 @@ export default function BoatRiverPage() {
       setError(true);
       return;
     }
-    console.log(boatRiverGeneral);
+    // console.log(boatRiverGeneral);
     setBoatRiverParams({
       vb: boatRiverGeneral.vb,
       vs: boatRiverGeneral.vs, //stream velocity
@@ -85,7 +85,7 @@ export default function BoatRiverPage() {
     <div className="min-h-screen flex flex-col items-center gap-4 my-4">
       <h1 className="text-2xl font-bold">Boat-River Problem</h1>
       <form
-        className="w-[32rem] p-5 rounded-lg border-slate-200 border"
+        className="w-5/6 lg:w-[32rem] p-2 lg:p-5 rounded-lg border-slate-200 border"
         onSubmit={onSubmit}
       >
         <Select
@@ -123,7 +123,7 @@ export default function BoatRiverPage() {
               <Input
                 id={field.name}
                 name={field.name}
-                className="flex-[16rem]"
+                className="w-[20ch]"
                 type={field.type}
                 value={inputs[field.name] || 0}
                 onChange={(e) =>

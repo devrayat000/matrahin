@@ -6,16 +6,15 @@ import { atom, useAtom, useAtomValue } from "jotai";
 import { useRef } from "react";
 import * as THREE from "three";
 import ReactFiberBasic from "~/components/common/ReactFiberBasic";
+import {
+  moiCasesInputsAtom,
+  moiCasesInputsType,
+} from "~/components/project/moment_of_inertia/store";
 import Chip from "~/components/ui/chip";
 import { CaseOfInertia } from "~/services/Moment_of_inertia";
 import { caseTypeAtom, solidMaterial, wireframeMaterial } from "../store";
 const axisAtom = atom<"x" | "y">("y");
 const sliceAtom = atom<boolean>(false);
-
-const data = {
-  radius: 3,
-  innerRadius: 2.5,
-};
 
 const SphereComponent = () => {
   const isSliced = useAtomValue(sliceAtom);
@@ -32,6 +31,9 @@ const SphereComponent = () => {
     }
   });
 
+  const { radius, height, innerRadius }: moiCasesInputsType =
+    useAtomValue(moiCasesInputsAtom);
+
   // Load the texture
   const texture = useTexture("/earth.jpeg");
   const sphereArgs: [
@@ -42,7 +44,7 @@ const SphereComponent = () => {
     phiLength?: number,
     thetaStart?: number,
     thetaLength?: number
-  ] = [data.radius, 32, 16, 0, Math.PI * 2, 0, Math.PI];
+  ] = [radius, 32, 16, 0, Math.PI * 2, 0, Math.PI];
   const modifiedSphereArgs: [
     radius?: number,
     widthSegments?: number,
@@ -52,7 +54,9 @@ const SphereComponent = () => {
     thetaStart?: number,
     thetaLength?: number
   ] = [...sphereArgs];
+  // modify the sphere args to create a hollow sphere
   modifiedSphereArgs[4] = Math.PI;
+
   const modifiedSphereArgs2: [
     radius?: number,
     widthSegments?: number,
@@ -62,7 +66,7 @@ const SphereComponent = () => {
     thetaStart?: number,
     thetaLength?: number
   ] = [...modifiedSphereArgs];
-  modifiedSphereArgs2[0] = data.innerRadius;
+  modifiedSphereArgs2[0] = innerRadius;
   return (
     <group ref={ref}>
       {/* solid */}
@@ -121,13 +125,13 @@ const SphereComponent = () => {
         </lineSegments>
 
         <mesh>
-          <ringGeometry args={[data.innerRadius, data.radius]} />
+          <ringGeometry args={[innerRadius, radius]} />
           <meshPhongMaterial {...solidMaterial} />
         </mesh>
         <lineSegments
           geometry={
             new THREE.WireframeGeometry(
-              new THREE.RingGeometry(data.innerRadius, data.radius)
+              new THREE.RingGeometry(innerRadius, radius)
             )
           }
         >

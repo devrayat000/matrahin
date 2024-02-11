@@ -1,7 +1,10 @@
+// import { EventEmitter } from "node:stream";
+
 const TWO_PI = 2 * Math.PI;
 
 class Pendulum {
-  angle: number = Math.PI / 6;
+  initialAngle: number = 0;
+  angle: number = 0;
   angularVelocity: number = 0;
   length: number = 1;
   mass: number = 1;
@@ -10,23 +13,31 @@ class Pendulum {
   friction: number = 0;
   damping: number = 0;
 
+  height: number = 0;
+  accelaration: number = 0;
+  velocity: number = 0;
+  kineticEnergy: number = 0;
+  potentialEnergy: number = 0;
+  totalEnergy: number = 0;
+
+  swingCount: number = 0;
   constructor(
     angle: number,
-    angularVelocity: number,
     length: number,
     mass: number,
     gravity: number,
     friction: number,
     damping: number
   ) {
-    this.angle = angle;
-    this.angularVelocity = angularVelocity;
+    this.angle = null;
+    this.initialAngle = angle;
     this.length = length;
     this.mass = mass;
     this.gravity = gravity;
     this.friction = friction;
     this.damping = damping;
   }
+
   /**
    * Stepper function for the pendulum model.
    * It uses a Runge-Kutta approach to solve the angular differential equation
@@ -35,8 +46,11 @@ class Pendulum {
    * @param {number} dt
    */
   step(dt: number) {
+    if (this.angle === null) {
+      this.angle = this.initialAngle;
+      //console.log("initial angle", (this.angle * 180) / Math.PI);
+    }
     let theta = this.angle;
-
     let omega = this.angularVelocity;
 
     const numSteps = Math.max(7, dt * 120);
@@ -79,12 +93,12 @@ class Pendulum {
     this.angle = theta;
     this.angularVelocity = omega;
 
-    return theta;
+    this.calculateResults(theta);
+
+    return this.angle;
 
     // update the derived variables, taking into account the transfer to thermal energy if friction is present
     // this.updateDerivedVariables( this.frictionProperty.value > 0 );
-
-    // this.stepEmitter.emit( dt );
   }
 
   /**
@@ -127,6 +141,9 @@ class Pendulum {
         ? Math.max(oldTheta, newTheta)
         : Math.min(oldTheta, newTheta);
     // this.peakEmitter.emit( turningAngle );
+    if (turningAngle > 0) {
+      this.swingCount++;
+    }
   }
 
   /**
@@ -154,11 +171,87 @@ class Pendulum {
    * @private
    *
    * @param {number} theta - angular position
-   * @param {number} omega - angular velocity
    * @returns {number}
    */
   omegaDerivative(theta: number): number {
     return -(this.gravity / this.length) * Math.sin(theta);
+  }
+
+  // a function that sets the value by its argument
+  setValue(string: string, value: number) {
+    switch (string) {
+      case "angle":
+        this.setAngle(value);
+        //console.log("angle", value);
+        break;
+      case "length":
+        this.setLength(value);
+        break;
+      case "mass":
+        this.setMass(value);
+        break;
+      case "gravity":
+        this.setGravity(value);
+        break;
+    }
+  }
+
+  resetSwingCount() {
+    this.swingCount = 0;
+  }
+  setLength(length: number) {
+    // this.reset();
+    // this.resetAnimation();
+    this.length = length;
+    this.calculateResults(this.angle);
+    return this;
+  }
+  setAngle(angle: number) {
+    this.resetAnimation();
+    // this.angle = angle;
+    //console.log(" in setANgleangle", angle);
+    this.initialAngle = angle;
+    this.calculateResults(angle);
+    return this;
+  }
+
+  setMass(mass: number) {
+    // this.reset();
+    this.mass = mass;
+    this.calculateResults(this.angle);
+    return this;
+  }
+
+  setGravity(gravity: number) {
+    // this.reset();
+    this.resetAnimation();
+    this.gravity = gravity;
+    this.calculateResults(this.angle);
+    return this;
+  }
+  resetAnimation() {
+    this.swingCount = 0;
+    this.angle = null;
+    this.angularVelocity = 0;
+    this.velocity = 0;
+    this.accelaration = 0;
+    this.kineticEnergy = 0;
+  }
+
+  calculateResults(theta: number) {
+    this.height = this.length * (1 - Math.cos(theta));
+    this.accelaration = this.gravity * Math.sin(theta);
+    // this.velocity = this.length * this.angularVelocity;
+    // sqrt(2 g delta h)
+    this.velocity = Math.sqrt(
+      2 *
+        this.gravity *
+        this.length *
+        (Math.cos(theta) - Math.cos(this.initialAngle))
+    );
+    this.kineticEnergy = 0.5 * this.mass * this.velocity ** 2;
+    this.potentialEnergy = this.mass * this.gravity * this.height;
+    this.totalEnergy = this.kineticEnergy + this.potentialEnergy;
   }
 }
 

@@ -1,3 +1,12 @@
+/**
+ * this component is used by the following components:
+ *
+ * Rectangular plate
+ * Rod
+ * Solid cuboid
+ *
+ */
+
 "use client";
 
 import React, { useState } from "react";
