@@ -7,9 +7,11 @@ import {
   useTexture,
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { useAtomValue } from "jotai";
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { resultAtom } from "./store";
 
 const colors = [
   "#0000ff",
@@ -66,9 +68,13 @@ const createArrow = (vectors: { label: string; vector: THREE.Vector3 }[]) => {
 
 const Ground = () => {
   const gridSurfaceRef = React.useRef<THREE.Mesh>(null);
+  const { v_object } = useAtomValue(resultAtom);
+
+  const speed = 2 + (v_object ?? 4) / 100;
+  // updating the position of the ground
   useFrame(({ clock }) => {
     const time = clock.getElapsedTime();
-    gridSurfaceRef.current?.position.set(0, 0, -1800 + time * 2);
+    gridSurfaceRef.current?.position.set(0, 0, -1800 + time * speed);
   });
   const textureColorPath = useTexture("/paving_color.jpg");
   textureColorPath.wrapS = THREE.RepeatWrapping;
@@ -137,10 +143,11 @@ const Animation = () => {
                 aspect={1.5}
                 near={1}
                 far={120}
-                position={[8, 3, 0]}
+                position={[-8, 3, 0]}
                 makeDefault={true}
               />
               <Ground />
+              {/* <axesHelper args={[10]} /> */}
               <fog attach="fog" args={["#a4a4a4", 30, 180]} />
 
               {/* <GridSurface /> */}
@@ -156,6 +163,7 @@ const Animation = () => {
                 position={[8, 8, -10]}
                 castShadow={true}
               />
+              {/* <gridHelper size={100} /> */}
             </Canvas>
           </React.Suspense>
         </div>
@@ -191,7 +199,11 @@ const Object = () => {
 
   const N = 20000; // number of snowflakes
   const vector = new THREE.Vector3(0, -1, 0);
-  const speed = 0.75;
+
+  const { v_object } = useAtomValue(resultAtom);
+
+  const actualSpeed = 1 + (v_object ?? 4) / 50;
+  const speed = 0.75 * actualSpeed;
 
   useFrame(() => {
     const delta = clockRef.current.getDelta();
@@ -213,7 +225,7 @@ const Object = () => {
           // v.y = 25;
 
           // this will work, but the snowflakes will not be random.
-          v.y = THREE.MathUtils.randFloat(10, 25);
+          v.y = THREE.MathUtils.randFloat(1, 25);
         }
 
         positions[i * 3] = v.x;

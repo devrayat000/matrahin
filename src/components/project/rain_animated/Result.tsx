@@ -1,23 +1,8 @@
 "use client";
 
-import { MathJax, MathJaxContext } from "better-react-mathjax";
+import { MathJax } from "better-react-mathjax";
 import { useAtomValue } from "jotai";
 import { RainVelocityResultsType, resultAtom } from "./store";
-
-const config = {
-  loader: { load: ["[tex]/html"] },
-  tex: {
-    packages: { "[+]": ["html"] },
-    inlineMath: [
-      ["$", "$"],
-      ["\\(", "\\)"],
-    ],
-    displayMath: [
-      ["$$", "$$"],
-      ["\\[", "\\]"],
-    ],
-  },
-};
 
 const InitializeVariables = ({
   v_object,
@@ -137,20 +122,18 @@ const Result = () => {
   return (
     result.v_object && (
       <div>
-        <MathJaxContext version={3} config={config}>
-          {/* <div className="w-full md:w-1/2 mb-4 md:mb-0 md:mr-4"> */}
-          <div className="flex flex-col ml-4 lg:ml-0 items-center lg:items-start justify-center lg:justify-normal gap-4">
-            <div className="flex flex-col md:flex-row ">
-              <InitializeVariables {...result} />
-              <Figure center={center} />
-            </div>
-
-            <WindSpeedModify {...result} />
-
-            {calculateAndRenderResults()}
-            {UmbrellaPosition(toDegree(resultAngle))}
+        {/* <div className="w-full md:w-1/2 mb-4 md:mb-0 md:mr-4"> */}
+        <div className="flex flex-col ml-4 lg:ml-0 items-center lg:items-start justify-center lg:justify-normal gap-4">
+          <div className="flex flex-col md:flex-row ">
+            <InitializeVariables {...result} />
+            <Figure center={center} />
           </div>
-        </MathJaxContext>
+
+          <WindSpeedModify {...result} />
+
+          {calculateAndRenderResults()}
+          {UmbrellaPosition(toDegree(resultAngle))}
+        </div>
       </div>
     )
   );
