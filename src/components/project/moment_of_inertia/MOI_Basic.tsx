@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "~/components/ui/form";
 
+import { useSetAtom } from "jotai";
 import DynamicUnitInput from "~/components/common/DynamicUnitInput";
 import constants, {
   momentOfInertiaSchema,
@@ -30,6 +31,7 @@ import {
   ShapesOfInertia,
   momentOfInertiaInput,
 } from "~/services/Moment_of_inertia";
+import { moiBasicInputDefaults, moiBasicInputsAtom } from "./store";
 
 interface MOI_BasicProps {
   shape: ShapesOfInertia;
@@ -42,6 +44,8 @@ const MOI_Basic: React.FC<MOI_BasicProps> = ({ shape }) => {
     constants.filter((option) => option.shape === shape)[0].options[0]
   );
   const [result, setResult] = useState<number>(NaN);
+
+  const setMoiBasicInputs = useSetAtom(moiBasicInputsAtom);
 
   function onSubmit(data: any) {
     const inputs: Record<string, number> = {};
@@ -57,6 +61,13 @@ const MOI_Basic: React.FC<MOI_BasicProps> = ({ shape }) => {
     );
 
     const result = newPointMassObject.solve();
+
+    setMoiBasicInputs({
+      mass: inputs.mass ?? moiBasicInputDefaults.mass,
+      mass2: inputs.mass2 ?? moiBasicInputDefaults.mass2,
+      distance: inputs.distance ?? moiBasicInputDefaults.distance,
+      radius: inputs.radius ?? moiBasicInputDefaults.radius,
+    });
     setResult(result.inertiaMainAxis);
   }
 
@@ -65,6 +76,7 @@ const MOI_Basic: React.FC<MOI_BasicProps> = ({ shape }) => {
   const reset = () => {
     form.reset();
     setResult(NaN);
+    setMoiBasicInputs(moiBasicInputDefaults);
   };
   return (
     <div className="flex flex-col items-center">

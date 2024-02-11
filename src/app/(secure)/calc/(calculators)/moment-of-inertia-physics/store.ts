@@ -5,7 +5,7 @@ import { CaseOfInertia } from "~/services/Moment_of_inertia";
 export const caseTypeAtom = atom<CaseOfInertia>(CaseOfInertia.Solid);
 
 export const solidMaterial = new THREE.MeshPhongMaterial({
-  color: new THREE.Color(0x069fec),
+  color: new THREE.Color(0x0aafff),
   emissive: new THREE.Color(0x072534),
   side: THREE.DoubleSide,
   flatShading: true,

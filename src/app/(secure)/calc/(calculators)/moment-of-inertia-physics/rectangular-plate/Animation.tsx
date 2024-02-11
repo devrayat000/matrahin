@@ -5,6 +5,7 @@ import { atom, useAtom, useAtomValue } from "jotai";
 import { useRef } from "react";
 import * as THREE from "three";
 import ReactFiberBasic from "~/components/common/ReactFiberBasic";
+import { moiDifferentAxesInputsAtom } from "~/components/project/moment_of_inertia/store";
 import Chip from "~/components/ui/chip";
 import { solidMaterial, wireframeMaterial } from "../store";
 
@@ -14,6 +15,11 @@ const Plate = () => {
   const meshRef = useRef<THREE.Mesh<THREE.BufferGeometry>>();
   const lineRef = useRef<THREE.LineSegments<THREE.BufferGeometry>>();
   const axis = useAtomValue(axisAtom);
+
+  const inputs = useAtomValue(moiDifferentAxesInputsAtom);
+
+  const { height, width, depth } = inputs;
+
   const prevAxis = useRef(axis);
   useFrame(({ clock }) => {
     if (prevAxis.current !== axis) {
@@ -36,14 +42,14 @@ const Plate = () => {
   return (
     <group ref={ref}>
       <mesh ref={meshRef} position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[2, 1.5]} />
+        <planeGeometry args={[width, height]} />
         <meshPhongMaterial {...solidMaterial} />
       </mesh>
       <lineSegments
         ref={lineRef}
         geometry={
           new THREE.WireframeGeometry(
-            new THREE.PlaneGeometry(2, 1.5).rotateX(Math.PI / 2)
+            new THREE.PlaneGeometry(width, height).rotateX(Math.PI / 2)
           )
         }
       >
