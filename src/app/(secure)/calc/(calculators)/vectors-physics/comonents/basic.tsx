@@ -7,17 +7,17 @@ import ReactFiberBasic from "~/components/common/ReactFiberBasic";
 
 const colors = [
   "#ff0000",
-  "#00ffff",
+  "#0080ff",
   "#80ff00",
   "#0000ff",
   "#ff8000",
+  "#8000ff",
   "#ffff00",
+  "#00ffff",
   "#00ff80",
-  "#0080ff",
   "#00ff00",
   "#ff00ff",
   "#ff0080",
-  "#8000ff",
 ];
 const createArrow = (vectors: { label: string; vector: THREE.Vector3 }[]) => {
   return (
