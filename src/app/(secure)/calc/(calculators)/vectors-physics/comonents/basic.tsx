@@ -8,7 +8,7 @@ import ReactFiberBasic from "~/components/common/ReactFiberBasic";
 const colors = [
   "#ff0000",
   "#0080ff",
-  "#80ff00",
+  "#80aaaa",
   "#0000ff",
   "#ff8000",
   "#8000ff",
