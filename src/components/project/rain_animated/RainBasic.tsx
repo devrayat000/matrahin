@@ -61,7 +61,7 @@ const RainBasic = () => {
     );
   };
 
-  return result.v_object && result.v_rain ? (
+  return result.v_object || result.v_rain ? (
     <>
       <div className="flex flex-col ml-4 lg:ml-0 items-center lg:items-start justify-center lg:justify-normal gap-4">
         <div className="flex flex-col md:flex-row ">
