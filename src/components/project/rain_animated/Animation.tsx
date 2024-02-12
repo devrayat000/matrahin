@@ -168,13 +168,13 @@ const Animation = () => {
               />
               <OrbitControls maxDistance={20} minDistance={5} />
               <hemisphereLight
-                args={[new THREE.Color(0xbbbbbb), new THREE.Color(0x00ffff), 3]}
-                position={[0, 20, 0]}
+                args={[new THREE.Color(0xdddddd), new THREE.Color(0x00ffff), 3]}
+                position={[0, 5, 0]}
               />
               <directionalLight
                 ref={directionalLightRef}
-                args={[new THREE.Color(0xaaaaaa), 4]}
-                position={[8, 8, -10]}
+                args={[new THREE.Color(0xffffff), 4]}
+                position={[2, 2, -4]}
                 castShadow={true}
               />
               {/* <gridHelper size={100} /> */}
