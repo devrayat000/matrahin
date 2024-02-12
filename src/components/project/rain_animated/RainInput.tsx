@@ -79,7 +79,7 @@ const RainInput = ({ wind }: { wind: boolean }) => {
   };
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex flex-row flex-wrap justify-center gap-4 items-center">
+      <div className="flex flex-row flex-wrap md:flex-nowrap justify-center gap-4 items-center">
         {rainUmbrellaData.map(({ label, helperText }, index) => {
           if (!wind && index === 2) return null;
 
