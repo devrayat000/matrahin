@@ -28,7 +28,7 @@ const RainWithWind = () => {
         <MathJax>
           {`
         $\\begin{gather}
-        Velocity\\space of\\space  Rain, \\overrightarrow{V}_{r} = -${v_rain}\\hat{j}\\space unit \\\\ 
+        Velocity\\space of\\space  Rain, \\overrightarrow{V}_{r} = -${v_rain}\\hat{j}\\space unit \\\\
         Velocity\\space of\\space  Object, \\overrightarrow{V}_{o} = ${v_object}\\hat{i}\\space unit \\\\
         Velocity\\space of\\space  Wind, \\overrightarrow{V}_{w} = ${v_wind}\\hat{i}\\space unit \\\\
         \\end{gather}$
@@ -118,22 +118,26 @@ const RainWithWind = () => {
   };
   const center = { x: 175, y: 100 };
 
-  return (
-    result.v_object && (
-      <div>
-        <div className="flex flex-col ml-4 lg:ml-0 items-center lg:items-start justify-center lg:justify-normal gap-4">
-          <div className="flex flex-col md:flex-row ">
-            <InitializeVariables {...result} />
-            <Figure center={center} results={result} />
-          </div>
-
-          <WindSpeedModify {...result} />
-
-          <CalculateAndRenderResults />
-          <UmbrellaPosition angle={toDegree(resultAngle)} />
+  return result.v_rain || result.v_object ? (
+    <div>
+      <div className="flex flex-col ml-4 lg:ml-0 items-center lg:items-start justify-center lg:justify-normal gap-4">
+        <div className="flex flex-col md:flex-row ">
+          <InitializeVariables {...result} />
+          <Figure center={center} results={result} />
         </div>
+
+        <WindSpeedModify {...result} />
+
+        <CalculateAndRenderResults />
+        <UmbrellaPosition angle={toDegree(resultAngle)} />
       </div>
-    )
+    </div>
+  ) : (
+    <div className="md:self-start self-center pt-2  ">
+      <p className="self-center text-center">
+        Please enter valid inputs to see the results
+      </p>
+    </div>
   );
 };
 

@@ -31,9 +31,10 @@ const ReactFiberBasic = ({ children }: { children: React.ReactNode }) => {
       />
       <OrbitControls />
       {children}
-      <directionalLight position={[0, 10, 0]} intensity={1} />
-      <directionalLight position={[1, 0, 0]} intensity={0.5} />
-      <ambientLight position={[5, 5, 5]} intensity={0.25} />
+      <directionalLight position={[100, 100, 0]} intensity={5} />
+      <directionalLight position={[100, -100, 0]} intensity={5} />
+      {/* <directionalLight position={[1, 0, 0]} intensity={0.5} /> */}
+      <ambientLight position={[5, 5, 5]} intensity={1} />
       <axesHelper args={[10]} />
       <AxesNotation />
     </Canvas>

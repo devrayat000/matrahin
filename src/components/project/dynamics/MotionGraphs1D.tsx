@@ -15,15 +15,16 @@ const MotionGraphs1D = () => {
   const a = Number(useAtomValue(accelerationAtom));
   const t = Number(useAtomValue(timeAtom));
 
-  console.log(s, u, v, a, t);
+  // console.log(s, u, v, a, t);
+  const factor = 1000;
 
   const graph = [
     {
       data: [
         ["time", "s"],
-        ...Array.from({ length: t * 10 + 1 }, (_, i) => [
-          i / 10,
-          (u * i) / 10 + 0.5 * a * (i / 10) ** 2,
+        ...Array.from({ length: t * factor + 1 }, (_, i) => [
+          i / factor,
+          (u * i) / factor + 0.5 * a * (i / factor) ** 2,
         ]),
       ],
       title: "Displacement vs Time",
@@ -34,9 +35,9 @@ const MotionGraphs1D = () => {
     {
       data: [
         ["time", "v"],
-        ...Array.from({ length: t * 10 + 1 }, (_, i) => [
-          i / 10,
-          u + a * (i / 10),
+        ...Array.from({ length: t * factor + 1 }, (_, i) => [
+          i / factor,
+          u + a * (i / factor),
         ]),
       ],
       title: "Velocity vs Time",
@@ -47,9 +48,9 @@ const MotionGraphs1D = () => {
     {
       data: [
         ["s", "v"],
-        ...Array.from({ length: s * 10 + 1 }, (_, i) => [
-          i / 10,
-          Math.sqrt(u ** 2 + 2 * a * (i / 10)),
+        ...Array.from({ length: s * factor + 1 }, (_, i) => [
+          i / factor,
+          Math.sqrt(u ** 2 + 2 * a * (i / factor)),
         ]),
       ],
       title: "Velocity vs Displacement",
@@ -61,7 +62,7 @@ const MotionGraphs1D = () => {
     {
       data: [
         ["time", "a"],
-        ...Array.from({ length: t * 10 + 1 }, (_, i) => [i / 10, a]),
+        ...Array.from({ length: t * factor + 1 }, (_, i) => [i / factor, a]),
       ],
       title: "Acceleration vs Time",
       hAxisTitle: "Time (t)",

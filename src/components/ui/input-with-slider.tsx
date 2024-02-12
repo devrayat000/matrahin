@@ -40,6 +40,7 @@ const InputWithSlider: React.FC<InputWithSliderProps> = ({
           step={0.1}
           min={min}
           max={max}
+          required
           value={value}
           onChange={(e) => onChangeInput(id, e.target.value)}
         />

@@ -12,6 +12,7 @@
 import React, { useState } from "react";
 
 import { MathJax } from "better-react-mathjax";
+import { useSetAtom } from "jotai";
 import { useForm } from "react-hook-form";
 import DynamicUnitInput from "~/components/common/DynamicUnitInput";
 import constants, {
@@ -33,6 +34,10 @@ import {
   momentOfInertiaResult,
 } from "~/services/Moment_of_inertia";
 import ResultsTable from "./ResultsTable";
+import {
+  moiDifferentAxesInputDefaults,
+  moiDifferentAxesInputsAtom,
+} from "./store";
 
 interface MOI_DifferentAxesProps {
   shape: ShapesOfInertia;
@@ -40,6 +45,11 @@ interface MOI_DifferentAxesProps {
 
 const MOI_DifferentAxes: React.FC<MOI_DifferentAxesProps> = ({ shape }) => {
   const form = useForm();
+
+  // to update the input fields value in the animation :
+
+  const setMoiDiffInputs = useSetAtom(moiDifferentAxesInputsAtom);
+
   const [calculationObject] = useState<momentOfInertiaSchema[0]["options"][0]>(
     constants.filter((option) => option.shape === shape)[0].options[0]
   );
@@ -58,6 +68,15 @@ const MOI_DifferentAxes: React.FC<MOI_DifferentAxesProps> = ({ shape }) => {
       calculationObject.shape,
       calculationObject.case
     );
+
+    setMoiDiffInputs({
+      mass: inputs.mass ?? moiDifferentAxesInputDefaults.mass,
+      length: inputs.length ?? moiDifferentAxesInputDefaults.length,
+      width: inputs.width ?? moiDifferentAxesInputDefaults.width,
+      height: inputs.height ?? moiDifferentAxesInputDefaults.height,
+      depth: inputs.depth ?? moiDifferentAxesInputDefaults.depth,
+    });
+
     const result: momentOfInertiaResult = newcalculationObject.solve();
     setResult([
       result.inertiaMainAxis,
@@ -69,6 +88,8 @@ const MOI_DifferentAxes: React.FC<MOI_DifferentAxesProps> = ({ shape }) => {
   const reset = () => {
     form.reset();
     setResult([]);
+
+    setMoiDiffInputs(moiDifferentAxesInputDefaults);
   };
 
   return (
