@@ -27,7 +27,7 @@ const ReactFiberBasic = ({ children }: { children: React.ReactNode }) => {
         position={[30, 10, 30]}
         fov={10}
         near={1}
-        far={1000}
+        far={5000}
       />
       <OrbitControls />
       {children}
