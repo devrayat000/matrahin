@@ -12,6 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
+import { Button } from "~/components/ui/button";
 import Checkbox from "~/components/ui/checkbox";
 
 const colors = [
@@ -132,10 +133,9 @@ const BasicVectorCalcultor = () => {
 
   const [controls, setControls] = useState({
     showGridonXZ: true,
-    showGridonXY: true,
-    showAxes: true,
-    showAonB: true,
-    showBonA: true,
+    showGridonXY: false,
+    showAonB: false,
+    showBonA: false,
     showParallelogram: true,
   });
   const initial = {
@@ -176,16 +176,35 @@ const BasicVectorCalcultor = () => {
     value: string
   ) => {
     if (vector === "A") {
-      setValueA((prevValueA) => ({
-        ...prevValueA,
-        [component]: parseFloat(value) || 0,
+      // setValueA((prevValueA) => ({
+      //   ...prevValueA,
+      //   [component]: parseFloat(value) || 0,
+      // }));
+      setInputs((prev) => ({
+        ...prev,
+        A: {
+          ...prev.A,
+          [component]: parseFloat(value) || 0,
+        },
       }));
     } else if (vector === "B") {
-      setValueB((prevValueB) => ({
-        ...prevValueB,
-        [component]: parseFloat(value) || 0,
+      // setValueB((prevValueB) => ({
+      //   ...prevValueB,
+      //   [component]: parseFloat(value) || 0,
+      // }));
+      setInputs((prev) => ({
+        ...prev,
+        B: {
+          ...prev.B,
+          [component]: parseFloat(value) || 0,
+        },
       }));
     }
+  };
+
+  const handleSubmit = () => {
+    setValueA(inputs.A);
+    setValueB(inputs.B);
   };
 
   const AdditionProcess = useMemo(
@@ -431,7 +450,7 @@ const BasicVectorCalcultor = () => {
             \\\\
           &= 
           \\frac
-            {${dotMult}}
+            {${dotMult.toFixed(precision)}}
             
             {${lengthOfVector(valueA).toFixed(2)}} 
             = ${(dotMult / lengthOfVector(valueA)).toFixed(2)}
@@ -507,10 +526,10 @@ const BasicVectorCalcultor = () => {
             \\\\
           &= 
           \\frac
-            {${dotMult}}
+            {${dotMult.toFixed(precision)}}
 
-            {${lengthOfVector(valueB).toFixed(2)}} 
-            = ${(dotMult / lengthOfVector(valueB)).toFixed(2)}
+            {${lengthOfVector(valueB).toFixed(precision)}} 
+            = ${(dotMult / lengthOfVector(valueB)).toFixed(precision)}
           
           \\end{align}
           $
@@ -532,7 +551,7 @@ const BasicVectorCalcultor = () => {
             \\frac{\\overrightarrow{B}}{|\\overrightarrow{B}|} \\\\
 
             &=
-            ${(dotMult / lengthOfVector(valueB)).toFixed(2)} \\cdot
+            ${(dotMult / lengthOfVector(valueB)).toFixed(precision)} \\cdot
             \\frac{${formatVector(
               valueB.x,
               valueB.y,
@@ -620,6 +639,7 @@ const BasicVectorCalcultor = () => {
             <gridHelper
               visible={controls.showGridonXY}
               args={[100, 100, 0x666666, 0x666666]}
+              rotation={[Math.PI / 2, 0, 0]}
             />
             <group>
               {createArrow([
@@ -645,42 +665,66 @@ const BasicVectorCalcultor = () => {
             <div className=" border p-2 bg-stone-100">
               <VectorInput
                 label={"Ax"}
-                value={A.x}
+                value={inputs.A.x}
                 onChangeInput={handleValueChange}
               />
 
               <hr className="my-2 border-t border-gray-300" />
               <VectorInput
                 label={"Ay"}
-                value={A.y}
+                value={inputs.A.y}
                 onChangeInput={handleValueChange}
               />
               <hr className="my-2 border-t border-gray-300" />
               <VectorInput
                 label={"Az"}
-                value={A.z}
+                value={inputs.A.z}
                 onChangeInput={handleValueChange}
               />
             </div>
             <div className="border p-2 bg-stone-100">
               <VectorInput
                 label={"Bx"}
-                value={B.x}
+                value={inputs.B.x}
                 onChangeInput={handleValueChange}
               />
               <hr className="my-2 border-t border-gray-300" />
               <VectorInput
                 label={"By"}
-                value={B.y}
+                value={inputs.B.y}
                 onChangeInput={handleValueChange}
               />
               <hr className="my-2 border-t border-gray-300" />
               <VectorInput
                 label={"Bz"}
-                value={B.z}
+                value={inputs.B.z}
                 onChangeInput={handleValueChange}
               />
             </div>
+          </div>
+          <div className="flex flex-row items-center justify-between gap-2">
+            <Button
+              onClick={() => {
+                setInputs(initial);
+                setValueA(initial.A);
+                setValueB(initial.B);
+              }}
+              variant={"destructive"}
+              name="Reset"
+              title="Reset the values to default"
+              // className="bg-stone-100 text-black p-2 rounded-md"
+            >
+              Reset
+            </Button>
+            <Button
+              onClick={handleSubmit}
+              variant={"default"}
+              name="Submit"
+              title="Submit the values to see the results"
+              // className="bg-stone-100 text-black p-2 rounded-md"
+            >
+              Calculate
+            </Button>
           </div>
           <div className="flex flex-row items-center gap-2">
             <div className="flex flex-col items-left gap-2">
@@ -715,7 +759,7 @@ const BasicVectorCalcultor = () => {
                 }
               />
             </div>
-            <div className="flex flex-col items-left gap-2">
+            <div className="flex self-start flex-col items-left gap-2">
               <Checkbox
                 label={"A বরাবর B এর উপাংশ"}
                 checked={controls.showBonA}
@@ -864,8 +908,8 @@ const VectorInput: React.FC<VectorInputProps> = ({
         </button>
         <input
           type="range"
-          min={-10}
-          max={10}
+          min={-100}
+          max={100}
           step={1}
           value={value}
           onChange={(e) =>
