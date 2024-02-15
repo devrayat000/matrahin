@@ -47,7 +47,7 @@ const Graphs = () => {
         title: "Time Period vs Length (θ < 10°)",
         hAxisTitle: "Length (m)",
         vAxisTitle: "Time Period (s)",
-        formula: (
+        formula: () => (
           <MathJax>{` 
         $$
         \\begin{align*}
@@ -72,7 +72,7 @@ const Graphs = () => {
         title: "Time Period vs Gravity (θ < 10°)",
         hAxisTitle: "Gravity (m/s²)",
         vAxisTitle: "Time Period (s)",
-        formula: (
+        formula: () => (
           <MathJax>{` 
               $$ 
                 \\begin{align*}
@@ -96,7 +96,7 @@ const Graphs = () => {
         title: "Time Period Squared vs Length (θ < 10°)",
         hAxisTitle: "Length (m)",
         vAxisTitle: "Time Period Squared (s²)",
-        formula: (
+        formula: () => (
           <MathJax>
             {` 
             $$
@@ -125,7 +125,7 @@ const Graphs = () => {
         title: "Acceleration vs Angle",
         hAxisTitle: "Angle (°)",
         vAxisTitle: "Acceleration (m/s²)",
-        formula: (
+        formula: () => (
           <MathJax>
             {` 
             $$
@@ -165,7 +165,7 @@ const Graphs = () => {
         title: "Velocity vs Angle",
         hAxisTitle: "Angle (°)",
         vAxisTitle: "Velocity (m/s)",
-        formula: (
+        formula: () => (
           <MathJax>
             {` 
             $$
@@ -203,7 +203,7 @@ const Graphs = () => {
         title: "Potential Energy vs Angle",
         hAxisTitle: "Angle (°)",
         vAxisTitle: "Potential Energy (J)",
-        formula: (
+        formula: () => (
           <MathJax>
             {` 
             $$
@@ -247,7 +247,7 @@ const Graphs = () => {
         title: "Kinetic Energy vs Angle",
         hAxisTitle: "Angle (°)",
         vAxisTitle: "Kinetic Energy (J)",
-        formula: (
+        formula: () => (
           <MathJax>
             {` 
             $$
@@ -294,7 +294,7 @@ const Graphs = () => {
         title: "Energy vs Angle",
         hAxisTitle: "Angle (°)",
         vAxisTitle: "Energy (J)",
-        formula: (
+        formula: () => (
           <MathJax>
             {` 
             $$
@@ -354,7 +354,7 @@ const Graphs = () => {
               rootProps={{ "data-testid": "1" }}
             />
 
-            <span className="">{g.formula}</span>
+            <span className="">{g.formula()}</span>
             <hr className="my-2 w-5/6  md:w-0 md:my-0" />
           </div>
         ))}
