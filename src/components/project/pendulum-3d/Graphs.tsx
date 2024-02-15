@@ -47,8 +47,7 @@ const Graphs = () => {
         title: "Time Period vs Length (θ < 10°)",
         hAxisTitle: "Length (m)",
         vAxisTitle: "Time Period (s)",
-        formula: (
-          <MathJax>{` 
+        formula: ` 
         $$
         \\begin{align*}
          T &=2\\pi\\sqrt{\\frac{l}{g}} = \\frac{2\\pi}{\\sqrt{g}} \\cdot \\sqrt{l} \\\\
@@ -56,8 +55,7 @@ const Graphs = () => {
          \\\\
          \\text{where c }&= \\frac{2\\pi}{\\sqrt{g}} \\text{ , g = ${gravity} } m/s^2
         \\end{align*}
-       $$ `}</MathJax>
-        ),
+       $$ `,
       },
       // T vs g
       {
@@ -72,17 +70,15 @@ const Graphs = () => {
         title: "Time Period vs Gravity (θ < 10°)",
         hAxisTitle: "Gravity (m/s²)",
         vAxisTitle: "Time Period (s)",
-        formula: (
-          <MathJax>{` 
-              $$ 
+        formula: ` 
+               
                 \\begin{align*}
                 T &= 2π\\sqrt{\\frac{l}{g}} = 2π\\sqrt{l} \\cdot \\frac{1}{\\sqrt{g}} \\\\
                 y &= c \\cdot \\frac{1}{\\sqrt{x}}      \\\\
                 \\text{where c }&= 2π\\sqrt{l} \\space ,\\space  l = ${length} m
                 \\end{align*}
                 
-                $$ `}</MathJax>
-        ),
+                 `,
       },
       // T^2 vs l graph
       {
@@ -96,19 +92,15 @@ const Graphs = () => {
         title: "Time Period Squared vs Length (θ < 10°)",
         hAxisTitle: "Length (m)",
         vAxisTitle: "Time Period Squared (s²)",
-        formula: (
-          <MathJax>
-            {` 
-            $$
+        formula: ` 
+            
               \\begin{align*} 
                 T^2 &= 4π^2\\frac{l}{g} = \\frac{4π^2}{g} \\cdot l \\\\
                 y &= m \\cdot x\\space \\text{(Straight Line)} \\\\
                 \\text{where m  } &= \\frac{4π^2}{g} \\text{(slope) , } g = ${gravity} m/s^2
               \\end{align*}    
-            $$ 
-          `}
-          </MathJax>
-        ),
+             
+          `,
       },
       // a vs angle graph
       {
@@ -125,10 +117,8 @@ const Graphs = () => {
         title: "Acceleration vs Angle",
         hAxisTitle: "Angle (°)",
         vAxisTitle: "Acceleration (m/s²)",
-        formula: (
-          <MathJax>
-            {` 
-            $
+        formula: ` 
+            
               \\begin{align*} 
                 a &= g \\cdot sin(\\theta) \\\\
                 y &= A \\cdot sin(\\theta) \\text{    (Sine)} \\\\
@@ -136,16 +126,14 @@ const Graphs = () => {
                 \\text{For } a_{max}& ,\\space \\theta =\\theta_{max} = \\alpha = ${angle}^\\circ \\\\
 
                  a_{max} &= g sin(${angle}) = ${(
-              Math.sin((angle * Math.PI) / 180) * gravity
-            ).toFixed(2)} ms^{-2} \\\\
+          Math.sin((angle * Math.PI) / 180) * gravity
+        ).toFixed(2)} ms^{-2} \\\\
 
             \\text{For } a_{min}&\\space ,\\space \\theta = 0^\\circ \\\\
             a_{min} &= gsin0^\\circ = 0 ms^{-2}
               \\end{align*}    
-            $
-          `}
-          </MathJax>
-        ),
+            
+          `,
       },
       // velocity vs angle graph
       {
@@ -165,10 +153,8 @@ const Graphs = () => {
         title: "Velocity vs Angle",
         hAxisTitle: "Angle (°)",
         vAxisTitle: "Velocity (m/s)",
-        formula: (
-          <MathJax>
-            {` 
-            $
+        formula: ` 
+            
               \\begin{align*} 
                 v &= \\sqrt{2gl (  cos\\theta -cos\\alpha )} \\\\
                 \\text{where } l &= ${length} m ,\\space g = ${gravity} ms^{-2} \\text{ and } \\alpha = ${angle}^\\circ \\\\
@@ -182,10 +168,8 @@ const Graphs = () => {
                 \\text{For } v_{min} &\\space ,\\space cos\\theta = cos \\alpha \\implies \\theta = \\alpha= ${angle}  \\\\
                 v_{min} &= \\sqrt{2gl(cos${angle}^\\circ - cos${angle}^\\circ)} = 0 ms^{-1}
               \\end{align*}    
-            $ 
-          `}
-          </MathJax>
-        ),
+            
+          `,
       },
       // potential energy vs angle graph
       {
@@ -203,10 +187,8 @@ const Graphs = () => {
         title: "Potential Energy vs Angle",
         hAxisTitle: "Angle (°)",
         vAxisTitle: "Potential Energy (J)",
-        formula: (
-          <MathJax>
-            {` 
-            $
+        formula: ` 
+            
               \\begin{align*} 
                 E_p &= mgh = mgl(1 - cos\\theta) \\\\
                 y &=  mgl( 1 - cos\\theta) \\\\
@@ -225,10 +207,8 @@ const Graphs = () => {
                 \\text{For } E_{p_{min}}&\\space ,\\space \\theta = 0^\\circ \\\\
                 E_{p_{min}} &= mgl(1 - cos0^\\circ) = 0 J
                \\end{align*}    
-            $
-          `}
-          </MathJax>
-        ),
+            
+          `,
       },
       // Kinetic energy vs angle graph
       {
@@ -247,10 +227,8 @@ const Graphs = () => {
         title: "Kinetic Energy vs Angle",
         hAxisTitle: "Angle (°)",
         vAxisTitle: "Kinetic Energy (J)",
-        formula: (
-          <MathJax>
-            {` 
-            $
+        formula: ` 
+            
               \\begin{align*} 
                 E_k &= \\frac{1}{2}mv^2 = mgl(cos\\theta - cos\\alpha) \\\\
                 E_k&= mgl(cos\\theta - cos${angle}^\\circ) \\\\
@@ -268,10 +246,8 @@ const Graphs = () => {
                 \\text{For } E_{k_{min}}&\\space ,\\space \\theta =\\theta_{max} = \\alpha = ${angle}^\\circ \\\\
                 E_{k_{min}} &= mgl(cos${angle}^\\circ - cos${angle}^\\circ) = 0 J
                \\end{align*}    
-            $
-          `}
-          </MathJax>
-        ),
+            
+          `,
       },
       // kinetic and potential energy vs angle graph
       {
@@ -294,10 +270,8 @@ const Graphs = () => {
         title: "Energy vs Angle",
         hAxisTitle: "Angle (°)",
         vAxisTitle: "Energy (J)",
-        formula: (
-          <MathJax>
-            {` 
-            $
+        formula: ` 
+            
               \\begin{align*} 
                 E &= E_p + E_k \\\\
                 E &= mgl(1 - cos\\theta) + mgl(cos\\theta - cos\\alpha) \\\\
@@ -311,10 +285,8 @@ const Graphs = () => {
                   (1 - Math.cos((angle * Math.PI) / 180))
                 ).toFixed(2)} J
                \\end{align*}    
-            $
-          `}
-          </MathJax>
-        ),
+            
+          `,
       },
     ],
     [angle, length, mass, gravity]
@@ -354,7 +326,16 @@ const Graphs = () => {
               rootProps={{ "data-testid": "1" }}
             />
 
-            <span className="">{g.formula}</span>
+            <span className="">
+              <MathJax
+                dynamic={true}
+                renderMode="pre"
+                text={g.formula}
+                typesettingOptions={{
+                  fn: "tex2chtml",
+                }}
+              />
+            </span>
             <hr className="my-2 w-5/6  md:w-0 md:my-0" />
           </div>
         ))}
