@@ -9,7 +9,7 @@ import {
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useAtom, useAtomValue } from "jotai";
 import { Pause, Play } from "lucide-react";
-import React, { ReactNode, useEffect, useRef } from "react";
+import React, { ReactNode, useRef } from "react";
 import * as THREE from "three";
 import Pendulum from "./Pendulum";
 import { pendulumStore } from "./store";
@@ -54,6 +54,7 @@ const PendulumAnimation = ({
   pendulumRef: React.RefObject<Pendulum>;
 }) => {
   const periodCounterRef = useRef<HTMLParagraphElement>(null);
+  const timeRef = useRef<HTMLParagraphElement>(null);
   const length = useAtomValue(pendulumStore.lengthAtom);
 
   const Camera = ({ length }: { length: number }) => (
@@ -90,6 +91,7 @@ const PendulumAnimation = ({
           <Animation
             pendulumRef={pendulumRef}
             periodCounterRef={periodCounterRef}
+            timeRef={timeRef}
           />
           {/* <Ground /> */}
           <Structure length={length} />
@@ -100,33 +102,40 @@ const PendulumAnimation = ({
         </Canvas>
       </div>
 
-      <PauseResumeControl periodCounterRef={periodCounterRef} />
+      <PauseResumeControl
+        periodCounterRef={periodCounterRef}
+        timeRef={timeRef}
+      />
     </div>
   );
 };
 
-const StopWatch = () => {
-  const animating = useAtomValue(pendulumStore.isPlayingAtom);
+const StopWatch = ({
+  timeRef,
+}: {
+  timeRef: React.RefObject<HTMLParagraphElement>;
+}) => {
+  // const animating = useAtomValue(pendulumStore.isPlayingAtom);
 
-  const timeRef = useRef<HTMLParagraphElement>(null);
-  const timeCounter = useRef(0);
+  // const timeRef = useRef<HTMLParagraphElement>(null);
+  // const timeCounter = useRef(0);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (animating) {
-      interval = setInterval(() => {
-        timeCounter.current += 0.01;
-        if (timeRef.current)
-          timeRef.current.innerText = timeCounter.current.toFixed(2);
-      }, 10);
-    } else {
-      clearInterval(interval);
-    }
+  // useEffect(() => {
+  //   let interval: NodeJS.Timeout;
+  //   if (animating) {
+  //     interval = setInterval(() => {
+  //       timeCounter.current += 0.01;
+  //       if (timeRef.current)
+  //         timeRef.current.innerText = timeCounter.current.toFixed(2);
+  //     }, 10);
+  //   } else {
+  //     clearInterval(interval);
+  //   }
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [animating]);
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, [animating]);
 
   return (
     <div className="flex flex-col items-center  gap-2 border-2 p-3 ">
@@ -146,15 +155,17 @@ const StopWatch = () => {
 
 const PauseResumeControl = ({
   periodCounterRef,
+  timeRef,
 }: {
   periodCounterRef: React.RefObject<HTMLParagraphElement>;
+  timeRef: React.RefObject<HTMLParagraphElement>;
 }) => {
   const [animating, setAnimating] = useAtom(pendulumStore.isPlayingAtom);
 
   return (
     <div className="flex flex-row gap-1 md:gap-4 items-center justify-center">
       {/* add stopwatch */}
-      <StopWatch />
+      {/* <StopWatch timeRef={timeRef} /> */}
       <PeriodCounter periodCounterRef={periodCounterRef} />
       <div
         className="bg-green-500 cursor-pointer shadow-xl p-3 md:p-5 self-start  rounded-full hover:scale-125 transition-transform duration-300 transform "
@@ -191,9 +202,11 @@ const PeriodCounter = ({
 const Animation = ({
   pendulumRef,
   periodCounterRef,
+  timeRef,
 }: {
   pendulumRef: React.RefObject<Pendulum>;
   periodCounterRef: React.RefObject<HTMLParagraphElement>;
+  timeRef: React.RefObject<HTMLParagraphElement>;
 }) => {
   const animating = useAtomValue(pendulumStore.isPlayingAtom);
 
@@ -231,6 +244,8 @@ const Animation = ({
         periodCounter = 0;
         pendulum.swingCount = 1;
       }
+      if (timeRef.current)
+        timeRef.current.innerText = timeCounter.toFixed(precision);
 
       animationRef.current.rotation.z = theta;
     } else {
