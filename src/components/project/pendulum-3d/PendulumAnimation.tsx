@@ -50,25 +50,10 @@ function rotateAboutPoint(
 // const PendulumAnimation = forwardRef<PendulumAnimationRefs>(({}, refs) => {
 const PendulumAnimation = ({
   pendulumRef,
-  angleResultRef,
-  velocityResultRef,
-  accelarationResultRef,
-  heightResultRef,
-  potentialEnergyResultRef,
-  kineticEnergyResultRef,
-  totalEnergyResultRef,
-  periodCounterRef,
 }: {
   pendulumRef: React.RefObject<Pendulum>;
-  angleResultRef: React.RefObject<HTMLParagraphElement>;
-  velocityResultRef: React.RefObject<HTMLParagraphElement>;
-  accelarationResultRef: React.RefObject<HTMLParagraphElement>;
-  heightResultRef: React.RefObject<HTMLParagraphElement>;
-  potentialEnergyResultRef: React.RefObject<HTMLParagraphElement>;
-  kineticEnergyResultRef: React.RefObject<HTMLParagraphElement>;
-  totalEnergyResultRef: React.RefObject<HTMLParagraphElement>;
-  periodCounterRef: React.RefObject<HTMLParagraphElement>;
 }) => {
+  const periodCounterRef = useRef<HTMLParagraphElement>(null);
   const length = useAtomValue(pendulumStore.lengthAtom);
 
   const Camera = ({ length }: { length: number }) => (
@@ -83,7 +68,7 @@ const PendulumAnimation = ({
   );
 
   return (
-    <>
+    <div>
       <div className=" w-5/6  lg:w-full  h-[40vh] md:h-[70vh] mb-2">
         <Canvas shadows="soft">
           {/* <AdaptiveCamera length={length} /> */}
@@ -103,17 +88,8 @@ const PendulumAnimation = ({
             preset="apartment"
           />
           <Animation
-            {...{
-              pendulumRef,
-              angleResultRef,
-              velocityResultRef,
-              accelarationResultRef,
-              heightResultRef,
-              potentialEnergyResultRef,
-              kineticEnergyResultRef,
-              totalEnergyResultRef,
-              periodCounterRef,
-            }}
+            pendulumRef={pendulumRef}
+            periodCounterRef={periodCounterRef}
           />
           {/* <Ground /> */}
           <Structure length={length} />
@@ -124,8 +100,8 @@ const PendulumAnimation = ({
         </Canvas>
       </div>
 
-      <PauseResumeControl />
-    </>
+      <PauseResumeControl periodCounterRef={periodCounterRef} />
+    </div>
   );
 };
 
@@ -153,26 +129,33 @@ const StopWatch = () => {
   }, [animating]);
 
   return (
-    <div className="flex flex-row items-center justify-between gap-2 border-2 p-3 ">
+    <div className="flex flex-col items-center  gap-2 border-2 p-3 ">
       <strong className="text-lg md:text-2xl">Stopwatch</strong>
-      <p
-        ref={timeRef}
-        className="text-xl md:text-3xl text-right font-mono w-[7ch]"
-      >
-        0
-      </p>
-      <strong className="text-xl">s</strong>
+      <div className="flex flex-row gap-1 md:gap-4 items-center justify-around">
+        <p
+          ref={timeRef}
+          className="text-xl md:text-3xl text-right font-mono w-[7ch]"
+        >
+          0
+        </p>
+        <strong className="text-xl">s</strong>
+      </div>
     </div>
   );
 };
 
-const PauseResumeControl = () => {
+const PauseResumeControl = ({
+  periodCounterRef,
+}: {
+  periodCounterRef: React.RefObject<HTMLParagraphElement>;
+}) => {
   const [animating, setAnimating] = useAtom(pendulumStore.isPlayingAtom);
 
   return (
-    <div className="flex flex-row gap-1 md:gap-4 items-center justify-around">
+    <div className="flex flex-row gap-1 md:gap-4 items-center justify-center">
       {/* add stopwatch */}
       <StopWatch />
+      <PeriodCounter periodCounterRef={periodCounterRef} />
       <div
         className="bg-green-500 cursor-pointer shadow-xl p-3 md:p-5 self-start  rounded-full hover:scale-125 transition-transform duration-300 transform "
         onClick={() => setAnimating(!animating)}
@@ -183,26 +166,33 @@ const PauseResumeControl = () => {
   );
 };
 
+const PeriodCounter = ({
+  periodCounterRef,
+}: {
+  periodCounterRef: React.RefObject<HTMLParagraphElement>;
+}) => {
+  return (
+    <div className="flex flex-col items-center  gap-2 border-2 p-3 ">
+      <strong className="text-lg md:text-2xl">Time Period</strong>
+      <div className="flex flex-row gap-1 md:gap-4 items-center justify-around">
+        <p
+          ref={periodCounterRef}
+          className="text-xl md:text-3xl text-right font-mono w-[7ch]"
+        >
+          0
+        </p>
+        <strong className="text-xl">s</strong>
+      </div>
+    </div>
+  );
+};
+
 // const Animation = forwardRef<PendulumAnimationRefs>(({}, refs) => {
 const Animation = ({
   pendulumRef,
-  angleResultRef,
-  velocityResultRef,
-  accelarationResultRef,
-  heightResultRef,
-  potentialEnergyResultRef,
-  kineticEnergyResultRef,
-  totalEnergyResultRef,
   periodCounterRef,
 }: {
   pendulumRef: React.RefObject<Pendulum>;
-  angleResultRef: React.RefObject<HTMLParagraphElement>;
-  velocityResultRef: React.RefObject<HTMLParagraphElement>;
-  accelarationResultRef: React.RefObject<HTMLParagraphElement>;
-  heightResultRef: React.RefObject<HTMLParagraphElement>;
-  potentialEnergyResultRef: React.RefObject<HTMLParagraphElement>;
-  kineticEnergyResultRef: React.RefObject<HTMLParagraphElement>;
-  totalEnergyResultRef: React.RefObject<HTMLParagraphElement>;
   periodCounterRef: React.RefObject<HTMLParagraphElement>;
 }) => {
   const animating = useAtomValue(pendulumStore.isPlayingAtom);
@@ -224,9 +214,9 @@ const Animation = ({
     clock.autoStart = false;
     if (animationRef.current && animating) {
       if (!clock.running) clock.start();
-      // if(pendulum.swingCount%2 == 1) {
-      //   periodCounter = 0;
-      // }
+      if (pendulum.swingCount % 2 == 1) {
+        periodCounter = 0;
+      }
 
       const deltaTime = clock.elapsedTime - timeCounter;
       const theta = pendulum.step(deltaTime);
@@ -241,45 +231,10 @@ const Animation = ({
         periodCounter = 0;
         pendulum.swingCount = 1;
       }
+
       animationRef.current.rotation.z = theta;
     } else {
       if (clock.running) clock.stop();
-    }
-    /**
-     * update results
-     */
-
-    if (pendulumRef.current) {
-      if (angleResultRef.current)
-        angleResultRef.current.innerText = (
-          (pendulum.angle * 180) /
-          Math.PI
-        ).toFixed(precision);
-
-      if (velocityResultRef.current)
-        velocityResultRef.current.innerText =
-          pendulum.velocity.toFixed(precision);
-
-      if (accelarationResultRef.current)
-        accelarationResultRef.current.innerText =
-          pendulum.accelaration.toFixed(precision);
-
-      if (heightResultRef.current)
-        heightResultRef.current.innerText = (pendulum.height * 100).toFixed(
-          precision
-        );
-
-      if (potentialEnergyResultRef.current)
-        potentialEnergyResultRef.current.innerText =
-          pendulum.potentialEnergy.toFixed(precision);
-
-      if (kineticEnergyResultRef.current)
-        kineticEnergyResultRef.current.innerText =
-          pendulum.kineticEnergy.toFixed(precision);
-
-      if (totalEnergyResultRef.current)
-        totalEnergyResultRef.current.innerText =
-          pendulum.totalEnergy.toFixed(precision);
     }
   });
   return (

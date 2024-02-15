@@ -9,38 +9,88 @@ import {
   LineChart,
   MinusSquare,
   MoveUp,
+  Pi,
   PlusSquare,
-  Timer,
-  Zap,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
+import Pendulum from "./Pendulum";
 import { pendulumStore } from "./store";
 
 // const PendulumResults = forwardRef<PendulumResultRefs>(({}, ref) => {
 const PendulumResults = ({
-  angleResultRef,
-  velocityResultRef,
-  accelarationResultRef,
-  heightResultRef,
-  potentialEnergyResultRef,
-  kineticEnergyResultRef,
-  totalEnergyResultRef,
-  periodCounterRef,
+  pendulumRef,
 }: {
-  angleResultRef: React.RefObject<HTMLParagraphElement>;
-  velocityResultRef: React.RefObject<HTMLParagraphElement>;
-  accelarationResultRef: React.RefObject<HTMLParagraphElement>;
-  heightResultRef: React.RefObject<HTMLParagraphElement>;
-  potentialEnergyResultRef: React.RefObject<HTMLParagraphElement>;
-  kineticEnergyResultRef: React.RefObject<HTMLParagraphElement>;
-  totalEnergyResultRef: React.RefObject<HTMLParagraphElement>;
-  periodCounterRef: React.RefObject<HTMLParagraphElement>;
+  pendulumRef: React.RefObject<Pendulum>;
 }) => {
   const [resultShowingLive, setResultShowingLive] = useAtom(
     pendulumStore.resultShowingLiveAtom
   );
+
+  // refs for showing results live
+  const angleResultRef = useRef<HTMLParagraphElement>(null);
+  const velocityResultRef = useRef<HTMLParagraphElement>(null);
+  const accelarationResultRef = useRef<HTMLParagraphElement>(null);
+  const heightResultRef = useRef<HTMLParagraphElement>(null);
+  const potentialEnergyResultRef = useRef<HTMLParagraphElement>(null);
+  const kineticEnergyResultRef = useRef<HTMLParagraphElement>(null);
+  const totalEnergyResultRef = useRef<HTMLParagraphElement>(null);
+
+  const animating = useAtomValue(pendulumStore.isPlayingAtom);
+
+  const timeCounter = useRef(0);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (animating) {
+      interval = setInterval(() => {
+        timeCounter.current += 0.01;
+
+        if (angleResultRef.current) {
+          angleResultRef.current.innerText =
+            (((pendulumRef.current?.angle ?? 0) * 180) / Math.PI).toFixed(2) ||
+            "0";
+        }
+
+        if (velocityResultRef.current) {
+          velocityResultRef.current.innerText =
+            pendulumRef.current?.velocity.toFixed(2) || "0";
+        }
+
+        if (accelarationResultRef.current) {
+          accelarationResultRef.current.innerText =
+            pendulumRef.current?.accelaration.toFixed(2) || "0";
+        }
+
+        if (heightResultRef.current) {
+          heightResultRef.current.innerText =
+            (pendulumRef.current?.height * 100).toFixed(2) || "0";
+        }
+
+        if (potentialEnergyResultRef.current) {
+          potentialEnergyResultRef.current.innerText =
+            pendulumRef.current?.potentialEnergy.toFixed(2) || "0";
+        }
+
+        if (kineticEnergyResultRef.current) {
+          kineticEnergyResultRef.current.innerText =
+            pendulumRef.current?.kineticEnergy.toFixed(2) || "0";
+        }
+
+        // if (totalEnergyResultRef.current) {
+        //   totalEnergyResultRef.current.innerText =
+        //     pendulumRef.current?.totalEnergy.toFixed(2) || "0";
+        // }
+      }, 10);
+    } else {
+      clearInterval(interval);
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [animating]);
 
   const angle = useAtomValue(pendulumStore.angleAtom);
   const length = useAtomValue(pendulumStore.lengthAtom);
@@ -59,52 +109,73 @@ const PendulumResults = ({
   const resultStyle =
     "flex flex-row justify-between   mx-3 p-3 px-4 my-2 flex-wrap items-center lg:gap-1   font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454]";
 
-  const velocityAtAngle = useMemo(
-    () =>
-      // √(2gl(1-cos(θ))
-      Math.sqrt(
-        2 *
+  const resultParams = useMemo(
+    () => [
+      {
+        label: "Height",
+        value: 100 * length * (1 - Math.cos((currentAngle * Math.PI) / 180)), // l(1-cos(θ))
+        unit: "cm",
+        ref: heightResultRef,
+        icon: <MoveUp />,
+      },
+      {
+        label: "Velocity",
+        value: Math.sqrt(
+          2 *
+            gravity *
+            length *
+            (Math.cos((currentAngle * Math.PI) / 180) -
+              Math.cos((angle * Math.PI) / 180))
+        ), // √(2gl(1-cos(θ))
+        unit: "m/s",
+        ref: velocityResultRef,
+        icon: <Gauge />,
+      },
+      {
+        label: "Acceleration",
+        value: gravity * Math.sin((currentAngle * Math.PI) / 180), // gsin(θ)
+        unit: "m/s²",
+        ref: accelarationResultRef,
+        icon: <GaugeCircle />,
+      },
+      {
+        label: "Potential Energy",
+        value:
+          mass *
+          gravity *
+          length *
+          (1 - Math.cos((currentAngle * Math.PI) / 180)), // mgh
+        unit: "J",
+        ref: potentialEnergyResultRef,
+        icon: <DatabaseZap />,
+      },
+
+      // adding this makes ui visually unstable for mobile devices
+
+      {
+        label: "Kinetic Energy",
+        value:
+          mass *
           gravity *
           length *
           (Math.cos((currentAngle * Math.PI) / 180) -
-            Math.cos((angle * Math.PI) / 180))
-      ),
-    [length, currentAngle, angle, gravity]
-  );
-  const accelarationAtAngle = useMemo(
-    () =>
-      // gsin(θ)
-      gravity * Math.sin((currentAngle * Math.PI) / 180),
-    [currentAngle, gravity]
-  );
-
-  const heightAtAngle = useMemo(
-    () =>
-      // l(1-cos(θ))
-      length * (1 - Math.cos((currentAngle * Math.PI) / 180)),
-    [length, currentAngle]
-  );
-
-  const potentialEnergyAtAngle = useMemo(
-    () =>
-      // mgh
-      mass * gravity * heightAtAngle,
-    [mass, gravity, heightAtAngle]
+            Math.cos((angle * Math.PI) / 180)), // 1/2mv^2 = mgl(cos(alpha) -cos(θ))
+        unit: "J",
+        ref: kineticEnergyResultRef,
+        icon: <LineChart />,
+      },
+      {
+        label: "Total Energy",
+        value:
+          mass * gravity * length * (1 - Math.cos((angle * Math.PI) / 180)), // mgl(1-cos(alpha))
+        unit: "J",
+        ref: undefined,
+        icon: <Pi />,
+      },
+    ],
+    [angle, currentAngle, length, mass, gravity]
   );
 
-  const kineticEnergyAtAngle = useMemo(
-    () =>
-      // 1/2mv^2
-      0.5 * mass * velocityAtAngle ** 2,
-    [mass, velocityAtAngle]
-  );
-
-  const totalEnergyAtAngle = useMemo(
-    () =>
-      // mgh + 1/2mv^2
-      potentialEnergyAtAngle + kineticEnergyAtAngle,
-    [potentialEnergyAtAngle, kineticEnergyAtAngle]
-  );
   return (
     <div className="w-full   flex-col  rounded-lg   items-center border-gray-950">
       {/* <div className="w-full lg:w-5/6  flex-col border-2 rounded-lg bg-[#42b6c5]  items-center border-gray-950"> */}
@@ -134,7 +205,7 @@ const PendulumResults = ({
           At Angle (°)
         </Button>
       </div>
-      {/* angle */}
+      {/* angle input */}
       <div className={resultStyle}>
         <DraftingCompass />
         <p>Angle </p>
@@ -187,114 +258,21 @@ const PendulumResults = ({
         </div>
       </div>
 
-      {/* height */}
-      <div className={resultStyle}>
-        <MoveUp />
-        <p>Height </p>
-        <div className="flex flex-row items-center justify-between gap-1">
-          <p
-            className="font-bold w-[7ch]"
-            ref={resultShowingLive ? heightResultRef : undefined}
-          >
-            {heightAtAngle.toFixed(4)}
-          </p>
-          <p>cm</p>
-        </div>
-      </div>
-
-      {/* velocity  */}
-      <div className={resultStyle}>
-        <Gauge />
-        <p>Velocity </p>
-        <div className="flex flex-row items-center justify-between gap-1">
-          <p
-            className="font-bold w-[5ch]"
-            ref={resultShowingLive ? velocityResultRef : undefined}
-          >
-            {velocityAtAngle.toFixed(4)}
-          </p>
-          <p>m/s</p>
-        </div>
-      </div>
-
-      {/* accelaration */}
-      <div className={resultStyle}>
-        <GaugeCircle />
-        <p>Acceleration </p>
-        <div className="flex flex-row items-center justify-between gap-1">
-          <p
-            className="font-bold w-[5ch]"
-            ref={resultShowingLive ? accelarationResultRef : undefined}
-          >
-            {accelarationAtAngle.toFixed(4)}
-          </p>
-          <p>
-            m/s<sup>2</sup>
-          </p>
-        </div>
-      </div>
-
-      {/* Potential Energy */}
-      <div className={resultStyle}>
-        <DatabaseZap />
-        <p className="text-left">Potential Energy </p>
-        <div className="flex flex-row items-center justify-between gap-1">
-          <p
-            className="font-bold w-[8ch]"
-            ref={resultShowingLive ? potentialEnergyResultRef : undefined}
-          >
-            {potentialEnergyAtAngle.toFixed(4)}
-          </p>
-          <p>J</p>
-        </div>
-      </div>
-
-      {/* Kinetic Energy */}
-      <div className={resultStyle}>
-        <LineChart />
-        <p>Kinetic Energy </p>
-        <div className="flex flex-row items-center justify-between gap-1">
-          <p
-            className="font-bold  w-[8ch]"
-            ref={resultShowingLive ? kineticEnergyResultRef : undefined}
-          >
-            {kineticEnergyAtAngle.toFixed(4)}
-          </p>
-          <p>m</p>
-        </div>
-      </div>
-
-      {/* Total Energy */}
-      <div className={resultStyle}>
-        <Zap />
-        <p>Total Energy </p>
-        <div className="flex flex-row items-center justify-between gap-1">
-          <p
-            className="font-bold w-[8ch]"
-            ref={resultShowingLive ? totalEnergyResultRef : undefined}
-          >
-            {totalEnergyAtAngle.toFixed(4)}
-          </p>
-          <p>J</p>
-        </div>
-      </div>
-
-      {resultShowingLive && (
-        <div className="flex flex-row justify-between mx-3 p-3 px-4  my-2 flex-wrap items-center lg:gap-1 m-1   font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454]">
-          <Timer />
-          <p>Time Period </p>
+      {resultParams.map((param, index) => (
+        <div key={index} className={resultStyle}>
+          <div>{param.icon}</div>
+          <p>{param.label}</p>
           <div className="flex flex-row items-center justify-between gap-1">
             <p
-              className="font-bold w-[6ch]"
-              ref={resultShowingLive ? periodCounterRef : undefined}
+              className="font-bold w-[8ch]"
+              ref={resultShowingLive ? param.ref : undefined}
             >
-              0
+              {param.value.toFixed(2)}
             </p>
-            <p>s</p>
+            <p>{param.unit}</p>
           </div>
         </div>
-      )}
-      {/* results done */}
+      ))}
     </div>
   );
 };

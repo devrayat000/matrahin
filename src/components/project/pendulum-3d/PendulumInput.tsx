@@ -1,8 +1,9 @@
 import { useAtom } from "jotai";
-import { RotateCcw } from "lucide-react";
+import { MinusSquare, PlusSquare, RotateCcw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Button } from "~/components/ui/button";
 import InputWithSlider from "~/components/ui/input-with-slider";
+import { Slider } from "~/components/ui/slider";
 import Pendulum from "./Pendulum";
 import { INITIAL_VALUES, inputOptions, pendulumStore } from "./store";
 
@@ -59,13 +60,13 @@ const PendulumInputs = ({
   };
 
   return (
-    <div className="w-full lg:w-5/6 flex-col  rounded-lg   items-center border-gray-950">
+    <div className="w-full  flex-col  rounded-lg   items-center border-gray-950">
       {/* <div className="w-full lg:w-5/6 mx-auto self-start"> */}
 
       {/* <div className="flex flex-row md:flex-col gap-2 items-center justify-center w-full mx-auto"> */}
       {inputOptions &&
         inputOptions.map((option, index) => (
-          <div className="w-64 mb-2 mx-auto" key={index}>
+          <div className="w-72 mb-2 mx-auto" key={index}>
             <InputWithSlider
               label={option.label}
               value={values[option.valueText]}
@@ -79,7 +80,7 @@ const PendulumInputs = ({
         ))}
 
       {/* <div className="flex flex-row w-64 justify-between flex-wrap items-center gap-1 m-3 font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454] p-3 px-4"> */}
-      <div className="w-64  mx-auto mb-2 ">
+      <div className="w-72  mx-auto mb-2 ">
         <div className="flex flex-row justify-between flex-wrap items-center gap-1 m-1 font-mono rounded-xl  text-white  shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-[#2f4454] p-3 px-4">
           {/* <div className="text-xs mt-1 self-start text-gray-500">
           Gravity {"("}where the experiment is being conducted{")"}
@@ -98,6 +99,38 @@ const PendulumInputs = ({
               disabled={!customGravitySelected}
               onChange={(e) => handleChangeInput(4, e.target.value)}
             />
+          </div>
+          <div
+            style={{
+              display: customGravitySelected ? "flex" : "none",
+            }}
+            className="mb-2 flex flex-row justify-between  w-full  gap-2 mt-1 items-center"
+          >
+            <button
+              name="-1"
+              disabled={gravity <= 0.1}
+              className="disabled:opacity-50"
+              onClick={() => handleChangeInput(4, (gravity - 1).toString())}
+            >
+              <MinusSquare />
+            </button>
+            <Slider
+              min={0.1}
+              max={100}
+              step={1}
+              value={[gravity]}
+              onValueChange={([val]) => handleChangeInput(4, val.toString())}
+              className="mt-2"
+            />
+
+            <button
+              name="+1"
+              disabled={gravity >= 100}
+              className="disabled:opacity-50"
+              onClick={() => handleChangeInput(4, (gravity + 1).toString())}
+            >
+              <PlusSquare />
+            </button>
           </div>
 
           <select
