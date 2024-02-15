@@ -54,22 +54,29 @@ export default function ExamplePage({
                       alt="Question"
                     />
                   </AccordionTrigger>
-                  <AccordionContent className="flex gap-1 items-start">
-                    {example.answers.map((answer) => {
-                      return (
-                        <article
-                          key={answer.src}
-                          className="p-1 bg-slate-300 w-fit"
-                        >
-                          <Image
-                            src={answer.src}
-                            width={320 * 2}
-                            height={480 * 2}
-                            alt="Question"
-                          />
-                        </article>
-                      );
-                    })}
+                  <AccordionContent>
+                    <div className="flex gap-1 items-start">
+                      {example.answers.map((answer) => {
+                        return (
+                          <article
+                            key={answer.src}
+                            className="p-1 bg-slate-300 w-fit"
+                          >
+                            <Image
+                              src={answer.src}
+                              width={320 * 2}
+                              height={480 * 2}
+                              alt="Question"
+                            />
+                          </article>
+                        );
+                      })}
+                    </div>
+                    {!!example.source && (
+                      <p className="mt-2 text-slate-500 italic font-medium">
+                        {example.source}
+                      </p>
+                    )}
                   </AccordionContent>
                 </AccordionItem>
               );
