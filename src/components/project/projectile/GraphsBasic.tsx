@@ -76,6 +76,7 @@ const GraphsBasic = () => {
       {graph.map((g, i) => (
         <div key={i} className="md:w-1/2">
           <Chart
+            loader={<div>Loading Graphs...</div>}
             chartType="LineChart"
             // width="1000"
             height={500}

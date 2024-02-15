@@ -122,7 +122,7 @@ const FormulaAndProcedures = () => {
   };
 
   return (
-    <MathJax>
+    <>
       <p className="text-center text-3xl pt-3">Formula & Procedures</p>
       <hr className="my-2 w-5/6" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 flex-wrap gap-3 font-bold ">
@@ -130,7 +130,7 @@ const FormulaAndProcedures = () => {
         <AtMinHeight />
         <AtInBetween />
       </div>
-    </MathJax>
+    </>
   );
 };
 
