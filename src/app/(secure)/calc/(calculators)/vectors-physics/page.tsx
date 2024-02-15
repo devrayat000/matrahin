@@ -1,11 +1,16 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import BasicVectorCalcultor from "./comonents/basic";
-import AdvancedVectorCalculator from "./comonents/advanced";
+
+const BasicVectorCalcultor = dynamic(() => import("./comonents/basic"), {
+  ssr: false,
+});
+// import BasicVectorCalcultor from "./comonents/basic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import Spinner from "~/components/common/Spinner";
+import AdvancedVectorCalculator from "./comonents/advanced";
 
 function VectorTabs() {
   const router = useRouter();
