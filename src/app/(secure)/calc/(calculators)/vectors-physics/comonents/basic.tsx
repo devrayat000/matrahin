@@ -1,6 +1,6 @@
 "use client";
 
-import { Html } from "@react-three/drei";
+import { Html, Line } from "@react-three/drei";
 import { MathJax } from "better-react-mathjax";
 import { MinusCircle, PlusCircle } from "lucide-react";
 import { Fragment, useMemo, useState } from "react";
@@ -29,6 +29,37 @@ const colors = [
   "#ff00ff",
   "#ff0080",
 ];
+
+const createSingleArrow = (
+  label: string,
+  vector: THREE.Vector3,
+  visible: boolean
+) => {
+  return (
+    <group>
+      <arrowHelper
+        args={[
+          vector.clone().normalize(),
+          new THREE.Vector3(0, 0, 0),
+          vector.length(),
+          colors[0],
+        ]}
+      />
+      <Html visible={visible} position={vector.toArray()}>
+        <p
+          style={{
+            maxWidth: "50px",
+            color: colors[0],
+            fontSize: "16px",
+            display: visible ? "block" : "none",
+          }}
+        >
+          {label}
+        </p>
+      </Html>
+    </group>
+  );
+};
 const createArrow = (vectors: { label: string; vector: THREE.Vector3 }[]) => {
   return (
     <group>
@@ -258,7 +289,7 @@ const BasicVectorCalcultor = () => {
         {`
           $
             \\begin{align}
-            \\overrightarrow{A}+\\overrightarrow{B}
+            \\overrightarrow{A}-\\overrightarrow{B}
             &=
             ( ${formatVector(valueA.x, valueA.y, valueA.z)} )  
             
@@ -309,7 +340,7 @@ const BasicVectorCalcultor = () => {
         {`
           $
             \\begin{align}
-            \\overrightarrow{A}+\\overrightarrow{B}
+            \\overrightarrow{A}\\cdot \\overrightarrow{B}
             &=
             ( ${formatVector(valueA.x, valueA.y, valueA.z)} )  
             
@@ -367,7 +398,7 @@ const BasicVectorCalcultor = () => {
         {`
           $
             \\begin{align}
-            \\overrightarrow{A}+\\overrightarrow{B}
+            \\overrightarrow{A}\\times \\overrightarrow{B}
             &=
             ( ${formatVector(valueA.x, valueA.y, valueA.z)} )  
             
@@ -601,6 +632,45 @@ const BasicVectorCalcultor = () => {
     ),
     [valueA, valueB]
   );
+
+  const angleBetween = useMemo(
+    () => (
+      <div>
+        <b>A</b> এবং <b>B</b> ভেক্টরের মধ্যে কোণ θ হলে,
+        <MathJax>
+          {`
+          $
+          \\begin{align}
+          \\cos\\theta &= \\frac{\\overrightarrow{A}\\cdot \\overrightarrow{B}}{|\\overrightarrow{A}|\\cdot|\\overrightarrow{B}|} \\\\
+          &= \\frac{${dotMult.toFixed(precision)}}{${lengthOfVector(
+            valueA
+          ).toFixed(precision)}\\times${lengthOfVector(valueB).toFixed(
+            precision
+          )}} \\\\
+          &= ${Math.cos(
+            dotMult / (lengthOfVector(valueA) * lengthOfVector(valueB))
+          ).toFixed(precision)}\\\\
+
+          \\theta &= \\cos^{-1}(${Math.cos(
+            dotMult / (lengthOfVector(valueA) * lengthOfVector(valueB))
+          ).toFixed(precision)}) \\\\
+          \\theta &\\approx ${(
+            Math.acos(
+              dotMult / (lengthOfVector(valueA) * lengthOfVector(valueB))
+            ) *
+            (180 / Math.PI)
+          ).toFixed(precision)}^\\circ
+
+            
+          \\end{align}
+          $ 
+          `}
+        </MathJax>
+      </div>
+    ),
+    [valueA, valueB]
+  );
+
   const processes = useMemo(
     () => [
       [
@@ -608,6 +678,10 @@ const BasicVectorCalcultor = () => {
         { name: "Subtraction ( বিয়োগ )", value: SubtractionProcess },
         { name: "Dot Product ( ডট গুণন )", value: DotMultProcess },
         { name: "Cross Product ( ক্রস গুণন )", value: CrossMultProcess },
+        {
+          name: "Angle between vectors (ভেক্টরের মধ্যবর্তী কোণ)",
+          value: angleBetween,
+        },
       ],
       [
         {
@@ -626,6 +700,16 @@ const BasicVectorCalcultor = () => {
       ],
     ],
     [valueA, valueB]
+  );
+
+  const ComponentAOnBVector = useMemo(
+    () => A.clone().projectOnVector(B),
+    [A, B]
+  );
+
+  const ComponentBOnAVector = useMemo(
+    () => B.clone().projectOnVector(A),
+    [A, B]
   );
   return (
     <div className="mb-3 flex flex-col ">
@@ -654,6 +738,48 @@ const BasicVectorCalcultor = () => {
                 <Parallelogram vector1={A} vector2={B} />
               </group>
             </group>
+
+            <group visible={controls.showAonB}>
+              {createSingleArrow(
+                "A_on_B",
+                ComponentAOnBVector,
+                controls.showAonB
+              )}
+
+              <Line
+                dashOffset={10}
+                dashScale={10}
+                dashSize={1}
+                dashed={true}
+                points={[A, ComponentAOnBVector, v.clone().set(0, 0, 0)]}
+              />
+            </group>
+            <group visible={controls.showBonA}>
+              {createSingleArrow(
+                "B_on_A",
+                ComponentBOnAVector,
+                controls.showBonA
+              )}
+              <Line
+                dashOffset={10}
+                dashScale={10}
+                dashSize={1}
+                dashed={true}
+                points={[B, ComponentBOnAVector, v.clone().set(0, 0, 0)]}
+              />
+            </group>
+
+            {/* <mesh>
+              <circleGeometry
+                args={[
+                  1,
+                  64,
+                  A.angleTo(v.clone().set(0, 0, 0)),
+                  B.angleTo(v.clone().set(0, 0, 0)),
+                ]}
+              />
+              <meshBasicMaterial color={0x00ff00} />
+            </mesh> */}
           </ReactFiberBasic>
         </div>
 

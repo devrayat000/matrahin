@@ -3,7 +3,7 @@ const Checkbox = ({ label, checked, onChange }) => {
     <label className="flex items-center  cursor-pointer">
       <input
         type="checkbox"
-        className="form-checkbox h-5 w-5 text-blue-600"
+        className="form-checkbox h-5 w-5 text-blue-600 cursor-pointer"
         checked={checked}
         onChange={onChange}
       />
