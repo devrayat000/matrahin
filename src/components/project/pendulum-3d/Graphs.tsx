@@ -128,7 +128,7 @@ const Graphs = () => {
         formula: (
           <MathJax>
             {` 
-            $
+            $$
               \\begin{align*} 
                 a &= g \\cdot sin(\\theta) \\\\
                 y &= A \\cdot sin(\\theta) \\text{    (Sine)} \\\\
@@ -142,7 +142,7 @@ const Graphs = () => {
             \\text{For } a_{min}&\\space ,\\space \\theta = 0^\\circ \\\\
             a_{min} &= gsin0^\\circ = 0 ms^{-2}
               \\end{align*}    
-            $
+            $$
           `}
           </MathJax>
         ),
@@ -168,7 +168,7 @@ const Graphs = () => {
         formula: (
           <MathJax>
             {` 
-            $
+            $$
               \\begin{align*} 
                 v &= \\sqrt{2gl (  cos\\theta -cos\\alpha )} \\\\
                 \\text{where } l &= ${length} m ,\\space g = ${gravity} ms^{-2} \\text{ and } \\alpha = ${angle}^\\circ \\\\
@@ -182,7 +182,7 @@ const Graphs = () => {
                 \\text{For } v_{min} &\\space ,\\space cos\\theta = cos \\alpha \\implies \\theta = \\alpha= ${angle}  \\\\
                 v_{min} &= \\sqrt{2gl(cos${angle}^\\circ - cos${angle}^\\circ)} = 0 ms^{-1}
               \\end{align*}    
-            $ 
+            $$
           `}
           </MathJax>
         ),
@@ -206,7 +206,7 @@ const Graphs = () => {
         formula: (
           <MathJax>
             {` 
-            $
+            $$
               \\begin{align*} 
                 E_p &= mgh = mgl(1 - cos\\theta) \\\\
                 y &=  mgl( 1 - cos\\theta) \\\\
@@ -225,7 +225,7 @@ const Graphs = () => {
                 \\text{For } E_{p_{min}}&\\space ,\\space \\theta = 0^\\circ \\\\
                 E_{p_{min}} &= mgl(1 - cos0^\\circ) = 0 J
                \\end{align*}    
-            $
+            $$
           `}
           </MathJax>
         ),
@@ -250,7 +250,7 @@ const Graphs = () => {
         formula: (
           <MathJax>
             {` 
-            $
+            $$
               \\begin{align*} 
                 E_k &= \\frac{1}{2}mv^2 = mgl(cos\\theta - cos\\alpha) \\\\
                 E_k&= mgl(cos\\theta - cos${angle}^\\circ) \\\\
@@ -268,7 +268,7 @@ const Graphs = () => {
                 \\text{For } E_{k_{min}}&\\space ,\\space \\theta =\\theta_{max} = \\alpha = ${angle}^\\circ \\\\
                 E_{k_{min}} &= mgl(cos${angle}^\\circ - cos${angle}^\\circ) = 0 J
                \\end{align*}    
-            $
+            $$
           `}
           </MathJax>
         ),
@@ -297,7 +297,7 @@ const Graphs = () => {
         formula: (
           <MathJax>
             {` 
-            $
+            $$
               \\begin{align*} 
                 E &= E_p + E_k \\\\
                 E &= mgl(1 - cos\\theta) + mgl(cos\\theta - cos\\alpha) \\\\
@@ -311,7 +311,7 @@ const Graphs = () => {
                   (1 - Math.cos((angle * Math.PI) / 180))
                 ).toFixed(2)} J
                \\end{align*}    
-            $
+            $$
           `}
           </MathJax>
         ),
