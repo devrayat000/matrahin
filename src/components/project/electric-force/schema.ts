@@ -11,4 +11,4 @@ export const electricForceSchema = [
     name: "f_neut",
     label: "Neutral point of a charge",
   },
-];
+] as const;
