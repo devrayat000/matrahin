@@ -702,6 +702,23 @@ const BasicVectorCalcultor = () => {
     [valueA, valueB]
   );
 
+  const AandBVectors = useMemo(
+    () => (
+      <MathJax>
+        {`
+          $
+          \\begin{align}
+          \\overrightarrow{A}
+          &= ${formatVector(valueA.x, valueA.y, valueA.z)} \\\\
+          \\overrightarrow{B}
+          &= ${formatVector(valueB.x, valueB.y, valueB.z)}
+          \\end{align}
+          $
+        `}
+      </MathJax>
+    ),
+    [valueA, valueB]
+  );
   const ComponentAOnBVector = useMemo(
     () => A.clone().projectOnVector(B),
     [A, B]
@@ -768,18 +785,6 @@ const BasicVectorCalcultor = () => {
                 points={[B, ComponentBOnAVector, v.clone().set(0, 0, 0)]}
               />
             </group>
-
-            {/* <mesh>
-              <circleGeometry
-                args={[
-                  1,
-                  64,
-                  A.angleTo(v.clone().set(0, 0, 0)),
-                  B.angleTo(v.clone().set(0, 0, 0)),
-                ]}
-              />
-              <meshBasicMaterial color={0x00ff00} />
-            </mesh> */}
           </ReactFiberBasic>
         </div>
 
@@ -909,19 +914,8 @@ const BasicVectorCalcultor = () => {
             </div>
           </div>
 
-          <div className="mt-2 text-lg">
-            <MathJax>
-              {`
-               $
-                \\begin{align}
-                \\overrightarrow{A}
-                    &= ${formatVector(valueA.x, valueA.y, valueA.z)} \\\\
-                \\overrightarrow{B}
-                    &= ${formatVector(valueB.x, valueB.y, valueB.z)}
-                \\end{align}
-                $
-              `}
-            </MathJax>
+          <div className="mt-2">
+            <div>{AandBVectors}</div>
           </div>
         </div>
       </div>
