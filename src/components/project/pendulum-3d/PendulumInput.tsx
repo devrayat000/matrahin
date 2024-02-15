@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { MinusSquare, PlusSquare, RotateCcw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Button } from "~/components/ui/button";
@@ -13,6 +13,7 @@ const PendulumInputs = ({
   pendulumRef: React.RefObject<Pendulum>;
 }) => {
   const [length, setLength] = useAtom(pendulumStore.lengthAtom);
+  const setSubmittedInputs = useSetAtom(pendulumStore.submittedInputsAtom);
   const [mass, setMass] = useAtom(pendulumStore.massAtom);
   const [gravity, setGravity] = useAtom(pendulumStore.gravityAtom);
   const [angle, setAngle] = useAtom(pendulumStore.angleAtom);
@@ -177,6 +178,15 @@ const PendulumInputs = ({
               INITIAL_VALUES.gravity
             );
             setIsPlaying(false);
+
+            setCustomGravitySelected(false);
+
+            setSubmittedInputs({
+              angle: Math.abs(INITIAL_VALUES.angle),
+              length: INITIAL_VALUES.length,
+              mass: INITIAL_VALUES.mass,
+              gravity: INITIAL_VALUES.gravity,
+            });
           }}
         >
           <RotateCcw size={25} />
@@ -186,6 +196,12 @@ const PendulumInputs = ({
           onClick={() => {
             calculateResults(angle, length, mass, gravity);
             setIsPlaying(true);
+            setSubmittedInputs({
+              angle: Math.abs(angle),
+              length,
+              mass,
+              gravity,
+            });
           }}
           className="w-[100px] hover:scale-125 transition-transform duration-300 transform hover:shadow-2xl "
         >

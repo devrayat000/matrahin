@@ -14,6 +14,13 @@ const angleAtom = atom(INITIAL_VALUES.angle);
 const isPlayingAtom = atom(true);
 const resultShowingLiveAtom = atom(true);
 
+const submittedInputsAtom = atom({
+  angle: INITIAL_VALUES.angle,
+  length: INITIAL_VALUES.length,
+  mass: INITIAL_VALUES.mass,
+  gravity: INITIAL_VALUES.gravity,
+});
+
 export const pendulumStore = {
   lengthAtom,
   massAtom,
@@ -21,6 +28,7 @@ export const pendulumStore = {
   angleAtom,
   isPlayingAtom,
   resultShowingLiveAtom,
+  submittedInputsAtom,
 };
 
 export const inputOptions: {

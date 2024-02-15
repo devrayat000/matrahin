@@ -1,6 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
+// import Graphs from "~/components/project/pendulum-3d/Graphs";
 // import FormulaAndProcedures from "~/components/project/pendulum-3d/FormulaAndProcedures";
 
 import Pendulum from "~/components/project/pendulum-3d/Pendulum";
@@ -19,6 +20,13 @@ const FormulaAndProcedures = dynamic(
 
 const TimePeriodCalcProcedure = dynamic(
   () => import("~/components/project/pendulum-3d/TimePeriodCalcProcedure"),
+  {
+    ssr: false,
+  }
+);
+
+const Graphs = dynamic(
+  () => import("~/components/project/pendulum-3d/Graphs"),
   {
     ssr: false,
   }
@@ -61,6 +69,9 @@ export default function PendulumAnimationPage() {
       {/* Formula and procedures */}
       <center>
         <FormulaAndProcedures />
+      </center>
+      <center>
+        <Graphs />
       </center>
       <center>
         <TimePeriodCalcProcedure />
