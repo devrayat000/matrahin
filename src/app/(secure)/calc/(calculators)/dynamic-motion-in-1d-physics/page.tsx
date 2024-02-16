@@ -32,6 +32,9 @@ export default function DynamicsPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center gap-4">
+      <h1 className="text-center text-4xl py-3 mt-3 text-primary font-bold leading-8 text-gray-900 ">
+        Dynamics in 1D
+      </h1>
       <form className="w-5/6 lg:w-[32rem] p-2 lg:p-5 rounded-lg border-slate-200 border flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <Label htmlFor="displacement" className="flex-2">
