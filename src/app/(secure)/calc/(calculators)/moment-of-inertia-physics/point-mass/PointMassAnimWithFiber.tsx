@@ -18,13 +18,17 @@ const PointMass = () => {
   });
   return (
     <group ref={ref}>
-      <mesh position={[radius, 1, 0]}>
-        <sphereGeometry attach={"geometry"} args={[0.05]} />
+      <mesh position={[radius, 0.5, 0]}>
+        <sphereGeometry attach={"geometry"} args={[0.1]} />
         <meshPhongMaterial {...solidMaterial} />
       </mesh>
 
       <arrowHelper
-        args={[new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), radius]}
+        args={[
+          new THREE.Vector3(1, 0, 0),
+          new THREE.Vector3(0, 0.5, 0),
+          radius,
+        ]}
       />
     </group>
   );
@@ -32,7 +36,7 @@ const PointMass = () => {
 
 const Scene = () => {
   return (
-    <div className="h-[30vh] w-[40vh] md:w-[70vh] md:h-[70vh]">
+    <div className="h-[30vh] w-[40vh] md:w-[70vh] md:h-[70vh] md:self-start">
       <ReactFiberBasic>
         <PointMass />
       </ReactFiberBasic>

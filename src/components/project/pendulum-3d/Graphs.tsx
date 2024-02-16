@@ -326,7 +326,7 @@ const Graphs = () => {
               rootProps={{ "data-testid": "1" }}
             />
 
-            <span className="">
+            <span className="text-lg">
               <MathJax
                 dynamic={true}
                 renderMode="pre"

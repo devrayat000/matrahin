@@ -49,6 +49,9 @@ export default function ProjectilePage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center gap-4 mb-4">
+      <h1 className="text-center text-4xl py-3 mt-3 text-primary font-bold leading-8 text-gray-900 ">
+        Projectile Motion
+      </h1>
       <form
         className="w-5/6 lg:w-[32rem] p-2 lg:p-5 rounded-lg border-slate-200 border"
         onSubmit={onSubmit}

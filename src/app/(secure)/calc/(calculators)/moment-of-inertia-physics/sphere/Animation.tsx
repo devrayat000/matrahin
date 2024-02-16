@@ -44,7 +44,7 @@ const SphereComponent = () => {
     phiLength?: number,
     thetaStart?: number,
     thetaLength?: number
-  ] = [radius, 32, 16, 0, Math.PI * 2, 0, Math.PI];
+  ] = [radius, 64, 32, 0, Math.PI * 2, 0, Math.PI];
   const modifiedSphereArgs: [
     radius?: number,
     widthSegments?: number,
@@ -85,7 +85,10 @@ const SphereComponent = () => {
       >
         <mesh>
           <sphereGeometry args={sphereArgs} />
-          <meshBasicMaterial {...solidMaterial} />
+          <meshBasicMaterial
+            {...solidMaterial}
+            wireframe={caseType === CaseOfInertia.Thin}
+          />
         </mesh>
         <lineSegments
           geometry={
@@ -145,7 +148,7 @@ const Animation = () => {
   const [sliced, setSliced] = useAtom(sliceAtom);
   const caseType = useAtomValue(caseTypeAtom);
   return (
-    <div className="h-[30vh] w-[40vh] md:w-[70vh] md:h-[70vh]">
+    <div className="h-[30vh] w-[40vh] md:w-[70vh] md:h-[70vh] md:self-start">
       {/* add slicing control here */}
 
       {caseType === CaseOfInertia.Hollow && (

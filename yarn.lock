@@ -4503,6 +4503,7 @@ __metadata:
     jotai: "npm:^2.5.1"
     jotai-effect: "npm:^0.2.3"
     lucide-react: "npm:^0.290.0"
+    maath: "npm:^0.10.7"
     next: "npm:^14.1.0"
     next-auth: "npm:^4.24.5"
     postcss: "npm:^8.4.31"

@@ -138,9 +138,9 @@ const constants: momentOfInertiaSchema = [
         title: "Rectangular Plate",
         shape: ShapesOfInertia.Plate,
         axes: [
-          "the perpendicular central axis",
-          "a symmetry axis in the plate plane",
-          "axis at the end of the plate",
+          "The perpendicular central axis",
+          "A symmetry axis in the plate plane",
+          "Axis at the end of the plate",
         ],
         case: CaseOfInertia.None,
         description: [

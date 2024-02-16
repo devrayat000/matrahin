@@ -95,6 +95,7 @@ const MotionGraphs1D = () => {
             chartType="LineChart"
             height={500}
             data={g.data}
+            loader={<div>Loading Graphs...</div>}
             options={{
               ...options,
               title: g.title,
