@@ -53,7 +53,7 @@ const Cube = ({
   });
   return (
     <mesh ref={ref} castShadow receiveShadow {...events} {...props}>
-      <sphereGeometry args={[0.5]} />
+      <sphereGeometry args={[0.25]} />
       <meshStandardMaterial />
     </mesh>
   );
@@ -76,7 +76,7 @@ export default function App() {
 
   return (
     <div className="w-[100%] h-[100vh]">
-      <Canvas shadows orthographic camera={{ position: [5, 5, 5], zoom: 50 }}>
+      <Canvas shadows orthographic camera={{ position: [0, 5, 0], zoom: 50 }}>
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, -5]} castShadow shadow-mapSize={1024} />
         <Grid scale={10}>
@@ -84,7 +84,7 @@ export default function App() {
           <Cube position={[2, 0.5, 1]} c={new Color(0x0000ff)} />
           <Cube position={[-2, 0.5, 1]} c={new Color(0x00ff00)} />
         </Grid>
-        <OrbitControls makeDefault />
+        <OrbitControls makeDefault enableRotate={false} enablePan={false} />
         {/* <axesHelper args={[5]} /> */}
       </Canvas>
     </div>

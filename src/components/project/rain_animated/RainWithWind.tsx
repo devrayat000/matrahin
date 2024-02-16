@@ -27,11 +27,11 @@ const RainWithWind = () => {
         Initialize variables:
         <MathJax>
           {`
-        $\\begin{gather}
-        Velocity\\space of\\space  Rain, \\overrightarrow{V}_{r} = -${v_rain}\\hat{j}\\space unit \\\\
-        Velocity\\space of\\space  Object, \\overrightarrow{V}_{o} = ${v_object}\\hat{i}\\space unit \\\\
-        Velocity\\space of\\space  Wind, \\overrightarrow{V}_{w} = ${v_wind}\\hat{i}\\space unit \\\\
-        \\end{gather}$
+        $\\begin{align*}
+       \\text{ Velocity of Rain, }\\overrightarrow{V}_{r} &= -${v_rain}\\hat{j}\\space unit \\\\
+        \\text{Velocity of Object, }\\overrightarrow{V}_{o} &= ${v_object}\\hat{i}\\space unit \\\\
+        \\text{Velocity of Wind, }\\overrightarrow{V}_{w} &= ${v_wind}\\hat{i}\\space unit \\\\
+        \\end{align*}$
       `}
         </MathJax>
       </p>
