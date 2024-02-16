@@ -2,27 +2,32 @@
 
 import { useFrame } from "@react-three/fiber";
 import { atom, useAtom, useAtomValue } from "jotai";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import ReactFiberBasic from "~/components/common/ReactFiberBasic";
+import { moiDifferentAxesInputsAtom } from "~/components/project/moment_of_inertia/store";
 import Chip from "~/components/ui/chip";
 import { solidMaterial } from "../store";
-import { moiDifferentAxesInputsAtom } from "~/components/project/moment_of_inertia/store";
 
 const axisAtom = atom<"x" | "y" | "e">("y");
 const Rod = () => {
   const ref = useRef<THREE.Group<THREE.Object3DEventMap>>();
   const meshRef = useRef<THREE.Mesh<THREE.BufferGeometry>>();
-  const axis = useAtomValue(axisAtom);
+  const [axis, setAxis] = useAtom(axisAtom);
 
   // to update animation with inputs;
 
   const { length } = useAtomValue(moiDifferentAxesInputsAtom);
+
+  useEffect(() => {
+    setAxis("y");
+  }, [length]);
+
   const prevAxis = useRef(axis);
   useFrame(({ clock }) => {
     if (prevAxis.current !== axis) {
       ref.current.rotation.set(0, 0, 0);
-      if (axis === "e") meshRef.current.position.set(0, 0.5, 1.5);
+      if (axis === "e") meshRef.current.position.set(0, 0.5, length / 2);
       else meshRef.current.position.set(0, 0.5, 0);
       prevAxis.current = axis;
     } else {
@@ -63,7 +68,7 @@ const AxisControl = () => {
 };
 const Scene = () => {
   return (
-    <div className="h-[30vh] w-[40vh] md:w-[70vh] md:h-[70vh]">
+    <div className="h-[30vh] w-[40vh] md:w-[70vh] md:h-[70vh] md:self-start">
       <AxisControl />
       <ReactFiberBasic>
         <Rod />

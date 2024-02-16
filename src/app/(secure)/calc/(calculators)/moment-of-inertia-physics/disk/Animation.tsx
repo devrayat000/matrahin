@@ -105,7 +105,7 @@ const AxisControl = () => {
 
 const Animation = () => {
   return (
-    <div className="h-[30vh] w-[40vh] md:w-[70vh] md:h-[70vh]">
+    <div className="h-[30vh] w-[40vh] md:w-[70vh] md:h-[70vh] md:self-start">
       <AxisControl />
       <ReactFiberBasic>
         <DiskComponent />

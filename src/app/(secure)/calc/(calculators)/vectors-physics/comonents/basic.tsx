@@ -383,7 +383,11 @@ const BasicVectorCalcultor = () => {
             ${formatNumberSign(valueA.z * valueB.z)}  \\\\
             \\\\
             &= 
-            ${valueA.x * valueB.x + valueA.y * valueB.y + valueA.z * valueB.z}
+            ${(
+              valueA.x * valueB.x +
+              valueA.y * valueB.y +
+              valueA.z * valueB.z
+            ).toFixed(2)}
             
             \\end{align}
           $
@@ -608,8 +612,8 @@ const BasicVectorCalcultor = () => {
         {`
       $$
       \\begin{align}
-      \\hat{\\eta} &= \\frac{\\overrightarrow{A} \\times \\overrightarrow{B}}{|\\overrightarrow{A} \\times \\overrightarrow{B}|} \\\\
-      &= \\frac{${formatVector(cross.x, cross.y, cross.z)}}
+      \\hat{\\eta} &=\\pm \\frac{\\overrightarrow{A} \\times \\overrightarrow{B}}{|\\overrightarrow{A} \\times \\overrightarrow{B}|} \\\\
+      &=\\pm \\frac{${formatVector(cross.x, cross.y, cross.z)}}
       {
         \\sqrt{ 
           (${cross.x.toFixed(precision)})^2 + 
@@ -617,14 +621,16 @@ const BasicVectorCalcultor = () => {
           (${cross.z.toFixed(precision)})^2
         }
       } \\\\
-      &= \\frac{${formatVector(cross.x, cross.y, cross.z)}}{${lengthOfVector(
-          cross
-        ).toFixed(precision)}} \\\\
-      &= ${formatVector(
+      &=\\pm \\frac{${formatVector(
+        cross.x,
+        cross.y,
+        cross.z
+      )}}{${lengthOfVector(cross).toFixed(precision)}} \\\\
+      &=\\pm( ${formatVector(
         cross.x / lengthOfVector(cross),
         cross.y / lengthOfVector(cross),
         cross.z / lengthOfVector(cross)
-      )}
+      )})
       \\end{align}
       $$
       `}

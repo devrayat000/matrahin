@@ -2,7 +2,7 @@
 
 import { useFrame } from "@react-three/fiber";
 import { atom, useAtom, useAtomValue } from "jotai";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import ReactFiberBasic from "~/components/common/ReactFiberBasic";
 import { moiDifferentAxesInputsAtom } from "~/components/project/moment_of_inertia/store";
@@ -14,19 +14,25 @@ const Plate = () => {
   const ref = useRef<THREE.Group<THREE.Object3DEventMap>>();
   const meshRef = useRef<THREE.Mesh<THREE.BufferGeometry>>();
   const lineRef = useRef<THREE.LineSegments<THREE.BufferGeometry>>();
-  const axis = useAtomValue(axisAtom);
+  const [axis, setAxis] = useAtom(axisAtom);
 
   const inputs = useAtomValue(moiDifferentAxesInputsAtom);
 
   const { height, width, depth } = inputs;
+
+  useEffect(() => {
+    setAxis("y");
+  }, [height, width]);
 
   const prevAxis = useRef(axis);
   useFrame(({ clock }) => {
     if (prevAxis.current !== axis) {
       ref.current.rotation.set(0, 0, 0);
       if (axis === "e") {
-        meshRef.current.position.set(1, 0, 0);
-        lineRef.current.position.set(1, 0, 0);
+        meshRef.current.position.set(0, 0, 0);
+        lineRef.current.position.set(0, 0, 0);
+        meshRef.current.position.set(width / 2, 0, 0);
+        lineRef.current.position.set(width / 2, 0, 0);
       } else {
         meshRef.current.position.set(0, 0, 0);
         lineRef.current.position.set(0, 0, 0);
@@ -55,6 +61,7 @@ const Plate = () => {
       >
         <lineBasicMaterial {...wireframeMaterial} />
       </lineSegments>
+      {/* <gridHelper args={[width, 10]} /> */}
     </group>
   );
 };
@@ -87,7 +94,7 @@ const AxisControl = () => {
 
 const Scene = () => {
   return (
-    <div className="h-[30vh] w-[40vh] md:w-[70vh] md:h-[70vh]">
+    <div className="h-[30vh] w-[40vh] md:w-[70vh] md:h-[70vh] md:self-start">
       <AxisControl />
       <ReactFiberBasic>
         <Plate />

@@ -27,7 +27,6 @@ const Moment_of_inertia = () => {
               image={option.image}
               imageAlt={option.title}
               name={option.title}
-              path={option.path}
             />
           </Link>
         ))}

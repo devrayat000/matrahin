@@ -19,7 +19,7 @@ const PointMass = () => {
   return (
     <group ref={ref}>
       <mesh position={[distance, 1, 0]}>
-        <sphereGeometry attach={"geometry"} args={[0.05]} />
+        <sphereGeometry attach={"geometry"} args={[0.1]} />
         <meshPhongMaterial
           attach={"material"}
           color={new THREE.Color(0x069fec)}
@@ -29,7 +29,7 @@ const PointMass = () => {
         />
       </mesh>
       <mesh position={[-distance, 1, 0]}>
-        <sphereGeometry attach={"geometry"} args={[0.05]} />
+        <sphereGeometry attach={"geometry"} args={[0.1]} />
         <meshPhongMaterial
           attach={"material"}
           color={new THREE.Color(0x069fec)}
@@ -51,7 +51,7 @@ const PointMass = () => {
 
 const Scene = () => {
   return (
-    <div className="h-[30vh] w-[40vh] md:w-[70vh] md:h-[70vh]">
+    <div className="h-[30vh] w-[40vh] md:w-[70vh] md:h-[70vh] md:self-start">
       <ReactFiberBasic>
         <PointMass />
       </ReactFiberBasic>
