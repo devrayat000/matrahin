@@ -48,14 +48,14 @@ const Graphs = () => {
         hAxisTitle: "Length (m)",
         vAxisTitle: "Time Period (s)",
         formula: ` 
-        $$
+        
         \\begin{align*}
          T &=2\\pi\\sqrt{\\frac{l}{g}} = \\frac{2\\pi}{\\sqrt{g}} \\cdot \\sqrt{l} \\\\
          y &= c \\cdot \\sqrt{x} \\implies y^2 = c^2 \\cdot x \\text{ (Parabola)}
          \\\\
          \\text{where c }&= \\frac{2\\pi}{\\sqrt{g}} \\text{ , g = ${gravity} } m/s^2
         \\end{align*}
-       $$ `,
+        `,
       },
       // T vs g
       {

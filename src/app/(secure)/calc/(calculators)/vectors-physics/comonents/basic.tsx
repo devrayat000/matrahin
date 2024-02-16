@@ -240,54 +240,61 @@ const BasicVectorCalcultor = () => {
 
   const AdditionProcess = useMemo(
     () => (
-      <MathJax>
-        {`
-      $
-        \\begin{align}
-        \\overrightarrow{A}+\\overrightarrow{B}
-        &=
-          (${formatVector(valueA.x, valueA.y, valueA.z)})  
-        ${newLineWithSpace(3)}
-        + 
-          (${formatVector(valueB.x, valueB.y, valueB.z)}) 
-          \\\\
-        &= 
-          (
-            ${valueA.x.toFixed(precision)} 
-              ${valueB.x > 0 ? "+" : ""}
-            ${formatNumberSign(valueB.x)}
-          )\\hat{i} + 
-
-          (
-            ${valueA.y.toFixed(precision)} 
-              ${valueB.y > 0 ? "+" : ""}
-            ${formatNumberSign(valueB.y)}
-          )\\hat{j} 
-            
-            ${newLineWithSpace(5)}
+      <MathJax
+        dynamic={true}
+        renderMode="pre"
+        text={`
+      
+          \\begin{align}
+            \\overrightarrow{A}+\\overrightarrow{B}
+            &=
+              (${formatVector(valueA.x, valueA.y, valueA.z)})  
+            ${newLineWithSpace(3)}
             + 
-            (
-              ${valueA.z.toFixed(precision)} 
-                ${valueB.z > 0 ? "+" : ""}
-              ${formatNumberSign(valueB.z)}
-            )\\hat{k}
-           \\\\
-           \\\\
-        &=
-        ${formatVector(add.x, add.y, add.z)} \\\\
-        \\end{align}
-      $
+              (${formatVector(valueB.x, valueB.y, valueB.z)}) 
+              \\\\
+            &= 
+              (
+                ${valueA.x.toFixed(precision)} 
+                  ${valueB.x > 0 ? "+" : ""}
+                ${formatNumberSign(valueB.x)}
+              )\\hat{i} + 
 
-    `}
-      </MathJax>
+              (
+                ${valueA.y.toFixed(precision)} 
+                  ${valueB.y > 0 ? "+" : ""}
+                ${formatNumberSign(valueB.y)}
+              )\\hat{j} 
+                
+                ${newLineWithSpace(5)}
+                + 
+                (
+                  ${valueA.z.toFixed(precision)} 
+                    ${valueB.z > 0 ? "+" : ""}
+                  ${formatNumberSign(valueB.z)}
+                )\\hat{k}
+              \\\\
+              \\\\
+            &=
+            ${formatVector(add.x, add.y, add.z)} \\\\
+          \\end{align}
+        `}
+        typesettingOptions={{
+          fn: "tex2chtml",
+        }}
+      />
     ),
     [valueA, valueB]
   );
   const SubtractionProcess = useMemo(
     () => (
-      <MathJax>
-        {`
-          $
+      <MathJax
+        dynamic={true}
+        renderMode="pre"
+        typesettingOptions={{
+          fn: "tex2chtml",
+        }}
+        text={`
             \\begin{align}
             \\overrightarrow{A}-\\overrightarrow{B}
             &=
@@ -328,17 +335,21 @@ const BasicVectorCalcultor = () => {
             &=
             ${formatVector(sub.x, sub.y, sub.z)} \\\\
             \\end{align}
-          $
         `}
-      </MathJax>
+      />
     ),
     [valueA, valueB]
   );
   const DotMultProcess = useMemo(
     () => (
-      <MathJax>
-        {`
-          $
+      <MathJax
+        dynamic={true}
+        renderMode="pre"
+        typesettingOptions={{
+          fn: "tex2chtml",
+        }}
+        text={`
+         
             \\begin{align}
             \\overrightarrow{A}\\cdot \\overrightarrow{B}
             &=
@@ -390,17 +401,22 @@ const BasicVectorCalcultor = () => {
             ).toFixed(2)}
             
             \\end{align}
-          $
+          
         `}
-      </MathJax>
+      />
     ),
     [valueA, valueB]
   );
   const CrossMultProcess = useMemo(
     () => (
-      <MathJax>
-        {`
-          $
+      <MathJax
+        dynamic={true}
+        renderMode="pre"
+        typesettingOptions={{
+          fn: "tex2chtml",
+        }}
+        text={`
+          
             \\begin{align}
             \\overrightarrow{A}\\times \\overrightarrow{B}
             &=
@@ -446,9 +462,9 @@ const BasicVectorCalcultor = () => {
             ${formatVector(cross.x, cross.y, cross.z)}
 
             \\end{align}
-          $
+          
         `}
-      </MathJax>
+      />
     ),
     [valueA, valueB]
   );
@@ -460,9 +476,14 @@ const BasicVectorCalcultor = () => {
         <p>
           <b>A</b> বরাবর <b>B</b> এর অভিক্ষেপঃ
         </p>
-        <MathJax>
-          {`
-          $
+        <MathJax
+          dynamic={true}
+          renderMode="pre"
+          typesettingOptions={{
+            fn: "tex2chtml",
+          }}
+          text={`
+          
           \\begin{align}
               |\\overrightarrow{B}|\\cos\\theta\\
             &=
@@ -491,16 +512,21 @@ const BasicVectorCalcultor = () => {
             = ${(dotMult / lengthOfVector(valueA)).toFixed(2)}
           
           \\end{align}
-          $
+          
           `}
-        </MathJax>
+        />
         <p className="mt-1">
           <b>A</b> বরাবর <b>B</b> এর উপাংশঃ
         </p>
 
-        <MathJax>
-          {`
-          $$
+        <MathJax
+          dynamic={true}
+          renderMode="pre"
+          typesettingOptions={{
+            fn: "tex2chtml",
+          }}
+          text={`
+         
           \\begin{align}
             |\\overrightarrow{B}| cos\\theta \\cdot \\hat{a}
 
@@ -523,9 +549,9 @@ const BasicVectorCalcultor = () => {
                 (dotMult / lengthOfVector(valueA) ** 2) * valueA.z
               )}
           \\end{align}
-          $$
+          
           `}
-        </MathJax>
+        />
       </div>
     ),
     [valueA, valueB]
@@ -536,9 +562,14 @@ const BasicVectorCalcultor = () => {
         <p>
           <b>B</b> বরাবর <b>A</b> এর অভিক্ষেপঃ
         </p>
-        <MathJax>
-          {`
-          $
+        <MathJax
+          dynamic={true}
+          renderMode="pre"
+          typesettingOptions={{
+            fn: "tex2chtml",
+          }}
+          text={`
+          
           \\begin{align}
               |\\overrightarrow{A}|\\cos\\theta\\
             &=
@@ -567,16 +598,21 @@ const BasicVectorCalcultor = () => {
             = ${(dotMult / lengthOfVector(valueB)).toFixed(precision)}
           
           \\end{align}
-          $
+          
           `}
-        </MathJax>
+        />
         <p className="mt-1">
           <b>B</b> বরাবর <b>A</b> এর উপাংশঃ
         </p>
 
-        <MathJax>
-          {`
-          $$
+        <MathJax
+          dynamic={true}
+          renderMode="pre"
+          typesettingOptions={{
+            fn: "tex2chtml",
+          }}
+          text={`
+          
           \\begin{align}
             |\\overrightarrow{A}| cos\\theta \\cdot \\hat{a}
 
@@ -599,18 +635,23 @@ const BasicVectorCalcultor = () => {
                 (dotMult / lengthOfVector(valueB) ** 2) * valueB.z
               )}
           \\end{align}
-          $$
+          
           `}
-        </MathJax>
+        />
       </div>
     ),
     [valueA, valueB]
   );
   const unitNormalVector = useMemo(
     () => (
-      <MathJax>
-        {`
-      $$
+      <MathJax
+        dynamic={true}
+        renderMode="pre"
+        typesettingOptions={{
+          fn: "tex2chtml",
+        }}
+        text={`
+     
       \\begin{align}
       \\hat{\\eta} &=\\pm \\frac{\\overrightarrow{A} \\times \\overrightarrow{B}}{|\\overrightarrow{A} \\times \\overrightarrow{B}|} \\\\
       &=\\pm \\frac{${formatVector(cross.x, cross.y, cross.z)}}
@@ -632,9 +673,9 @@ const BasicVectorCalcultor = () => {
         cross.z / lengthOfVector(cross)
       )})
       \\end{align}
-      $$
+      
       `}
-      </MathJax>
+      />
     ),
     [valueA, valueB]
   );
@@ -643,9 +684,14 @@ const BasicVectorCalcultor = () => {
     () => (
       <div>
         <b>A</b> এবং <b>B</b> ভেক্টরের মধ্যে কোণ θ হলে,
-        <MathJax>
-          {`
-          $
+        <MathJax
+          dynamic={true}
+          renderMode="pre"
+          typesettingOptions={{
+            fn: "tex2chtml",
+          }}
+          text={`
+          
           \\begin{align}
           \\cos\\theta &= \\frac{\\overrightarrow{A}\\cdot \\overrightarrow{B}}{|\\overrightarrow{A}|\\cdot|\\overrightarrow{B}|} \\\\
           &= \\frac{${dotMult.toFixed(precision)}}{${lengthOfVector(
@@ -669,9 +715,9 @@ const BasicVectorCalcultor = () => {
 
             
           \\end{align}
-          $ 
+          
           `}
-        </MathJax>
+        />
       </div>
     ),
     [valueA, valueB]
@@ -710,18 +756,23 @@ const BasicVectorCalcultor = () => {
 
   const AandBVectors = useMemo(
     () => (
-      <MathJax>
-        {`
-          $
+      <MathJax
+        dynamic={true}
+        renderMode="pre"
+        typesettingOptions={{
+          fn: "tex2chtml",
+        }}
+        text={`
+          
           \\begin{align}
           \\overrightarrow{A}
           &= ${formatVector(valueA.x, valueA.y, valueA.z)} \\\\
           \\overrightarrow{B}
           &= ${formatVector(valueB.x, valueB.y, valueB.z)}
           \\end{align}
-          $
+          
         `}
-      </MathJax>
+      />
     ),
     [valueA, valueB]
   );
