@@ -5,6 +5,7 @@ import type { Url } from "next/dist/shared/lib/router/router";
 
 import { buttonVariants } from "~/components/ui/button";
 import { getCalculators } from "~/services/graphql/calc";
+import { CardBody, CardContainer, CardItem } from "~/components/ui/3d-card";
 
 export default function HomePage() {
   const imageSize = {
@@ -55,12 +56,65 @@ interface ProjectCardProps {
 
 function ProjectCard(props: ProjectCardProps) {
   return (
+    <CardContainer className="inter-var">
+      <CardBody className="group/card border-black/[0.1] h-auto rounded-xl p-4 border">
+        <CardItem translateZ="100">
+          <Image
+            {...props.img}
+            width={420}
+            alt="projectile"
+            className="aspect-video object-fill rounded-xl group-hover/card:shadow-xl border-2 border-muted"
+          />
+        </CardItem>
+        <div className="mt-2 [transform-style:preserve-3d] [&>*]:[transform-style:preserve-3d]">
+          <CardItem
+            translateZ={70}
+            className="text-xl font-semibold text-center group-hover:underline"
+            asChild
+          >
+            <h6>{props.title}</h6>
+          </CardItem>
+          <div className="flex flex-col items-stretch gap-y-1 mt-3 [transform-style:preserve-3d] [&>*]:[transform-style:preserve-3d]">
+            <CardItem
+              asChild
+              className={buttonVariants({
+                size: "sm",
+                variant: "outline",
+                className: "w-full group-hover/card:shadow-sm transition",
+              })}
+              translateZ={35}
+              translateY={-4}
+              rotateZ={-2}
+            >
+              <Link href={`/calc/${props.to}`}>Calculator and Simulation</Link>
+            </CardItem>
+            <CardItem
+              asChild
+              className={buttonVariants({
+                size: "sm",
+                variant: "outline",
+                className: "w-full group-hover/card:shadow-sm  transition",
+              })}
+              translateZ={25}
+              rotateZ={1}
+            >
+              <Link href={`/calc/${props.to}/examples`}>
+                Theory and Examples
+              </Link>
+            </CardItem>
+          </div>
+        </div>
+      </CardBody>
+    </CardContainer>
+  );
+
+  return (
     <div className="card rounded-md shadow-md hover:shadow-lg transition ease-in-out overflow-hidden">
       <Image
         {...props.img}
         width={420}
         alt="projectile"
-        className="aspect-video object-fill"
+        className="aspect-video object-fill rounded-xl group-hover/card:shadow-xl border-2 border-muted"
       />
       <div className="p-2">
         <h6 className="text-xl font-semibold text-center mt-2 group-hover:underline">
