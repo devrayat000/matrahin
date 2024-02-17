@@ -45,6 +45,10 @@ export default function PendulumAnimationPage() {
         0
       );
     }
+
+    return () => {
+      pendulumRef.current = null;
+    };
   }, []);
 
   return (

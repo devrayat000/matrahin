@@ -25,15 +25,20 @@ const RainWithWind = () => {
         <b>Step: 1</b>
         <br />
         Initialize variables:
-        <MathJax>
-          {`
-        $\\begin{align*}
-       \\text{ Velocity of Rain, }\\overrightarrow{V}_{r} &= -${v_rain}\\hat{j}\\space unit \\\\
+        <MathJax
+          dynamic={true}
+          renderMode="pre"
+          typesettingOptions={{
+            fn: "tex2chtml",
+          }}
+          text={`
+        \\begin{align*}
+        \\text{ Velocity of Rain, }\\overrightarrow{V}_{r} &= -${v_rain}\\hat{j}\\space unit \\\\
         \\text{Velocity of Object, }\\overrightarrow{V}_{o} &= ${v_object}\\hat{i}\\space unit \\\\
         \\text{Velocity of Wind, }\\overrightarrow{V}_{w} &= ${v_wind}\\hat{i}\\space unit \\\\
-        \\end{align*}$
+        \\end{align*}
       `}
-        </MathJax>
+        />
       </p>
     );
   };
@@ -49,15 +54,20 @@ const RainWithWind = () => {
         <b>Step: 2</b>
         <br />
         Velocity of wind <b> relative to object:</b>
-        <MathJax>
-          {`
-        $$\\begin{gather}
+        <MathJax
+          dynamic={true}
+          renderMode="pre"
+          typesettingOptions={{
+            fn: "tex2chtml",
+          }}
+          text={`
+        \\begin{gather}
         \\overrightarrow{V}_{wo} = \\overrightarrow{V}_{wind} - \\overrightarrow{V}_{object} \\\\ 
           \\overrightarrow{V}_{wo} = ${v_wind}\\hat{i} - ${v_object_str} \\\\
           \\overrightarrow{V}_{wo} = ${v_wind_object.toFixed(2)}\\hat{i} \\\\
-        \\end{gather}$$
+        \\end{gather}
       `}
-        </MathJax>
+        />
       </p>
     );
   };
@@ -67,19 +77,29 @@ const RainWithWind = () => {
         <b>Step: 3</b>
         <br />
         Velocity of rain relative to object:
-        <MathJax>
-          {`
-            $$\\begin{gather}
+        <MathJax
+          dynamic={true}
+          renderMode="pre"
+          typesettingOptions={{
+            fn: "tex2chtml",
+          }}
+          text={`
+            \\begin{gather}
               \\overrightarrow{V}_{ro} = \\overrightarrow{V}_{rain} + \\overrightarrow{V}_{wo} = ${v_wind_object.toFixed(
                 2
               )}\\hat{i}- ${v_rain}\\hat{j} \\\\
-            \\end{gather}$$
+            \\end{gather}
           `}
-        </MathJax>
+        />
         Magnitude and Angle of rain relative to object:
-        <MathJax>
-          {`
-            $$\\begin{gather}
+        <MathJax
+          dynamic={true}
+          renderMode="pre"
+          typesettingOptions={{
+            fn: "tex2chtml",
+          }}
+          text={`
+            \\begin{gather}
               \\left|\\overrightarrow{V}_{ro}\\right| = \\sqrt{(${v_wind_object.toFixed(
                 2
               )})^2 + (${v_rain})^2} = ${magnitude.toFixed(2)}\\space unit \\\\
@@ -88,9 +108,9 @@ const RainWithWind = () => {
               }}{${v_wind_object.toFixed(2)}}\\right) = ${toDegree(
             resultAngle
           ).toFixed(2)}^\\circ \\\\
-            \\end{gather}$$
+            \\end{gather}
           `}
-        </MathJax>
+        />
       </p>
     );
   };
@@ -100,19 +120,29 @@ const RainWithWind = () => {
     return (
       <p>
         So, Umbrella should be tilted <b>relative to +x axis</b> at ,{" "}
-        <MathJax>
-          {`$$
+        <MathJax
+          dynamic={true}
+          renderMode="pre"
+          typesettingOptions={{
+            fn: "tex2chtml",
+          }}
+          text={`
           \\theta =180^\\circ ${angle.toFixed(2)}^\\circ \\  = ${(
             180 + angle
           ).toFixed(2)}^\\circ \\\\ 
-          $$`}
-        </MathJax>
+          `}
+        />
         <b>Relative to the direction of object's velocity: </b>
-        <MathJax>
-          {`$$
+        <MathJax
+          dynamic={true}
+          renderMode="pre"
+          typesettingOptions={{
+            fn: "tex2chtml",
+          }}
+          text={`
           \\theta = ${final_angle.toFixed(2)}^\\circ \\\\ 
-          $$`}
-        </MathJax>
+          `}
+        />
       </p>
     );
   };

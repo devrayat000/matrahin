@@ -24,6 +24,7 @@ const RainInput = ({ wind }: { wind: boolean }) => {
   };
 
   useEffect(() => {
+    //@ts-ignore
     handleSubmit();
   }, []);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

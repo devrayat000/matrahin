@@ -9,7 +9,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { MathJax } from "better-react-mathjax";
 import { useSetAtom } from "jotai";
@@ -91,7 +91,11 @@ const MOI_DifferentAxes: React.FC<MOI_DifferentAxesProps> = ({ shape }) => {
 
     setMoiDiffInputs(moiDifferentAxesInputDefaults);
   };
-
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, []);
   return (
     <div>
       <h2 className="text-2xl font-semibold italic pt-2 text-center">

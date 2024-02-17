@@ -11,7 +11,7 @@
 
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { MathJax } from "better-react-mathjax";
 import { useAtom, useSetAtom } from "jotai";
@@ -111,6 +111,11 @@ const MOI_Cases: React.FC<MOI_CasesProps> = ({ shape }) => {
     setMoiCasesInputs(moiCasesInputDefaults);
   };
 
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, []);
   const changeCase = (i: number) => {
     setResult([]);
     setCaseOfInertia(calculationObject[i].case);
