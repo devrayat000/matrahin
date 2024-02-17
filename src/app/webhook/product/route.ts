@@ -16,5 +16,6 @@ export async function POST(request: Request) {
 
   revalidatePath("/calc", "page");
   revalidateTag("calculatorCount");
+  revalidateTag("examples");
   return new Response("OK", { status: 200 });
 }

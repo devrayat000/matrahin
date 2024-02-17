@@ -782,7 +782,7 @@ export default function ElectricForcePage() {
                         <TableCell
                           className="font-medium"
                           dangerouslySetInnerHTML={{
-                            __html: (key as symbol).description,
+                            __html: key.description,
                           }}
                         />
                         <TableCell className="text-right">
