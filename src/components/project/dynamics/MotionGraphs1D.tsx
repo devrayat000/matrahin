@@ -1,3 +1,4 @@
+import { MathJax } from "better-react-mathjax";
 import { useAtomValue } from "jotai";
 import Chart from "react-google-charts";
 import {
@@ -30,6 +31,18 @@ const MotionGraphs1D = () => {
       title: "Displacement vs Time",
       hAxisTitle: "Time (t)",
       vAxisTitle: "Displacement (s)",
+      description: `
+      \\begin{align*}
+          \\text{Equation: } &s = ut + \\frac{1}{2}at^2 \\\\
+          y = ax &+ bx^2 \\text{(Parabola)} \\\\
+
+          \\frac{ds}{dt} & = v =  u + at \\\\
+          \\frac{d^2s}{dt^2} & = a\\\\
+          \\text{slope of the} & \\text{ curve} = a
+
+        \\end{align*}
+
+      `,
     },
     // v vs t
     {
@@ -43,6 +56,20 @@ const MotionGraphs1D = () => {
       title: "Velocity vs Time",
       hAxisTitle: "Time (t)",
       vAxisTitle: "Velocity (v)",
+      description: `
+      \\begin{align*}
+        \\text{Equation: } &v = u + at \\\\
+        y & = mx + c \\text{(Straight Line)} \\\\
+        \\text{Differentiating, } \\frac{dv}{dt} & = m =  a \\\\
+        slope & = a \\\\
+        \\text{Integrating } \\\\
+        \\int v dt & = \\int u dt + \\int at dt \\\\
+        s & = ut + \\frac{1}{2}at^2 \\\\
+        \\text{Area under the curve} & = \\text{Displacement} \\\\
+        
+
+      \\end{align*}
+      `,
     },
     // v vs s
     {
@@ -56,6 +83,15 @@ const MotionGraphs1D = () => {
       title: "Velocity vs Displacement",
       hAxisTitle: "Displacement (s)",
       vAxisTitle: "Velocity (v)",
+      description: `
+      \\begin{align*}
+        \\text{Equation: } &v^2 = u^2 + 2as \\\\
+        y^2 &= c + 2ax \\text{(Parabola)} \\\\
+        \\text{Main axis} & = x \\\\
+        
+
+      \\end{align*}
+      `,
     },
 
     // a vs t
@@ -67,6 +103,17 @@ const MotionGraphs1D = () => {
       title: "Acceleration vs Time",
       hAxisTitle: "Time (t)",
       vAxisTitle: "Acceleration (a)",
+
+      description: `
+      \\begin{align*}
+        \\text{Equation: } &a = \\text{constant} \\\\
+        y & = c \\text{(Straight Line)} \\\\
+        \\text{Differentiating} \\\\
+        \\frac{da}{dt} & = 0 \\\\
+        slope  = 0 \\implies& \\text{ constant acceleration} \\\\
+        
+        \\end{align*}
+        `,
     },
   ];
 
@@ -92,7 +139,7 @@ const MotionGraphs1D = () => {
       {graph.map((g, i) => (
         <div key={i} className="md:w-1/2">
           <Chart
-            chartType="LineChart"
+            chartType={i === 1 ? "AreaChart" : "LineChart"}
             height={500}
             data={g.data}
             loader={<div>Loading Graphs...</div>}
@@ -113,6 +160,16 @@ const MotionGraphs1D = () => {
               },
             }}
           />
+          <span className="text-lg">
+            <MathJax
+              dynamic={true}
+              renderMode="pre"
+              text={g.description}
+              typesettingOptions={{
+                fn: "tex2chtml",
+              }}
+            />
+          </span>
         </div>
       ))}
     </div>

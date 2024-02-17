@@ -162,6 +162,7 @@ const Figure = ({
 
         {/* <!-- X-axis label --> */}
         <text
+          style={{ userSelect: "none" }}
           x="325"
           y={canvasHeight - yOriginOffset + 20}
           fontFamily="Arial"
@@ -172,7 +173,14 @@ const Figure = ({
         </text>
 
         {/* <!-- Y-axis label --> */}
-        <text x="185" y="15" fontFamily="Arial" fontSize="12" fill="black">
+        <text
+          style={{ userSelect: "none" }}
+          x="185"
+          y="15"
+          fontFamily="Arial"
+          fontSize="12"
+          fill="black"
+        >
           Y
         </text>
 
@@ -192,6 +200,7 @@ const Figure = ({
 
         {/* upper angle */}
         <text
+          style={{ userSelect: "none" }}
           x={175 + (modifiedResults.v_wind_object > 0 ? 70 : -70)}
           y="130"
           fontFamily="Arial"
@@ -247,7 +256,12 @@ const Figure = ({
             )}
           </g>
         ) : (
-          <text x={center.x - 70} y={center.y - 50} fill="red">
+          <text
+            style={{ userSelect: "none" }}
+            x={center.x - 70}
+            y={center.y - 50}
+            fill="red"
+          >
             {modifiedResults.helperText}
           </text>
         )}
