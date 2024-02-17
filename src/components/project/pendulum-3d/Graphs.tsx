@@ -39,9 +39,9 @@ const Graphs = () => {
       {
         data: [
           ["Length", "Time Period"],
-          ...Array.from({ length: 1000 }, (_, i) => [
-            i / 100,
-            2 * Math.PI * Math.sqrt(i / 100 / gravity),
+          ...Array.from({ length: 100 }, (_, i) => [
+            i / 10,
+            2 * Math.PI * Math.sqrt(i / 10 / gravity),
           ]),
         ],
         title: "Time Period vs Length (θ < 10°)",
@@ -61,8 +61,8 @@ const Graphs = () => {
       {
         data: [
           ["Gravity", "Time Period"],
-          ...Array.from({ length: 1000 }, (_, i) => {
-            const g = i / 100;
+          ...Array.from({ length: 100 }, (_, i) => {
+            const g = i / 10;
             const T = 2 * Math.PI * Math.sqrt(length / g);
             return [g, T];
           }),
@@ -84,9 +84,9 @@ const Graphs = () => {
       {
         data: [
           ["Length", "Time Period Squared"],
-          ...Array.from({ length: 1000 }, (_, i) => [
-            i / 100,
-            (4 * Math.PI * Math.PI * i) / 980,
+          ...Array.from({ length: 100 }, (_, i) => [
+            i / 10,
+            (4 * Math.PI * Math.PI * i) / 98,
           ]),
         ],
         title: "Time Period Squared vs Length (θ < 10°)",
