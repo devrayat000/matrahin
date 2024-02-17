@@ -6,6 +6,7 @@ import Hero from "./Hero";
 import Stats from "./Stats";
 import Team from "./Team";
 import MathElements from "~/assets/math_elements.svg?url";
+import { TracingBeam } from "~/components/ui/tracing-beam";
 
 export const metadata: Metadata = {
   title: "Matrahin",
@@ -31,13 +32,15 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <div>
-      <Hero />
-      <About />
-      <Stats />
-      <Features />
-      <Team />
-      <FAQ />
-    </div>
+    <TracingBeam>
+      <div className="antialiased relative">
+        <Hero />
+        <About />
+        <Stats />
+        <Features />
+        <Team />
+        <FAQ />
+      </div>
+    </TracingBeam>
   );
 }

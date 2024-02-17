@@ -5,7 +5,7 @@ import logo from "~/assets/logo.png";
 
 export default function Footer() {
   return (
-    <footer className="mt-4 py-3 bg-slate-50 border-t border-border">
+    <footer className="mt-4 py-3 bg-slate-50 border-t border-border z-10">
       <section className="container flex flex-col sm:flex-row flex-nowrap justify-between items-center">
         <div className="flex justify-between sm:justify-end items-center gap-6">
           <Image src={logo} alt="Matrahin" width={44} height={44} />
