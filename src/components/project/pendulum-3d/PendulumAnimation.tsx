@@ -12,7 +12,7 @@ import { Pause, Play } from "lucide-react";
 import React, { ReactNode, useRef } from "react";
 import * as THREE from "three";
 import Pendulum from "./Pendulum";
-import { pendulumStore } from "./store";
+import { pendulumStore, timePeriodAtom } from "./store";
 
 /**
  * takes an object and rotates it about a point
@@ -102,10 +102,7 @@ const PendulumAnimation = ({
         </Canvas>
       </div>
 
-      <PauseResumeControl
-        periodCounterRef={periodCounterRef}
-        timeRef={timeRef}
-      />
+      <PauseResumeControl pendulumRef={pendulumRef} timeRef={timeRef} />
     </div>
   );
 };
@@ -154,10 +151,10 @@ const StopWatch = ({
 };
 
 const PauseResumeControl = ({
-  periodCounterRef,
+  pendulumRef,
   timeRef,
 }: {
-  periodCounterRef: React.RefObject<HTMLParagraphElement>;
+  pendulumRef: React.RefObject<Pendulum>;
   timeRef: React.RefObject<HTMLParagraphElement>;
 }) => {
   const [animating, setAnimating] = useAtom(pendulumStore.isPlayingAtom);
@@ -166,7 +163,7 @@ const PauseResumeControl = ({
     <div className="flex flex-row gap-1 md:gap-4 items-center justify-center">
       {/* add stopwatch */}
       {/* <StopWatch timeRef={timeRef} /> */}
-      <PeriodCounter periodCounterRef={periodCounterRef} />
+      <PeriodCounter />
       <div
         className="bg-green-500 cursor-pointer shadow-xl p-3 md:p-5 self-start  rounded-full hover:scale-125 transition-transform duration-300 transform "
         onClick={() => setAnimating(!animating)}
@@ -177,20 +174,14 @@ const PauseResumeControl = ({
   );
 };
 
-const PeriodCounter = ({
-  periodCounterRef,
-}: {
-  periodCounterRef: React.RefObject<HTMLParagraphElement>;
-}) => {
+const PeriodCounter = () => {
+  const timePeriod = useAtomValue(timePeriodAtom);
   return (
     <div className="flex flex-col items-center  gap-2 border-2 p-3 ">
       <strong className="text-lg md:text-2xl">Time Period</strong>
       <div className="flex flex-row gap-1 md:gap-4 items-center justify-around">
-        <p
-          ref={periodCounterRef}
-          className="text-xl md:text-3xl text-right font-mono w-[7ch]"
-        >
-          0
+        <p className="text-xl md:text-3xl text-right font-mono w-[7ch]">
+          {timePeriod?.toFixed(5) || 0}
         </p>
         <strong className="text-xl">s</strong>
       </div>

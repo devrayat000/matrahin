@@ -20,6 +20,8 @@ class Pendulum {
   potentialEnergy: number = 0;
   totalEnergy: number = 0;
 
+  timePeriod: number = 0;
+
   swingCount: number = 0;
   constructor(
     angle: number,

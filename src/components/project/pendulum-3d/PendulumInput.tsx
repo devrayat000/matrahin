@@ -74,7 +74,7 @@ const PendulumInputs = ({
     setIsPlaying(false);
 
     setCustomGravitySelected(false);
-
+      
     setSubmittedInputs({
       angle: Math.abs(INITIAL_VALUES.angle),
       length: INITIAL_VALUES.length,

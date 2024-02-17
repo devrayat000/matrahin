@@ -64,3 +64,18 @@ export const inputOptions: {
     valueText: "mass", //to change in Pendulum object
   },
 ];
+
+export const timePeriodAtom = atom((get) => {
+  const { length, gravity, angle } = get(submittedInputsAtom);
+
+  const radian = (angle * Math.PI) / 180;
+  return (
+    2 *
+    Math.PI *
+    Math.sqrt(length / gravity) *
+    (1 +
+      (1 / 16) * radian ** 2 +
+      (11 / 3072) * radian ** 4 +
+      (173 / 737280) * radian ** 6)
+  );
+});
