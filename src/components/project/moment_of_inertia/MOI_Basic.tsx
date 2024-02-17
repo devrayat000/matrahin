@@ -8,7 +8,7 @@
 "use client";
 
 import { MathJax } from "better-react-mathjax";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "~/components/ui/form";
 
@@ -78,6 +78,12 @@ const MOI_Basic: React.FC<MOI_BasicProps> = ({ shape }) => {
     setResult(NaN);
     setMoiBasicInputs(moiBasicInputDefaults);
   };
+
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, []);
   return (
     <div className="flex flex-col items-center">
       <div className="flex flex-col gap-2  items-center justify-center">
