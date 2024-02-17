@@ -1,6 +1,6 @@
 import { useAtom, useSetAtom } from "jotai";
 import { MinusSquare, PlusSquare, RotateCcw } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "~/components/ui/button";
 import InputWithSlider from "~/components/ui/input-with-slider";
 import { Slider } from "~/components/ui/slider";
@@ -59,6 +59,35 @@ const PendulumInputs = ({
     }
     calculateResults(angle, length, mass, gravity);
   };
+
+  const reset = () => {
+    setLength(INITIAL_VALUES.length);
+    setMass(INITIAL_VALUES.mass);
+    setGravity(INITIAL_VALUES.gravity);
+    setAngle(INITIAL_VALUES.angle);
+    calculateResults(
+      INITIAL_VALUES.angle,
+      INITIAL_VALUES.length,
+      INITIAL_VALUES.mass,
+      INITIAL_VALUES.gravity
+    );
+    setIsPlaying(false);
+
+    setCustomGravitySelected(false);
+
+    setSubmittedInputs({
+      angle: Math.abs(INITIAL_VALUES.angle),
+      length: INITIAL_VALUES.length,
+      mass: INITIAL_VALUES.mass,
+      gravity: INITIAL_VALUES.gravity,
+    });
+  };
+
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, []);
 
   return (
     <div className="w-full  flex-col  rounded-lg   items-center border-gray-950">
@@ -166,28 +195,7 @@ const PendulumInputs = ({
         <div
           title="reset"
           className="bg-cyan-300  self-start cursor-pointer hover:shadow-xl hover:scale-125 transition-transform duration-300 transform  p-4   rounded-full "
-          onClick={() => {
-            setLength(INITIAL_VALUES.length);
-            setMass(INITIAL_VALUES.mass);
-            setGravity(INITIAL_VALUES.gravity);
-            setAngle(INITIAL_VALUES.angle);
-            calculateResults(
-              INITIAL_VALUES.angle,
-              INITIAL_VALUES.length,
-              INITIAL_VALUES.mass,
-              INITIAL_VALUES.gravity
-            );
-            setIsPlaying(false);
-
-            setCustomGravitySelected(false);
-
-            setSubmittedInputs({
-              angle: Math.abs(INITIAL_VALUES.angle),
-              length: INITIAL_VALUES.length,
-              mass: INITIAL_VALUES.mass,
-              gravity: INITIAL_VALUES.gravity,
-            });
-          }}
+          onClick={reset}
         >
           <RotateCcw size={25} />
         </div>
