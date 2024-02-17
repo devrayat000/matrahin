@@ -1,8 +1,7 @@
-// @ts-nocheck
-
+import { MathJax } from "better-react-mathjax";
 import { useAtomValue } from "jotai";
 import { useMemo } from "react";
-import { Chart } from "react-google-charts";
+import Chart from "react-google-charts";
 import { pointsAtom } from "./AnimationHelper";
 
 const GraphsBasic = () => {
@@ -27,12 +26,30 @@ const GraphsBasic = () => {
         title: "Height vs Time",
         hAxisTitle: "Time (t)",
         vAxisTitle: "Height (m)",
+        description: `
+        \\begin{align*}
+          \\text{Equation: } &y = (usin\\theta_0)t - \\frac{1}{2}gt^2 \\\\
+          y = ax &- bx^2 \\text{(Parabola)} \\\\
+          \\frac{dy}{dt}  = v =& usin\\theta_0 - gt \\\\
+          \\frac{d^2y}{dt^2}  = &-g\\\\
+        \\end{align*}
+        `,
       },
       {
         data: [["x", "y"], ...resultPoints.map((point) => [point.x, point.y])],
         title: "Height vs Distance",
         hAxisTitle: "Distance (x)",
         vAxisTitle: "Height (m)",
+
+        description: `
+        \\begin{align*} 
+          \\text{Equation: } &y = xtan\\theta_0 - \\frac{gx^2}{2u^2cos^2\\theta_0} \\\\
+          y = ax &- bx^2 \\text{(Parabola)} \\\\
+          \\text{Where,} 
+          a &= tan\\theta_0, \\space b = \\frac{g}{2u^2cos^2\\theta_0} \\\\
+          
+          \\end{align*} 
+        `,
       },
       {
         data: [
@@ -45,6 +62,38 @@ const GraphsBasic = () => {
         title: "Speed vs Time",
         hAxisTitle: "Time (t)",
         vAxisTitle: "Speed (m/s)",
+
+        description: `
+        \\begin{align*}
+          &\\text{Equation: } \\\\
+          v &= \\sqrt{(v_x^2 + v_y^2)} \\\\
+          v &= \\sqrt{(ucos\\theta_0)^2 + (usin\\theta_0 - gt)^2} \\\\
+          
+          v &= \\sqrt{u^2 - 2usin\\theta_0 gt + g^2t^2} \\\\
+          v &= \\sqrt{u^2 + g^2t^2 - 2usin\\theta_0 gt} \\\\
+          v^2 &= u^2 + g^2t^2 - 2usin\\theta_0 gt \\\\
+          \\implies y &= c + ax^2 - bx \\text{(Parabola)} \\\\
+        \\end{align*}
+        `,
+      },
+
+      {
+        data: [
+          ["time", "vy"],
+          ...resultPoints.map((point) => [point.t, point.vy]),
+        ],
+        title: "Vy vs Time",
+        hAxisTitle: "Time (t)",
+        vAxisTitle: "Vy (m/s)",
+
+        description: `
+        \\begin{align*}
+          \\text{Equation: } v_y =& usin\\theta_0 - gt \\\\
+          v_y = c -& mx \\text{ (Straight Line)} \\\\
+          \\frac{dv_y}{dt} & = -g \\\\
+          \\text{slope of the} & \\text{ line} = -g
+        \\end{align*}
+        `,
       },
       {
         data: [
@@ -57,15 +106,14 @@ const GraphsBasic = () => {
         title: "Speed vs Angle",
         hAxisTitle: "Angle (θ)",
         vAxisTitle: "Speed (m/s)",
-      },
-      {
-        data: [
-          ["time", "vy"],
-          ...resultPoints.map((point) => [point.t, point.vy]),
-        ],
-        title: "Vy vs Time",
-        hAxisTitle: "Time (t)",
-        vAxisTitle: "Vy (m/s)",
+
+        description: `
+          \\begin{align*}
+          \\text{Equation: } &v = \\sqrt{(v_x^2 + v_y^2)} \\\\
+          \\theta = tan^{-1} &\\left(\\frac{v_y}{v_x}\\right) \\\\
+
+          \\end{align*}
+        `,
       },
     ],
     [resultPoints]
@@ -87,9 +135,9 @@ const GraphsBasic = () => {
   };
 
   return (
-    <div className="flex flex-col flex-wrap w-full md:flex-row m-2 items-center justify-between  ">
+    <div className="flex flex-col w-full md:flex-row md:flex-wrap m-2 items-center md:items-start justify-evenly  ">
       {graph.map((g, i) => (
-        <div key={i} className="md:w-1/2">
+        <div key={i} className=" w-5/6 md:w-1/2">
           <Chart
             loader={<div>Loading Graphs...</div>}
             chartType="LineChart"
@@ -113,6 +161,16 @@ const GraphsBasic = () => {
               },
             }}
           />
+          <span className="text-lg md:text-2xl">
+            <MathJax
+              dynamic={true}
+              renderMode="pre"
+              text={g.description}
+              typesettingOptions={{
+                fn: "tex2chtml",
+              }}
+            />
+          </span>
         </div>
       ))}
     </div>
