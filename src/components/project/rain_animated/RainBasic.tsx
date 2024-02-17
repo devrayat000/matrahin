@@ -22,9 +22,14 @@ const RainBasic = () => {
     return (
       <p className="self-start">
         From the figure, Velocity of rain relative to object:
-        <MathJax>
-          {`
-            $$\\begin{gather}
+        <MathJax
+          dynamic={true}
+          renderMode="pre"
+          typesettingOptions={{
+            fn: "tex2chtml",
+          }}
+          text={`
+            \\begin{gather}
             \\left|\\overrightarrow{V}_{ro}\\right| = \\sqrt{(V_{r})^2 + (V_{o})^2} \\\\
 
               V_{ro} = \\sqrt{(${Math.abs(v_wind_object).toFixed(
@@ -40,9 +45,9 @@ const RainBasic = () => {
             180 + toDegree(resultAngle),
             Math.abs(toDegree(resultAngle))
           ).toFixed(2)}}^\\circ \\\\
-            \\end{gather}$$
+            \\end{gather}
           `}
-        </MathJax>
+        />
       </p>
     );
   };
@@ -52,11 +57,16 @@ const RainBasic = () => {
     return (
       <p>
         So, Umbrella should be tilted <b>relative to ground: </b>
-        <MathJax>
-          {`$$
+        <MathJax
+          dynamic={true}
+          renderMode="pre"
+          typesettingOptions={{
+            fn: "tex2chtml",
+          }}
+          text={`
           \\theta = ${final_angle.toFixed(2)}^\\circ \\\\ 
-          $$`}
-        </MathJax>
+          `}
+        />
       </p>
     );
   };

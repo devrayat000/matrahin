@@ -1,18 +1,33 @@
 "use client";
 
+import { useSetAtom } from "jotai";
 import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect } from "react";
+import Spinner from "~/components/common/Spinner";
+import Animation from "~/components/project/rain_animated/Animation";
 import RainBasic from "~/components/project/rain_animated/RainBasic";
 import RainInput from "~/components/project/rain_animated/RainInput";
 import RainWithWind from "~/components/project/rain_animated/RainWithWind";
 import TabSelection from "~/components/project/rain_animated/TabSelection";
-import Animation from "~/components/project/rain_animated/Animation";
-import { Suspense } from "react";
-import Spinner from "~/components/common/Spinner";
+import {
+  defaultInputValues,
+  inputValuesAtom,
+} from "~/components/project/rain_animated/store";
 
 function RainCalculatorInput() {
   const searchParams = useSearchParams();
   const Option = searchParams.get("case");
   const activeCase = Option === "with-wind" ? Option : "basic";
+
+  // const setResultsReset = useSetAtom(resultAtom);
+  const setInputsReset = useSetAtom(inputValuesAtom);
+
+  useEffect(() => {
+    return () => {
+      // setResultsReset(undefined);
+      setInputsReset(defaultInputValues);
+    };
+  }, []);
 
   return (
     <div>
