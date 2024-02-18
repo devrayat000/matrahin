@@ -137,7 +137,7 @@ const MotionGraphs1D = () => {
     // <div className="flex flex-col md:flex-row flex-wrap items-center gap-4">
     <div className="flex flex-col flex-wrap w-full md:flex-row m-2 items-center justify-between  ">
       {graph.map((g, i) => (
-        <div key={i} className="md:w-1/2">
+        <div key={i} className=" w-full md:w-1/2">
           <Chart
             chartType={i === 1 ? "AreaChart" : "LineChart"}
             height={500}
