@@ -38,7 +38,7 @@ const MotionGraphs1D = () => {
 
           \\frac{ds}{dt} & = v =  u + at \\\\
           \\frac{d^2s}{dt^2} & = a\\\\
-          \\text{slope of the} & \\text{ curve} = a
+          
 
         \\end{align*}
 
