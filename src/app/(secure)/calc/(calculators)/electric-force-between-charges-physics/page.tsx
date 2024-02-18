@@ -1,5 +1,6 @@
 "use client";
 
+import { ZoomInIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useController, useForm, useWatch } from "react-hook-form";
 
@@ -7,6 +8,7 @@ import IterableFiels from "~/components/project/electric-force/IterableFields";
 import StaticFields from "~/components/project/electric-force/StaticFields";
 import { electricForceSchema } from "~/components/project/electric-force/schema";
 import { Button } from "~/components/ui/button";
+import Chip from "~/components/ui/chip";
 import { Form } from "~/components/ui/form";
 import {
   Select,
@@ -85,7 +87,7 @@ export default function ElectricForcePage() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (window.innerWidth < 640) {
-        setWidth((window.innerWidth * 4) / 5);
+        setWidth((window.innerWidth * 7) / 8);
         setHeight(window.innerHeight / 2);
       } else {
         setHeight((window.innerHeight * 4) / 5);
@@ -354,8 +356,8 @@ export default function ElectricForcePage() {
                   style={{
                     display: showPosition === i ? "block" : "none",
                   }}
-                  x={positionSelfX - 4 * scale}
-                  y={positionSelfY - 4 * scale}
+                  x={positionSelfX - 4 * 10}
+                  y={positionSelfY - 4 * 10}
                   width="80"
                   height="25"
                   fill="none"
@@ -365,8 +367,8 @@ export default function ElectricForcePage() {
                   style={{
                     display: showPosition === i ? "block" : "none",
                   }}
-                  x={positionSelfX - 3.5 * scale}
-                  y={positionSelfY - 2 * scale}
+                  x={positionSelfX - 3.5 * 10}
+                  y={positionSelfY - 2 * 10}
                   color="black"
                 >
                   {Number(charge?.x).toPrecision(2)} ,{" "}
@@ -529,8 +531,8 @@ export default function ElectricForcePage() {
                   style={{
                     display: showPosition === i ? "block" : "none",
                   }}
-                  x={positionSelfX - 4 * scale}
-                  y={positionSelfY - 4 * scale}
+                  x={positionSelfX - 40}
+                  y={positionSelfY - 50}
                   width="80"
                   height="25"
                   fill="none"
@@ -540,8 +542,8 @@ export default function ElectricForcePage() {
                   style={{
                     display: showPosition === i ? "block" : "none",
                   }}
-                  x={positionSelfX - 3.5 * scale}
-                  y={positionSelfY - 2 * scale}
+                  x={positionSelfX - 35}
+                  y={positionSelfY - 30}
                   color="black"
                 >
                   {Number(charge?.x).toPrecision(2)} ,{" "}
@@ -602,47 +604,27 @@ export default function ElectricForcePage() {
   const MAX_ZOOM = 20;
   const MIN_ZOOM = 0.5;
   const Figure = () => (
-    <div className="w-full h-full">
+    <div className="w-full h-full flex-col">
       <svg
+        style={{
+          userSelect: "none",
+          border: "1px solid black",
+          boxShadow: "0 0 20px 0 rgba(0, 0, 0, 0.5)",
+        }}
         //change scale on scroll
         onWheel={(e) => {
+          // disable page scroll
+          e.preventDefault();
+
           if (e.deltaY > 0) {
             setScale((prev) => (prev > MIN_ZOOM ? prev - 0.1 : prev));
           } else {
             setScale((prev) => (prev < MAX_ZOOM ? prev + 0.1 : prev));
           }
         }}
-        // change scale on pinch
-        onTouchStart={(e) => {
-          if (e.touches.length === 2) {
-            const [touch1, touch2] = e.touches;
-            const distance = Math.sqrt(
-              (touch1.clientX - touch2.clientX) ** 2 +
-                (touch1.clientY - touch2.clientY) ** 2
-            );
-            const initialScale = scale;
-            const initialDistance = distance;
-            const onMove = (e: TouchEvent) => {
-              const [touch1, touch2] = e.touches;
-              const distance = Math.sqrt(
-                (touch1.clientX - touch2.clientX) ** 2 +
-                  (touch1.clientY - touch2.clientY) ** 2
-              );
-
-              setScale((prev) => {
-                return prev + (distance - initialDistance) / 100;
-              });
-            };
-            const onEnd = () => {
-              window.removeEventListener("touchmove", onMove);
-              window.removeEventListener("touchend", onEnd);
-            };
-            window.addEventListener("touchmove", onMove);
-            window.addEventListener("touchend", onEnd);
-          }
-        }}
         width={canvasWidth}
         height={canvasHeight}
+        viewBox={`0 0 ${canvasWidth} ${canvasHeight}`}
         xmlns="http://www.w3.org/2000/svg"
       >
         {/* draw grid  */}
@@ -708,7 +690,7 @@ export default function ElectricForcePage() {
             x={canvasWidth - 20}
             y={canvasHeight - yOriginOffset + 20}
             fontFamily="Arial"
-            fontSize="12"
+            fontSize="20"
             fill="black"
           >
             X
@@ -717,9 +699,9 @@ export default function ElectricForcePage() {
           {/* <!-- Y-axis label --> */}
           <text
             x={canvasWidth / 2 + 10}
-            y="15"
+            y="20"
             fontFamily="Arial"
-            fontSize="12"
+            fontSize="20"
             fill="black"
           >
             Y
@@ -758,19 +740,164 @@ export default function ElectricForcePage() {
               charges={form.watch("charges")}
             />
           )}
+
+        {/* add + and - icon in svg to zoom in or out */}
+        <ZoomControl />
       </svg>
     </div>
   );
 
+  const ZoomControl = () => {
+    return (
+      <g>
+        <rect
+          x={canvasWidth - 80}
+          y={canvasHeight - 55}
+          width="70"
+          style={{
+            cursor: "pointer",
+            userSelect: "none",
+          }}
+          height="40"
+          fill="white"
+          stroke="black"
+          strokeWidth="1"
+          rx="5"
+        />
+        <text
+          onClick={() => {
+            setScale((prev) => (prev < MAX_ZOOM ? prev + 0.5 : prev));
+
+            console.log("zoom in");
+          }}
+          x={canvasWidth - 45}
+          y={canvasHeight - 17}
+          fontFamily="Arial"
+          fontSize="50"
+          fill={scale < MAX_ZOOM ? "green" : "gray"}
+          style={{
+            cursor: scale < MAX_ZOOM ? "pointer" : "not-allowed",
+            userSelect: "none",
+          }}
+        >
+          +
+        </text>
+
+        <text
+          onClick={() => {
+            setScale((prev) => (prev > MIN_ZOOM ? prev - 0.5 : prev));
+            console.log("zoom out");
+          }}
+          x={canvasWidth - 70}
+          y={canvasHeight - 20}
+          fontFamily="Arial"
+          fontSize="50"
+          fill={scale > MIN_ZOOM ? "green" : "gray"}
+          style={{
+            cursor: scale > MIN_ZOOM ? "pointer" : "not-allowed",
+            userSelect: "none",
+          }}
+        >
+          -
+        </text>
+      </g>
+    );
+  };
+  //   const Simulation = () => {
+  //     const FirstCase3D = ({
+  //       isAttractive,
+  //       d,
+  //     }: {
+  //       isAttractive: boolean;
+  //       d: number;
+  //     }) => {
+  //       return (
+  //         <group>
+  //           <mesh position={[-d / 2, 0, 0]}>
+  //             <sphereGeometry args={[0.5, 32, 32]} />
+  //             <meshStandardMaterial color="red" />
+  //           </mesh>
+  //           <mesh position={[d / 2, 0, 0]}>
+  //             <sphereGeometry args={[0.5, 32, 32]} />
+  //             <meshStandardMaterial color="blue" />
+  //           </mesh>
+  //           <arrowHelper
+  //             args={[new Vector3(1, 0, 0), new Vector3(-d / 2, 0, 0), 0]}
+  //           />
+  //           <arrowHelper
+  //             args={[new Vector3(1, 0, 0), new Vector3(d / 2, 0, 0), 0]}
+  //           />
+  //         </group>
+  //       );
+  //     };
+  //     return (
+  //       <div className=" h-[80vh]">
+  //         <Canvas>
+  //           <gridHelper args={[100, 100]} />
+  //           <ambientLight />
+  //           {/* <pointLight position={[100, 100, 100]} /> */}
+  //           {initialParams === "f_2" &&
+  //             form.watch("d") &&
+  //             form.watch("q1") != 0 &&
+  //             form.watch("q2") != 0 && (
+  //               <FirstCase3D
+  //                 key={"first-case"}
+  //                 isAttractive={form.watch("q1") * form.watch("q2") > 0}
+  //                 d={form.watch("d")}
+  //               />
+  //             )}
+  //           <perspectiveCamera makeDefault position={[0, 100, 0]} />
+  //           <OrbitControls enableDamping={false} />
+  //         </Canvas>
+  //       </div>
+  //     );
+  //   };
   return (
-    <>
+    <div className="mb-3 ">
       <p className="text-center text-4xl pt-3">Static Electricity</p>
-      <div className="flex flex-col-reverse md:flex-row md:gap-2 items-center md:items-center justify-between md:mx-5">
-        <div className=" md:self-start md:mt-4 md:w-[180px] md:h-[180px] ">
-          {/* <div className=" "> */}
-          <Figure />
+      <div className="flex flex-col-reverse md:flex-row md:gap-2 items-center md:items-center justify-around md:mx-5">
+        <div className="flex flex-col md:self-start items-center justify-center gap-2">
+          <div className="self-center md:self-start md:mt-4  ">
+            {/* <div className=" "> */}
+            <Figure />
+            {/* <Simulation /> */}
+          </div>
+          <div
+            className="flex flex-row flex-wrap justify-center gap-1 md:gap-2 mt-2 border-slate-100 border-2 p-2 *:
+            shadow-[0_5px_10px_rgb(0,0,0,0.4)] bg-slate-300 rounded-lg
+
+          "
+          >
+            {/* <p className="text-center my-auto text-1xl">Zoom: </p> */}
+            <ZoomInIcon className="my-auto" />
+            <Chip
+              label="0.25x"
+              selected={scale === MIN_ZOOM}
+              onClick={() => setScale(MIN_ZOOM)}
+            />
+            <Chip
+              label="0.5x"
+              selected={scale === 1}
+              onClick={() => setScale(1)}
+            />
+            <Chip
+              label="1x"
+              selected={scale === 5}
+              onClick={() => setScale(5)}
+            />
+            <Chip
+              label="2x"
+              onClick={() => setScale(10)}
+              selected={scale === 10}
+            />
+            <Chip
+              label="4x"
+              onClick={() => setScale(MAX_ZOOM)}
+              selected={scale === MAX_ZOOM}
+            />
+          </div>
         </div>
-        <div className="bg-slate-300 z-10  flex md:w-1/3 m-2 p-2  flex-col items-center gap-4">
+        <div className="bg-slate-300 z-10 self-start  flex md:w-1/3 m-2 p-2  flex-col items-center gap-4">
           <Form {...form}>
             <form
               className="w-full p-5 rounded-lg border-slate-200 border"
@@ -842,6 +969,6 @@ export default function ElectricForcePage() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
