@@ -20,8 +20,8 @@ const AxesNotation = () => (
 );
 const ReactFiberBasic = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Canvas>
-      <color attach="background" args={["#dddddd"]} />
+    <Canvas className="shadow-[0_5px_10px_rgb(0,0,0,0.4)]">
+      <color attach="background" args={["#eeeeee"]} />
       <PerspectiveCamera
         makeDefault
         position={[30, 10, 30]}
