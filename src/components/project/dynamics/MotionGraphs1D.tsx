@@ -17,7 +17,7 @@ const MotionGraphs1D = () => {
   const t = Number(useAtomValue(timeAtom));
 
   // console.log(s, u, v, a, t);
-  const factor = 1000;
+  const factor = 10;
 
   const graph = [
     {

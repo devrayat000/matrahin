@@ -27,12 +27,25 @@ const GraphsBasic = () => {
         hAxisTitle: "Time (t)",
         vAxisTitle: "Height (m)",
         description: `
-        \\begin{align*}
-          \\text{Equation: } &y = (usin\\theta_0)t - \\frac{1}{2}gt^2 \\\\
-          y = ax &- bx^2 \\text{(Parabola)} \\\\
-          \\frac{dy}{dt}  = v =& usin\\theta_0 - gt \\\\
-          \\frac{d^2y}{dt^2}  = &-g\\\\
-        \\end{align*}
+        \\begin{gather}
+          \\text{Equation: } y = (usin\\theta_0)t - \\frac{1}{2}gt^2 \\\\
+          y = ax - bx^2 \\text{(Parabola)} \\\\
+          \\frac{dy}{dt}  = v = usin\\theta_0 - gt \\\\
+          \\frac{d^2y}{dt^2}  = -g   \\text{  (-ve)}  \\\\
+          
+          y_{max}\\text{ can be}   \\text{ found at}  \\frac{dy}{dt}  =  0 \\\\
+          \\implies v = usin\\theta_0  - gt  = 0 \\\\
+          \\implies t  = \\frac{usin\\theta_0}{g} \\\\
+          \\text{which is half of the Time of flight} \\\\
+          \\text{Substituting this value in the y(t)} \\\\
+          y  = (usin\\theta_0)t - \\frac{1}{2}gt^2 \\\\
+          y_{max} = (usin\\theta_0) \\cdot \\frac{usin\\theta_0}{g} - \\frac{1}{2}g \\cdot \\left(\\frac{usin\\theta_0}{g}\\right)^2 \\\\
+          y_{max} = \\frac{u^2sin^2\\theta_0}{g} - \\frac{u^2sin^2\\theta_0}{2g} \\\\
+          y_{max} = \\frac{u^2sin^2\\theta_0}{2g} \\\\
+           \\text{Maximum Height, }H_{max}   = \\frac{u^2sin^2\\theta_0}{2g}\\\\
+          \\text{And,Total time of flight, } T  = \\frac{2 \\cdot u sin\\theta_0}{g}\\\\
+        \\end{gather}
+        
         `,
       },
       {
@@ -42,13 +55,33 @@ const GraphsBasic = () => {
         vAxisTitle: "Height (m)",
 
         description: `
-        \\begin{align*} 
-          \\text{Equation: } &y = xtan\\theta_0 - \\frac{gx^2}{2u^2cos^2\\theta_0} \\\\
-          y = ax &- bx^2 \\text{(Parabola)} \\\\
-          \\text{Where,} 
-          a &= tan\\theta_0, \\space b = \\frac{g}{2u^2cos^2\\theta_0} \\\\
-          
-          \\end{align*} 
+        \\begin{gather} 
+          \\text{Equation: } y = xtan\\theta_0 - \\frac{gx^2}{2u^2cos^2\\theta_0} \\\\
+          y = ax - bx^2 \\text{(Parabola)} \\\\
+          \\text{Where, } 
+          a = tan\\theta_0, \\space b = \\frac{g}{2u^2cos^2\\theta_0} \\\\
+          \\frac{dy}{dx} = a - 2bx ,
+          \\frac{d^2y}{dx^2} = -2b \\text{  (-ve)} \\\\
+          h_{max}\\text{ can be found at} \\frac{dy}{dx} = 0 \\\\
+          \\implies a - 2bx = 0 
+          \\implies x = \\frac{a}{2b}\\\\  
+          \\text{which is half of the Horizontal range} \\\\
+          \\text{Substituting this value to } y(x) \\\\
+          y_{max} = a \\cdot \\frac{a}{2b} - b \\cdot \\left(\\frac{a}{2b}\\right)^2 \\\\
+           = \\frac{a^2}{2b}  - \\frac{a^2}{4b} 
+           = \\frac{a^2}{4b} 
+            = \\frac{tan^2\\theta_0}{4 \\cdot \\frac{g}{2u^2cos^2\\theta_0}} \\\\
+            = \\frac{ tan^2\\theta_0 \\cdot u^2cos^2\\theta_0}{2g} 
+            = \\frac{u^2sin^2\\theta_0}{2g}\\\\
+
+          x_{max} = 2 \\times \\frac{a}{2b} = \\frac{a}{b} 
+          = \\frac{tan\\theta_0}{\\frac{g}{2u^2cos^2\\theta_0}} \\\\
+          = \\frac{tan\\theta_0 \\cdot 2u^2cos^2\\theta_0}{g} 
+          = \\frac{2u^2sin\\theta_0cos\\theta_0}{g} \\\\
+           = \\frac{u^2sin2\\theta_0}{g}\\\\         
+          \\text{So, Maximum Height, } h_{max}  = \\frac{u^2sin^2\\theta_0}{2g} \\\\
+          \\text{And, Total Horizontal range, } R = \\frac{u^2sin2\\theta_0}{g}\\\
+          \\end{gather} 
         `,
       },
       {
@@ -64,16 +97,16 @@ const GraphsBasic = () => {
         vAxisTitle: "Speed (m/s)",
 
         description: `
-        \\begin{align*}
-          &\\text{Equation: } \\\\
-          v &= \\sqrt{(v_x^2 + v_y^2)} \\\\
-          v &= \\sqrt{(ucos\\theta_0)^2 + (usin\\theta_0 - gt)^2} \\\\
+        \\begin{gather}
+          \\text{Equation: } \\\\
+          v = \\sqrt{(v_x^2 + v_y^2)} \\\\
+          v = \\sqrt{(ucos\\theta_0)^2 + (usin\\theta_0 - gt)^2} \\\\
           
-          v &= \\sqrt{u^2 - 2usin\\theta_0 gt + g^2t^2} \\\\
-          v &= \\sqrt{u^2 + g^2t^2 - 2usin\\theta_0 gt} \\\\
-          v^2 &= u^2 + g^2t^2 - 2usin\\theta_0 gt \\\\
-          \\implies y &= c + ax^2 - bx \\text{(Parabola)} \\\\
-        \\end{align*}
+          v = \\sqrt{u^2 - 2usin\\theta_0 gt + g^2t^2} \\\\
+          v = \\sqrt{u^2 - 2usin\\theta_0 gt + g^2t^2} \\\\
+          v^2 = u^2 - 2usin\\theta_0 gt + g^2t^2 \\\\
+          \\implies y^2 = c  - bx+ ax^2 \\\
+        \\end{gather}
         `,
       },
 
@@ -87,12 +120,12 @@ const GraphsBasic = () => {
         vAxisTitle: "Vy (m/s)",
 
         description: `
-        \\begin{align*}
-          \\text{Equation: } v_y =& usin\\theta_0 - gt \\\\
-          v_y = c -& mx \\text{ (Straight Line)} \\\\
-          \\frac{dv_y}{dt} & = -g \\\\
-          \\text{slope of the} & \\text{ line} = -g
-        \\end{align*}
+        \\begin{gather}
+          \\text{Equation: } v_y = usin\\theta_0 - gt \\\\
+          v_y = c - mx \\text{ (Straight Line)} \\\\
+          \\frac{dv_y}{dt}  = -g \\\\
+          \\text{Slope of the}  \\text{ line} = -g
+        \\end{gather}
         `,
       },
       {
@@ -108,11 +141,11 @@ const GraphsBasic = () => {
         vAxisTitle: "Speed (m/s)",
 
         description: `
-          \\begin{align*}
-          \\text{Equation: } &v = \\sqrt{(v_x^2 + v_y^2)} \\\\
-          \\theta = tan^{-1} &\\left(\\frac{v_y}{v_x}\\right) \\\\
+          \\begin{gather}
+          \\text{Equation: } v = \\sqrt{(v_x^2 + v_y^2)} \\\\
+          \\theta = tan^{-1} \\left(\\frac{v_y}{v_x}\\right) \\\\
 
-          \\end{align*}
+          \\end{gather}
         `,
       },
     ],
