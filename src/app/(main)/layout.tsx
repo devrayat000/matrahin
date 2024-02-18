@@ -28,7 +28,7 @@ export default async function MainLayout({
           <MainDrawer />
         </div>
       </header>
-      <main className="min-h-screen">{children}</main>
+      <main className="min-h-[calc(100vh-10rem)]">{children}</main>
       <Footer />
     </div>
   );

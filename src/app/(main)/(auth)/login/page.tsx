@@ -7,12 +7,12 @@ import { Suspense } from "react";
 
 export default function LoginPage() {
   return (
-    <div className="container relative hidden h-full flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+    <div className="container relative h-full flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       <Link
         href="/register"
         className={cn(
           buttonVariants({ variant: "ghost" }),
-          "absolute right-4 top-4 md:right-8 md:top-8"
+          "hidden lg:absolute lg:inline right-4 top-4 md:right-8 md:top-8"
         )}
       >
         Register
@@ -30,7 +30,7 @@ export default function LoginPage() {
           </blockquote>
         </div>
       </div>
-      <div className="lg:p-8">
+      <div className="lg:p-8 pt-36 lg:pt-0">
         <div className="mx-auto flex w-full flex-col justify-center gap-y-6 sm:w-[350px]">
           <div className="flex flex-col gap-y-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">
