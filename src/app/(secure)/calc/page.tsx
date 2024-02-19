@@ -6,6 +6,7 @@ import type { Url } from "next/dist/shared/lib/router/router";
 import { buttonVariants } from "~/components/ui/button";
 import { getCalculators } from "~/services/graphql/calc";
 import { CardBody, CardContainer, CardItem } from "~/components/ui/3d-card";
+import Animated from "./Animated";
 
 export default function HomePage() {
   const imageSize = {
@@ -17,7 +18,7 @@ export default function HomePage() {
   const { products: cards } = use(getCalculators(imageSize));
 
   return (
-    <main>
+    <Animated>
       <section className="mt-6 sm:mx-20 p-3">
         <h1 className="text-center text-2xl sm:text-3xl font-bold">
           Tools Available at Matrahin
@@ -44,7 +45,7 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-    </main>
+    </Animated>
   );
 }
 

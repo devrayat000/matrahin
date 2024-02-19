@@ -1,11 +1,15 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import AdvancedRainCalculator from "./component/advanced";
 import BasicRainCalculator from "./component/basic";
 import { Suspense } from "react";
 import Spinner from "~/components/common/Spinner";
+import Animated from "../../Animated";
+import { textAppear } from "~/lib/animations";
 
 function RainManTabs() {
   const router = useRouter();
@@ -34,15 +38,18 @@ function RainManTabs() {
 
 export default function RainManPage() {
   return (
-    <div>
-      <h1 className="text-center text-4xl py-3 mt-3 text-primary font-bold leading-8 text-gray-900 ">
+    <Animated>
+      <motion.h1
+        variants={textAppear}
+        className="text-center text-4xl py-3 mt-3 text-primary font-bold leading-8 text-gray-900 "
+      >
         Rain Umbrella Problem
-      </h1>
+      </motion.h1>
       <div className="mt-4">
         <Suspense fallback={<Spinner />}>
           <RainManTabs />
         </Suspense>
       </div>
-    </div>
+    </Animated>
   );
 }

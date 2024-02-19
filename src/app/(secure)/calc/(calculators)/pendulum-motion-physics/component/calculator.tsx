@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { motion } from "framer-motion";
+
 import pendulum from "~/assets/cards/pendulum.jpg";
 import DynamicUnitInput from "~/components/common/DynamicUnitInput";
 import { Button } from "~/components/ui/button";
@@ -29,6 +31,7 @@ import {
 } from "~/lib/UnitConverter";
 import UnitValue, { IUnitValue } from "~/lib/UnitValue";
 import "~/lib/globals";
+import { textAppear } from "~/lib/animations";
 
 type PendulumParams = {
   aMax: IUnitValue<any>;
@@ -99,7 +102,12 @@ export default function PendulumCalculator() {
 
   return (
     <div className="m-4">
-      <h1 className="text-3xl font-bold text-center">Pendulum Calculator</h1>
+      <motion.h1
+        variants={textAppear}
+        className="text-3xl font-bold text-center"
+      >
+        Pendulum Calculator
+      </motion.h1>
       <div className="mt-12 flex gap-4 mx-auto max-w-4xl">
         <figure className="basis-[45%]">
           <Image {...pendulum} alt="Pendulum physics" />

@@ -9,6 +9,7 @@ import {
 } from "~/components/ui/accordion";
 
 import { getExamples } from "~/services/graphql/example";
+import Animated from "../../../Animated";
 
 export default function ExamplePage({
   params: { slug },
@@ -18,7 +19,7 @@ export default function ExamplePage({
   const { product } = use(getExamples({ slug }));
 
   return (
-    <div className="container">
+    <Animated className="container">
       <h1 className="text-5xl text-center font-bold">{product.name}</h1>
 
       <div className="mt-2 container max-w-4xl mx-auto">
@@ -84,6 +85,6 @@ export default function ExamplePage({
           </Accordion>
         </div>
       </div>
-    </div>
+    </Animated>
   );
 }

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-
 import { useSetAtom } from "jotai";
+import { motion } from "framer-motion";
+
 import ResultsContainer from "~/components/project/boat_river/ResultsContainer";
 import { boatRiverSchema } from "~/components/project/boat_river/schema";
 import { boatRiverAtom } from "~/components/project/boat_river/store";
@@ -17,6 +18,8 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Boat_RiverInput, Boat_River_General } from "~/services/Boat_River";
+import Animated from "../../Animated";
+import { textAppear } from "~/lib/animations";
 
 export default function BoatRiverPage() {
   const [initialState, setInitialState] = useState(boatRiverSchema[0]);
@@ -63,10 +66,10 @@ export default function BoatRiverPage() {
   if (error && !angleGiven) {
     return (
       <div className="mt-10 min-h-screen flex flex-col items-center gap-4">
-        <p className="text-red-800">
+        <motion.p variants={textAppear} className="text-red-800">
           Can't reach other end in shortest distance please provide initial
           angle to calculate
-        </p>
+        </motion.p>
         <Button
           className="justify-self-end"
           onClick={() => {
@@ -82,7 +85,7 @@ export default function BoatRiverPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center gap-4 my-4">
+    <Animated className="min-h-screen flex flex-col items-center gap-4 my-4">
       <h1 className="text-2xl font-bold">Boat-River Problem</h1>
       <form
         className="w-5/6 lg:w-[32rem] p-2 lg:p-5 rounded-lg border-slate-200 border"
@@ -166,6 +169,6 @@ export default function BoatRiverPage() {
         </div>
       </form>
       <ResultsContainer />
-    </div>
+    </Animated>
   );
 }
