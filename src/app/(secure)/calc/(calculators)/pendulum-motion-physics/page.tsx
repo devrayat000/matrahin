@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import Spinner from "~/components/common/Spinner";
 import PendulumCalculator from "./component/calculator";
 import PendulumSimulation from "./component/simulation";
+import Animated from "../../Animated";
 
 function PendulumTabs() {
   const router = useRouter();
@@ -34,12 +35,12 @@ function PendulumTabs() {
 
 export default function PendulumPage() {
   return (
-    <div>
+    <Animated>
       <div className="mt-4">
         <Suspense fallback={<Spinner />}>
           <PendulumTabs />
         </Suspense>
       </div>
-    </div>
+    </Animated>
   );
 }

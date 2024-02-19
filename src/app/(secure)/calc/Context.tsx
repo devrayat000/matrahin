@@ -1,6 +1,8 @@
 "use client";
 
 import { MathJaxContext } from "better-react-mathjax";
+import { AnimatePresence } from "framer-motion";
+import { Children } from "react";
 
 const config = {
   loader: { load: ["[tex]/html"] },
@@ -22,9 +24,11 @@ export default function CalcContext({
 }: {
   children: React.ReactNode;
 }) {
+  const child = Children.only(children);
+
   return (
     <MathJaxContext version={3} config={config}>
-      {children}
+      <AnimatePresence mode="sync">{child}</AnimatePresence>
     </MathJaxContext>
   );
 }

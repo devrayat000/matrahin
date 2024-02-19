@@ -1,14 +1,24 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
+
 import OptionsCard from "~/components/project/moment_of_inertia/OptionsCard";
 import constants from "~/components/project/moment_of_inertia/schema";
+import Animated from "../../Animated";
+import { textAppear } from "~/lib/animations";
+
 const Moment_of_inertia = () => {
   return (
-    <>
-      <p className="max-w-3xl  mx-auto text-center text-base leading-6 text-gray-500 p-2">
+    <Animated>
+      <motion.p
+        variants={textAppear}
+        className="max-w-3xl  mx-auto text-center text-base leading-6 text-gray-500 p-2"
+      >
         The moment of inertia of a rigid body about a given axis describes how
         difficult it is to change its angular motion about that axis. The SI
         unit of moment of inertia is the kilogram square metre (kg⋅m2).
-      </p>
+      </motion.p>
       {/* <div className="flex flex-col sm:flex-row m-2 mx-10 gap-6 items-center justify-center">
         {constants.map((option, index) => (
           <OptionsCard
@@ -31,7 +41,7 @@ const Moment_of_inertia = () => {
           </Link>
         ))}
       </div>
-    </>
+    </Animated>
   );
 };
 

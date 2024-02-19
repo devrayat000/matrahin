@@ -2,6 +2,7 @@
 
 import { useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 import ResultsContainer from "~/components/project/projectile/ResultsContainer";
 import { projectileSchema } from "~/components/project/projectile/schema";
@@ -17,6 +18,8 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import Projectile, { ProjectileInput } from "~/services/Projectile";
+import Animated from "../../Animated";
+import { textAppear } from "~/lib/animations";
 
 export default function ProjectilePage() {
   //@ts-ignore
@@ -29,14 +32,17 @@ export default function ProjectilePage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center gap-4 mb-4">
-      <h1 className="text-center text-4xl py-3 mt-3 text-primary font-bold leading-8 text-gray-900 ">
+    <Animated className="min-h-screen flex flex-col items-center gap-4 mb-4">
+      <motion.h1
+        variants={textAppear}
+        className="text-center text-4xl py-3 mt-3 text-primary font-bold leading-8 text-gray-900 "
+      >
         Projectile Motion
-      </h1>
+      </motion.h1>
 
       <Inputs />
       <ResultsContainer />
-    </div>
+    </Animated>
   );
 }
 

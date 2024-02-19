@@ -11,6 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import Spinner from "~/components/common/Spinner";
 import AdvancedVectorCalculator from "./comonents/advanced";
+import Animated from "../../Animated";
 
 function VectorTabs() {
   const router = useRouter();
@@ -39,7 +40,7 @@ function VectorTabs() {
 
 export default function VectorPage() {
   return (
-    <div>
+    <Animated>
       <h1 className="text-center text-4xl py-3 mt-3 text-primary font-bold leading-8 text-gray-900 ">
         Vector Calculation
       </h1>
@@ -48,6 +49,6 @@ export default function VectorPage() {
           <VectorTabs />
         </Suspense>
       </div>
-    </div>
+    </Animated>
   );
 }

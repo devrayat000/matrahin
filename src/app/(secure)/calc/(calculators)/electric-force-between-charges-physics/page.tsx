@@ -3,6 +3,7 @@
 import { ZoomInIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useController, useForm, useWatch } from "react-hook-form";
+import { motion } from "framer-motion";
 
 import IterableFiels from "~/components/project/electric-force/IterableFields";
 import StaticFields from "~/components/project/electric-force/StaticFields";
@@ -27,6 +28,8 @@ import {
 } from "~/components/ui/table";
 import { makeDegree } from "~/lib/utils";
 import Vector from "~/lib/vector";
+import Animated from "../../Animated";
+import { textAppear } from "~/lib/animations";
 
 type ElectricForceParams =
   | {
@@ -853,8 +856,10 @@ export default function ElectricForcePage() {
   //     );
   //   };
   return (
-    <div className="mb-3 ">
-      <p className="text-center text-4xl pt-3">Static Electricity</p>
+    <Animated className="mb-3">
+      <motion.p variants={textAppear} className="text-center text-4xl pt-3">
+        Static Electricity
+      </motion.p>
       <div className="flex flex-col-reverse md:flex-row md:gap-2 items-center md:items-center justify-around md:mx-5">
         <div className="flex flex-col md:self-start items-center justify-center gap-2">
           <div className="self-center md:self-start md:mt-4  ">
@@ -969,6 +974,6 @@ export default function ElectricForcePage() {
           )}
         </div>
       </div>
-    </div>
+    </Animated>
   );
 }
