@@ -127,7 +127,6 @@ export default function BoatRiverPage() {
                 id={field.name}
                 name={field.name}
                 className="w-[20ch]"
-                type={field.type}
                 value={inputs[field.name] || 0}
                 onChange={(e) =>
                   setInputs({ ...inputs, [field.name]: +e.currentTarget.value })

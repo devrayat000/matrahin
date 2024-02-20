@@ -42,7 +42,7 @@ export default function IterableFiels() {
     <div className="flex flex-col gap-2">
       {initialParams === "f_net" && (
         <>
-          <fieldset className="flex items-center gap-x-6 p-2 border border-slate-300 rounded-md">
+          <fieldset className="flex flex-col md:flex-row items-center gap-x-6 p-2 border border-slate-300 rounded-md">
             <legend>Test Charge</legend>
             <FormField
               control={form.control}
@@ -52,7 +52,7 @@ export default function IterableFiels() {
                 <FormItem className="flex-1 flex items-center gap-2 gap-y-0">
                   <FormLabel htmlFor={`test.c`}>charge</FormLabel>
                   <FormControl>
-                    <Input className="mt-0" type="number" {...field} />
+                    <Input className="mt-0" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -65,7 +65,7 @@ export default function IterableFiels() {
                 <FormItem className="basis-[20%] flex items-center gap-2 gap-y-0">
                   <FormLabel htmlFor={`test.c`}>x</FormLabel>
                   <FormControl>
-                    <Input className="mt-0" type="number" {...field} />
+                    <Input className="mt-0" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -78,7 +78,7 @@ export default function IterableFiels() {
                 <FormItem className="basis-[20%] flex items-center gap-2 gap-y-0">
                   <FormLabel htmlFor={`test.c`}>y</FormLabel>
                   <FormControl>
-                    <Input className="mt-0" type="number" {...field} />
+                    <Input className="mt-0" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -99,57 +99,62 @@ export default function IterableFiels() {
           >
             <Plus className="w-4 h-4" />
           </Button>
-          {fields.map((field, i) => (
-            <div key={field.id} className="flex items-center gap-x-6">
-              <FormField<IterableFields, `charges.${number}.c`>
-                control={form.control}
-                defaultValue={0}
-                name={`charges.${i}.c`}
-                render={({ field }) => (
-                  <FormItem className="flex-1 flex items-center gap-2 gap-y-0">
-                    <FormLabel htmlFor={`charges.${i}.c`}>charge</FormLabel>
-                    <FormControl>
-                      <Input className="mt-0" type="number" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField<IterableFields, `charges.${number}.x`>
-                control={form.control}
-                defaultValue={0}
-                name={`charges.${i}.x`}
-                render={({ field }) => (
-                  <FormItem className="basis-[20%] flex items-center gap-2 gap-y-0">
-                    <FormLabel htmlFor={`charges.${i}.c`}>x</FormLabel>
-                    <FormControl>
-                      <Input className="mt-0" type="number" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField<IterableFields, `charges.${number}.y`>
-                control={form.control}
-                defaultValue={0}
-                name={`charges.${i}.y`}
-                render={({ field }) => (
-                  <FormItem className="basis-[20%] flex items-center gap-2 gap-y-0">
-                    <FormLabel htmlFor={`charges.${i}.c`}>y</FormLabel>
-                    <FormControl>
-                      <Input className="mt-0" type="number" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <Button
-                size="icon"
-                variant="outline"
-                type="button"
-                onClick={() => remove(i)}
+          <div className="flex flex-col gap-y-4">
+            {fields.map((field, i) => (
+              <div
+                key={field.id}
+                className="flex flex-col md:flex-row items-center gap-x-6 gap-y-1"
               >
-                <Trash2 className="w-4 h-4" />
-              </Button>
-            </div>
-          ))}
+                <FormField<IterableFields, `charges.${number}.c`>
+                  control={form.control}
+                  defaultValue={0}
+                  name={`charges.${i}.c`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1 flex items-center gap-2 gap-y-0">
+                      <FormLabel htmlFor={`charges.${i}.c`}>charge</FormLabel>
+                      <FormControl>
+                        <Input className="mt-0" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField<IterableFields, `charges.${number}.x`>
+                  control={form.control}
+                  defaultValue={0}
+                  name={`charges.${i}.x`}
+                  render={({ field }) => (
+                    <FormItem className="basis-[20%] flex items-center gap-2 gap-y-0">
+                      <FormLabel htmlFor={`charges.${i}.c`}>x</FormLabel>
+                      <FormControl>
+                        <Input className="mt-0" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField<IterableFields, `charges.${number}.y`>
+                  control={form.control}
+                  defaultValue={0}
+                  name={`charges.${i}.y`}
+                  render={({ field }) => (
+                    <FormItem className="basis-[20%] flex items-center gap-2 gap-y-0">
+                      <FormLabel htmlFor={`charges.${i}.c`}>y</FormLabel>
+                      <FormControl>
+                        <Input className="mt-0" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  size="icon"
+                  variant="outline"
+                  type="button"
+                  onClick={() => remove(i)}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
         </div>
       </fieldset>
     </div>

@@ -284,7 +284,7 @@ export default function ElectricForcePage() {
           </div>
           <ZoomControlChips />
         </div>
-        <div className="bg-slate-300 z-10 self-start  flex md:w-1/3 m-2 p-2  flex-col items-center gap-4">
+        <div className="bg-slate-300 z-10 md:self-start  flex md:w-1/3 m-2 p-2  flex-col items-center gap-4">
           <Form {...form}>
             <form
               className="w-full p-5 rounded-lg border-slate-200 border"

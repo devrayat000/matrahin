@@ -60,7 +60,6 @@ export default function DynamicUnitInput<
       <div className="flex">
         <Input
           id={id}
-          type="number"
           defaultValue={0}
           className="flex-1 rounded-r-none"
           {...form.register(

@@ -48,7 +48,6 @@ export default function DynamicsPage() {
           </Label>
           <Input
             className="basis-[70%]"
-            type="number"
             disabled={completed}
             value={useRoundedAtomValue(displacementAtom)}
             onChange={useAtomChanger(displacementAtom)}
@@ -60,7 +59,6 @@ export default function DynamicsPage() {
           </Label>
           <Input
             className="basis-[70%]"
-            type="number"
             disabled={completed}
             value={useRoundedAtomValue(initialVelocityAtom)}
             onChange={useAtomChanger(initialVelocityAtom)}
@@ -72,7 +70,6 @@ export default function DynamicsPage() {
           </Label>
           <Input
             className="basis-[70%]"
-            type="number"
             disabled={completed}
             value={useRoundedAtomValue(finalVelocityAtom)}
             onChange={useAtomChanger(finalVelocityAtom)}
@@ -84,7 +81,6 @@ export default function DynamicsPage() {
           </Label>
           <Input
             className="basis-[70%]"
-            type="number"
             disabled={completed}
             value={useRoundedAtomValue(accelerationAtom)}
             onChange={useAtomChanger(accelerationAtom)}
@@ -96,7 +92,6 @@ export default function DynamicsPage() {
           </Label>
           <Input
             className="basis-[70%]"
-            type="number"
             disabled={completed}
             value={useRoundedAtomValue(timeAtom)}
             onChange={useAtomChanger(timeAtom)}
