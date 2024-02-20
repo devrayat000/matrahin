@@ -52,7 +52,7 @@ export default function IterableFiels() {
                 <FormItem className="flex-1 flex items-center gap-2 gap-y-0">
                   <FormLabel htmlFor={`test.c`}>charge</FormLabel>
                   <FormControl>
-                    <Input className="mt-0" type="number" {...field} />
+                    <Input className="mt-0" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -65,7 +65,7 @@ export default function IterableFiels() {
                 <FormItem className="basis-[20%] flex items-center gap-2 gap-y-0">
                   <FormLabel htmlFor={`test.c`}>x</FormLabel>
                   <FormControl>
-                    <Input className="mt-0" type="number" {...field} />
+                    <Input className="mt-0" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -78,7 +78,7 @@ export default function IterableFiels() {
                 <FormItem className="basis-[20%] flex items-center gap-2 gap-y-0">
                   <FormLabel htmlFor={`test.c`}>y</FormLabel>
                   <FormControl>
-                    <Input className="mt-0" type="number" {...field} />
+                    <Input className="mt-0" {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -113,7 +113,7 @@ export default function IterableFiels() {
                     <FormItem className="flex-1 flex items-center gap-2 gap-y-0">
                       <FormLabel htmlFor={`charges.${i}.c`}>charge</FormLabel>
                       <FormControl>
-                        <Input className="mt-0" type="number" {...field} />
+                        <Input className="mt-0" {...field} />
                       </FormControl>
                     </FormItem>
                   )}
@@ -126,7 +126,7 @@ export default function IterableFiels() {
                     <FormItem className="basis-[20%] flex items-center gap-2 gap-y-0">
                       <FormLabel htmlFor={`charges.${i}.c`}>x</FormLabel>
                       <FormControl>
-                        <Input className="mt-0" type="number" {...field} />
+                        <Input className="mt-0" {...field} />
                       </FormControl>
                     </FormItem>
                   )}
@@ -139,7 +139,7 @@ export default function IterableFiels() {
                     <FormItem className="basis-[20%] flex items-center gap-2 gap-y-0">
                       <FormLabel htmlFor={`charges.${i}.c`}>y</FormLabel>
                       <FormControl>
-                        <Input className="mt-0" type="number" {...field} />
+                        <Input className="mt-0" {...field} />
                       </FormControl>
                     </FormItem>
                   )}
