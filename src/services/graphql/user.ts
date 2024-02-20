@@ -39,21 +39,17 @@ const FIND_STUDENT = gql`
   }
 `;
 
-export const findStudent = unstable_cache(
-  async (email: string) => {
-    console.log("okay");
-    const { student } = await gqlClient.request<
-      FindStudentQuery,
-      FindStudentQueryVariables
-    >(FIND_STUDENT, { email });
-    console.log("finding...");
-    console.log({ student });
+export const findStudent = async (email: string) => {
+  console.log("okay");
+  const { student } = await gqlClient.request<
+    FindStudentQuery,
+    FindStudentQueryVariables
+  >(FIND_STUDENT, { email });
+  console.log("finding...");
+  console.log({ student });
 
-    return student;
-  },
-  ["login", "student"],
-  { tags: ["login", "student"] }
-);
+  return student;
+};
 
 const CREATE_STUDENT = gql`
   mutation CreateStudent($input: StudentCreateInput!) {
