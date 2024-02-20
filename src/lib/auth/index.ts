@@ -87,19 +87,15 @@ interface Auth {
   (req: NextApiRequest, res: NextApiResponse): Promise<Session>;
 }
 
-export const auth: Auth = unstable_cache(
-  (
-    ...args:
-      | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
-      | [NextApiRequest, NextApiResponse]
-      | []
-  ) => {
-    if (typeof window !== "undefined") {
-      return getSession({ req: args[0] });
-    } else {
-      return getServerSession(...args, authConfig);
-    }
-  },
-  ["session", "login"],
-  { tags: ["session", "login"] }
-);
+export const auth: Auth = (
+  ...args:
+    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
+    | [NextApiRequest, NextApiResponse]
+    | []
+) => {
+  if (typeof window !== "undefined") {
+    return getSession({ req: args[0] });
+  } else {
+    return getServerSession(...args, authConfig);
+  }
+};
