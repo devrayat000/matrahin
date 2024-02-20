@@ -120,7 +120,7 @@ export default function AdvancedRainCalculator() {
                   <FormItem className="flex-1">
                     <FormLabel htmlFor="vr">Velocity</FormLabel>
                     <FormControl>
-                      <Input id="vr" type="number" {...field} />
+                      <Input id="vr" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -132,7 +132,7 @@ export default function AdvancedRainCalculator() {
                   <FormItem className="flex-1">
                     <FormLabel htmlFor="Tr">Angle</FormLabel>
                     <FormControl>
-                      <Input id="Tr" type="number" {...field} />
+                      <Input id="Tr" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -147,7 +147,7 @@ export default function AdvancedRainCalculator() {
                   <FormItem className="flex-1">
                     <FormLabel htmlFor="vo">Velocity</FormLabel>
                     <FormControl>
-                      <Input id="vo" type="number" {...field} />
+                      <Input id="vo" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -159,7 +159,7 @@ export default function AdvancedRainCalculator() {
                   <FormItem className="flex-1">
                     <FormLabel htmlFor="To">Angle</FormLabel>
                     <FormControl>
-                      <Input id="To" type="number" {...field} />
+                      <Input id="To" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -174,7 +174,7 @@ export default function AdvancedRainCalculator() {
                   <FormItem className="flex-1">
                     <FormLabel htmlFor="va">Velocity</FormLabel>
                     <FormControl>
-                      <Input id="va" type="number" {...field} />
+                      <Input id="va" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -186,7 +186,7 @@ export default function AdvancedRainCalculator() {
                   <FormItem className="flex-1">
                     <FormLabel htmlFor="Ta">Angle</FormLabel>
                     <FormControl>
-                      <Input id="Ta" type="number" {...field} />
+                      <Input id="Ta" {...field} />
                     </FormControl>
                   </FormItem>
                 )}

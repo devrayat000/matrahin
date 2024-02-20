@@ -108,7 +108,6 @@ const Inputs = () => {
             id="g"
             name="g"
             className=" w-[20ch]"
-            type="number"
             value={inputs.g}
             max={30}
             onChange={(e) =>
@@ -128,7 +127,6 @@ const Inputs = () => {
               id={field.name}
               name={field.name}
               className=" w-[20ch]"
-              type={field.type}
               max={field.name == "angle" ? 90 : Infinity}
               value={inputs[field.name] || 0}
               onChange={(e) =>
