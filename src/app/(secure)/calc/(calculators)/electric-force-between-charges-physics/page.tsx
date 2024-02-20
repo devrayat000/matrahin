@@ -251,10 +251,10 @@ export default function ElectricForcePage() {
                         test={form.watch("test")}
                       />
                       {!!result &&
-                        form.watch("charges")[0].c &&
+                        form.watch("charges")[0]?.c &&
                         !isNaN(result[angle]) && (
                           <NetForce
-                            angle={result[angle]}
+                            angle={-result[angle]}
                             force={result[f]}
                             test={form.watch("test")}
                           />
@@ -265,7 +265,7 @@ export default function ElectricForcePage() {
                 {/* 3rd case */}
                 {initialParams === "f_neut" &&
                   form.watch("charges") &&
-                  form.watch("charges").length > 0 && (
+                  form.watch("charges")?.length > 0 && (
                     <g>
                       <ChargesForNeutralPoints
                         key={"neutral-point"}

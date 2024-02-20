@@ -1,4 +1,4 @@
-import { useController, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { FormField, FormItem, FormLabel } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 
@@ -43,7 +43,7 @@ export default function StaticFields() {
         render={({ field: input }) => (
           <FormItem className="flex items-center">
             <FormLabel className="flex-1" htmlFor="d">
-              Diatsnce (d)
+              Distance (d)
             </FormLabel>
             <Input id="d" className="flex-[16rem]" type="number" {...input} />
           </FormItem>

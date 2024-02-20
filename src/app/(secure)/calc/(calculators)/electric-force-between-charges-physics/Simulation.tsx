@@ -494,19 +494,8 @@ export const NetForce = ({
         </defs>
 
         <text
-          x={
-            canvasWidth / 2 +
-            test.x * scale +
-            10 * scale * Math.cos((angle * Math.PI) / 180) +
-            10
-          }
-          y={
-            canvasHeight -
-            yOriginOffset -
-            test.y * scale +
-            10 * scale * Math.sin((angle * Math.PI) / 180) +
-            10
-          }
+          x={test.x * scale + canvasWidth / 2 + 15}
+          y={canvasHeight - yOriginOffset - test.y * scale + 25}
           color="black"
         >
           F = {force?.toPrecision(2)} N
