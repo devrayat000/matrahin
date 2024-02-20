@@ -1,9 +1,10 @@
 import { useAtom, useSetAtom } from "jotai";
-import { MinusSquare, PlusSquare, RotateCcw } from "lucide-react";
+import { Info, MinusSquare, PlusSquare, RotateCcw } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "~/components/ui/button";
 import InputWithSlider from "~/components/ui/input-with-slider";
 import { Slider } from "~/components/ui/slider";
+import { cn } from "~/lib/utils";
 import Pendulum from "./Pendulum";
 import { INITIAL_VALUES, inputOptions, pendulumStore } from "./store";
 
@@ -19,6 +20,9 @@ const PendulumInputs = ({
   const [angle, setAngle] = useAtom(pendulumStore.angleAtom);
   const [isPlaying, setIsPlaying] = useAtom(pendulumStore.isPlayingAtom);
   const [customGravitySelected, setCustomGravitySelected] = useState(false);
+  const [inputChanged, setInputChanged] = useAtom(
+    pendulumStore.inputChangedAtom
+  );
   const values = useMemo(() => {
     return {
       length,
@@ -43,6 +47,7 @@ const PendulumInputs = ({
 
   const handleChangeInput = (id: number, value: string) => {
     setIsPlaying(false);
+    setInputChanged(true);
     switch (id) {
       case 1:
         setAngle(Number(value));
@@ -61,6 +66,7 @@ const PendulumInputs = ({
   };
 
   const reset = () => {
+    setInputChanged(true);
     setLength(INITIAL_VALUES.length);
     setMass(INITIAL_VALUES.mass);
     setGravity(INITIAL_VALUES.gravity);
@@ -74,7 +80,7 @@ const PendulumInputs = ({
     setIsPlaying(false);
 
     setCustomGravitySelected(false);
-      
+
     setSubmittedInputs({
       angle: Math.abs(INITIAL_VALUES.angle),
       length: INITIAL_VALUES.length,
@@ -200,10 +206,11 @@ const PendulumInputs = ({
           <RotateCcw size={25} />
         </div>
         <Button
-          disabled={isPlaying}
+          disabled={isPlaying || !inputChanged}
           onClick={() => {
             calculateResults(angle, length, mass, gravity);
             setIsPlaying(true);
+            setInputChanged(false);
             setSubmittedInputs({
               angle: Math.abs(angle),
               length,
@@ -211,11 +218,23 @@ const PendulumInputs = ({
               gravity,
             });
           }}
-          className="w-[100px] hover:scale-125 transition-transform duration-300 transform hover:shadow-2xl "
+          // className="w-[100px] hover:scale-125 transition-transform duration-300 transform hover:shadow-2xl "
+          className={cn(
+            "w-[100px] hover:scale-125 transition-transform duration-300 transform hover:shadow-2xl",
+            inputChanged ? "bg-green-500 scale-125" : "scale-100"
+          )}
         >
           Calculate
         </Button>
       </center>
+
+      {/* info: press calculate to see results */}
+      {inputChanged && (
+        <div className="flex flex-row items-center justify-center w-full gap-2 mt-2 text-sm text-gray-500">
+          <Info size={20} />
+          <span>Press Calculate to see results</span>
+        </div>
+      )}
     </div>
   );
 };
