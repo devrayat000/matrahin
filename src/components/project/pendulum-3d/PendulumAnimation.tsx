@@ -102,7 +102,7 @@ const PendulumAnimation = ({
         </Canvas>
       </div>
 
-      <PauseResumeControl pendulumRef={pendulumRef} timeRef={timeRef} />
+      <PauseResumeControl />
     </div>
   );
 };
@@ -150,22 +150,22 @@ const StopWatch = ({
   );
 };
 
-const PauseResumeControl = ({
-  pendulumRef,
-  timeRef,
-}: {
-  pendulumRef: React.RefObject<Pendulum>;
-  timeRef: React.RefObject<HTMLParagraphElement>;
-}) => {
+const PauseResumeControl = () => {
   const [animating, setAnimating] = useAtom(pendulumStore.isPlayingAtom);
-
+  const inputChanged = useAtomValue(pendulumStore.inputChangedAtom);
   return (
     <div className="flex flex-row gap-1 md:gap-4 items-center justify-center">
       {/* add stopwatch */}
       {/* <StopWatch timeRef={timeRef} /> */}
       <PeriodCounter />
       <div
-        className="bg-green-500 cursor-pointer shadow-xl p-3 md:p-5 self-start  rounded-full hover:scale-125 transition-transform duration-300 transform "
+        // className="bg-green-500 cursor-pointer shadow-xl p-3 md:p-5 self-start  rounded-full hover:scale-125 transition-transform duration-300 transform "
+        // if inputChanged true, this will be disabled
+        className={`${
+          inputChanged
+            ? "bg-gray-300 cursor-not-allowed"
+            : "bg-green-500 cursor-pointer"
+        } shadow-xl p-3 md:p-5 self-start  rounded-full hover:scale-125 transition-transform duration-300 transform `}
         onClick={() => setAnimating(!animating)}
       >
         {animating ? <Pause size={40} /> : <Play size={40} />}
