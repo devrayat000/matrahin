@@ -60,16 +60,12 @@ const GET_HISTORIES = gql`
   }
 `;
 
-export const getHistories = unstable_cache(
-  async () => {
-    const session = await auth();
-    const student = await findStudent(session.user.email);
-    const { histories } = await gqlClient.request<
-      GetHistoriesQuery,
-      GetHistoriesQueryVariables
-    >(GET_HISTORIES, { studentId: student.id });
-    return histories;
-  },
-  ["histories", "login"],
-  { tags: ["histories", "login"] }
-);
+export const getHistories = async () => {
+  const session = await auth();
+  const student = await findStudent(session.user.email);
+  const { histories } = await gqlClient.request<
+    GetHistoriesQuery,
+    GetHistoriesQueryVariables
+  >(GET_HISTORIES, { studentId: student.id });
+  return histories;
+};
