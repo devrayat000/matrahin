@@ -93,6 +93,10 @@ const PendulumResults = ({
   const gravity = useAtomValue(pendulumStore.gravityAtom);
 
   const [currentAngle, setCurrentAngle] = useState(angle);
+
+  useEffect(() => {
+    setCurrentAngle(angle);
+  }, [angle]);
   /**
    * chosen colors:
    * #fbeec1
