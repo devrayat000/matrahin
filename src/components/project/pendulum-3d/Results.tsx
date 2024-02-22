@@ -40,12 +40,12 @@ const PendulumResults = ({
   const animating = useAtomValue(pendulumStore.isPlayingAtom);
 
   const timeCounter = useRef(0);
-
+  const timeInterval = 100;
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (animating) {
       interval = setInterval(() => {
-        timeCounter.current += 0.01;
+        timeCounter.current += timeInterval / 1000;
 
         if (angleResultRef.current) {
           angleResultRef.current.innerText =
@@ -77,12 +77,7 @@ const PendulumResults = ({
           kineticEnergyResultRef.current.innerText =
             pendulumRef.current?.kineticEnergy.toFixed(2) || "0";
         }
-
-        // if (totalEnergyResultRef.current) {
-        //   totalEnergyResultRef.current.innerText =
-        //     pendulumRef.current?.totalEnergy.toFixed(2) || "0";
-        // }
-      }, 10);
+      }, timeInterval);
     } else {
       clearInterval(interval);
     }
