@@ -24,9 +24,9 @@ export const ZoomControlChips = () => {
         selected={scale === MIN_ZOOM}
         onClick={() => setScale(MIN_ZOOM)}
       />
-      <Chip label="0.5x" selected={scale === 1} onClick={() => setScale(1)} />
-      <Chip label="1x" selected={scale === 5} onClick={() => setScale(5)} />
-      <Chip label="2x" onClick={() => setScale(10)} selected={scale === 10} />
+      <Chip label="0.5x" selected={scale === 5} onClick={() => setScale(5)} />
+      <Chip label="1x" selected={scale === 10} onClick={() => setScale(10)} />
+      <Chip label="2x" onClick={() => setScale(20)} selected={scale === 20} />
       <Chip
         label="4x"
         onClick={() => setScale(MAX_ZOOM)}
@@ -207,7 +207,7 @@ export const FirstCase = ({
       <line
         x1={canvasWidth / 2 - (scale * d) / 2}
         y1={canvasHeight - yOriginOffset}
-        x2={canvasWidth / 2 - (scale * d) / 2 + (isAttractive ? -4 : 4) * scale}
+        x2={canvasWidth / 2 - (scale * d) / 2 + (isAttractive ? -4 : 4) * 10}
         y2={canvasHeight - yOriginOffset}
         stroke={isAttractive ? "blue" : "red"}
         strokeWidth="3"
@@ -218,7 +218,7 @@ export const FirstCase = ({
       <line
         x1={canvasWidth / 2 + (scale * d) / 2}
         y1={canvasHeight - yOriginOffset}
-        x2={canvasWidth / 2 + (scale * d) / 2 + (isAttractive ? 4 : -4) * scale}
+        x2={canvasWidth / 2 + (scale * d) / 2 + (isAttractive ? 4 : -4) * 10}
         y2={canvasHeight - yOriginOffset}
         stroke={isAttractive ? "blue" : "red"}
         strokeWidth="3"
@@ -387,12 +387,16 @@ export const Charges = ({
             />
           </g>
         )}
+
+        {/* test charge */}
         <rect
           style={{
             display: showPosition === -1 ? "block" : "none",
           }}
-          x={testChargePositionX - 4 * scale}
-          y={testChargePositionY - 4 * scale}
+          // x={testChargePositionX - 4 * scale}
+          // y={testChargePositionY - 4 * scale}
+          x={testChargePositionX - 4 * 10}
+          y={testChargePositionY - 4 * 10}
           width="80"
           height="25"
           fill="none"
@@ -402,8 +406,8 @@ export const Charges = ({
           style={{
             display: showPosition === -1 ? "block" : "none",
           }}
-          x={testChargePositionX - 3.5 * scale}
-          y={testChargePositionY - 2 * scale}
+          x={testChargePositionX - 3.5 * 10}
+          y={testChargePositionY - 2 * 10}
           color="black"
         >
           {Number(test.x).toPrecision(2)} , {Number(test.y).toPrecision(2)}
