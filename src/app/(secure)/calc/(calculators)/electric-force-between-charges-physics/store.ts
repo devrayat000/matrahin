@@ -8,5 +8,5 @@ export const dimensionsAtom = atom({
   yOriginOffset: 175,
 });
 
-export const MAX_ZOOM = 20;
+export const MAX_ZOOM = 50;
 export const MIN_ZOOM = 0.5;
