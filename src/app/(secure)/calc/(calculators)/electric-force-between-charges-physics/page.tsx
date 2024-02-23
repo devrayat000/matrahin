@@ -219,9 +219,9 @@ export default function ElectricForcePage() {
                   e.preventDefault();
 
                   if (e.deltaY > 0) {
-                    setScale((prev) => (prev > MIN_ZOOM ? prev - 0.1 : prev));
+                    setScale((prev) => (prev > MIN_ZOOM ? prev - 0.5 : prev));
                   } else {
-                    setScale((prev) => (prev < MAX_ZOOM ? prev + 0.1 : prev));
+                    setScale((prev) => (prev < MAX_ZOOM ? prev + 0.5 : prev));
                   }
                 }}
                 width={canvasWidth}
@@ -254,7 +254,7 @@ export default function ElectricForcePage() {
                         form.watch("charges")[0]?.c &&
                         !isNaN(result[angle]) && (
                           <NetForce
-                            angle={-result[angle]}
+                            angle={result[angle]}
                             force={result[f]}
                             test={form.watch("test")}
                           />
