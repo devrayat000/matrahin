@@ -254,7 +254,7 @@ export default function ElectricForcePage() {
                         form.watch("charges")[0]?.c &&
                         !isNaN(result[angle]) && (
                           <NetForce
-                            angle={-result[angle]}
+                            angle={result[angle]}
                             force={result[f]}
                             test={form.watch("test")}
                           />

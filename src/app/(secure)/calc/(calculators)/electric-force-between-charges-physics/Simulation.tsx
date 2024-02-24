@@ -4,12 +4,6 @@ import { useState } from "react";
 import Chip from "~/components/ui/chip";
 import { MAX_ZOOM, MIN_ZOOM, dimensionsAtom, scaleAtom } from "./store";
 
-const Simulation = () => {
-  return <div>Simulation</div>;
-};
-
-export default Simulation;
-
 export const ZoomControlChips = () => {
   const [scale, setScale] = useAtom(scaleAtom);
   return (
