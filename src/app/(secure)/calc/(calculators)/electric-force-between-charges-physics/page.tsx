@@ -40,6 +40,7 @@ import {
   ZoomControlChips,
 } from "./Simulation";
 import { MAX_ZOOM, MIN_ZOOM, dimensionsAtom, scaleAtom } from "./store";
+import "~/lib/globals";
 
 export type ElectricForceParams =
   | {
