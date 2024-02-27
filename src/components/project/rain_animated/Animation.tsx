@@ -4,6 +4,7 @@
 
 import {
   Html,
+  Loader,
   OrbitControls,
   PerspectiveCamera,
   useTexture,
@@ -145,7 +146,7 @@ const Animation = () => {
     <div className="lg:self-start">
       <div className="flex flex-col md:flex-row items-center justify-center">
         <div className="m-auto md:mx-0 my-4 h-[50vh] w-[40vh] md:w-[100vh] md:h-[90vh]">
-          <React.Suspense fallback={<p> loading ...</p>}>
+          <React.Suspense fallback={<Loader />}>
             <Canvas shadows>
               <color attach="background" args={["#a4a4a4"]} />
               <PerspectiveCamera
