@@ -17,7 +17,7 @@ const velocityOneAtom = atom(1);
 
 const velocityTwoAtom = atom(1);
 
-const valuesShowingAtom = atom(false);
+const valuesShowingAtom = atom(true);
 
 const BOX_SIZE = 2;
 export {
