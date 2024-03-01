@@ -3,13 +3,14 @@
 import {
   CubeCamera,
   Environment,
+  Loader,
   OrbitControls,
   useTexture,
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useAtom, useAtomValue } from "jotai";
 import { Pause, Play } from "lucide-react";
-import React, { ReactNode, useRef } from "react";
+import React, { ReactNode, Suspense, useRef } from "react";
 import * as THREE from "three";
 import Pendulum from "./Pendulum";
 import { pendulumStore, timePeriodAtom } from "./store";
@@ -71,35 +72,37 @@ const PendulumAnimation = ({
   return (
     <div>
       <div className=" w-5/6  lg:w-full  h-[40vh] md:h-[70vh] mb-2">
-        <Canvas shadows="soft">
-          {/* <AdaptiveCamera length={length} /> */}
-          <Camera length={length} />
-          {/* <PerspectiveCamera
+        <Suspense fallback={<Loader />}>
+          <Canvas shadows="soft">
+            {/* <AdaptiveCamera length={length} /> */}
+            <Camera length={length} />
+            {/* <PerspectiveCamera
                 makeDefault
                 position={[0, 0.6, currentLength + 1]}
                 fov={75}
                 near={0.1}
                 far={100}
               /> */}
-          <Environment
-            near={0.2}
-            far={100}
-            background
-            blur={0}
-            preset="apartment"
-          />
-          <Animation
-            pendulumRef={pendulumRef}
-            periodCounterRef={periodCounterRef}
-            timeRef={timeRef}
-          />
-          {/* <Ground /> */}
-          <Structure length={length} />
+            <Environment
+              near={0.2}
+              far={100}
+              background
+              blur={0}
+              preset="apartment"
+            />
+            <Animation
+              pendulumRef={pendulumRef}
+              periodCounterRef={periodCounterRef}
+              timeRef={timeRef}
+            />
+            {/* <Ground /> */}
+            <Structure length={length} />
 
-          {/* <ambientLight args={[0xdddddd, 0.4]} /> */}
+            {/* <ambientLight args={[0xdddddd, 0.4]} /> */}
 
-          <OrbitControls minDistance={1} maxDistance={45} />
-        </Canvas>
+            <OrbitControls minDistance={1} maxDistance={45} />
+          </Canvas>
+        </Suspense>
       </div>
 
       <PauseResumeControl />
