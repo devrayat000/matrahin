@@ -18,8 +18,9 @@ const velocityOneAtom = atom(1);
 const velocityTwoAtom = atom(1);
 
 const valuesShowingAtom = atom(true);
-
+const fullScreenOnAtom = atom(false);
 const BOX_SIZE = 2;
+
 export {
   BOX_SIZE,
   END_OF_ROAD,
@@ -29,4 +30,5 @@ export {
   valuesShowingAtom,
   velocityOneAtom,
   velocityTwoAtom,
+  fullScreenOnAtom,
 };

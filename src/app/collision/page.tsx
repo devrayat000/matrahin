@@ -10,7 +10,8 @@ import {
   PerspectiveCamera,
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
+import { Maximize, Minimize } from "lucide-react";
 import { ForwardedRef, Fragment, Suspense, forwardRef, useRef } from "react";
 import * as THREE from "three";
 import {
@@ -24,6 +25,7 @@ import {
   BOX_SIZE,
   END_OF_ROAD,
   TIME_STEP,
+  fullScreenOnAtom,
   massOneAtom,
   massTwoAtom,
 } from "./store";
@@ -108,7 +110,7 @@ const SingleBlock = forwardRef(
           color={colors[count - 1]}
         />
 
-        <BBAnchor anchor={[-1, 0.5, -1]}>
+        <BBAnchor anchor={[-1, 0.5, -0.5]}>
           <Html
             transform
             occlude
@@ -150,87 +152,87 @@ const Results = ({
   ];
 
   return (
-    <div className="flex flex-col justify-between items-center border-black  w-full h-full   ">
-      <div className="w-full">
-        <div className="flex flex-row justify-between items-start gap-2 m-1 flex-wrap ">
-          {/* Object 2 */}
-
-          <Accordion
-            onValueChange={(value) => {
-              if (value === "Object 2") updateAllTexts(2);
-            }}
-            defaultValue="Object 2"
-            type="single"
-            collapsible={true}
-            className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none "
+    <div
+      style={{
+        fontFamily: "consolas",
+      }}
+      className="flex flex-col justify-between items-center   w-full h-full   "
+    >
+      <div className="flex flex-col justify-between items-start  w-full gap-2 m-1  ">
+        {/* Object 1 */}
+        <Accordion
+          onValueChange={(value) => {
+            if (value === "Object 1") updateAllTexts(1);
+          }}
+          defaultValue="Object 1"
+          type="single"
+          collapsible={true}
+          className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none "
+        >
+          <AccordionItem
+            value="Object 1"
+            className="px-2 rounded-xl border-2 border-border"
           >
-            <AccordionItem
-              value="Object 2"
-              className="px-2 rounded-xl border-2 border-border"
-            >
-              <AccordionTrigger className="md:text-xl py-1  font-bold w-full">
-                Object 2
-              </AccordionTrigger>
-              <AccordionContent className="text-xs md:text-lg">
-                {
-                  params(2).map((param) => (
-                    <div
-                      key={param.label}
-                      className="flex  flex-row w-full items-center"
-                    >
-                      <p className="text-left w-[3ch]">
-                        {param.label}
-                        <sub>2</sub>
-                      </p>
-                      :<p className="text-right  w-[8ch]" ref={param.ref}></p>
-                      <p className="text-left ml-1">{param.unit}</p>
-                    </div>
-                  )) // m,v,p,KE
-                }
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+            <AccordionTrigger className="lg:text-xl py-1  font-bold w-full">
+              Object 1
+            </AccordionTrigger>
+            <AccordionContent className="text-xs lg:text-lg">
+              {
+                params(1).map((param) => (
+                  <div
+                    key={param.label}
+                    className="flex flex-row w-full items-center"
+                  >
+                    <p className="text-left w-[3ch]">
+                      {param.label}
+                      <sub>1</sub>
+                    </p>
+                    :<p className="text-right  w-[8ch]" ref={param.ref}></p>
+                    <p className="text-left ml-1">{param.unit}</p>
+                  </div>
+                )) // m,v,p,KE
+              }
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
-          {/* Object 1 */}
-          <Accordion
-            onValueChange={(value) => {
-              if (value === "Object 1") updateAllTexts(1);
-            }}
-            defaultValue="Object 1"
-            type="single"
-            collapsible={true}
-            className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none "
+        {/* Object 2 */}
+
+        <Accordion
+          onValueChange={(value) => {
+            if (value === "Object 2") updateAllTexts(2);
+          }}
+          defaultValue="Object 2"
+          type="single"
+          collapsible={true}
+          className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none "
+        >
+          <AccordionItem
+            value="Object 2"
+            className="px-2 rounded-xl border-2 border-border"
           >
-            <AccordionItem
-              value="Object 1"
-              className="px-2 rounded-xl border-2 border-border"
-            >
-              <AccordionTrigger className="md:text-xl py-1  font-bold w-full">
-                Object 1
-              </AccordionTrigger>
-              <AccordionContent className="text-xs md:text-lg">
-                {
-                  params(1).map((param) => (
-                    <div
-                      key={param.label}
-                      className="flex flex-row w-full items-center"
-                    >
-                      <p className="text-left w-[3ch]">
-                        {param.label}
-                        <sub>1</sub>
-                      </p>
-                      :<p className="text-right  w-[8ch]" ref={param.ref}></p>
-                      <p className="text-left ml-1">{param.unit}</p>
-                    </div>
-                  )) // m,v,p,KE
-                }
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
-      </div>
-
-      <div className="">
+            <AccordionTrigger className="lg:text-xl py-1  font-bold w-full">
+              Object 2
+            </AccordionTrigger>
+            <AccordionContent className="text-xs lg:text-lg">
+              {
+                params(2).map((param) => (
+                  <div
+                    key={param.label}
+                    className="flex  flex-row w-full items-center"
+                  >
+                    <p className="text-left w-[3ch]">
+                      {param.label}
+                      <sub>2</sub>
+                    </p>
+                    :<p className="text-right  w-[8ch]" ref={param.ref}></p>
+                    <p className="text-left ml-1">{param.unit}</p>
+                  </div>
+                )) // m,v,p,KE
+              }
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
         {/* Total */}
         <Accordion
           defaultValue="Total"
@@ -245,10 +247,10 @@ const Results = ({
             value="Total"
             className="px-2 rounded-xl border-2 border-border"
           >
-            <AccordionTrigger className="md:text-xl py-1  font-bold w-full">
+            <AccordionTrigger className="lg:text-xl py-1  font-bold w-full">
               Total
             </AccordionTrigger>
-            <AccordionContent className="text-xs md:text-lg">
+            <AccordionContent className="text-xs lg:text-lg">
               <div className="flex  flex-row w-full items-center">
                 <p className="text-left w-[3ch]">KE:</p>
                 <p className="text-right  w-[8ch]" ref={totalKETextRef}></p>
@@ -277,7 +279,12 @@ const checkCollision = (
   box2.setFromObject(object2);
   return box1.intersectsBox(box2);
 };
-const Objects = () => {
+const Objects = ({
+  divRef,
+}: {
+  divRef: React.MutableRefObject<HTMLDivElement | null>;
+}) => {
+  const [fullScreenOn, setFullScreenOn] = useAtom(fullScreenOnAtom);
   const m1 = useAtomValue(massOneAtom);
   const m2 = useAtomValue(massTwoAtom);
 
@@ -402,12 +409,41 @@ const Objects = () => {
         fullscreen
         style={{
           letterSpacing: "0.1em",
-          fontFamily: "consolas",
           userSelect: "none",
         }}
         prepend
-        className="  md:p-1 md:px-2  w-fit"
+        className="p-1 lg:px-2  w-full"
       >
+        <div className="flex items-center justify-center text-white text-3xl my-2">
+          Collision
+        </div>
+        <div className="absolute bottom-2 right-2 ">
+          <button
+            onClick={() => {
+              if (divRef.current) {
+                if (document.fullscreenElement) {
+                  document.exitFullscreen();
+                  setFullScreenOn(false);
+                } else {
+                  divRef.current
+                    .requestFullscreen()
+                    .then(() => {
+                      setFullScreenOn(true);
+                    })
+                    .catch((err) => {
+                      console.error(
+                        "Error attempting to enable full-screen mode:",
+                        err.message
+                      );
+                    });
+                }
+              }
+            }}
+            className=" backdrop-blur-[1px] backdrop-brightness-75 text-white p-1 lg:scale-125 hover:scale-150  rounded-md"
+          >
+            {fullScreenOn ? <Minimize size={40} /> : <Maximize size={40} />}
+          </button>
+        </div>
         <Results
           refs={[
             [m1TextRef, v1TextRef, p1TextRef, kE1TextRef],
@@ -473,10 +509,33 @@ const XTicks = ({ length }: { length: number }) => {
   );
 };
 const Simulation = () => {
+  const divRef = useRef<HTMLDivElement>(null);
+  const [fullScreenOn, setFullScreenOn] = useAtom(fullScreenOnAtom);
+  window.addEventListener("keypress", (e) => {
+    if (e.key === "f") {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+        setFullScreenOn(false);
+      } else {
+        divRef.current
+          .requestFullscreen()
+          .then(() => {
+            setFullScreenOn(true);
+          })
+          .catch((err) => {
+            console.error(
+              "Error attempting to enable full-screen mode:",
+              err.message
+            );
+          });
+      }
+    }
+  });
+
   return (
-    <div className="my-2 w-5/6 h-[50svh] md:h-[80svh]">
+    <div ref={divRef} className="my-2 w-5/6 lg:w-[95%]  h-[70svh] lg:h-[80svh]">
       <Suspense fallback={<Loader />}>
-        <Canvas shadows>
+        <Canvas shadows style={{ contain: "layout" }}>
           <color attach="background" args={["#303035"]} />
           {/* <Environment
             blur={1}
@@ -495,9 +554,10 @@ const Simulation = () => {
             sectionColor={"#aaa"}
             position-y={-BOX_SIZE / 2}
             cellThickness={1}
+            fadeDistance={300}
           />
 
-          <PerspectiveCamera makeDefault position={[-20, 10, 0]} fov={45} />
+          <PerspectiveCamera makeDefault position={[-30, 10, 0]} fov={30} />
           <ContactShadows
             blur={2}
             far={10}
@@ -509,8 +569,8 @@ const Simulation = () => {
 
           <XTicks length={50} />
 
-          <OrbitControls makeDefault />
-          <Objects />
+          <OrbitControls enableDamping={false} enablePan={false} makeDefault />
+          <Objects divRef={divRef} />
         </Canvas>
       </Suspense>
     </div>
@@ -519,13 +579,13 @@ const Simulation = () => {
 
 export default function CollisionPage() {
   return (
-    <div className="grid md:grid-cols-10 grid-cols-1  my-2 justify-center items-center md:items-start">
-      <center className="md:col-span-9   ">
+    <div className="grid lg:grid-cols-10 grid-cols-1  my-2 justify-center items-center lg:items-start">
+      <center className="lg:col-span-10   ">
         <Simulation />
       </center>
-      <center>
+      {/* <center>
         <p className="text-2xl font-bold">Collision</p>
-      </center>
+      </center> */}
     </div>
   );
 }
