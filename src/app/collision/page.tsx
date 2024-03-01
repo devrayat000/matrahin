@@ -10,9 +10,16 @@ import {
   PerspectiveCamera,
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Maximize, Minimize } from "lucide-react";
-import { ForwardedRef, Fragment, Suspense, forwardRef, useRef } from "react";
+import {
+  ForwardedRef,
+  Fragment,
+  Suspense,
+  forwardRef,
+  useEffect,
+  useRef,
+} from "react";
 import * as THREE from "three";
 import {
   Accordion,
@@ -20,6 +27,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
+import { toggleFullScreen } from "~/lib/utils/3DCanvasUtils";
 import colors from "./colors";
 import {
   BOX_SIZE,
@@ -420,24 +428,10 @@ const Objects = ({
         <div className="absolute bottom-2 right-2 ">
           <button
             onClick={() => {
-              if (divRef.current) {
-                if (document.fullscreenElement) {
-                  document.exitFullscreen();
-                  setFullScreenOn(false);
-                } else {
-                  divRef.current
-                    .requestFullscreen()
-                    .then(() => {
-                      setFullScreenOn(true);
-                    })
-                    .catch((err) => {
-                      console.error(
-                        "Error attempting to enable full-screen mode:",
-                        err.message
-                      );
-                    });
-                }
-              }
+              toggleFullScreen(
+                divRef.current as HTMLDivElement,
+                setFullScreenOn
+              );
             }}
             className=" backdrop-blur-[1px] backdrop-brightness-75 text-white p-1 lg:scale-125 hover:scale-150  rounded-md"
           >
@@ -508,16 +502,19 @@ const XTicks = ({ length }: { length: number }) => {
     </>
   );
 };
-const Simulation = () => {
-  const divRef = useRef<HTMLDivElement>(null);
-  const [fullScreenOn, setFullScreenOn] = useAtom(fullScreenOnAtom);
+
+const addKeyControlToGoFullScreen = (
+  div: HTMLDivElement,
+  setFullScreenOn: (value: boolean) => void
+) => {
+  if (!div) return;
   window.addEventListener("keypress", (e) => {
     if (e.key === "f") {
       if (document.fullscreenElement) {
         document.exitFullscreen();
         setFullScreenOn(false);
       } else {
-        divRef.current
+        div
           .requestFullscreen()
           .then(() => {
             setFullScreenOn(true);
@@ -531,7 +528,19 @@ const Simulation = () => {
       }
     }
   });
+};
+const Simulation = () => {
+  const divRef = useRef<HTMLDivElement>(null);
+  const setFullScreenOn = useSetAtom(fullScreenOnAtom);
 
+  useEffect(() => {
+    addKeyControlToGoFullScreen(divRef.current, setFullScreenOn);
+
+    return () => {
+      window.removeEventListener("keypress", () => {});
+      setFullScreenOn(false);
+    };
+  }, []);
   return (
     <div ref={divRef} className="my-2 w-5/6 lg:w-[95%]  h-[70svh] lg:h-[80svh]">
       <Suspense fallback={<Loader />}>
