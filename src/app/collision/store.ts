@@ -9,9 +9,9 @@ const defaultValues = {
   v1: 1,
   v2: 1,
 };
-const massOneAtom = atom(0.001);
+const massOneAtom = atom(0.1);
 
-const massTwoAtom = atom(0.001);
+const massTwoAtom = atom(0.1);
 
 const velocityOneAtom = atom(1);
 
