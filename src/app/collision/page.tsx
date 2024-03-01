@@ -11,8 +11,14 @@ import {
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useAtomValue } from "jotai";
-import { ForwardedRef, Suspense, forwardRef, useRef } from "react";
+import { ForwardedRef, Fragment, Suspense, forwardRef, useRef } from "react";
 import * as THREE from "three";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
 import colors from "./colors";
 import {
   BOX_SIZE,
@@ -40,17 +46,31 @@ const calculateVelocityAfterCollision = (
 
 // const colors = [woodColor, marbleColor];
 // const roughness = [woodTexture, marbleTexture];
+
+const precision = 1;
 const updateText = (
-  vTextParagraph: HTMLParagraphElement,
-  vValue: number,
+  v: number,
   m: number,
-  count: number
+  mText: HTMLParagraphElement,
+  vText: HTMLParagraphElement,
+  pText: HTMLParagraphElement,
+  kEText: HTMLParagraphElement
 ) => {
-  vTextParagraph.innerHTML = `v<sub>${count}</sub>=${vValue.toFixed(
-    2
-  )}m/s m<sub>${count}</sub>=${m}kg`;
+  if (vText) vText.innerText = v.toFixed(precision);
+  if (mText) mText.innerText = m.toFixed(precision);
+  if (pText) pText.innerText = (m * v).toFixed(precision);
+  if (kEText) kEText.innerText = (0.5 * m * v * v).toFixed(precision);
 };
 
+const updateTotalKE = (totalKE: number, totalKEText: HTMLParagraphElement) => {
+  if (totalKEText) totalKEText.innerText = totalKE.toFixed(precision);
+};
+
+const updateTotalPE = (totalPE: number, totalPEText: HTMLParagraphElement) => {
+  if (totalPEText) totalPEText.innerText = totalPE.toFixed(precision);
+};
+
+const BoundingBox = new THREE.Box3();
 const vec = new THREE.Vector3();
 const updateArrows = (
   arrow: THREE.ArrowHelper,
@@ -109,6 +129,154 @@ const SingleBlock = forwardRef(
     );
   }
 );
+
+const Results = ({
+  refs, // as m,v,p,kE
+  totalKETextRef,
+  totalPETextRef,
+  updateAllTexts,
+}: {
+  refs: React.MutableRefObject<HTMLParagraphElement>[][];
+
+  totalKETextRef: React.MutableRefObject<HTMLParagraphElement>;
+  totalPETextRef: React.MutableRefObject<HTMLParagraphElement>;
+  updateAllTexts: (count: number) => void;
+}) => {
+  const params = (i: number) => [
+    { label: `M`, ref: refs[i - 1][0], unit: "kg" },
+    { label: `V`, ref: refs[i - 1][1], unit: "m/s" },
+    { label: `P`, ref: refs[i - 1][2], unit: "kgm/s" },
+    { label: `KE`, ref: refs[i - 1][3], unit: "J" },
+  ];
+
+  return (
+    <div className="flex flex-col justify-between items-center border-black  w-full h-full   ">
+      <div className="w-full">
+        <div className="flex flex-row justify-between items-start gap-2 m-1 flex-wrap ">
+          {/* Object 2 */}
+
+          <Accordion
+            onValueChange={(value) => {
+              if (value === "Object 2") updateAllTexts(2);
+            }}
+            defaultValue="Object 2"
+            type="single"
+            collapsible={true}
+            className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none "
+          >
+            <AccordionItem
+              value="Object 2"
+              className="px-2 rounded-xl border-2 border-border"
+            >
+              <AccordionTrigger className="md:text-xl py-1  font-bold w-full">
+                Object 2
+              </AccordionTrigger>
+              <AccordionContent className="text-xs md:text-lg">
+                {
+                  params(2).map((param) => (
+                    <div
+                      key={param.label}
+                      className="flex  flex-row w-full items-center"
+                    >
+                      <p className="text-left w-[3ch]">
+                        {param.label}
+                        <sub>2</sub>
+                      </p>
+                      :<p className="text-right  w-[8ch]" ref={param.ref}></p>
+                      <p className="text-left ml-1">{param.unit}</p>
+                    </div>
+                  )) // m,v,p,KE
+                }
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+
+          {/* Object 1 */}
+          <Accordion
+            onValueChange={(value) => {
+              if (value === "Object 1") updateAllTexts(1);
+            }}
+            defaultValue="Object 1"
+            type="single"
+            collapsible={true}
+            className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none "
+          >
+            <AccordionItem
+              value="Object 1"
+              className="px-2 rounded-xl border-2 border-border"
+            >
+              <AccordionTrigger className="md:text-xl py-1  font-bold w-full">
+                Object 1
+              </AccordionTrigger>
+              <AccordionContent className="text-xs md:text-lg">
+                {
+                  params(1).map((param) => (
+                    <div
+                      key={param.label}
+                      className="flex flex-row w-full items-center"
+                    >
+                      <p className="text-left w-[3ch]">
+                        {param.label}
+                        <sub>1</sub>
+                      </p>
+                      :<p className="text-right  w-[8ch]" ref={param.ref}></p>
+                      <p className="text-left ml-1">{param.unit}</p>
+                    </div>
+                  )) // m,v,p,KE
+                }
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </div>
+
+      <div className="">
+        {/* Total */}
+        <Accordion
+          defaultValue="Total"
+          type="single"
+          collapsible={true}
+          className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none "
+          onValueChange={(value) => {
+            if (value === "Total") updateAllTexts(0);
+          }}
+        >
+          <AccordionItem
+            value="Total"
+            className="px-2 rounded-xl border-2 border-border"
+          >
+            <AccordionTrigger className="md:text-xl py-1  font-bold w-full">
+              Total
+            </AccordionTrigger>
+            <AccordionContent className="text-xs md:text-lg">
+              <div className="flex  flex-row w-full items-center">
+                <p className="text-left w-[3ch]">KE:</p>
+                <p className="text-right  w-[8ch]" ref={totalKETextRef}></p>
+                <p className="text-left ml-1">J</p>
+              </div>
+              <div className="flex  flex-row w-full items-center">
+                <p className="text-left w-[3ch]">P:</p>
+                <p className="text-right  w-[8ch]" ref={totalPETextRef}></p>
+                <p className="text-left ml-1">kgm/s</p>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
+    </div>
+  );
+};
+
+const checkCollision = (
+  object1: THREE.Object3D<THREE.Object3DEventMap>,
+  object2: THREE.Object3D<THREE.Object3DEventMap>
+) => {
+  const box1 = BoundingBox.clone();
+  const box2 = BoundingBox.clone();
+  box1.setFromObject(object1);
+  box2.setFromObject(object2);
+  return box1.intersectsBox(box2);
+};
 const Objects = () => {
   const m1 = useAtomValue(massOneAtom);
   const m2 = useAtomValue(massTwoAtom);
@@ -118,26 +286,72 @@ const Objects = () => {
   const v1: React.MutableRefObject<number> = useRef(-5 * TIME_STEP);
   const v2: React.MutableRefObject<number> = useRef(1 * TIME_STEP);
 
+  const arrowRef1: React.MutableRefObject<THREE.ArrowHelper | null> =
+    useRef(null);
+  const arrowRef2: React.MutableRefObject<THREE.ArrowHelper | null> =
+    useRef(null);
+
   const v1TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
     useRef(null);
   const v2TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
     useRef(null);
 
-  const arrowRef1: React.MutableRefObject<THREE.ArrowHelper | null> =
+  const m1TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
     useRef(null);
-  const arrowRef2: React.MutableRefObject<THREE.ArrowHelper | null> =
+  const m2TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
     useRef(null);
-  const BoundingBox = new THREE.Box3();
+  const p1TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
+    useRef(null);
+  const p2TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
+    useRef(null);
 
-  const checkCollision = (
-    object1: THREE.Object3D<THREE.Object3DEventMap>,
-    object2: THREE.Object3D<THREE.Object3DEventMap>
-  ) => {
-    const box1 = BoundingBox.clone();
-    const box2 = BoundingBox.clone();
-    box1.setFromObject(object1);
-    box2.setFromObject(object2);
-    return box1.intersectsBox(box2);
+  const kE1TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
+    useRef(null);
+  const kE2TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
+    useRef(null);
+
+  const totalKETextRef: React.MutableRefObject<HTMLParagraphElement | null> =
+    useRef(null);
+  const totalMomentumTextRef: React.MutableRefObject<HTMLParagraphElement | null> =
+    useRef(null);
+
+  /**
+   * Update the text of the objects, always updates the total KE and momentum
+   * @param count 0: update all, 1: update 1, 2: update 2
+   */
+  const updateAllTexts = (count: number) => {
+    if (count == 0 || count == 1) {
+      updateText(
+        v1.current / TIME_STEP,
+        m1,
+        m1TextRef.current as HTMLParagraphElement,
+        v1TextRef.current as HTMLParagraphElement,
+        p1TextRef.current as HTMLParagraphElement,
+        kE1TextRef.current as HTMLParagraphElement
+      );
+    }
+    if (count == 0 || count == 2)
+      updateText(
+        v2.current / TIME_STEP,
+        m2,
+        m2TextRef.current as HTMLParagraphElement,
+        v2TextRef.current as HTMLParagraphElement,
+        p2TextRef.current as HTMLParagraphElement,
+        kE2TextRef.current as HTMLParagraphElement
+      );
+
+    // update the total kinetic energy
+    updateTotalKE(
+      (0.5 * m1 * v1.current * v1.current) / TIME_STEP / TIME_STEP +
+        (0.5 * m2 * v2.current * v2.current) / TIME_STEP / TIME_STEP,
+      totalKETextRef.current as HTMLParagraphElement
+    );
+
+    // update the total momentum
+    updateTotalPE(
+      (m1 * v1.current + m2 * v2.current) / TIME_STEP,
+      totalMomentumTextRef.current as HTMLParagraphElement
+    );
   };
 
   useFrame(() => {
@@ -157,9 +371,7 @@ const Objects = () => {
       v1.current = v1f;
       v2.current = v2f;
 
-      // update the text
-      updateText(v1TextRef.current, v1.current / TIME_STEP, m1, 1);
-      updateText(v2TextRef.current, v2.current / TIME_STEP, m2, 2);
+      updateAllTexts(0);
     }
 
     // moves along x axis
@@ -169,14 +381,15 @@ const Objects = () => {
     // if it reaches the end of the road, reverse the direction
     if (mesh1.position.z > END_OF_ROAD || mesh1.position.z < -END_OF_ROAD) {
       v1.current = -v1.current;
-      updateText(v1TextRef.current, v1.current / TIME_STEP, m1, 1);
+      updateAllTexts(1);
     }
 
     if (mesh2.position.z > END_OF_ROAD || mesh2.position.z < -END_OF_ROAD) {
       v2.current = -v2.current;
-      updateText(v2TextRef.current, v2.current / TIME_STEP, m2, 2);
+      updateAllTexts(2);
     }
     // update the arrow direction and position
+
     updateArrows(arrowRef1.current as THREE.ArrowHelper, mesh1, v1.current);
     updateArrows(arrowRef2.current as THREE.ArrowHelper, mesh2, v2.current);
   });
@@ -193,12 +406,17 @@ const Objects = () => {
           userSelect: "none",
         }}
         prepend
-        className="  p-1 px-2  w-fit"
+        className="  md:p-1 md:px-2  w-fit"
       >
-        <div className="flex flex-col justify-center bg-stone-200 w-fit  opacity-100">
-          <p ref={v1TextRef}>v={v1.current.toFixed(1)} m/s</p>
-          <p ref={v2TextRef}>v={v2.current.toFixed(1)} m/s</p>
-        </div>
+        <Results
+          refs={[
+            [m1TextRef, v1TextRef, p1TextRef, kE1TextRef],
+            [m2TextRef, v2TextRef, p2TextRef, kE2TextRef],
+          ]}
+          totalKETextRef={totalKETextRef}
+          totalPETextRef={totalMomentumTextRef}
+          updateAllTexts={updateAllTexts}
+        />
       </Html>
 
       {/* draw arrow from box to the direction of velocity */}
@@ -222,9 +440,41 @@ const Objects = () => {
   );
 };
 
+const Lights = () => (
+  <>
+    <directionalLight position={[-5, 10, 0]} intensity={1} castShadow />
+    <directionalLight position={[0, 5, 5]} intensity={1} castShadow />
+    <directionalLight position={[-5, 5, -5]} intensity={1} castShadow />
+    <pointLight position={[0, 10, 0]} intensity={0.7} />
+  </>
+);
+
+const XTicks = ({ length }: { length: number }) => {
+  // returns x ticks from -length to +length in 5 gaps
+  return (
+    <>
+      {Array.from({ length: length / 5 }, (_, i) => (
+        <Fragment key={i}>
+          <Html
+            className="text-white text-xs"
+            position={[0, -BOX_SIZE / 2, i * 5]}
+          >
+            {i * 5}
+          </Html>
+          <Html
+            className="text-white text-xs"
+            position={[0, -BOX_SIZE / 2, -i * 5]}
+          >
+            {-i * 5}
+          </Html>
+        </Fragment>
+      ))}
+    </>
+  );
+};
 const Simulation = () => {
   return (
-    <div className="m-2 w-5/6 h-[40svh] md:h-[80svh]">
+    <div className="my-2 w-5/6 h-[50svh] md:h-[80svh]">
       <Suspense fallback={<Loader />}>
         <Canvas shadows>
           <color attach="background" args={["#303035"]} />
@@ -235,10 +485,7 @@ const Simulation = () => {
             resolution={256}
             preset="sunset"
           /> */}
-          <pointLight position={[0, 10, 0]} intensity={0.7} />
-          <directionalLight position={[-5, 10, 0]} intensity={1} castShadow />
-          <directionalLight position={[0, 5, 5]} intensity={1} castShadow />
-          <directionalLight position={[-5, 5, -5]} intensity={1} castShadow />
+          <Lights />
           <Grid
             receiveShadow
             infiniteGrid
@@ -259,6 +506,9 @@ const Simulation = () => {
             resolution={1024}
             scale={100}
           />
+
+          <XTicks length={50} />
+
           <OrbitControls makeDefault />
           <Objects />
         </Canvas>
