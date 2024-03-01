@@ -10,6 +10,7 @@ import {
 } from "~/components/ui/table";
 import { resultSchema } from "./schema";
 import { projectileAtom } from "./store";
+import "~/lib/globals";
 
 export default function ResultTable() {
   const projectileParams = useAtomValue(projectileAtom);
@@ -17,6 +18,8 @@ export default function ResultTable() {
   if (!projectileParams) {
     return null;
   }
+
+  console.log(projectileParams);
 
   return (
     <div className="w-5/6 lg:w-[32rem] p-5 rounded-lg border-slate-200 border">
@@ -41,7 +44,7 @@ export default function ResultTable() {
                 }}
               />
               <TableCell className="text-right">
-                {projectileParams[name].toPrecision(4)}
+                {projectileParams[name]?.toPrecision(4)}
               </TableCell>
             </TableRow>
           ))}

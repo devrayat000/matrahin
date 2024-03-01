@@ -147,7 +147,7 @@ const Animation = () => {
       <div className="flex flex-col md:flex-row items-center justify-center">
         <div className="m-auto md:mx-0 my-4 h-[50vh] w-[40vh] md:w-[100vh] md:h-[90vh]">
           <React.Suspense fallback={<Loader />}>
-            <Canvas shadows>
+            <Canvas shadows className="cursor-move">
               <color attach="background" args={["#a4a4a4"]} />
               <PerspectiveCamera
                 fov={45}
@@ -220,8 +220,6 @@ const Object = ({
 
   const [animations, setAnimations] = useState<THREE.AnimationClip[]>([]);
 
-  const clockRef = useRef<THREE.Clock>(new THREE.Clock());
-
   const N = 20000; // number of snowflakes
   const vector = new THREE.Vector3(0, -1, 0);
 
@@ -234,8 +232,7 @@ const Object = ({
       else rainRef.current.visible = true;
     }
   }, [v_rain]);
-  useFrame(() => {
-    const delta = clockRef.current.getDelta();
+  useFrame(({}, delta) => {
     if (groupRef.current && mixerRef.current) {
       mixerRef.current.update(delta * speed);
     }
@@ -295,7 +292,7 @@ const Object = ({
       action.play();
     });
 
-    var snowflakes = new THREE.BufferGeometry();
+    let snowflakes = new THREE.BufferGeometry();
     const points = [];
     for (var i = 0; i < N; i++) {
       points.push(
@@ -320,7 +317,7 @@ const Object = ({
       transparent: false,
       opacity: 1,
       depthWrite: true,
-      // blending: THREE.AdditiveBlending,
+      blending: THREE.AdditiveBlending,
     });
 
     const point = new THREE.Points(snowflakes, pointMaterial);

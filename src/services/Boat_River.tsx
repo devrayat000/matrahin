@@ -35,7 +35,11 @@ export class Boat_River_General<Input extends Boat_RiverInput>
     for (const key in input) {
       if (Object.prototype.hasOwnProperty.call(input, key)) {
         const element = input[key];
-        Object.defineProperty(this, key, { value: element });
+        Object.defineProperty(this, key, {
+          value: element,
+          writable: true,
+          configurable: true,
+        });
       }
     }
     this.type = type;

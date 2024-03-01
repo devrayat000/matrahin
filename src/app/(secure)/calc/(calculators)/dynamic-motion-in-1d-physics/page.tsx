@@ -49,7 +49,7 @@ export default function DynamicsPage() {
           <Input
             className="basis-[70%]"
             disabled={completed}
-            value={useRoundedAtomValue(displacementAtom)}
+            value={useAtomValue(displacementAtom)}
             onChange={useAtomChanger(displacementAtom)}
           />
         </div>

@@ -56,13 +56,13 @@ function Grid({ children, scale, divisions = 10, ...props }) {
   })
   return (
     <group {...props}>
-      <group scale={scale}>
-        <gridHelper ref={grid} args={[1, divisions, '#888', '#bbb']} />
-        <mesh receiveShadow ref={plane} rotation-x={-Math.PI / 2}>
-          <planeGeometry />
-          <meshStandardMaterial transparent color="lightblue" polygonOffset polygonOffsetUnits={1} polygonOffsetFactor={1} />
-        </mesh>
-      </group>
+    <group scale={scale}>
+    <gridHelper ref={grid} args={[1, divisions, '#888', '#bbb']} />
+    <mesh receiveShadow ref={plane} rotation-x={-Math.PI / 2}>
+      <planeGeometry />
+      <meshStandardMaterial transparent color="lightblue" polygonOffset polygonOffsetUnits={1} polygonOffsetFactor={1} />
+    </mesh>
+  </group>
       <context.Provider value={activate}>{children}</context.Provider>
     </group>
   )

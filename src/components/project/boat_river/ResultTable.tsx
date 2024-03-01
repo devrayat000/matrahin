@@ -10,6 +10,7 @@ import {
 } from "~/components/ui/table";
 import { resultSchema } from "./schema";
 import { boatRiverAtom } from "./store";
+import "~/lib/globals";
 
 export default function ResultTable() {
   const boatRiverParams = useAtomValue(boatRiverAtom);
