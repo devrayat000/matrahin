@@ -6,6 +6,7 @@ import ResultTable from "./ResultTable";
 import dynamic from "next/dynamic";
 import ProjectileMotion from "./MotionCanvas";
 import { projectileAtom } from "./store";
+import "~/lib/globals";
 
 const GraphsBasic = dynamic(() => import("./GraphsBasic"), { ssr: false });
 

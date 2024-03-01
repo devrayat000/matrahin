@@ -1,4 +1,5 @@
 import CalcContext from "./Context";
+import "~/lib/globals";
 
 export default function CalcLayout({
   children,

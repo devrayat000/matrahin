@@ -3,6 +3,7 @@ import { ZoomInIcon } from "lucide-react";
 import { useState } from "react";
 import Chip from "~/components/ui/chip";
 import { MAX_ZOOM, MIN_ZOOM, dimensionsAtom, scaleAtom } from "./store";
+import "~/lib/globals";
 
 export const ZoomControlChips = () => {
   const [scale, setScale] = useAtom(scaleAtom);
