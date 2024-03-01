@@ -96,13 +96,12 @@ export function useAtomChanger(
 
   return (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value === "") return setAtom("");
-    setAtom(event.target.valueAsNumber);
+    setAtom(Number(event.target.value));
   };
 }
 
 export function useRoundedAtomValue(atom: Atom<number | "">) {
   const val = useAtomValue(atom);
-
   return val === ""
     ? ""
     : val.toLocaleString(undefined, { maximumFractionDigits: 2 });

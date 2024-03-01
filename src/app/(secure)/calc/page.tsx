@@ -73,7 +73,7 @@ function ProjectCard(props: ProjectCardProps) {
             className="text-xl font-semibold text-center group-hover:underline"
             asChild
           >
-            <h6>{props.title}</h6>
+            <h6 className="w-full">{props.title}</h6>
           </CardItem>
           <div className="flex flex-col items-stretch gap-y-1 mt-3 [transform-style:preserve-3d] [&>*]:[transform-style:preserve-3d]">
             <CardItem

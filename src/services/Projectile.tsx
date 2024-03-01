@@ -116,7 +116,7 @@ export default class Projectile<Input extends ProjectileInput>
     const { g, t, xm } = this;
     const an = Math.atan((t ** 2 * g) / (2 * xm));
     this.angle = this.#makeDegree(an);
-    this.#solve_vi_angle();
+    this.#solve_angle_xm();
   }
 
   #solve_vi_xm() {

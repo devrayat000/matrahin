@@ -13,7 +13,7 @@ export default async function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div>
+    <div className="h-full">
       <main className="min-h-[calc(100vh-10rem)]">{children}</main>
       <Footer />
     </div>

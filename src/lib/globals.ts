@@ -4,6 +4,7 @@ Number.prototype.toCalc = function (fractionalDigits?: number) {
   });
 };
 
+export {};
 declare global {
   interface Number {
     /**
@@ -17,4 +18,3 @@ declare global {
     toCalc(fractionalDigits: number): string;
   }
 }
-export {};
