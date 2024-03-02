@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 const BoundingBox = new THREE.Box3();
 const vec = new THREE.Vector3();
 const precision = 1;
@@ -96,4 +98,14 @@ const checkCollision = (
   box1.setFromObject(object1);
   box2.setFromObject(object2);
   return box1.intersectsBox(box2);
+};
+
+export {
+  calculateVelocityAfterCollision,
+  checkCollision,
+  updateArrows,
+  updateText,
+  updateTotalKE,
+  updateTotalPE,
+  vec,
 };

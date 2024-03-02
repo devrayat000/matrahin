@@ -25,6 +25,16 @@ import {
   massOneAtom,
   massTwoAtom,
 } from "./store";
+import "./utils";
+import {
+  calculateVelocityAfterCollision,
+  checkCollision,
+  updateArrows,
+  updateText,
+  updateTotalKE,
+  updateTotalPE,
+  vec,
+} from "./utils";
 
 /**
  * Represents the main contents of the collision page.
