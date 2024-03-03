@@ -41,7 +41,7 @@ const Results = ({
       style={{
         fontFamily: "consolas",
       }}
-      className="flex flex-col justify-between items-center   w-full h-full   "
+      className="flex flex-col justify-between items-center    "
     >
       <div className="flex flex-col justify-between items-start  w-full gap-2 m-1  ">
         {/* Object 1 */}

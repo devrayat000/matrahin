@@ -13,6 +13,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { Suspense, useEffect, useRef } from "react";
 import * as THREE from "three";
 import { XTicks } from "~/components/common/CanvasTHREE/xTicks";
+import CollisionInputs from "~/components/project/collisions/CollisionInputs";
 import FullScreenButton from "~/components/project/collisions/FullScreenButton";
 import Results from "~/components/project/collisions/Results";
 import SingleBlock from "~/components/project/collisions/SingleBlock";
@@ -24,7 +25,7 @@ import {
   fullScreenOnAtom,
   massOneAtom,
   massTwoAtom,
-} from "./store";
+} from "../../components/project/collisions/store";
 import "./utils";
 import {
   calculateVelocityAfterCollision,
@@ -179,16 +180,22 @@ const MainContents = ({
         <div className="flex items-center justify-center text-white text-3xl my-2">
           Collision
         </div>
+        <div className="flex flex-row justify-between items-start w-full gap-2 m-1  ">
+          <Results
+            refs={[
+              [m1TextRef, v1TextRef, p1TextRef, kE1TextRef],
+              [m2TextRef, v2TextRef, p2TextRef, kE2TextRef],
+            ]}
+            totalKETextRef={totalKETextRef}
+            totalPETextRef={totalMomentumTextRef}
+            updateAllTexts={updateAllTexts}
+          />
+
+          <div>
+            <CollisionInputs />
+          </div>
+        </div>
         <FullScreenButton div={divRef.current} />
-        <Results
-          refs={[
-            [m1TextRef, v1TextRef, p1TextRef, kE1TextRef],
-            [m2TextRef, v2TextRef, p2TextRef, kE2TextRef],
-          ]}
-          totalKETextRef={totalKETextRef}
-          totalPETextRef={totalMomentumTextRef}
-          updateAllTexts={updateAllTexts}
-        />
       </Html>
 
       {/* draw arrow from box to the direction of velocity */}
@@ -264,7 +271,12 @@ const Simulation = () => {
 
           <XTicks length={50} y={-BOX_SIZE / 2} />
 
-          <OrbitControls enableDamping={false} enablePan={false} makeDefault />
+          <OrbitControls
+            // enableRotate={false}
+            enableDamping={false}
+            enablePan={false}
+            makeDefault
+          />
           <MainContents divRef={divRef} />
         </Canvas>
       </Suspense>

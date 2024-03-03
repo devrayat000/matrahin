@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { Maximize, Minimize } from "lucide-react";
-import { fullScreenOnAtom } from "~/app/collision/store";
+import { fullScreenOnAtom } from "~/components/project/collisions/store";
 import { toggleFullScreen } from "~/lib/utils/3DCanvasUtils";
 
 /**

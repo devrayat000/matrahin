@@ -2,7 +2,7 @@ import { BBAnchor, Html } from "@react-three/drei";
 import { ForwardedRef, forwardRef } from "react";
 import * as THREE from "three";
 import colors from "~/app/collision/colors";
-import { BOX_SIZE } from "~/app/collision/store";
+import { BOX_SIZE } from "~/components/project/collisions/store";
 
 const SingleBlock = forwardRef(
   (
