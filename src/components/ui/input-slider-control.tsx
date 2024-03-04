@@ -11,7 +11,7 @@ import { Slider } from "./slider";
 interface InputSliderControlProps {
   label: string;
   value: number;
-  onChange: (value: number) => void;
+  onChange: (value: number | "") => void;
   min?: number;
   max?: number;
   step?: number;
@@ -36,10 +36,12 @@ const InputSliderControl: React.FC<InputSliderControlProps> = ({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === "") return onChange("");
     onChange(Number(e.target.value));
   };
 
-  const handleSliderClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  // prevent 3d canvas from moving when slider is clicked
+  const preventCanvasRotation = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
 
@@ -128,7 +130,7 @@ const InputSliderControl: React.FC<InputSliderControlProps> = ({
           </div>
           <AccordionContent className="text-xs lg:text-lg pb-1">
             <div
-              onPointerDown={handleSliderClick}
+              onPointerDown={preventCanvasRotation}
               className="flex flex-col w-full items-center"
             >
               <Slider
