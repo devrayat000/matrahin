@@ -36,6 +36,7 @@ import {
   updateTotalPE,
   vec,
 } from "./utils";
+import Controls from "~/components/project/collisions/Controls";
 
 /**
  * Represents the main contents of the collision page.
@@ -235,12 +236,7 @@ const MainContents = ({
             </div>
           </div>
           <div>
-            <button
-              onClick={() => setPlaying(!playing)}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-              {playing ? "Pause" : "Play"}
-            </button>
+            <Controls />
           </div>
         </div>
         <FullScreenButton div={divRef.current} />
