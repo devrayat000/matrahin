@@ -11,7 +11,7 @@ import { Slider } from "./slider";
 interface InputSliderControlProps {
   label: string;
   value: number;
-  onChange: (value: number | "") => void;
+  onChange: (value: number) => void;
   min?: number;
   max?: number;
   step?: number;
@@ -36,7 +36,7 @@ const InputSliderControl: React.FC<InputSliderControlProps> = ({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value === "") return onChange("");
+    // if (e.target.value === "") return onChange("");
     onChange(Number(e.target.value));
   };
 
@@ -89,7 +89,7 @@ const InputSliderControl: React.FC<InputSliderControlProps> = ({
                 </button>
                 <input
                   type="number"
-                  value={value}
+                  value={value === 0 ? "" : value}
                   min={min}
                   max={max}
                   onChange={handleChange}

@@ -10,23 +10,24 @@ import {
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useAtomValue, useSetAtom } from "jotai";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { XTicks } from "~/components/common/CanvasTHREE/xTicks";
 import CollisionInputs from "~/components/project/collisions/CollisionInputs";
 import FullScreenButton from "~/components/project/collisions/FullScreenButton";
 import Results from "~/components/project/collisions/Results";
 import SingleBlock from "~/components/project/collisions/SingleBlock";
-import { addKeyControlToGoFullScreen } from "~/lib/utils/3DCanvasUtils";
+import WallsAtEndOfRoad from "~/components/project/collisions/WallsAtEndOfRoad";
 import {
   BOX_SIZE,
+  DEFAULT_INPUTS,
   END_OF_ROAD,
   TIME_STEP,
+  collisionInputsAtom,
   fullScreenOnAtom,
-  massOneAtom,
-  massTwoAtom,
-} from "../../components/project/collisions/store";
-import "./utils";
+} from "~/components/project/collisions/store";
+import { addKeyControlToGoFullScreen } from "~/lib/utils/3DCanvasUtils";
+
 import {
   calculateVelocityAfterCollision,
   checkCollision,
@@ -48,14 +49,34 @@ const MainContents = ({
 }: {
   divRef: React.MutableRefObject<HTMLDivElement | null>;
 }) => {
-  const m1 = useAtomValue(massOneAtom);
-  const m2 = useAtomValue(massTwoAtom);
+  const [playing, setPlaying] = useState(true);
+
+  const v1: React.MutableRefObject<number> = useRef(
+    DEFAULT_INPUTS.v1 * TIME_STEP
+  );
+  const v2: React.MutableRefObject<number> = useRef(
+    DEFAULT_INPUTS.v2 * TIME_STEP
+  );
+
+  const {
+    massOne: m1,
+    massTwo: m2,
+    velocityOne,
+    velocityTwo,
+  } = useAtomValue(collisionInputsAtom);
+
+  useEffect(() => {
+    v1.current = velocityOne * TIME_STEP;
+  }, [velocityOne]);
+  useEffect(() => {
+    v2.current = velocityTwo * TIME_STEP;
+  }, [velocityTwo]);
+
+  const size1 = useMemo(() => 1 + m1 / 10, [m1]);
+  const size2 = useMemo(() => 1 + m2 / 10, [m2]);
 
   const meshRef1: React.MutableRefObject<THREE.Mesh | null> = useRef(null);
   const meshRef2: React.MutableRefObject<THREE.Mesh | null> = useRef(null);
-  const v1: React.MutableRefObject<number> = useRef(-5 * TIME_STEP);
-  const v2: React.MutableRefObject<number> = useRef(1 * TIME_STEP);
-
   const arrowRef1: React.MutableRefObject<THREE.ArrowHelper | null> =
     useRef(null);
   const arrowRef2: React.MutableRefObject<THREE.ArrowHelper | null> =
@@ -124,7 +145,22 @@ const MainContents = ({
     );
   };
 
+  const checkIfReachedEndOfRoad = (
+    mesh: THREE.Mesh,
+    v: React.MutableRefObject<number>,
+    size: number
+  ) => {
+    if (
+      mesh.position.z + size > END_OF_ROAD ||
+      mesh.position.z - size < -END_OF_ROAD
+    ) {
+      v.current = -v.current;
+      updateAllTexts(1);
+    }
+  };
+
   useFrame(() => {
+    if (!playing) return;
     const mesh1 = meshRef1.current as THREE.Mesh;
     const mesh2 = meshRef2.current as THREE.Mesh;
     if (!mesh1 || !mesh2) return;
@@ -149,15 +185,8 @@ const MainContents = ({
     mesh2.position.z += v2.current;
 
     // if it reaches the end of the road, reverse the direction
-    if (mesh1.position.z > END_OF_ROAD || mesh1.position.z < -END_OF_ROAD) {
-      v1.current = -v1.current;
-      updateAllTexts(1);
-    }
-
-    if (mesh2.position.z > END_OF_ROAD || mesh2.position.z < -END_OF_ROAD) {
-      v2.current = -v2.current;
-      updateAllTexts(2);
-    }
+    checkIfReachedEndOfRoad(mesh1, v1, size1);
+    checkIfReachedEndOfRoad(mesh2, v2, size2);
     // update the arrow direction and position
 
     updateArrows(arrowRef1.current as THREE.ArrowHelper, mesh1, v1.current);
@@ -166,8 +195,11 @@ const MainContents = ({
 
   return (
     <group scale={[1, 1, 1]}>
-      <SingleBlock ref={meshRef1} count={1} />
-      <SingleBlock ref={meshRef2} count={2} />
+      <SingleBlock ref={meshRef1} size={size1} count={1} />
+      <SingleBlock ref={meshRef2} size={size2} count={2} />
+
+      <WallsAtEndOfRoad />
+
       <Html
         fullscreen
         style={{
@@ -203,7 +235,7 @@ const MainContents = ({
         ref={arrowRef1}
         args={[
           vec.set(0, 0, v1.current).normalize(),
-          vec.clone().set(0, BOX_SIZE / 2, 0),
+          vec.clone().set(0, size1, 0),
           4,
         ]}
       />
@@ -211,7 +243,7 @@ const MainContents = ({
         ref={arrowRef2}
         args={[
           vec.set(0, 0, v2.current).normalize(),
-          vec.clone().set(0, BOX_SIZE / 2, 0),
+          vec.clone().set(0, size2, 0),
           4,
         ]}
       />
@@ -224,7 +256,7 @@ const Lights = () => (
     <directionalLight position={[-5, 10, 0]} intensity={1} castShadow />
     <directionalLight position={[0, 5, 5]} intensity={1} castShadow />
     <directionalLight position={[-5, 5, -5]} intensity={1} castShadow />
-    <pointLight position={[0, 10, 0]} intensity={0.7} />
+    <pointLight position={[0, 10, 0]} intensity={0.1} castShadow />
   </>
 );
 
@@ -254,12 +286,12 @@ const Simulation = () => {
             sectionSize={10}
             cellColor={"#6f6f6f"}
             sectionColor={"#aaa"}
-            position-y={-BOX_SIZE / 2}
             cellThickness={1}
             fadeDistance={150}
           />
 
           <PerspectiveCamera makeDefault position={[-30, 10, 0]} fov={30} />
+          {/* <OrthographicCamera makeDefault position={[-10, 5, 0]} /> */}
           <ContactShadows
             blur={2}
             far={10}
@@ -269,7 +301,7 @@ const Simulation = () => {
             scale={100}
           />
 
-          <XTicks length={50} y={-BOX_SIZE / 2} />
+          <XTicks length={50} />
 
           <OrbitControls
             // enableRotate={false}

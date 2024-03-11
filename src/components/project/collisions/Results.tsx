@@ -43,7 +43,7 @@ const Results = ({
       }}
       className="flex flex-col justify-between items-center    "
     >
-      <div className="flex flex-col justify-between items-start  w-full gap-2 m-1  ">
+      <div className="flex flex-col justify-between items-start  w-full gap-2 m-1   ">
         {/* Object 1 */}
         <Accordion
           onValueChange={(value) => {
@@ -52,7 +52,7 @@ const Results = ({
           defaultValue="Object 1"
           type="single"
           collapsible={true}
-          className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none "
+          className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none  "
         >
           <AccordionItem
             value="Object 1"

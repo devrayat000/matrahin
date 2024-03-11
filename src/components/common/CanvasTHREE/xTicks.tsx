@@ -8,7 +8,7 @@ import { Fragment } from "react";
  * @param y - The y-coordinate of the ticks.
  * @returns The XTicks component.
  */
-export const XTicks = ({ length, y }: { length: number; y: number }) => {
+export const XTicks = ({ length, y = 0 }: { length: number; y?: number }) => {
   return (
     <>
       {Array.from({ length: length / 5 }, (_, i) => (
