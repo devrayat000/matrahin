@@ -19,7 +19,6 @@ import Results from "~/components/project/collisions/Results";
 import SingleBlock from "~/components/project/collisions/SingleBlock";
 import WallsAtEndOfRoad from "~/components/project/collisions/WallsAtEndOfRoad";
 import {
-  BOX_SIZE,
   DEFAULT_INPUTS,
   END_OF_ROAD,
   TIME_STEP,
@@ -49,7 +48,7 @@ const MainContents = ({
 }: {
   divRef: React.MutableRefObject<HTMLDivElement | null>;
 }) => {
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
 
   const v1: React.MutableRefObject<number> = useRef(
     DEFAULT_INPUTS.v1 * TIME_STEP
@@ -193,6 +192,13 @@ const MainContents = ({
     updateArrows(arrowRef2.current as THREE.ArrowHelper, mesh2, v2.current);
   });
 
+  /**
+   * Update the text of the objects, always updates the total KE and momentum
+   */
+  useEffect(() => {
+    updateAllTexts(0);
+  }, [playing]);
+
   return (
     <group scale={[1, 1, 1]}>
       <SingleBlock ref={meshRef1} size={size1} count={1} />
@@ -212,41 +218,55 @@ const MainContents = ({
         <div className="flex items-center justify-center text-white text-3xl my-2">
           Collision
         </div>
-        <div className="flex flex-row justify-between items-start w-full gap-2 m-1  ">
-          <Results
-            refs={[
-              [m1TextRef, v1TextRef, p1TextRef, kE1TextRef],
-              [m2TextRef, v2TextRef, p2TextRef, kE2TextRef],
-            ]}
-            totalKETextRef={totalKETextRef}
-            totalPETextRef={totalMomentumTextRef}
-            updateAllTexts={updateAllTexts}
-          />
+        <div>
+          <div className="flex flex-row justify-between items-start w-full gap-2 m-1  ">
+            <Results
+              refs={[
+                [m1TextRef, v1TextRef, p1TextRef, kE1TextRef],
+                [m2TextRef, v2TextRef, p2TextRef, kE2TextRef],
+              ]}
+              totalKETextRef={totalKETextRef}
+              totalPETextRef={totalMomentumTextRef}
+              updateAllTexts={updateAllTexts}
+            />
 
+            <div>
+              <CollisionInputs />
+            </div>
+          </div>
           <div>
-            <CollisionInputs />
+            <button
+              onClick={() => setPlaying(!playing)}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              {playing ? "Pause" : "Play"}
+            </button>
           </div>
         </div>
         <FullScreenButton div={divRef.current} />
       </Html>
 
       {/* draw arrow from box to the direction of velocity */}
-      <arrowHelper
-        ref={arrowRef1}
-        args={[
-          vec.set(0, 0, v1.current).normalize(),
-          vec.clone().set(0, size1, 0),
-          4,
-        ]}
-      />
-      <arrowHelper
-        ref={arrowRef2}
-        args={[
-          vec.set(0, 0, v2.current).normalize(),
-          vec.clone().set(0, size2, 0),
-          4,
-        ]}
-      />
+      {playing && (
+        <group>
+          <arrowHelper
+            ref={arrowRef1}
+            args={[
+              vec.set(0, 0, v1.current).normalize(),
+              vec.clone().set(0, size1, 0),
+              5,
+            ]}
+          />
+          <arrowHelper
+            ref={arrowRef2}
+            args={[
+              vec.set(0, 0, v2.current).normalize(),
+              vec.clone().set(0, size2, 0),
+              4,
+            ]}
+          />
+        </group>
+      )}
     </group>
   );
 };
