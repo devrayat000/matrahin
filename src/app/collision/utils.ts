@@ -100,9 +100,19 @@ const checkCollision = (
   return box1.intersectsBox(box2);
 };
 
+/**
+ *
+ * @param size size of the box
+ * @param count count of the box. count= 1 -> right , 2 -> left
+ * @returns THREE.Vector3 object to use as position
+ */
+const getDefaultPositionOfBox = (size: number, count: number): THREE.Vector3 =>
+  vec.clone().set(0, size / 2, 10 * (count === 1 ? 1 : -1));
+
 export {
   calculateVelocityAfterCollision,
   checkCollision,
+  getDefaultPositionOfBox,
   updateArrows,
   updateText,
   updateTotalKE,

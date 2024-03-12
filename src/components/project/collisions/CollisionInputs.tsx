@@ -4,9 +4,14 @@ import { useAtomValue, useSetAtom } from "jotai";
 import InputSliderControl from "~/components/ui/input-slider-control";
 import { collisionInputsAtom, debouncedValueAtom } from "./store";
 
-const CollisionInputs = () => {
+interface CollisionInputProps {
+  resetPosition: () => void;
+}
+
+const CollisionInputs = (props: CollisionInputProps) => {
   const { massOne, massTwo, velocityOne, velocityTwo } =
     useAtomValue(collisionInputsAtom);
+  const { resetPosition } = props;
 
   const setInput = useSetAtom(debouncedValueAtom);
 
@@ -16,7 +21,10 @@ const CollisionInputs = () => {
         <InputSliderControl
           label="Mass 1"
           value={massOne}
-          onChange={(num) => setInput((prev) => ({ ...prev, massOne: num }))}
+          onChange={(num) => {
+            resetPosition();
+            setInput((prev) => ({ ...prev, massOne: num }));
+          }}
           min={0.1}
           max={50}
         />
@@ -25,9 +33,10 @@ const CollisionInputs = () => {
         <InputSliderControl
           label="Velocity 1"
           value={velocityOne}
-          onChange={(num) =>
-            setInput((prev) => ({ ...prev, velocityOne: num }))
-          }
+          onChange={(num) => {
+            resetPosition();
+            setInput((prev) => ({ ...prev, velocityOne: num }));
+          }}
           min={-15}
           max={15}
         />
@@ -36,7 +45,10 @@ const CollisionInputs = () => {
         <InputSliderControl
           label="Mass 2"
           value={massTwo}
-          onChange={(num) => setInput((prev) => ({ ...prev, massTwo: num }))}
+          onChange={(num) => {
+            resetPosition();
+            setInput((prev) => ({ ...prev, massTwo: num }));
+          }}
           min={0.1}
           max={50}
         />
@@ -45,9 +57,10 @@ const CollisionInputs = () => {
         <InputSliderControl
           label="Velocity 2"
           value={velocityTwo}
-          onChange={(num) =>
-            setInput((prev) => ({ ...prev, velocityTwo: num }))
-          }
+          onChange={(num) => {
+            resetPosition();
+            setInput((prev) => ({ ...prev, velocityTwo: num }));
+          }}
           min={-15}
           max={15}
         />

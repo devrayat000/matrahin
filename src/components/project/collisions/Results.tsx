@@ -52,7 +52,8 @@ const Results = ({
           defaultValue="Object 1"
           type="single"
           collapsible={true}
-          className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none  "
+          onPointerDown={(e) => e.stopPropagation()}
+          className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none overflow-auto resize-x  "
         >
           <AccordionItem
             value="Object 1"
@@ -72,7 +73,7 @@ const Results = ({
                       {param.label}
                       <sub>1</sub>
                     </p>
-                    :<p className="text-right  w-[8ch]" ref={param.ref}></p>
+                    :<p className="text-right  min-w-[8ch]" ref={param.ref}></p>
                     <p className="text-left ml-1">{param.unit}</p>
                   </div>
                 )) // m,v,p,KE
@@ -90,7 +91,8 @@ const Results = ({
           defaultValue="Object 2"
           type="single"
           collapsible={true}
-          className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none "
+          onPointerDown={(e) => e.stopPropagation()}
+          className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none  overflow-auto resize-x "
         >
           <AccordionItem
             value="Object 2"
@@ -110,7 +112,7 @@ const Results = ({
                       {param.label}
                       <sub>2</sub>
                     </p>
-                    :<p className="text-right  w-[8ch]" ref={param.ref}></p>
+                    :<p className="text-right  min-w-[8ch]" ref={param.ref}></p>
                     <p className="text-left ml-1">{param.unit}</p>
                   </div>
                 )) // m,v,p,KE
@@ -123,7 +125,8 @@ const Results = ({
           defaultValue="Total"
           type="single"
           collapsible={true}
-          className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none "
+          onPointerDown={(e) => e.stopPropagation()}
+          className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none  overflow-auto resize-x "
           onValueChange={(value) => {
             if (value === "Total") updateAllTexts(0);
           }}
@@ -138,12 +141,12 @@ const Results = ({
             <AccordionContent className="text-xs lg:text-lg">
               <div className="flex  flex-row w-full items-center">
                 <p className="text-left w-[3ch]">KE:</p>
-                <p className="text-right  w-[8ch]" ref={totalKETextRef}></p>
+                <p className="text-right  min-w-[8ch]" ref={totalKETextRef}></p>
                 <p className="text-left ml-1">J</p>
               </div>
               <div className="flex  flex-row w-full items-center">
                 <p className="text-left w-[3ch]">P:</p>
-                <p className="text-right  w-[8ch]" ref={totalPETextRef}></p>
+                <p className="text-right  min-w-[8ch]" ref={totalPETextRef}></p>
                 <p className="text-left ml-1">kgm/s</p>
               </div>
             </AccordionContent>

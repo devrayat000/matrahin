@@ -27,16 +27,17 @@ import {
 } from "~/components/project/collisions/store";
 import { addKeyControlToGoFullScreen } from "~/lib/utils/3DCanvasUtils";
 
+import { Pause, Play, RotateCcw } from "lucide-react";
 import {
   calculateVelocityAfterCollision,
   checkCollision,
+  getDefaultPositionOfBox,
   updateArrows,
   updateText,
   updateTotalKE,
   updateTotalPE,
   vec,
 } from "./utils";
-import Controls from "~/components/project/collisions/Controls";
 
 /**
  * Represents the main contents of the collision page.
@@ -49,8 +50,6 @@ const MainContents = ({
 }: {
   divRef: React.MutableRefObject<HTMLDivElement | null>;
 }) => {
-  const [playing, setPlaying] = useState(false);
-
   const v1: React.MutableRefObject<number> = useRef(
     DEFAULT_INPUTS.v1 * TIME_STEP
   );
@@ -64,6 +63,8 @@ const MainContents = ({
     velocityOne,
     velocityTwo,
   } = useAtomValue(collisionInputsAtom);
+
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     v1.current = velocityOne * TIME_STEP;
@@ -180,9 +181,11 @@ const MainContents = ({
       updateAllTexts(0);
     }
 
-    // moves along x axis
-    mesh1.position.z += v1.current;
-    mesh2.position.z += v2.current;
+    // moves along z axis
+    mesh1.position.setZ(mesh1.position.z + v1.current);
+    // mesh1.position.z += v1.current;
+    mesh2.position.setZ(mesh2.position.z + v2.current);
+    // mesh2.position.z += v2.current;
 
     // if it reaches the end of the road, reverse the direction
     checkIfReachedEndOfRoad(mesh1, v1, size1);
@@ -199,6 +202,17 @@ const MainContents = ({
   useEffect(() => {
     updateAllTexts(0);
   }, [playing]);
+
+  /**
+   * Reset the position of the boxes to the initial position.
+   */
+  const resetPosition = () => {
+    setPlaying(false);
+    meshRef1.current!.position.setZ(getDefaultPositionOfBox(size1, 1).z);
+    meshRef2.current!.position.setZ(getDefaultPositionOfBox(size2, 2).z);
+    v1.current = velocityOne * TIME_STEP;
+    v2.current = velocityTwo * TIME_STEP;
+  };
 
   return (
     <group scale={[1, 1, 1]}>
@@ -232,11 +246,19 @@ const MainContents = ({
             />
 
             <div>
-              <CollisionInputs />
+              <CollisionInputs resetPosition={resetPosition} />
             </div>
           </div>
-          <div>
-            <Controls />
+          {/* Controls */}
+          {/* <Controls resetPosition={resetPosition} /> */}
+
+          <div className="flex flex-row justify-between items-center gap-6 w-fit text-white">
+            <button onClick={() => setPlaying((prev) => !prev)}>
+              {playing ? <Pause size={50} /> : <Play size={50} />}
+            </button>
+            <button onClick={resetPosition}>
+              <RotateCcw size={40} />
+            </button>
           </div>
         </div>
         <FullScreenButton div={divRef.current} />

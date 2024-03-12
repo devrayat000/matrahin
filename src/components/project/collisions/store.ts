@@ -5,26 +5,16 @@ const END_OF_ROAD = 50;
 const TIME_STEP = 1 / 60; // normal animation frame 60fps
 
 const DEFAULT_INPUTS = {
-  m1: 1,
-  m2: 1,
-  v1: -1,
-  v2: 1,
+  m1: 10,
+  m2: 10,
+  v1: -10,
+  v2: 10,
 };
-const massOneAtom = atom(DEFAULT_INPUTS.m1);
-// const massOneAtom = atomWithDebounce(DEFAULT_INPUTS.m1);
-
-const massTwoAtom = atom(DEFAULT_INPUTS.m2);
-
-const velocityOneAtom = atom(DEFAULT_INPUTS.v1);
-
-const velocityTwoAtom = atom(DEFAULT_INPUTS.v2);
 
 const valuesShowingAtom = atom(true);
 const fullScreenOnAtom = atom(false);
+const playingAtom = atom(false);
 const BOX_SIZE = 2;
-
-const boxSizeOneAtom = atom((get) => 1 + get(massOneAtom) / 10);
-const boxSizeTwoAtom = atom((get) => 1 + get(massTwoAtom) / 10);
 
 const { debouncedValueAtom } = atomWithDebounce(
   {
@@ -42,14 +32,9 @@ export {
   DEFAULT_INPUTS,
   END_OF_ROAD,
   TIME_STEP,
-  boxSizeOneAtom,
-  boxSizeTwoAtom,
   collisionInputsAtom,
   debouncedValueAtom,
   fullScreenOnAtom,
-  massOneAtom,
-  massTwoAtom,
+  playingAtom,
   valuesShowingAtom,
-  velocityOneAtom,
-  velocityTwoAtom,
 };
