@@ -16,34 +16,35 @@ const SingleBlock = memo(
     (
       { count, size = BOX_SIZE }: SingleBlockProps,
       ref: ForwardedRef<THREE.Mesh>
-    ) => (
-      <mesh
-        castShadow
-        ref={ref}
-        position={getDefaultPositionOfBox(size, count)}
-      >
-        <boxGeometry args={[size, size, size]} />
-        <meshStandardMaterial color={colors[count - 1]} />
+    ) => {
+      return (
+        <mesh
+          castShadow
+          ref={ref}
+          position={getDefaultPositionOfBox(size, count)}
+        >
+          <boxGeometry args={[size, size, size]} />
+          <meshStandardMaterial color={colors[count - 1]} />
 
-        <BBAnchor anchor={[-1, 0.5, -0.5]}>
-          <Html
-            transform
-            occlude
-            position={[-0.01, 0, 0]}
-            rotation-y={-Math.PI / 2}
-            style={{
-              letterSpacing: "0.1em",
-              fontSize: "2em",
-              fontFamily: "consolas",
-              userSelect: "none",
-            }}
-            className="text-white absolute rounded-md  bg-black p-1 px-2"
-          >
-            M<sub>{count}</sub>
-          </Html>
-        </BBAnchor>
+          <BBAnchor anchor={[-1, 0.5, -0.5]}>
+            <Html
+              transform
+              occlude
+              position={[-0.01, 0, 0]}
+              rotation-y={-Math.PI / 2}
+              style={{
+                letterSpacing: "0.1em",
+                fontSize: "2em",
+                fontFamily: "consolas",
+                userSelect: "none",
+              }}
+              className="text-white absolute rounded-md  bg-black p-1 px-2"
+            >
+              M<sub>{count}</sub>
+            </Html>
+          </BBAnchor>
 
-        {/* <arrowHelper
+          {/* <arrowHelper
             args={[
               new THREE.Vector3(0, 0, 1),
               new THREE.Vector3(0, size / 2, 0),
@@ -51,8 +52,9 @@ const SingleBlock = memo(
               colors[count - 1],
             ]}
           /> */}
-      </mesh>
-    )
+        </mesh>
+      );
+    }
   )
 );
 

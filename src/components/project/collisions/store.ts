@@ -16,23 +16,10 @@ const fullScreenOnAtom = atom(false);
 const playingAtom = atom(false);
 const BOX_SIZE = 2;
 
-const { debouncedValueAtom } = atomWithDebounce(
-  {
-    massOne: DEFAULT_INPUTS.m1,
-    massTwo: DEFAULT_INPUTS.m2,
-    velocityOne: DEFAULT_INPUTS.v1,
-    velocityTwo: DEFAULT_INPUTS.v2,
-  },
-  5
-);
+const { debouncedValueAtom } = atomWithDebounce(DEFAULT_INPUTS, 5);
 // const collisionInputsAtom = atom((get) => get(debouncedValueAtom));
 
-const collisionInputsAtom = atom({
-  massOne: DEFAULT_INPUTS.m1,
-  massTwo: DEFAULT_INPUTS.m2,
-  velocityOne: DEFAULT_INPUTS.v1,
-  velocityTwo: DEFAULT_INPUTS.v2,
-});
+const collisionInputsAtom = atom(DEFAULT_INPUTS);
 export {
   BOX_SIZE,
   DEFAULT_INPUTS,

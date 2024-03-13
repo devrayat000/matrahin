@@ -9,8 +9,8 @@ import {
   PerspectiveCamera,
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useAtomValue, useSetAtom } from "jotai";
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useSetAtom } from "jotai";
+import { Suspense, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { XTicks } from "~/components/common/CanvasTHREE/xTicks";
 import CollisionInputs from "~/components/project/collisions/CollisionInputs";
@@ -22,20 +22,24 @@ import {
   DEFAULT_INPUTS,
   END_OF_ROAD,
   TIME_STEP,
-  collisionInputsAtom,
   fullScreenOnAtom,
 } from "~/components/project/collisions/store";
 import { addKeyControlToGoFullScreen } from "~/lib/utils/3DCanvasUtils";
 
 import { Pause, Play, RotateCcw } from "lucide-react";
 import {
+  boxGeometry,
   calculateVelocityAfterCollision,
   checkCollision,
   getDefaultPositionOfBox,
+  getSizeOfBox,
+  getTotalKE,
+  getTotalMomentum,
+  matrix4,
   updateArrows,
   updateText,
   updateTotalKE,
-  updateTotalPE,
+  updateTotalMomentum,
   vec,
 } from "./utils";
 
@@ -50,31 +54,32 @@ const MainContents = ({
 }: {
   divRef: React.MutableRefObject<HTMLDivElement | null>;
 }) => {
-  const v1: React.MutableRefObject<number> = useRef(
-    DEFAULT_INPUTS.v1 * TIME_STEP
-  );
-  const v2: React.MutableRefObject<number> = useRef(
-    DEFAULT_INPUTS.v2 * TIME_STEP
-  );
+  const m1 = useRef(DEFAULT_INPUTS.m1);
+  const m2 = useRef(DEFAULT_INPUTS.m2);
+  const v1 = useRef(DEFAULT_INPUTS.v1 * TIME_STEP);
+  const v2 = useRef(DEFAULT_INPUTS.v2 * TIME_STEP);
+  const size1 = useRef(1 + DEFAULT_INPUTS.m1 / 10);
+  const size2 = useRef(1 + DEFAULT_INPUTS.m2 / 10);
 
-  const {
-    massOne: m1,
-    massTwo: m2,
-    velocityOne,
-    velocityTwo,
-  } = useAtomValue(collisionInputsAtom);
+  // to be used on resume after reset
+  const initialVelocity = useRef({
+    v1: v1.current,
+    v2: v2.current,
+  });
 
   const [playing, setPlaying] = useState(false);
 
   // useEffect(() => {
-  //   v1.current = velocityOne * TIME_STEP;
-  // }, [velocityOne]);
-  // useEffect(() => {
-  //   v2.current = velocityTwo * TIME_STEP;
-  // }, [velocityTwo]);
+  //   // m1.current = massOne;
+  //   // m2.current = massTwo;
+  //   // v1.current = velocityOne * TIME_STEP;
+  //   // v2.current = velocityTwo * TIME_STEP;
 
-  const size1 = useMemo(() => 1 + m1 / 10, [m1]);
-  const size2 = useMemo(() => 1 + m2 / 10, [m2]);
+  //   console.log(m1, v1, m2, v2);
+  // }, [massOne, massTwo, velocityOne, velocityTwo]);
+
+  // const size1 = useMemo(() => 1 + massOne / 10, [massOne]);
+  // const size2 = useMemo(() => 1 + massTwo / 10, [massTwo]);
 
   const meshRef1: React.MutableRefObject<THREE.Mesh | null> = useRef(null);
   const meshRef2: React.MutableRefObject<THREE.Mesh | null> = useRef(null);
@@ -115,7 +120,7 @@ const MainContents = ({
     if (count == 0 || count == 1) {
       updateText(
         v1.current / TIME_STEP,
-        m1,
+        m1.current,
         m1TextRef.current as HTMLParagraphElement,
         v1TextRef.current as HTMLParagraphElement,
         p1TextRef.current as HTMLParagraphElement,
@@ -125,7 +130,7 @@ const MainContents = ({
     if (count == 0 || count == 2)
       updateText(
         v2.current / TIME_STEP,
-        m2,
+        m2.current,
         m2TextRef.current as HTMLParagraphElement,
         v2TextRef.current as HTMLParagraphElement,
         p2TextRef.current as HTMLParagraphElement,
@@ -134,14 +139,13 @@ const MainContents = ({
 
     // update the total kinetic energy
     updateTotalKE(
-      (0.5 * m1 * v1.current * v1.current) / TIME_STEP / TIME_STEP +
-        (0.5 * m2 * v2.current * v2.current) / TIME_STEP / TIME_STEP,
+      getTotalKE(m1.current, v1.current, m2.current, v2.current),
       totalKETextRef.current as HTMLParagraphElement
     );
 
     // update the total momentum
-    updateTotalPE(
-      (m1 * v1.current + m2 * v2.current) / TIME_STEP,
+    updateTotalMomentum(
+      getTotalMomentum(m1.current, v1.current, m2.current, v2.current),
       totalMomentumTextRef.current as HTMLParagraphElement
     );
   };
@@ -160,14 +164,6 @@ const MainContents = ({
     }
   };
 
-  const updateArrowsLength = (arrow: THREE.ArrowHelper | null, v: number) => {
-    console.log("in updateArrowsLength, arrow, v");
-    if (arrow) {
-      arrow.setLength(2 + Math.abs(v));
-      console.log(arrow);
-    }
-  };
-
   useFrame(() => {
     if (!playing) return;
     const mesh1 = meshRef1.current as THREE.Mesh;
@@ -177,9 +173,9 @@ const MainContents = ({
     if (checkCollision(mesh1, mesh2)) {
       // calculate the velocity after collision
       const { v1f, v2f } = calculateVelocityAfterCollision(
-        m1,
+        m1.current,
         v1.current,
-        m2,
+        m2.current,
         v2.current
       );
 
@@ -191,8 +187,6 @@ const MainContents = ({
     }
     updateArrows(arrowRef1.current, mesh1.position.z, v1.current);
     updateArrows(arrowRef2.current, mesh2.position.z, v2.current);
-    updateArrowsLength(arrowRef1.current, v1.current);
-    updateArrowsLength(arrowRef2.current, v2.current);
 
     // moves along z axis
     mesh1.position.setZ(mesh1.position.z + v1.current);
@@ -201,8 +195,8 @@ const MainContents = ({
     // mesh2.position.z += v2.current;
 
     // if it reaches the end of the road, reverse the direction
-    updateIfReachedEndOfRoad(mesh1, v1, size1);
-    updateIfReachedEndOfRoad(mesh2, v2, size2);
+    updateIfReachedEndOfRoad(mesh1, v1, size1.current);
+    updateIfReachedEndOfRoad(mesh2, v2, size2.current);
     // update the arrow direction and position
   });
 
@@ -215,32 +209,114 @@ const MainContents = ({
     updateArrows(arrowRef2.current, meshRef2.current.position.z, v2.current);
   }, [playing]);
 
-  /**
-   *  Update the arrow direction and position when the component is mounted.
-   */
-  useEffect(() => {
-    updateArrows(arrowRef1.current, meshRef1.current.position.z, v1.current);
-    updateArrows(arrowRef2.current, meshRef2.current.position.z, v2.current);
-  });
+  const updateBox = (mesh: THREE.Mesh, size: number) => {
+    mesh.geometry = boxGeometry
+      .clone()
+      .applyMatrix4(matrix4.clone().makeScale(size, size, size));
+    mesh.position.setY(size / 2);
+  };
+
+  const updateRefValues = (param: string, value: number) => {
+    const position1 = getDefaultPositionOfBox(size1.current, 1).z;
+    const position2 = getDefaultPositionOfBox(size2.current, 2).z;
+    switch (param) {
+      case "m1":
+        m1.current = value;
+        size1.current = getSizeOfBox(value);
+        updateBox(meshRef1.current, size1.current);
+        arrowRef1.current!.position.setY(size1.current);
+        break;
+      case "m2":
+        m2.current = value;
+        size2.current = getSizeOfBox(value);
+        updateBox(meshRef2.current, size2.current);
+        arrowRef2.current!.position.setY(size2.current);
+        break;
+      case "v1":
+        v1.current = value * TIME_STEP;
+        initialVelocity.current.v1 = value * TIME_STEP;
+        arrowRef1.current!.position.setY(size1.current);
+        updateArrows(arrowRef1.current, position1, v1.current);
+        break;
+      case "v2":
+        v2.current = value * TIME_STEP;
+        initialVelocity.current.v2 = value;
+        arrowRef2.current!.position.setY(size2.current);
+        updateArrows(arrowRef2.current, position2, v2.current);
+        break;
+    }
+  };
+
+  const handleInputChange = (param: string, value: number) => {
+    /**
+     * pause
+     * reset position
+     * update reference values
+     * update the text
+     *
+     */
+
+    setPlaying(false);
+
+    const meshOneNotResetPosition: boolean =
+      meshRef1.current.position.z !=
+      getDefaultPositionOfBox(size1.current, 1).z;
+    const meshTwoNotResetPosition: boolean =
+      meshRef2.current.position.z !=
+      getDefaultPositionOfBox(size2.current, 2).z;
+
+    if (meshOneNotResetPosition || meshTwoNotResetPosition) {
+      resetPosition();
+    }
+
+    updateRefValues(param, value);
+    updateAllTexts(0);
+  };
+
+  const handleReset = () => {
+    /**
+     * STEPS:
+     * pause
+     * update velocities
+     * update arrows
+     * reset position
+     *
+     */
+    setPlaying(false);
+
+    v1.current = initialVelocity.current.v1;
+    v2.current = initialVelocity.current.v2;
+
+    updateArrows(
+      arrowRef1.current,
+      getDefaultPositionOfBox(size1.current, 1).z,
+      v1.current
+    );
+    updateArrows(
+      arrowRef2.current,
+      getDefaultPositionOfBox(size2.current, 2).z,
+      v2.current
+    );
+
+    resetPosition();
+  };
+
   /**
    * Reset the position of the boxes to the initial position.
    */
-  const resetPosition = (vOne = velocityOne, vTwo = velocityTwo) => {
-    setPlaying(false);
-    meshRef1.current!.position.setZ(getDefaultPositionOfBox(size1, 1).z);
-    meshRef2.current!.position.setZ(getDefaultPositionOfBox(size2, 2).z);
-    v1.current = vOne * TIME_STEP;
-    v2.current = vTwo * TIME_STEP;
-
-    updateAllTexts(0);
-    updateArrows(arrowRef1.current, meshRef1.current.position.z, v1.current);
-    updateArrows(arrowRef2.current, meshRef2.current.position.z, v2.current);
+  const resetPosition = () => {
+    meshRef1.current!.position.setZ(
+      getDefaultPositionOfBox(size1.current, 1).z
+    );
+    meshRef2.current!.position.setZ(
+      getDefaultPositionOfBox(size2.current, 2).z
+    );
   };
 
   return (
     <group scale={[1, 1, 1]}>
-      <SingleBlock ref={meshRef1} size={size1} count={1} />
-      <SingleBlock ref={meshRef2} size={size2} count={2} />
+      <SingleBlock ref={meshRef1} size={size1.current} count={1} />
+      <SingleBlock ref={meshRef2} size={size2.current} count={2} />
 
       <WallsAtEndOfRoad />
 
@@ -269,7 +345,7 @@ const MainContents = ({
             />
 
             <div className="invisible sm:visible">
-              <CollisionInputs resetPosition={resetPosition} />
+              <CollisionInputs inputChange={handleInputChange} />
             </div>
           </div>
           {/* Controls */}
@@ -285,7 +361,7 @@ const MainContents = ({
             <div
               title="reset"
               className="bg-cyan-300 text-black self-start cursor-pointer hover:shadow-xl hover:scale-125 transition-transform duration-300 transform  p-4   rounded-full "
-              onClick={() => resetPosition()}
+              onClick={handleReset}
             >
               <RotateCcw size={25} />
             </div>
@@ -301,15 +377,15 @@ const MainContents = ({
           ref={arrowRef1}
           args={[
             vec.set(0, 0, v1.current).normalize(),
-            vec.clone().set(0, size1, 0),
-            5,
+            vec.clone().set(0, size1.current, 0),
+            4,
           ]}
         />
         <arrowHelper
           ref={arrowRef2}
           args={[
             vec.set(0, 0, v2.current).normalize(),
-            vec.clone().set(0, size2, 0),
+            vec.clone().set(0, size2.current, 0),
             4,
           ]}
         />

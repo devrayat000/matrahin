@@ -1,27 +1,28 @@
 "use client";
 
-import { useAtom } from "jotai";
+import { useState } from "react";
 import InputSliderControl from "~/components/ui/input-slider-control";
-import { collisionInputsAtom } from "./store";
+import { DEFAULT_INPUTS } from "./store";
 
 interface CollisionInputProps {
-  resetPosition: () => void;
+  inputChange: (param: string, value: number) => void;
 }
 
 const CollisionInputs = (props: CollisionInputProps) => {
-  const [{ massOne, massTwo, velocityOne, velocityTwo }, setInput] =
-    useAtom(collisionInputsAtom);
-  const { resetPosition } = props;
+  const [{ m1, m2, v1, v2 }, setInput] = useState(DEFAULT_INPUTS);
+  // useAtom(collisionInputsAtom);
+
+  const { inputChange } = props;
 
   return (
     <div style={{ userSelect: "auto" }} className="flex flex-col gap-1">
       <div>
         <InputSliderControl
           label="Mass 1"
-          value={massOne}
+          value={m1}
           onChange={(num) => {
-            setInput((prev) => ({ ...prev, massOne: num }));
-            resetPosition();
+            setInput((prev) => ({ ...prev, m1: num }));
+            inputChange("m1", num);
           }}
           min={0.1}
           max={50}
@@ -30,10 +31,10 @@ const CollisionInputs = (props: CollisionInputProps) => {
       <div>
         <InputSliderControl
           label="Velocity 1"
-          value={velocityOne}
+          value={v1}
           onChange={(num) => {
-            setInput((prev) => ({ ...prev, velocityOne: num }));
-            resetPosition();
+            setInput((prev) => ({ ...prev, v1: num }));
+            inputChange("v1", num);
           }}
           min={-15}
           max={15}
@@ -42,10 +43,10 @@ const CollisionInputs = (props: CollisionInputProps) => {
       <div>
         <InputSliderControl
           label="Mass 2"
-          value={massTwo}
+          value={m2}
           onChange={(num) => {
-            setInput((prev) => ({ ...prev, massTwo: num }));
-            resetPosition();
+            setInput((prev) => ({ ...prev, m2: num }));
+            inputChange("m2", num);
           }}
           min={0.1}
           max={50}
@@ -54,10 +55,10 @@ const CollisionInputs = (props: CollisionInputProps) => {
       <div>
         <InputSliderControl
           label="Velocity 2"
-          value={velocityTwo}
+          value={v2}
           onChange={(num) => {
-            setInput((prev) => ({ ...prev, velocityTwo: num }));
-            resetPosition();
+            setInput((prev) => ({ ...prev, v2: num }));
+            inputChange("v2", num);
           }}
           min={-15}
           max={15}

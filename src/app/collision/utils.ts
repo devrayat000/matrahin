@@ -1,7 +1,10 @@
 import * as THREE from "three";
+import { TIME_STEP } from "~/components/project/collisions/store";
 
 const BoundingBox = new THREE.Box3();
 const vec = new THREE.Vector3();
+const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+const matrix4 = new THREE.Matrix4();
 const precision = 1;
 
 /**
@@ -61,7 +64,10 @@ const updateTotalKE = (totalKE: number, totalKEText: HTMLParagraphElement) => {
  * @param totalPE - The total potential energy value to be updated.
  * @param totalPEText - The HTML paragraph element where the updated value will be displayed.
  */
-const updateTotalPE = (totalPE: number, totalPEText: HTMLParagraphElement) => {
+const updateTotalMomentum = (
+  totalPE: number,
+  totalPEText: HTMLParagraphElement
+) => {
   if (totalPEText) totalPEText.innerText = totalPE.toFixed(precision);
 };
 
@@ -79,6 +85,7 @@ const updateArrows = (
   if (!arrow) return;
   arrow.setDirection(vec.set(0, 0, v).normalize());
   arrow.position.z = position;
+  arrow.setLength(Math.abs(v / TIME_STEP));
 
   // hide the arrow if the velocity is 0
   arrow.visible = v !== 0;
@@ -96,10 +103,6 @@ const checkCollision = (
 ) => {
   const box1 = BoundingBox.clone();
   const box2 = BoundingBox.clone();
-  // const obj1 = object1.clone();
-  // const obj2 = object2.clone();
-  // obj1.children[0].removeFromParent();
-  // obj2.children[0].removeFromParent();
   box2.setFromObject(object1);
   box1.setFromObject(object2);
   return box1.intersectsBox(box2);
@@ -114,13 +117,34 @@ const checkCollision = (
 const getDefaultPositionOfBox = (size: number, count: number): THREE.Vector3 =>
   vec.clone().set(0, size / 2, 10 * (count === 1 ? 1 : -1));
 
+const getKE = (m: number, v: number) =>
+  (0.5 * m * v * v) / TIME_STEP / TIME_STEP;
+const getMomentum = (m: number, v: number) => (m * v) / TIME_STEP;
+
+const getTotalKE = (m1: number, v1: number, m2: number, v2: number): number =>
+  getKE(m1, v1) + getKE(m2, v2);
+
+const getTotalMomentum = (
+  m1: number,
+  v1: number,
+  m2: number,
+  v2: number
+): number => getMomentum(m1, v1) + getMomentum(m2, v2);
+
+const getSizeOfBox = (m: number) => 1 + m / 10;
+
 export {
+  boxGeometry,
   calculateVelocityAfterCollision,
   checkCollision,
   getDefaultPositionOfBox,
+  getSizeOfBox,
+  getTotalKE,
+  getTotalMomentum,
+  matrix4,
   updateArrows,
   updateText,
   updateTotalKE,
-  updateTotalPE,
+  updateTotalMomentum,
   vec,
 };
