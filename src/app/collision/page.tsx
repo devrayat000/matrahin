@@ -66,12 +66,12 @@ const MainContents = ({
 
   const [playing, setPlaying] = useState(false);
 
-  useEffect(() => {
-    v1.current = velocityOne * TIME_STEP;
-  }, [velocityOne]);
-  useEffect(() => {
-    v2.current = velocityTwo * TIME_STEP;
-  }, [velocityTwo]);
+  // useEffect(() => {
+  //   v1.current = velocityOne * TIME_STEP;
+  // }, [velocityOne]);
+  // useEffect(() => {
+  //   v2.current = velocityTwo * TIME_STEP;
+  // }, [velocityTwo]);
 
   const size1 = useMemo(() => 1 + m1 / 10, [m1]);
   const size2 = useMemo(() => 1 + m2 / 10, [m2]);
@@ -160,11 +160,20 @@ const MainContents = ({
     }
   };
 
+  const updateArrowsLength = (arrow: THREE.ArrowHelper | null, v: number) => {
+    console.log("in updateArrowsLength, arrow, v");
+    if (arrow) {
+      arrow.setLength(2 + Math.abs(v));
+      console.log(arrow);
+    }
+  };
+
   useFrame(() => {
     if (!playing) return;
     const mesh1 = meshRef1.current as THREE.Mesh;
     const mesh2 = meshRef2.current as THREE.Mesh;
     if (!mesh1 || !mesh2) return;
+
     if (checkCollision(mesh1, mesh2)) {
       // calculate the velocity after collision
       const { v1f, v2f } = calculateVelocityAfterCollision(
@@ -180,6 +189,10 @@ const MainContents = ({
 
       updateAllTexts(0);
     }
+    updateArrows(arrowRef1.current, mesh1.position.z, v1.current);
+    updateArrows(arrowRef2.current, mesh2.position.z, v2.current);
+    updateArrowsLength(arrowRef1.current, v1.current);
+    updateArrowsLength(arrowRef2.current, v2.current);
 
     // moves along z axis
     mesh1.position.setZ(mesh1.position.z + v1.current);
@@ -191,9 +204,6 @@ const MainContents = ({
     updateIfReachedEndOfRoad(mesh1, v1, size1);
     updateIfReachedEndOfRoad(mesh2, v2, size2);
     // update the arrow direction and position
-
-    updateArrows(arrowRef1.current, mesh1, v1.current);
-    updateArrows(arrowRef2.current, mesh2, v2.current);
   });
 
   /**
@@ -201,26 +211,30 @@ const MainContents = ({
    */
   useEffect(() => {
     updateAllTexts(0);
-    updateArrows(arrowRef1.current, meshRef1.current as THREE.Mesh, v1.current);
-    updateArrows(arrowRef2.current, meshRef2.current as THREE.Mesh, v2.current);
+    updateArrows(arrowRef1.current, meshRef1.current.position.z, v1.current);
+    updateArrows(arrowRef2.current, meshRef2.current.position.z, v2.current);
   }, [playing]);
 
   /**
    *  Update the arrow direction and position when the component is mounted.
    */
   useEffect(() => {
-    updateArrows(arrowRef1.current, meshRef1.current as THREE.Mesh, v1.current);
-    updateArrows(arrowRef2.current, meshRef2.current as THREE.Mesh, v2.current);
+    updateArrows(arrowRef1.current, meshRef1.current.position.z, v1.current);
+    updateArrows(arrowRef2.current, meshRef2.current.position.z, v2.current);
   });
   /**
    * Reset the position of the boxes to the initial position.
    */
-  const resetPosition = () => {
+  const resetPosition = (vOne = velocityOne, vTwo = velocityTwo) => {
     setPlaying(false);
     meshRef1.current!.position.setZ(getDefaultPositionOfBox(size1, 1).z);
     meshRef2.current!.position.setZ(getDefaultPositionOfBox(size2, 2).z);
-    v1.current = velocityOne * TIME_STEP;
-    v2.current = velocityTwo * TIME_STEP;
+    v1.current = vOne * TIME_STEP;
+    v2.current = vTwo * TIME_STEP;
+
+    updateAllTexts(0);
+    updateArrows(arrowRef1.current, meshRef1.current.position.z, v1.current);
+    updateArrows(arrowRef2.current, meshRef2.current.position.z, v2.current);
   };
 
   return (
@@ -254,20 +268,27 @@ const MainContents = ({
               updateAllTexts={updateAllTexts}
             />
 
-            <div>
+            <div className="invisible sm:visible">
               <CollisionInputs resetPosition={resetPosition} />
             </div>
           </div>
           {/* Controls */}
           {/* <Controls resetPosition={resetPosition} /> */}
 
-          <div className="flex flex-row justify-between items-center gap-6 w-fit text-white">
-            <button onClick={() => setPlaying((prev) => !prev)}>
-              {playing ? <Pause size={50} /> : <Play size={50} />}
-            </button>
-            <button onClick={resetPosition}>
-              <RotateCcw size={40} />
-            </button>
+          <div className="absolute bottom-2 left-1/3  flex flex-row justify-between items-center gap-6 w-fit text-white">
+            <div
+              className="bg-green-500 text-black cursor-pointer shadow-xl p-3 md:p-5 self-start  rounded-full hover:scale-125 transition-transform duration-300 transform "
+              onClick={() => setPlaying((prev) => !prev)}
+            >
+              {playing ? <Pause size={40} /> : <Play size={40} />}
+            </div>
+            <div
+              title="reset"
+              className="bg-cyan-300 text-black self-start cursor-pointer hover:shadow-xl hover:scale-125 transition-transform duration-300 transform  p-4   rounded-full "
+              onClick={() => resetPosition()}
+            >
+              <RotateCcw size={25} />
+            </div>
           </div>
         </div>
         <FullScreenButton div={divRef.current} />

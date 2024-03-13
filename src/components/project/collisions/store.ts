@@ -25,8 +25,14 @@ const { debouncedValueAtom } = atomWithDebounce(
   },
   5
 );
-const collisionInputsAtom = atom((get) => get(debouncedValueAtom));
+// const collisionInputsAtom = atom((get) => get(debouncedValueAtom));
 
+const collisionInputsAtom = atom({
+  massOne: DEFAULT_INPUTS.m1,
+  massTwo: DEFAULT_INPUTS.m2,
+  velocityOne: DEFAULT_INPUTS.v1,
+  velocityTwo: DEFAULT_INPUTS.v2,
+});
 export {
   BOX_SIZE,
   DEFAULT_INPUTS,

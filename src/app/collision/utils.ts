@@ -73,14 +73,12 @@ const updateTotalPE = (totalPE: number, totalPEText: HTMLParagraphElement) => {
  */
 const updateArrows = (
   arrow: THREE.ArrowHelper,
-  mesh: THREE.Mesh,
+  position: number,
   v: number
 ) => {
   if (!arrow) return;
-
   arrow.setDirection(vec.set(0, 0, v).normalize());
-  arrow.setLength(4 + v / 10);
-  arrow.position.z = mesh.position.z;
+  arrow.position.z = position;
 
   // hide the arrow if the velocity is 0
   arrow.visible = v !== 0;

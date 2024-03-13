@@ -1,19 +1,17 @@
 "use client";
 
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import InputSliderControl from "~/components/ui/input-slider-control";
-import { collisionInputsAtom, debouncedValueAtom } from "./store";
+import { collisionInputsAtom } from "./store";
 
 interface CollisionInputProps {
   resetPosition: () => void;
 }
 
 const CollisionInputs = (props: CollisionInputProps) => {
-  const { massOne, massTwo, velocityOne, velocityTwo } =
-    useAtomValue(collisionInputsAtom);
+  const [{ massOne, massTwo, velocityOne, velocityTwo }, setInput] =
+    useAtom(collisionInputsAtom);
   const { resetPosition } = props;
-
-  const setInput = useSetAtom(debouncedValueAtom);
 
   return (
     <div style={{ userSelect: "auto" }} className="flex flex-col gap-1">
@@ -22,8 +20,8 @@ const CollisionInputs = (props: CollisionInputProps) => {
           label="Mass 1"
           value={massOne}
           onChange={(num) => {
-            resetPosition();
             setInput((prev) => ({ ...prev, massOne: num }));
+            resetPosition();
           }}
           min={0.1}
           max={50}
@@ -34,8 +32,8 @@ const CollisionInputs = (props: CollisionInputProps) => {
           label="Velocity 1"
           value={velocityOne}
           onChange={(num) => {
-            resetPosition();
             setInput((prev) => ({ ...prev, velocityOne: num }));
+            resetPosition();
           }}
           min={-15}
           max={15}
@@ -46,8 +44,8 @@ const CollisionInputs = (props: CollisionInputProps) => {
           label="Mass 2"
           value={massTwo}
           onChange={(num) => {
-            resetPosition();
             setInput((prev) => ({ ...prev, massTwo: num }));
+            resetPosition();
           }}
           min={0.1}
           max={50}
@@ -58,8 +56,8 @@ const CollisionInputs = (props: CollisionInputProps) => {
           label="Velocity 2"
           value={velocityTwo}
           onChange={(num) => {
-            resetPosition();
             setInput((prev) => ({ ...prev, velocityTwo: num }));
+            resetPosition();
           }}
           min={-15}
           max={15}

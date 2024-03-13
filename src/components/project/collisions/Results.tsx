@@ -43,7 +43,7 @@ const Results = ({
       }}
       className="flex flex-col justify-between items-center    "
     >
-      <div className="flex flex-col justify-between items-start  w-full gap-2 m-1   ">
+      <div className="flex flex-row sm:flex-col  justify-between items-start  w-full gap-2 m-1   ">
         {/* Object 1 */}
         <Accordion
           onValueChange={(value) => {
@@ -120,39 +120,39 @@ const Results = ({
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-        {/* Total */}
-        <Accordion
-          defaultValue="Total"
-          type="single"
-          collapsible={true}
-          onPointerDown={(e) => e.stopPropagation()}
-          className=" backdrop-blur-[1px] backdrop-brightness-75 text-white border-none  overflow-auto resize-x "
-          onValueChange={(value) => {
-            if (value === "Total") updateAllTexts(0);
-          }}
-        >
-          <AccordionItem
-            value="Total"
-            className="px-2 rounded-xl border-2 border-border"
-          >
-            <AccordionTrigger className="lg:text-xl py-1  font-bold w-full">
-              Total
-            </AccordionTrigger>
-            <AccordionContent className="text-xs lg:text-lg">
-              <div className="flex  flex-row w-full items-center">
-                <p className="text-left w-[3ch]">KE:</p>
-                <p className="text-right  min-w-[8ch]" ref={totalKETextRef}></p>
-                <p className="text-left ml-1">J</p>
-              </div>
-              <div className="flex  flex-row w-full items-center">
-                <p className="text-left w-[3ch]">P:</p>
-                <p className="text-right  min-w-[8ch]" ref={totalPETextRef}></p>
-                <p className="text-left ml-1">kgm/s</p>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
       </div>
+      {/* Total */}
+      <Accordion
+        defaultValue="Total"
+        type="single"
+        collapsible={true}
+        onPointerDown={(e) => e.stopPropagation()}
+        className="self-start backdrop-blur-[1px] backdrop-brightness-75 text-white border-none  overflow-auto resize-x "
+        onValueChange={(value) => {
+          if (value === "Total") updateAllTexts(0);
+        }}
+      >
+        <AccordionItem
+          value="Total"
+          className="px-2 rounded-xl border-2 border-border"
+        >
+          <AccordionTrigger className="lg:text-xl py-1  font-bold w-full">
+            Total
+          </AccordionTrigger>
+          <AccordionContent className="text-xs lg:text-lg">
+            <div className="flex  flex-row w-full items-center">
+              <p className="text-left w-[3ch]">KE:</p>
+              <p className="text-right  min-w-[8ch]" ref={totalKETextRef}></p>
+              <p className="text-left ml-1">J</p>
+            </div>
+            <div className="flex  flex-row w-full items-center">
+              <p className="text-left w-[3ch]">P:</p>
+              <p className="text-right  min-w-[8ch]" ref={totalPETextRef}></p>
+              <p className="text-left ml-1">kgm/s</p>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 };
