@@ -77,6 +77,7 @@ const updateArrows = (
   v: number
 ) => {
   arrow.setDirection(vec.set(0, 0, v).normalize());
+
   arrow.position.setZ(mesh.position.z);
 
   // hide the arrow if the velocity is 0
@@ -95,8 +96,12 @@ const checkCollision = (
 ) => {
   const box1 = BoundingBox.clone();
   const box2 = BoundingBox.clone();
-  box1.setFromObject(object1);
-  box2.setFromObject(object2);
+  const obj1 = object1.clone();
+  const obj2 = object2.clone();
+  obj1.children[0].removeFromParent();
+  obj2.children[0].removeFromParent();
+  box2.setFromObject(obj1);
+  box1.setFromObject(obj2);
   return box1.intersectsBox(box2);
 };
 

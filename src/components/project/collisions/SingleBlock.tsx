@@ -44,6 +44,15 @@ const SingleBlock = memo(
               M<sub>{count}</sub>
             </Html>
           </BBAnchor>
+
+          <arrowHelper
+            args={[
+              new THREE.Vector3(0, 0, 1),
+              new THREE.Vector3(0, size / 2, 0),
+              6,
+              colors[count - 1],
+            ]}
+          />
         </mesh>
       );
     }

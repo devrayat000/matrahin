@@ -32,11 +32,9 @@ import {
   calculateVelocityAfterCollision,
   checkCollision,
   getDefaultPositionOfBox,
-  updateArrows,
   updateText,
   updateTotalKE,
   updateTotalPE,
-  vec,
 } from "./utils";
 
 /**
@@ -73,15 +71,19 @@ const MainContents = ({
     v2.current = velocityTwo * TIME_STEP;
   }, [velocityTwo]);
 
+  useEffect(() => {
+    console.log(v1.current);
+  }, [v1.current]);
+
   const size1 = useMemo(() => 1 + m1 / 10, [m1]);
   const size2 = useMemo(() => 1 + m2 / 10, [m2]);
 
   const meshRef1: React.MutableRefObject<THREE.Mesh | null> = useRef(null);
   const meshRef2: React.MutableRefObject<THREE.Mesh | null> = useRef(null);
-  const arrowRef1: React.MutableRefObject<THREE.ArrowHelper | null> =
-    useRef(null);
-  const arrowRef2: React.MutableRefObject<THREE.ArrowHelper | null> =
-    useRef(null);
+  // const arrowRef1: React.MutableRefObject<THREE.ArrowHelper | null> =
+  //   useRef(null);
+  // const arrowRef2: React.MutableRefObject<THREE.ArrowHelper | null> =
+  //   useRef(null);
 
   const v1TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
     useRef(null);
@@ -146,7 +148,7 @@ const MainContents = ({
     );
   };
 
-  const checkIfReachedEndOfRoad = (
+  const updateIfReachedEndOfRoad = (
     mesh: THREE.Mesh,
     v: React.MutableRefObject<number>,
     size: number
@@ -188,12 +190,12 @@ const MainContents = ({
     // mesh2.position.z += v2.current;
 
     // if it reaches the end of the road, reverse the direction
-    checkIfReachedEndOfRoad(mesh1, v1, size1);
-    checkIfReachedEndOfRoad(mesh2, v2, size2);
+    updateIfReachedEndOfRoad(mesh1, v1, size1);
+    updateIfReachedEndOfRoad(mesh2, v2, size2);
     // update the arrow direction and position
 
-    updateArrows(arrowRef1.current as THREE.ArrowHelper, mesh1, v1.current);
-    updateArrows(arrowRef2.current as THREE.ArrowHelper, mesh2, v2.current);
+    // updateArrows(arrowRef1.current as THREE.ArrowHelper, mesh1, v1.current);
+    // updateArrows(arrowRef2.current as THREE.ArrowHelper, mesh2, v2.current);
   });
 
   /**
@@ -265,26 +267,26 @@ const MainContents = ({
       </Html>
 
       {/* draw arrow from box to the direction of velocity */}
-      {playing && (
-        <group>
-          <arrowHelper
-            ref={arrowRef1}
-            args={[
-              vec.set(0, 0, v1.current).normalize(),
-              vec.clone().set(0, size1, 0),
-              5,
-            ]}
-          />
-          <arrowHelper
-            ref={arrowRef2}
-            args={[
-              vec.set(0, 0, v2.current).normalize(),
-              vec.clone().set(0, size2, 0),
-              4,
-            ]}
-          />
-        </group>
-      )}
+      {/* {playing && ( */}
+      {/* <group>
+        <arrowHelper
+          ref={arrowRef1}
+          args={[
+            vec.set(0, 0, v1.current).normalize(),
+            vec.clone().set(0, size1, 0),
+            5,
+          ]}
+        />
+        <arrowHelper
+          ref={arrowRef2}
+          args={[
+            vec.set(0, 0, v2.current).normalize(),
+            vec.clone().set(0, size2, 0),
+            4,
+          ]}
+        />
+      </group> */}
+      {/* )} */}
     </group>
   );
 };
