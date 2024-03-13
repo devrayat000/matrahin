@@ -32,9 +32,11 @@ import {
   calculateVelocityAfterCollision,
   checkCollision,
   getDefaultPositionOfBox,
+  updateArrows,
   updateText,
   updateTotalKE,
   updateTotalPE,
+  vec,
 } from "./utils";
 
 /**
@@ -71,19 +73,15 @@ const MainContents = ({
     v2.current = velocityTwo * TIME_STEP;
   }, [velocityTwo]);
 
-  useEffect(() => {
-    console.log(v1.current);
-  }, [v1.current]);
-
   const size1 = useMemo(() => 1 + m1 / 10, [m1]);
   const size2 = useMemo(() => 1 + m2 / 10, [m2]);
 
   const meshRef1: React.MutableRefObject<THREE.Mesh | null> = useRef(null);
   const meshRef2: React.MutableRefObject<THREE.Mesh | null> = useRef(null);
-  // const arrowRef1: React.MutableRefObject<THREE.ArrowHelper | null> =
-  //   useRef(null);
-  // const arrowRef2: React.MutableRefObject<THREE.ArrowHelper | null> =
-  //   useRef(null);
+  const arrowRef1: React.MutableRefObject<THREE.ArrowHelper | null> =
+    useRef(null);
+  const arrowRef2: React.MutableRefObject<THREE.ArrowHelper | null> =
+    useRef(null);
 
   const v1TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
     useRef(null);
@@ -158,7 +156,7 @@ const MainContents = ({
       mesh.position.z - size < -END_OF_ROAD
     ) {
       v.current = -v.current;
-      updateAllTexts(1);
+      updateAllTexts(0);
     }
   };
 
@@ -194,17 +192,26 @@ const MainContents = ({
     updateIfReachedEndOfRoad(mesh2, v2, size2);
     // update the arrow direction and position
 
-    // updateArrows(arrowRef1.current as THREE.ArrowHelper, mesh1, v1.current);
-    // updateArrows(arrowRef2.current as THREE.ArrowHelper, mesh2, v2.current);
+    updateArrows(arrowRef1.current, mesh1, v1.current);
+    updateArrows(arrowRef2.current, mesh2, v2.current);
   });
 
   /**
-   * Update the text of the objects, always updates the total KE and momentum
+   * Update the text of the objects, always updates the total KE and momentum. When the playing state changes.
    */
   useEffect(() => {
     updateAllTexts(0);
+    updateArrows(arrowRef1.current, meshRef1.current as THREE.Mesh, v1.current);
+    updateArrows(arrowRef2.current, meshRef2.current as THREE.Mesh, v2.current);
   }, [playing]);
 
+  /**
+   *  Update the arrow direction and position when the component is mounted.
+   */
+  useEffect(() => {
+    updateArrows(arrowRef1.current, meshRef1.current as THREE.Mesh, v1.current);
+    updateArrows(arrowRef2.current, meshRef2.current as THREE.Mesh, v2.current);
+  });
   /**
    * Reset the position of the boxes to the initial position.
    */
@@ -268,7 +275,7 @@ const MainContents = ({
 
       {/* draw arrow from box to the direction of velocity */}
       {/* {playing && ( */}
-      {/* <group>
+      <group>
         <arrowHelper
           ref={arrowRef1}
           args={[
@@ -285,7 +292,7 @@ const MainContents = ({
             4,
           ]}
         />
-      </group> */}
+      </group>
       {/* )} */}
     </group>
   );

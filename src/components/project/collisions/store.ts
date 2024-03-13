@@ -23,7 +23,7 @@ const { debouncedValueAtom } = atomWithDebounce(
     velocityOne: DEFAULT_INPUTS.v1,
     velocityTwo: DEFAULT_INPUTS.v2,
   },
-  10
+  5
 );
 const collisionInputsAtom = atom((get) => get(debouncedValueAtom));
 

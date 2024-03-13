@@ -76,9 +76,11 @@ const updateArrows = (
   mesh: THREE.Mesh,
   v: number
 ) => {
-  arrow.setDirection(vec.set(0, 0, v).normalize());
+  if (!arrow) return;
 
-  arrow.position.setZ(mesh.position.z);
+  arrow.setDirection(vec.set(0, 0, v).normalize());
+  arrow.setLength(4 + v / 10);
+  arrow.position.z = mesh.position.z;
 
   // hide the arrow if the velocity is 0
   arrow.visible = v !== 0;
@@ -96,12 +98,12 @@ const checkCollision = (
 ) => {
   const box1 = BoundingBox.clone();
   const box2 = BoundingBox.clone();
-  const obj1 = object1.clone();
-  const obj2 = object2.clone();
-  obj1.children[0].removeFromParent();
-  obj2.children[0].removeFromParent();
-  box2.setFromObject(obj1);
-  box1.setFromObject(obj2);
+  // const obj1 = object1.clone();
+  // const obj2 = object2.clone();
+  // obj1.children[0].removeFromParent();
+  // obj2.children[0].removeFromParent();
+  box2.setFromObject(object1);
+  box1.setFromObject(object2);
   return box1.intersectsBox(box2);
 };
 
