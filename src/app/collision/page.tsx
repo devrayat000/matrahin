@@ -10,14 +10,13 @@ import {
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useSetAtom } from "jotai";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { MutableRefObject, Suspense, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { XTicks } from "~/components/common/CanvasTHREE/xTicks";
 import CollisionInputs from "~/components/project/collisions/CollisionInputs";
 import FullScreenButton from "~/components/project/collisions/FullScreenButton";
 import Results from "~/components/project/collisions/Results";
 import SingleBlock from "~/components/project/collisions/SingleBlock";
-import WallsAtEndOfRoad from "~/components/project/collisions/WallsAtEndOfRoad";
 import {
   DEFAULT_INPUTS,
   END_OF_ROAD,
@@ -31,6 +30,7 @@ import {
   boxGeometry,
   calculateVelocityAfterCollision,
   checkCollision,
+  checkIfReachedEndOfRoad,
   getDefaultPositionOfBox,
   getSizeOfBox,
   getTotalKE,
@@ -68,48 +68,26 @@ const MainContents = ({
   });
 
   const [playing, setPlaying] = useState(false);
+  // refs of 3D canvas
+  const meshRef1: MutableRefObject<THREE.Mesh | null> = useRef(null);
+  const meshRef2: MutableRefObject<THREE.Mesh | null> = useRef(null);
+  const arrowRef1: MutableRefObject<THREE.ArrowHelper | null> = useRef(null);
+  const arrowRef2: MutableRefObject<THREE.ArrowHelper | null> = useRef(null);
 
-  // useEffect(() => {
-  //   // m1.current = massOne;
-  //   // m2.current = massTwo;
-  //   // v1.current = velocityOne * TIME_STEP;
-  //   // v2.current = velocityTwo * TIME_STEP;
-
-  //   console.log(m1, v1, m2, v2);
-  // }, [massOne, massTwo, velocityOne, velocityTwo]);
-
-  // const size1 = useMemo(() => 1 + massOne / 10, [massOne]);
-  // const size2 = useMemo(() => 1 + massTwo / 10, [massTwo]);
-
-  const meshRef1: React.MutableRefObject<THREE.Mesh | null> = useRef(null);
-  const meshRef2: React.MutableRefObject<THREE.Mesh | null> = useRef(null);
-  const arrowRef1: React.MutableRefObject<THREE.ArrowHelper | null> =
+  // refs to update results text
+  const v1TextRef: MutableRefObject<HTMLParagraphElement | null> = useRef(null);
+  const v2TextRef: MutableRefObject<HTMLParagraphElement | null> = useRef(null);
+  const m1TextRef: MutableRefObject<HTMLParagraphElement | null> = useRef(null);
+  const m2TextRef: MutableRefObject<HTMLParagraphElement | null> = useRef(null);
+  const p1TextRef: MutableRefObject<HTMLParagraphElement | null> = useRef(null);
+  const p2TextRef: MutableRefObject<HTMLParagraphElement | null> = useRef(null);
+  const kE1TextRef: MutableRefObject<HTMLParagraphElement | null> =
     useRef(null);
-  const arrowRef2: React.MutableRefObject<THREE.ArrowHelper | null> =
+  const kE2TextRef: MutableRefObject<HTMLParagraphElement | null> =
     useRef(null);
-
-  const v1TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
+  const totalKETextRef: MutableRefObject<HTMLParagraphElement | null> =
     useRef(null);
-  const v2TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
-    useRef(null);
-
-  const m1TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
-    useRef(null);
-  const m2TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
-    useRef(null);
-  const p1TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
-    useRef(null);
-  const p2TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
-    useRef(null);
-
-  const kE1TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
-    useRef(null);
-  const kE2TextRef: React.MutableRefObject<HTMLParagraphElement | null> =
-    useRef(null);
-
-  const totalKETextRef: React.MutableRefObject<HTMLParagraphElement | null> =
-    useRef(null);
-  const totalMomentumTextRef: React.MutableRefObject<HTMLParagraphElement | null> =
+  const totalMomentumTextRef: MutableRefObject<HTMLParagraphElement | null> =
     useRef(null);
 
   /**
@@ -152,7 +130,7 @@ const MainContents = ({
 
   const updateIfReachedEndOfRoad = (
     mesh: THREE.Mesh,
-    v: React.MutableRefObject<number>,
+    v: MutableRefObject<number>,
     size: number
   ) => {
     if (
@@ -190,14 +168,18 @@ const MainContents = ({
 
     // moves along z axis
     mesh1.position.setZ(mesh1.position.z + v1.current);
-    // mesh1.position.z += v1.current;
     mesh2.position.setZ(mesh2.position.z + v2.current);
-    // mesh2.position.z += v2.current;
 
-    // if it reaches the end of the road, reverse the direction
-    updateIfReachedEndOfRoad(mesh1, v1, size1.current);
-    updateIfReachedEndOfRoad(mesh2, v2, size2.current);
-    // update the arrow direction and position
+    // // if it reaches the end of the road, reverse the direction
+    // updateIfReachedEndOfRoad(mesh1, v1, size1.current);
+    // updateIfReachedEndOfRoad(mesh2, v2, size2.current);
+
+    if (
+      checkIfReachedEndOfRoad(mesh1, size1.current) ||
+      checkIfReachedEndOfRoad(mesh2, size2.current)
+    ) {
+      handleReset();
+    }
   });
 
   /**
@@ -240,7 +222,7 @@ const MainContents = ({
         break;
       case "v2":
         v2.current = value * TIME_STEP;
-        initialVelocity.current.v2 = value;
+        initialVelocity.current.v2 = value * TIME_STEP;
         arrowRef2.current!.position.setY(size2.current);
         updateArrows(arrowRef2.current, position2, v2.current);
         break;
@@ -318,7 +300,7 @@ const MainContents = ({
       <SingleBlock ref={meshRef1} size={size1.current} count={1} />
       <SingleBlock ref={meshRef2} size={size2.current} count={2} />
 
-      <WallsAtEndOfRoad />
+      {/* <WallsAtEndOfRoad /> */}
 
       <Html
         fullscreen
@@ -371,7 +353,6 @@ const MainContents = ({
       </Html>
 
       {/* draw arrow from box to the direction of velocity */}
-      {/* {playing && ( */}
       <group>
         <arrowHelper
           ref={arrowRef1}
@@ -390,7 +371,6 @@ const MainContents = ({
           ]}
         />
       </group>
-      {/* )} */}
     </group>
   );
 };
@@ -453,7 +433,9 @@ const Simulation = () => {
             enablePan={false}
             makeDefault
           />
-          <MainContents divRef={divRef} />
+          <Suspense fallback="loading...">
+            <MainContents divRef={divRef} />
+          </Suspense>
         </Canvas>
       </Suspense>
     </div>

@@ -1,5 +1,3 @@
-import { Html } from "@react-three/drei";
-
 /**
  * Toggles the full-screen mode for the specified HTML canvas element.
  * If the canvas is already in full-screen mode, it exits full-screen mode.

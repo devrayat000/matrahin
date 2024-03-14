@@ -3,7 +3,7 @@ import { MeshProps } from "@react-three/fiber";
 import { ForwardedRef, forwardRef, memo } from "react";
 import * as THREE from "three";
 import colors from "~/app/collision/colors";
-import { getDefaultPositionOfBox } from "~/app/collision/utils";
+import { getDefaultPositionOfBox, vec } from "~/app/collision/utils";
 import { BOX_SIZE } from "./store";
 
 interface SingleBlockProps extends MeshProps {
@@ -23,7 +23,13 @@ const SingleBlock = memo(
           ref={ref}
           position={getDefaultPositionOfBox(size, count)}
         >
-          <boxGeometry args={[size, size, size]} />
+          {/* <boxGeometry args={[size, size, size]} /> */}
+          <sphereGeometry
+            args={[size / 2]}
+            boundingSphere={
+              new THREE.Sphere(vec.clone().set(0, 0, 0), size / 2)
+            }
+          />
           <meshStandardMaterial color={colors[count - 1]} />
 
           <BBAnchor anchor={[-1, 0.5, -0.5]}>

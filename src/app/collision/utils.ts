@@ -1,11 +1,18 @@
 import * as THREE from "three";
-import { TIME_STEP } from "~/components/project/collisions/store";
+import { END_OF_ROAD, TIME_STEP } from "~/components/project/collisions/store";
 
 const BoundingBox = new THREE.Box3();
 const vec = new THREE.Vector3();
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 const matrix4 = new THREE.Matrix4();
 const precision = 1;
+
+const checkIfReachedEndOfRoad = (mesh: THREE.Mesh, size: number) => {
+  return (
+    mesh.position.z + size > END_OF_ROAD ||
+    mesh.position.z - size < -END_OF_ROAD
+  );
+};
 
 /**
  * Calculates the velocities of two objects after a collision.
@@ -137,6 +144,7 @@ export {
   boxGeometry,
   calculateVelocityAfterCollision,
   checkCollision,
+  checkIfReachedEndOfRoad,
   getDefaultPositionOfBox,
   getSizeOfBox,
   getTotalKE,

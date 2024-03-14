@@ -6,9 +6,9 @@ const TIME_STEP = 1 / 60; // normal animation frame 60fps
 
 const DEFAULT_INPUTS = {
   m1: 10,
-  m2: 10,
+  m2: 20,
   v1: -10,
-  v2: 10,
+  v2: 5,
 };
 
 const valuesShowingAtom = atom(true);
