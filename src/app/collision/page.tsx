@@ -4,6 +4,7 @@ import {
   ContactShadows,
   Grid,
   Html,
+  Line,
   Loader,
   OrbitControls,
   PerspectiveCamera,
@@ -26,6 +27,7 @@ import {
 import { addKeyControlToGoFullScreen } from "~/lib/utils/3DCanvasUtils";
 
 import { Pause, Play, RotateCcw } from "lucide-react";
+import { Line2, LineSegments2 } from "three-stdlib";
 import {
   boxGeometry,
   calculateVelocityAfterCollision,
@@ -73,6 +75,7 @@ const MainContents = ({
   const meshRef2: MutableRefObject<THREE.Mesh | null> = useRef(null);
   const arrowRef1: MutableRefObject<THREE.ArrowHelper | null> = useRef(null);
   const arrowRef2: MutableRefObject<THREE.ArrowHelper | null> = useRef(null);
+  const dottedLineRef1: MutableRefObject<Line2 | LineSegments2> = useRef(null);
 
   // refs to update results text
   const v1TextRef: MutableRefObject<HTMLParagraphElement | null> = useRef(null);
@@ -206,13 +209,13 @@ const MainContents = ({
         m1.current = value;
         size1.current = getSizeOfBox(value);
         updateBox(meshRef1.current, size1.current);
-        arrowRef1.current!.position.setY(size1.current);
+        arrowRef1.current!.position.setY(size1.current / 2);
         break;
       case "m2":
         m2.current = value;
         size2.current = getSizeOfBox(value);
         updateBox(meshRef2.current, size2.current);
-        arrowRef2.current!.position.setY(size2.current);
+        arrowRef2.current!.position.setY(size2.current / 2);
         break;
       case "v1":
         v1.current = value * TIME_STEP;
@@ -309,7 +312,7 @@ const MainContents = ({
           userSelect: "none",
         }}
         prepend
-        className="p-1 lg:px-2  w-full"
+        className="p-2 lg:px-2  w-full"
       >
         <div className="flex items-center justify-center text-white text-3xl my-2">
           Collision
@@ -358,7 +361,7 @@ const MainContents = ({
           ref={arrowRef1}
           args={[
             vec.set(0, 0, v1.current).normalize(),
-            vec.clone().set(0, size1.current, 0),
+            vec.clone().set(0, size1.current / 2, 0),
             4,
           ]}
         />
@@ -366,7 +369,7 @@ const MainContents = ({
           ref={arrowRef2}
           args={[
             vec.set(0, 0, v2.current).normalize(),
-            vec.clone().set(0, size2.current, 0),
+            vec.clone().set(0, size2.current / 2, 0),
             4,
           ]}
         />
