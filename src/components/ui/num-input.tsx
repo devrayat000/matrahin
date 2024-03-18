@@ -13,7 +13,11 @@ import { Slider } from "./slider";
 const Label = forwardRef<ElementRef<"span">, ComponentPropsWithRef<"span">>(
   ({ children, className, ...props }, ref) => {
     return (
-      <span className={cn("text-xl", className)} {...props} ref={ref}>
+      <span
+        className={cn("text-lg xl:text-xl", className)}
+        {...props}
+        ref={ref}
+      >
         {children}
       </span>
     );

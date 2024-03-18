@@ -1,7 +1,7 @@
 "use client";
 
 import { Slack } from "lucide-react";
-import NumInputWithSliderPop from "~/components/abstract/NumInputWithSliderPop";
+import NumInputWithSliderPop from "~/components/abstract/NumInputWithSliderProp";
 
 const TwoInputs = () => {
   return (
@@ -35,7 +35,7 @@ const Velocity = () => {
   return (
     <div>
       <div className="flex flex-row items-center justify-between w-full gap-3 p-1">
-        <p className="text-2xl ">Initial Velocity</p>
+        <p className="text-lg xl:text-xl ">Initial Velocity</p>
 
         <select className="border rounded-md border-slate-900 w-fit ">
           <option>m/s</option>
@@ -56,10 +56,10 @@ const Velocity = () => {
 const Object1 = () => {
   return (
     <div className="   flex flex-col items-center justify-center border w-fit rounded-md border-slate-900 ">
-      <h1 className="text-2xl font-bold">Object 1</h1>
+      <h1 className="text-lg xl:text-xl font-bold">Object 1</h1>
       {/* mass */}
       <div className="flex flex-row items-center justify-between w-full gap-3 p-1">
-        <p className="text-2xl text-left ">Mass</p>
+        <p className="text-lg xl:text-xl text-left ">Mass</p>
         <div className="flex items-center justify-around gap-2">
           <input
             type="number"
@@ -82,14 +82,31 @@ const Object1 = () => {
       <hr className="w-full mt-2" />
 
       <div className="flex flex-row items-center justify-between w-full gap-3 p-1">
-        <p className="text-2xl ">Momentum</p>
-        <p className="text-2xl ">{0} kgm/s</p>
+        <p className="text-lg xl:text-xl text-left ">Momentum</p>
+        <p className="text-lg xl:text-xl "> kgm/s</p>
       </div>
+      <div className="flex justify-around items-center gap-2 w-full">
+        <div>Initial</div>
+
+        <div>0</div>
+
+        <div>Final</div>
+        <div>1</div>
+      </div>
+
       <hr className="w-full mt-2" />
 
       <div className="flex flex-row items-center justify-between w-full gap-3 p-1">
-        <p className="text-2xl ">Kinetic Energy</p>
-        <p className="text-2xl ">{0} J</p>
+        <p className="text-lg xl:text-xl text-left ">Kinetic Energy</p>
+        <p className="text-lg xl:text-xl "> kgm/s</p>
+      </div>
+      <div className="flex justify-around items-center gap-2 w-full">
+        <div>Initial</div>
+
+        <div>0</div>
+
+        <div>Final</div>
+        <div>1</div>
       </div>
     </div>
   );
