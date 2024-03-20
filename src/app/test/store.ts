@@ -98,6 +98,7 @@ const totalValuesAtom = atom((get) => {
 });
 
 export {
+  DEFAULT_VALUES,
   calculatedValuesAtom,
   totalValuesAtom,
   twoDCollisionAtom as twoDCollisionInputsAtom,

@@ -1,13 +1,19 @@
 "use client";
 
 import { MathJaxContext } from "better-react-mathjax";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Slack } from "lucide-react";
 import { useState } from "react";
 import NumInputWithSliderProp from "~/components/abstract/NumInputWithSliderProp";
 import Chip from "~/components/ui/chip";
-import { twoDCollisionInputsAtom } from "./store";
+import {
+  DEFAULT_VALUES,
+  calculatedValuesAtom,
+  twoDCollisionInputsAtom,
+} from "./store";
 import { deepCopy, getUpdatedV } from "./utils";
+
+const PRECISION = 2;
 
 const TwoInputs = () => {
   return (
@@ -161,7 +167,7 @@ const Object1 = ({ count }: { count: 0 | 1 }) => {
 const Mass = ({ count }: { count: 0 | 1 }) => {
   const setValues = useSetAtom(twoDCollisionInputsAtom);
   const [mass, setMass] = useState({
-    value: 0,
+    value: DEFAULT_VALUES[count].M,
     unit: 1,
   });
 
@@ -205,6 +211,9 @@ const Mass = ({ count }: { count: 0 | 1 }) => {
 };
 
 const KineticEnergy = ({ count }: { count: 0 | 1 }) => {
+  const {
+    K: { i, f },
+  } = useAtomValue(calculatedValuesAtom)[count];
   return (
     <>
       <div className="flex flex-row items-center justify-between w-full gap-3 p-1">
@@ -214,15 +223,18 @@ const KineticEnergy = ({ count }: { count: 0 | 1 }) => {
       <div className="flex justify-around items-center gap-2 w-full">
         <div>Initial</div>
 
-        <div>0</div>
+        <div>{i.toFixed(PRECISION)}</div>
 
         <div>Final</div>
-        <div>1</div>
+        <div>{f.toFixed(PRECISION)}</div>
       </div>
     </>
   );
 };
 const Momentum = ({ count }: { count: 0 | 1 }) => {
+  const {
+    P: { i, f },
+  } = useAtomValue(calculatedValuesAtom)[count];
   return (
     <>
       <div className="flex flex-row items-center justify-between w-full gap-3 p-1">
@@ -240,13 +252,13 @@ const Momentum = ({ count }: { count: 0 | 1 }) => {
         <tbody>
           <tr>
             <th>Initial</th>
-            <td className="w-1/3 text-center">0</td>
-            <td className="w-1/3 text-center">0</td>
+            <td className="w-1/3 text-center">{i.x.toFixed(PRECISION)}</td>
+            <td className="w-1/3 text-center">{i.y.toFixed(PRECISION)}</td>
           </tr>
           <tr>
             <th>Final</th>
-            <td className="w-1/3 text-center">1</td>
-            <td className="w-1/3 text-center">1</td>
+            <td className="w-1/3 text-center">{f.x.toFixed(PRECISION)}</td>
+            <td className="w-1/3 text-center">{f.x.toFixed(PRECISION)}</td>
           </tr>
         </tbody>
       </table>
