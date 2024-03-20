@@ -1,9 +1,13 @@
 "use client";
 
 import { MathJaxContext } from "better-react-mathjax";
+import { useSetAtom } from "jotai";
 import { Slack } from "lucide-react";
+import { useState } from "react";
 import NumInputWithSliderProp from "~/components/abstract/NumInputWithSliderProp";
 import Chip from "~/components/ui/chip";
+import { twoDCollisionInputsAtom } from "./store";
+import { deepCopy, getUpdatedV } from "./utils";
 
 const TwoInputs = () => {
   return (
@@ -135,7 +139,7 @@ const Velocity = ({ count }: { count: number }) => {
   );
 };
 
-const Object1 = ({ count }: { count: number }) => {
+const Object1 = ({ count }: { count: 0 | 1 }) => {
   return (
     <div className="   flex flex-col items-center justify-center border w-fit rounded-md border-slate-900 ">
       <h1 className="text-lg xl:text-xl font-bold">Object {count + 1}</h1>
@@ -154,26 +158,53 @@ const Object1 = ({ count }: { count: number }) => {
   );
 };
 
-const Mass = ({ count }: { count: number }) => {
+const Mass = ({ count }: { count: 0 | 1 }) => {
+  const setValues = useSetAtom(twoDCollisionInputsAtom);
+  const [mass, setMass] = useState({
+    value: 0,
+    unit: 1,
+  });
+
+  const handleMassChange = (value: number, count: 0 | 1) => {
+    setValues((values) => {
+      const newValues = deepCopy(values);
+      newValues[count].M = value;
+      const { v1, v2 } = getUpdatedV(newValues);
+      newValues[0].V.f = v1;
+      newValues[1].V.f = v2;
+      return newValues;
+    });
+  };
+
   return (
     <div className="flex flex-row items-center justify-between w-full gap-3 p-1">
       <p className="text-lg xl:text-xl text-left ">Mass</p>
       <div className="flex items-center justify-around gap-2">
-        <input
-          type="number"
-          className="w-20 p-2  border rounded-md border-slate-900"
+        <NumInputWithSliderProp
+          value={mass.value}
+          min={0.001}
+          max={100}
+          onChange={(value) => {
+            setMass({ ...mass, value });
+            handleMassChange(value * mass.unit, count);
+          }}
         />
-        <Slack />
-        <select className="border rounded-md border-slate-900 w-fit ">
-          <option>g</option>
-          <option>kg</option>
+        <select
+          className="border rounded-md border-slate-900 w-fit px-2"
+          defaultValue={1}
+          onChange={(e) => {
+            setMass({ ...mass, unit: Number(e.target.value) });
+          }}
+        >
+          <option value={0.001}>g</option>
+          <option value={1}>kg</option>
         </select>
       </div>
     </div>
   );
 };
 
-const KineticEnergy = ({ count }: { count: number }) => {
+const KineticEnergy = ({ count }: { count: 0 | 1 }) => {
   return (
     <>
       <div className="flex flex-row items-center justify-between w-full gap-3 p-1">
@@ -191,7 +222,7 @@ const KineticEnergy = ({ count }: { count: number }) => {
     </>
   );
 };
-const Momentum = ({ count }: { count: number }) => {
+const Momentum = ({ count }: { count: 0 | 1 }) => {
   return (
     <>
       <div className="flex flex-row items-center justify-between w-full gap-3 p-1">

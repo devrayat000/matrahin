@@ -133,7 +133,7 @@ const SliderPopoverContent = forwardRef<
     };
     return (
       <div ref={ref} {...props}>
-        <p className="text-center ">{10}</p>
+        <p className="text-center ">{numValue}</p>
         <div className="flex flex-row justify-between  w-full  gap-2 mt-1 items-center">
           <button
             name={`-${step.toFixed(0)}`}

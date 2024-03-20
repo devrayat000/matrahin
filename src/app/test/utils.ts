@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import {
   TwoDCollisionValueSingleAxisType,
   TwoDCollisionValueType,
@@ -10,6 +10,17 @@ type FinalVelocitiesType = {
   v1: vectorType;
   v2: vectorType;
 };
+
+function deepCopy(o) {
+  var output, v, key;
+  output = Array.isArray(o) ? [] : {};
+  for (key in o) {
+    v = o[key];
+    output[key] = typeof v === "object" ? deepCopy(v) : v;
+  }
+  return output;
+}
+
 const getUpdatedV = (values: TwoDCollisionValueType): FinalVelocitiesType => {
   let { m1, m2, u1, v1, u2, v2 } = destructureToSingleAxis(values, "x");
   const v1x = (u1 * (m1 - m2) + 2 * m2 * u2) / (m1 + m2);
@@ -73,6 +84,7 @@ const destructureToSingleAxis = (
 /**
  * Update the input values for the two-dimensional collision.
  *
+ * @param values The current values from atom
  * @param param m | v
  * @param count 0 | 1
  * @param value number
@@ -80,14 +92,14 @@ const destructureToSingleAxis = (
  * @returns
  */
 export const updateInputValues = (
+  values: TwoDCollisionValueType,
   param: "m" | "v",
   count: 0 | 1,
   value: number,
-  axis: "x" | "y",
+  axis: "x" | "y" = "x",
   initOrFinal: "i" | "f" = "i"
 ) => {
-  const [values, setVaues] = useAtom(twoDCollisionInputsAtom);
-
+  const setVaues = useSetAtom(twoDCollisionInputsAtom);
   const newValues = [...values];
 
   if (param === "m") {
@@ -110,4 +122,12 @@ export const updateInputValues = (
   }
 
   setVaues({ ...newValues });
+};
+
+export {
+  calculateInitialVelocity,
+  destructureToSingleAxis,
+  getUpdatedU,
+  getUpdatedV,
+  deepCopy,
 };
