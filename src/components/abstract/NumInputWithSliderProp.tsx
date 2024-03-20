@@ -55,7 +55,7 @@ interface NumInputWithSliderPopProps {
  *
  * @returns {JSX.Element} The rendered component.
  */
-const NumInputWithSliderPop: FC<NumInputWithSliderPopProps> = ({
+const NumInputWithSliderProp: FC<NumInputWithSliderPopProps> = ({
   label,
   value,
   min = 0,
@@ -98,4 +98,4 @@ const NumInputWithSliderPop: FC<NumInputWithSliderPopProps> = ({
   );
 };
 
-export default NumInputWithSliderPop;
+export default NumInputWithSliderProp;
