@@ -1,4 +1,5 @@
-import { atom } from "jotai";
+import { PrimitiveAtom, atom } from "jotai";
+import { deepCopy } from "./utils";
 
 export type vectorType = {
   x: number;
@@ -22,6 +23,18 @@ export type TwoDCollisionValueSingleAxisType = {
   v2: number;
 };
 
+const MINIMUMs = {
+  m: 0.001,
+  modV: -20,
+  angle: -180,
+};
+
+const MAXIMUMs = {
+  m: 100,
+  modV: 20,
+  angle: 180,
+};
+
 const DEFAULT_VALUES: TwoDCollisionValueType = [
   {
     M: 10,
@@ -42,7 +55,9 @@ const DEFAULT_VALUES: TwoDCollisionValueType = [
 /**
  * Atom representing the two-dimensional collision inputs.
  */
-const twoDCollisionAtom = atom(DEFAULT_VALUES);
+const twoDCollisionAtom: PrimitiveAtom<TwoDCollisionValueType> = atom(
+  deepCopy(DEFAULT_VALUES)
+);
 
 /**
  * Atom representing the calculated values for the two-dimensional collision.
@@ -99,6 +114,8 @@ const totalValuesAtom = atom((get) => {
 
 export {
   DEFAULT_VALUES,
+  MAXIMUMs,
+  MINIMUMs,
   calculatedValuesAtom,
   totalValuesAtom,
   twoDCollisionAtom as twoDCollisionInputsAtom,

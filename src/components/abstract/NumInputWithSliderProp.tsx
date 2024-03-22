@@ -74,6 +74,7 @@ const NumInputWithSliderProp: FC<NumInputWithSliderPopProps> = ({
         min={min}
         max={max}
         step={step}
+        onChange={(e) => onChange(Number(e.target.value))}
       />
       {needsSlider ? (
         <Popover>

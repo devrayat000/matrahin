@@ -11,29 +11,54 @@ type FinalVelocitiesType = {
   v2: vectorType;
 };
 
-function deepCopy(o) {
-  var output, v, key;
-  output = Array.isArray(o) ? [] : {};
-  for (key in o) {
-    v = o[key];
-    output[key] = typeof v === "object" ? deepCopy(v) : v;
+const checkTendsToZero = (value: number) => {
+  const temp = value;
+  return Math.abs(temp) < 0.0001 ? 0 : Number(value.toFixed(4));
+};
+
+// function deepCopy(o) {
+//   var output, v, key;
+//   output = Array.isArray(o) ? [] : {};
+//   for (key in o) {
+//     v = o[key];
+//     output[key] = typeof v === "object" ? deepCopy(v) : v;
+//   }
+//   return output;
+// }
+
+type DeepCopyable = { [key: string]: any } | any[];
+
+function deepCopy<T extends DeepCopyable>(o: T): T {
+  let output: T;
+  if (Array.isArray(o)) {
+    output = [] as any;
+  } else {
+    output = {} as any;
+  }
+  for (const key in o) {
+    if (o.hasOwnProperty(key)) {
+      const v = o[key];
+      output[key] = typeof v === "object" ? deepCopy(v) : v;
+    }
   }
   return output;
 }
 
-const getUpdatedV = (values: TwoDCollisionValueType): FinalVelocitiesType => {
-  let { m1, m2, u1, v1, u2, v2 } = destructureToSingleAxis(values, "x");
-  const v1x = (u1 * (m1 - m2) + 2 * m2 * u2) / (m1 + m2);
-  const v2x = (u2 * (m2 - m1) + 2 * m1 * u1) / (m1 + m2);
-
-  ({ m1, m2, u1, v1, u2, v2 } = destructureToSingleAxis(values, "y"));
-  const v1y = (u1 * (m1 - m2) + 2 * m2 * u2) / (m1 + m2);
-  const v2y = (u2 * (m2 - m1) + 2 * m1 * u1) / (m1 + m2);
-
-  return {
-    v1: { x: v1x, y: v1y },
-    v2: { x: v2x, y: v2y },
+const getUpdatedV = (
+  m1: number,
+  m2: number,
+  u1: vectorType,
+  u2: vectorType
+): FinalVelocitiesType => {
+  const v1 = {
+    x: (u1.x * (m1 - m2) + 2 * m2 * u2.x) / (m1 + m2),
+    y: (u1.y * (m1 - m2) + 2 * m2 * u2.y) / (m1 + m2),
   };
+  const v2 = {
+    x: (u2.x * (m2 - m1) + 2 * m1 * u1.x) / (m1 + m2),
+    y: (u2.y * (m2 - m1) + 2 * m1 * u1.y) / (m1 + m2),
+  };
+  return { v1, v2 };
 };
 const calculateInitialVelocity = (
   { m1, m2, u1, v1, u2, v2 }: TwoDCollisionValueSingleAxisType,
@@ -46,19 +71,17 @@ const calculateInitialVelocity = (
   }
 };
 
-const getUpdatedU = (
-  values: TwoDCollisionValueType,
-  count: 0 | 1
+const getUpdatedUSelf = (
+  m1: number,
+  m2: number,
+  vSelf: vectorType,
+  uOther: vectorType
 ): vectorType => {
-  const ux = calculateInitialVelocity(
-    destructureToSingleAxis({ ...values }, "x"),
-    count
-  );
-  const uy = calculateInitialVelocity(
-    destructureToSingleAxis({ ...values }, "y"),
-    count
-  );
-  return { x: ux, y: uy };
+  console.log(m1, m2, vSelf, uOther);
+  return {
+    x: ((m1 + m2) * vSelf.x - 2 * m2 * uOther.x) / (m1 - m2),
+    y: ((m1 + m2) * vSelf.y - 2 * m2 * uOther.y) / (m1 - m2),
+  };
 };
 
 const destructureToSingleAxis = (
@@ -126,8 +149,9 @@ export const updateInputValues = (
 
 export {
   calculateInitialVelocity,
-  destructureToSingleAxis,
-  getUpdatedU,
-  getUpdatedV,
+  checkTendsToZero,
   deepCopy,
+  destructureToSingleAxis,
+  getUpdatedUSelf,
+  getUpdatedV,
 };

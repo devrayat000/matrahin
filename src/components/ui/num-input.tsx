@@ -32,6 +32,7 @@ const NumInput = forwardRef<
   return (
     <div className="flex items-center justify-items-end gap-2">
       <input
+        placeholder="0"
         ref={ref}
         type="number"
         className={cn("w-20 p-2 border rounded-md border-slate-900", className)}
