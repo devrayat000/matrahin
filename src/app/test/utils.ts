@@ -1,8 +1,10 @@
 import { useSetAtom } from "jotai";
+import { TIME_STEP } from "~/components/common/CanvasTHREE/store";
 import {
   TwoDCollisionValueSingleAxisType,
   TwoDCollisionValueType,
   twoDCollisionInputsAtom,
+  vec,
   vectorType,
 } from "./store";
 
@@ -147,6 +149,23 @@ export const updateInputValues = (
   setVaues({ ...newValues });
 };
 
+const updateArrows = (
+  mesh: THREE.Mesh,
+  arrow: THREE.ArrowHelper,
+  velocity: vectorType
+) => {
+  arrow.position.copy(mesh.position);
+  arrow.setDirection(
+    vec
+      .clone()
+      .set(velocity.y / TIME_STEP, 0, velocity.x / TIME_STEP)
+      .normalize()
+  );
+  arrow.setLength(
+    Math.abs(vec.clone().set(velocity.x, velocity.y, 0).length() / TIME_STEP)
+  );
+};
+
 export {
   calculateInitialVelocity,
   checkTendsToZero,
@@ -154,4 +173,5 @@ export {
   destructureToSingleAxis,
   getUpdatedUSelf,
   getUpdatedV,
+  updateArrows,
 };

@@ -4,7 +4,6 @@ import {
   ContactShadows,
   Grid,
   Html,
-  Line,
   Loader,
   OrbitControls,
   PerspectiveCamera,
@@ -21,13 +20,13 @@ import SingleBlock from "~/components/project/collisions/SingleBlock";
 import {
   DEFAULT_INPUTS,
   END_OF_ROAD,
-  TIME_STEP,
   fullScreenOnAtom,
 } from "~/components/project/collisions/store";
 import { addKeyControlToGoFullScreen } from "~/lib/utils/3DCanvasUtils";
 
 import { Pause, Play, RotateCcw } from "lucide-react";
 import { Line2, LineSegments2 } from "three-stdlib";
+import { TIME_STEP } from "~/components/common/CanvasTHREE/store";
 import {
   boxGeometry,
   calculateVelocityAfterCollision,

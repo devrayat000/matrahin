@@ -2,7 +2,6 @@ import { atom } from "jotai";
 import atomWithDebounce from "~/hooks/atomWithDebounce";
 
 const END_OF_ROAD = 50;
-const TIME_STEP = 1 / 60; // normal animation frame 60fps
 
 const DEFAULT_INPUTS = {
   m1: 10,
@@ -24,7 +23,6 @@ export {
   BOX_SIZE,
   DEFAULT_INPUTS,
   END_OF_ROAD,
-  TIME_STEP,
   collisionInputsAtom,
   debouncedValueAtom,
   fullScreenOnAtom,

@@ -1,5 +1,6 @@
 import * as THREE from "three";
-import { END_OF_ROAD, TIME_STEP } from "~/components/project/collisions/store";
+import { TIME_STEP } from "~/components/common/CanvasTHREE/store";
+import { END_OF_ROAD } from "~/components/project/collisions/store";
 
 const BoundingBox = new THREE.Box3();
 const vec = new THREE.Vector3();

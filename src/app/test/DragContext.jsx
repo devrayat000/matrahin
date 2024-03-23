@@ -1,4 +1,4 @@
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import {
   createContext,
   useCallback,
@@ -65,7 +65,7 @@ function Grid({ children, ...props }) {
   const grid = useRef();
   const [active, activate] = useState(false);
   // useFrame((state, delta) => {
-  //   easing.damp(grid.current.material, "opacity", active ? 1 : 0.9, 0.1, delta);
+    // easing.damp(grid.current.material, "opacity", active ? 1 : 0.9, 0.1, delta);
   //   // easing.damp(plane.current.material, 'opacity', active ? 1 : 0.25, 0.1, delta)
   //   // <mesh receiveShadow ref={plane}  rotation-x={-Math.PI / 2}>
   //   //       <planeGeometry />

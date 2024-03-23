@@ -24,7 +24,7 @@ export type TwoDCollisionValueSingleAxisType = {
   v2: number;
 };
 
-export const vec = new Vector3();
+const vec = new Vector3();
 const MINIMUMs = {
   m: 0.001,
   modV: -20,
@@ -60,6 +60,11 @@ const DEFAULT_VALUES: TwoDCollisionValueType = [
 const twoDCollisionAtom: PrimitiveAtom<TwoDCollisionValueType> = atom(
   deepCopy(DEFAULT_VALUES)
 );
+
+/**
+ * Atom representing the playing state of the animation.
+ */
+const playingAtom = atom(false);
 
 /**
  * Atom representing the calculated values for the two-dimensional collision.
@@ -119,6 +124,8 @@ export {
   MAXIMUMs,
   MINIMUMs,
   calculatedValuesAtom,
+  playingAtom,
   totalValuesAtom,
   twoDCollisionAtom as twoDCollisionInputsAtom,
+  vec,
 };
