@@ -2,9 +2,8 @@ import { BBAnchor, Html } from "@react-three/drei";
 import { MeshProps } from "@react-three/fiber";
 import { ForwardedRef, forwardRef, memo } from "react";
 import * as THREE from "three";
-import colors from "~/components/common/CanvasTHREE/colors";
 import { getDefaultPositionOfBox } from "~/app/collision/utils";
-import { BOX_SIZE } from "./store";
+import colors from "~/components/common/CanvasTHREE/colors";
 
 interface SingleBlockProps extends MeshProps {
   count: number;
@@ -13,23 +12,19 @@ interface SingleBlockProps extends MeshProps {
 
 const SingleBlock = memo(
   forwardRef(
-    (
-      { count, size = BOX_SIZE }: SingleBlockProps,
-      ref: ForwardedRef<THREE.Mesh>
-    ) => {
+    ({ count, size = 1 }: SingleBlockProps, ref: ForwardedRef<THREE.Mesh>) => {
       return (
         <mesh
           castShadow
           ref={ref}
           position={getDefaultPositionOfBox(size, count)}
         >
-          <boxGeometry args={[size, size, size]} />
-          {/* <sphereGeometry
+          <sphereGeometry
             args={[size / 2]}
             boundingSphere={
               new THREE.Sphere(vec.clone().set(0, 0, 0), size / 2)
             }
-          /> */}
+          />
           <meshStandardMaterial color={colors[count - 1]} />
 
           <BBAnchor anchor={[-1, 0.5, -0.5]}>

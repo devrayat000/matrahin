@@ -1,4 +1,5 @@
 import { PrimitiveAtom, atom } from "jotai";
+import { Vector3 } from "three";
 import { deepCopy } from "./utils";
 
 export type vectorType = {
@@ -23,6 +24,7 @@ export type TwoDCollisionValueSingleAxisType = {
   v2: number;
 };
 
+export const vec = new Vector3();
 const MINIMUMs = {
   m: 0.001,
   modV: -20,

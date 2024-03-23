@@ -14,10 +14,22 @@ export const XTicks = ({ length, y = 0 }: { length: number; y?: number }) => {
       {Array.from({ length: length / 5 }, (_, i) => (
         <Fragment key={i}>
           <Html className="text-white text-xs" position={[0, y, i * 5]}>
-            {i * 5}
+            <p
+              style={{
+                userSelect: "none",
+              }}
+            >
+              {i * 5}
+            </p>
           </Html>
           <Html className="text-white text-xs" position={[0, y, -i * 5]}>
-            {-i * 5}
+            <p
+              style={{
+                userSelect: "none",
+              }}
+            >
+              {-i * 5}
+            </p>
           </Html>
         </Fragment>
       ))}

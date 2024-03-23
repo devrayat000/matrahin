@@ -5,6 +5,7 @@ import { Slack } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import NumInputWithSliderProp from "~/components/abstract/NumInputWithSliderProp";
 import Chip from "~/components/ui/chip";
+import Collision2DAnimation from "./Collision2DAnimation";
 import {
   DEFAULT_VALUES,
   MAXIMUMs,
@@ -225,7 +226,7 @@ const Velocity = ({ count }: { count: 0 | 1 }) => {
         </select> */}
       </div>
       <div className="flex flex-row items-center justify-between w-full gap-3 p-1">
-        <p className="text-md  ">Velocity format</p>
+        <p className="text-md  ">Format</p>
         <Chip
           selected={format === "xy"}
           onClick={() => {
@@ -438,7 +439,7 @@ const Momentum = ({ count }: { count: 0 | 1 }) => {
   );
 };
 
-const Object1 = ({ count }: { count: 0 | 1 }) => {
+const Object = ({ count }: { count: 0 | 1 }) => {
   return (
     <div className="   flex flex-col items-center justify-center border w-fit rounded-md border-slate-900 ">
       <h1 className="text-lg xl:text-xl font-bold">Object {count + 1}</h1>
@@ -460,15 +461,12 @@ const page = () => {
   return (
     <div className="">
       <h1 className=" text-center m-auto text-4xl font-bold">Test</h1>
-      <div className="flex justify-around items-center mx-2">
-        {/* <Canvas>
-            <mesh>
-              <boxGeometry args={[1, 1, 1]} />
-              <meshStandardMaterial color="hotpink" />
-            </mesh>
-          </Canvas> */}
-        <Object1 count={0} />
-        <Object1 count={1} />
+      <div className="flex justify-between items-center mx-2 gap-2">
+        <div className="w-2/3  border border-slate-500 h-[80vh] self-start">
+          <Collision2DAnimation />
+        </div>
+        <Object count={0} />
+        <Object count={1} />
       </div>
     </div>
   );
