@@ -154,6 +154,7 @@ const updateArrows = (
   arrow: THREE.ArrowHelper,
   velocity: vectorType
 ) => {
+  if (!arrow) return;
   arrow.position.copy(mesh.position);
   arrow.setDirection(
     vec
@@ -161,9 +162,7 @@ const updateArrows = (
       .set(velocity.y / TIME_STEP, 0, velocity.x / TIME_STEP)
       .normalize()
   );
-  arrow.setLength(
-    Math.abs(vec.clone().set(velocity.x, velocity.y, 0).length() / TIME_STEP)
-  );
+  arrow.setLength(Math.sqrt(velocity.x ** 2 + velocity.y ** 2) / TIME_STEP);
 };
 
 export {

@@ -64,7 +64,13 @@ const twoDCollisionAtom: PrimitiveAtom<TwoDCollisionValueType> = atom(
 /**
  * Atom representing the playing state of the animation.
  */
-const playingAtom = atom(false);
+
+export const PLAYING_STATES = {
+  PLAY: "play",
+  PAUSE: "pause",
+  RESET: "reset",
+};
+const playingAtom = atom(PLAYING_STATES.PAUSE);
 
 /**
  * Atom representing the calculated values for the two-dimensional collision.

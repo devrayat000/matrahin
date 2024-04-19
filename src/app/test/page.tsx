@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import NumInputWithSliderProp from "~/components/abstract/NumInputWithSliderProp";
 import Chip from "~/components/ui/chip";
 import Collision2DAnimation from "./Collision2DAnimation";
+import PauseResumeControl from "./PauseResumeControl";
 import {
   DEFAULT_VALUES,
   MAXIMUMs,
@@ -84,7 +85,7 @@ const Velocity = ({ count }: { count: 0 | 1 }) => {
 
   useEffect(() => {
     updateInputs(format === "xy" ? 0 : 1, velocity[count].V);
-  }, [velocity[count].V]);
+  }, [velocity[count].V.i, velocity[count].V.f]);
   /**
    *
    * @param vector the vector to be converted
@@ -94,7 +95,6 @@ const Velocity = ({ count }: { count: 0 | 1 }) => {
   const getVectorInValueAngleFormat = useCallback(
     (vector: vectorType, mode: 0 | 1) => {
       if (mode === 0) {
-        console.log(format);
         if (format === "xy")
           return {
             x: vector.x / unit,
@@ -132,7 +132,7 @@ const Velocity = ({ count }: { count: 0 | 1 }) => {
     let newInputs = { ...inputs };
     newInputs.i = getVectorInValueAngleFormat(inputs.i, mode);
     newInputs.f = getVectorInValueAngleFormat(inputs.f, mode);
-    console.log(newInputs.i.x, inputs);
+
     setInputs(newInputs);
   };
 
@@ -467,6 +467,9 @@ const page = () => {
         </div>
         <Object count={0} />
         <Object count={1} />
+      </div>
+      <div className="flex justify-center items-center">
+        <PauseResumeControl />
       </div>
     </div>
   );

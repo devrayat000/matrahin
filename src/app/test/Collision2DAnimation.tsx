@@ -6,16 +6,16 @@ import {
   PerspectiveCamera,
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useAtom, useAtomValue } from "jotai";
-import { Suspense, useEffect, useRef } from "react";
+import { useAtom } from "jotai";
+import { Suspense, useCallback, useEffect, useRef } from "react";
 import colors from "~/components/common/CanvasTHREE/colors";
 import { TIME_STEP } from "~/components/common/CanvasTHREE/store";
 import { XTicks } from "~/components/common/CanvasTHREE/xTicks";
 import { checkCollision } from "../collision/utils";
 import { DragContext } from "./DragContext";
 import Sphere from "./Sphere";
-import { playingAtom, twoDCollisionInputsAtom } from "./store";
-import { updateArrows } from "./utils";
+import { PLAYING_STATES, playingAtom, twoDCollisionInputsAtom } from "./store";
+import { getUpdatedV, updateArrows } from "./utils";
 
 const MainContent = () => {
   const sphereRef1 = useRef<THREE.Mesh>(null);
@@ -34,9 +34,18 @@ const MainContent = () => {
     y: values[1].V.i.y * TIME_STEP,
   });
 
-  const playing = useAtomValue(playingAtom);
+  const [playing, setPlaying] = useAtom(playingAtom);
 
-  useEffect(() => {
+  const reset = useCallback(() => {
+    setPlaying(PLAYING_STATES.PAUSE);
+    u1.current = {
+      x: values[0].V.i.x * TIME_STEP,
+      y: values[0].V.i.y * TIME_STEP,
+    };
+    u2.current = {
+      x: values[1].V.i.x * TIME_STEP,
+      y: values[1].V.i.y * TIME_STEP,
+    };
     const obj1 = sphereRef1.current!;
     const obj2 = sphereRef2.current!;
     const arrow1 = arrowRef1.current!;
@@ -46,9 +55,23 @@ const MainContent = () => {
 
     updateArrows(obj1, arrow1, u1.current);
     updateArrows(obj2, arrow2, u2.current);
+  }, [values]);
+
+  useEffect(() => {
+    reset();
   }, []);
+
+  useEffect(() => {
+    reset();
+  }, [values[0].V, values[1].V]);
+
+  useEffect(() => {
+    if (playing === PLAYING_STATES.RESET) {
+      reset();
+    }
+  }, [playing]);
   useFrame(() => {
-    // if (!playing) return;
+    if (playing !== PLAYING_STATES.PLAY) return;
     const obj1 = sphereRef1.current!;
     const obj2 = sphereRef2.current!;
     const arrow1 = arrowRef1.current!;
@@ -62,6 +85,17 @@ const MainContent = () => {
       u1.current = { x: v1.x * TIME_STEP, y: v1.y * TIME_STEP };
       u2.current = { x: v2.x * TIME_STEP, y: v2.y * TIME_STEP };
     }
+
+    if (
+      obj1.position.z > 21 ||
+      obj1.position.z < -21 ||
+      obj1.position.x > 21 ||
+      obj1.position.x < -21
+    ) {
+      reset();
+      return;
+    }
+
     obj1.position.z += u1.current.x;
     obj1.position.x += u1.current.y;
     obj2.position.z += u2.current.x;
@@ -70,12 +104,69 @@ const MainContent = () => {
     updateArrows(obj1, arrow1, u1.current);
     updateArrows(obj2, arrow2, u2.current);
   });
+
+  const updateInputsFromMouseDrag = (index: number, x: number, y: number) => {
+    setValues((prev) => {
+      const newValues = [...prev];
+
+      newValues[index].V.i.x = -y;
+      newValues[index].V.i.y = x;
+
+      const { v1, v2 } = getUpdatedV(
+        newValues[0].M,
+        newValues[1].M,
+        newValues[0].V.i,
+        newValues[1].V.i
+      );
+
+      newValues[0].V.f = v1;
+      newValues[1].V.f = v2;
+      newValues[index] = {
+        ...prev[index],
+        V: {
+          ...prev[index].V,
+          i: {
+            x: -x,
+            y: y,
+          },
+        },
+      };
+      console.log(
+        0,
+        newValues[0].V.i.x,
+        newValues[0].V.i.y,
+        newValues[0].V.f.x,
+        newValues[0].V.f.y
+      );
+      console.log(
+        1,
+        newValues[1].V.i.x,
+        newValues[1].V.i.y,
+        newValues[1].V.f.x,
+        newValues[1].V.f.y
+      );
+      return newValues;
+    });
+  };
+
   return (
     <DragContext>
-      <Sphere ref={sphereRef1} c={colors[0]} />
-      <Sphere ref={sphereRef2} c={colors[1]} />
       <arrowHelper ref={arrowRef1} />
       <arrowHelper ref={arrowRef2} />
+      <Sphere
+        arrowRef={arrowRef1}
+        ref={sphereRef1}
+        c={colors[0]}
+        updateInputsFromMouseDrag={updateInputsFromMouseDrag}
+        index={0}
+      />
+      <Sphere
+        arrowRef={arrowRef2}
+        ref={sphereRef2}
+        c={colors[2]}
+        updateInputsFromMouseDrag={updateInputsFromMouseDrag}
+        index={1}
+      />
     </DragContext>
   );
 };

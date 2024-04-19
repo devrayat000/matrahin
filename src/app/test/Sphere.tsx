@@ -1,46 +1,70 @@
 "use client";
 
-import { useAtomValue } from "jotai";
-import { forwardRef, useCallback, useEffect, useRef } from "react";
+import {
+  MutableRefObject,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 import * as THREE from "three";
 import { Color, MathUtils } from "three";
+import { TIME_STEP } from "~/components/common/CanvasTHREE/store";
 import { useDrag } from "./DragContext";
-import { playingAtom, vec } from "./store";
-import { easing } from "maath";
+import { vec } from "./store";
+import { updateArrows } from "./utils";
 const Sphere = forwardRef<
   THREE.Mesh,
   {
+    arrowRef: MutableRefObject<THREE.ArrowHelper>;
     position?: [number, number, number];
     c?: Color;
     radius?: number;
     round?: (n: number) => number;
     clamp?: (n: number, min: number, max: number) => number;
+    updateInputsFromMouseDrag: (index: number, x: number, y: number) => void;
+    index: number;
     [key: string]: any;
   }
 >(
   (
     {
+      arrowRef,
       position = [1, 1, -1],
       c = new Color(),
       radius = 1,
       round = Math.round,
       clamp = MathUtils.clamp,
+      updateInputsFromMouseDrag,
+      index,
       ...props
     },
     ref
   ) => {
     const pos = useRef(position);
 
-    const playing = useAtomValue(playingAtom);
     // clamp the position of the cube to the grid on Dragging
     const onDrag = useCallback(({ x, z }) => {
-      pos.current = [clamp(x, -20, 20), position[1], clamp(z, -20, 20)];
-      easing.damp3(
-        ref?.current.position,
-        [clamp(x, -20, 20), position[1], clamp(z, -20, 20)],
-        0.1,
-        0.01
-      );
+      pos.current = [
+        Math.round(clamp(x, -20, 20)),
+        position[1],
+        Math.round(clamp(z, -20, 20)),
+      ];
+      // easing.damp3(
+      //   ref?.current.position,
+      //   pos.current,
+      //   1,
+      //   0.01
+      // );
+      // no need of easing here
+      ref?.current.position.set(...pos.current);
+
+      // update the inputs from the mouse drag
+      updateInputsFromMouseDrag(index, pos.current[2], -pos.current[0]);
+      updateArrows(ref?.current, arrowRef?.current, {
+        x: -pos.current?.[2] * TIME_STEP,
+        y: -pos.current?.[0] * TIME_STEP,
+      });
     }, []);
 
     // get the events, active and hovered states from the useDrag hook
@@ -71,7 +95,24 @@ const Sphere = forwardRef<
           args={[radius]}
           boundingSphere={new THREE.Sphere(vec.clone().set(0, 0, 0), radius)}
         />
-        <meshStandardMaterial />
+        <meshStandardMaterial color={c} />
+        {/* <BBAnchor anchor={[-1, 0.5, -0.5]}>
+          <Html
+            transform
+            occlude
+            position={[-0.01, 1, 0]}
+            rotation-y={-Math.PI / 2}
+            style={{
+              letterSpacing: "0.1em",
+              fontSize: "2em",
+              fontFamily: "consolas",
+              userSelect: "none",
+            }}
+            className="text-white absolute rounded-md  bg-black p-1 px-2"
+          >
+            {index + 1}
+          </Html>
+        </BBAnchor> */}
       </mesh>
     );
   }
