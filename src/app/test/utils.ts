@@ -75,7 +75,7 @@ const calculateInitialVelocity = (
 
 const getUpdatedUSelf = (
   m1: number,
-  m2: number,
+  m2: number, //mOther
   vSelf: vectorType,
   uOther: vectorType
 ): vectorType => {
@@ -130,19 +130,34 @@ export const updateInputValues = (
   if (param === "m") {
     newValues[count].M = value;
 
-    const { v1, v2 } = getUpdatedV({ ...newValues });
+    const { v1, v2 } = getUpdatedV(
+      newValues[0].M,
+      newValues[1].M,
+      newValues[0].V.i,
+      newValues[1].V.i
+    );
     newValues[0].V.f = v1;
     newValues[1].V.f = v2;
   } else if (param === "v" && initOrFinal === "i") {
     newValues[count].V.i[axis] = value;
 
-    const { v1, v2 } = getUpdatedV({ ...newValues });
+    const { v1, v2 } = getUpdatedV(
+      newValues[0].M,
+      newValues[1].M,
+      newValues[0].V.i,
+      newValues[1].V.i
+    );
     newValues[0].V.f = v1;
     newValues[1].V.f = v2;
   } else if (param === "v" && initOrFinal === "f") {
     newValues[count].V.f[axis] = value;
 
-    const { x: ux, y: uy } = getUpdatedU({ ...newValues }, count);
+    const { x: ux, y: uy } = getUpdatedUSelf(
+      newValues[count].M,
+      newValues[1 - count].M,
+      newValues[count].V.f,
+      newValues[1 - count].V.i
+    );
     newValues[count].V.i = { x: ux, y: uy };
   }
 

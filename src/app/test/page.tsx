@@ -4,6 +4,7 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Slack } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import NumInputWithSliderProp from "~/components/abstract/NumInputWithSliderProp";
+import colors from "~/components/common/CanvasTHREE/colors";
 import Chip from "~/components/ui/chip";
 import Collision2DAnimation from "./Collision2DAnimation";
 import PauseResumeControl from "./PauseResumeControl";
@@ -353,6 +354,7 @@ const Mass = ({ count }: { count: 0 | 1 }) => {
 
   const handleUnitChange = (value: number) => {
     // update the mass value on current unit
+
     setMass({ ...mass, unit: value });
     handleMassChange(mass.value * value, count);
   };
@@ -366,7 +368,7 @@ const Mass = ({ count }: { count: 0 | 1 }) => {
           min={MINIMUMs.m}
           max={MAXIMUMs.m}
           onChange={(value) => {
-            setMass({ ...mass, value });
+            setMass({ ...mass, value: value < 0.1 ? 0.1 : value });
             handleMassChange(value * mass.unit, count);
           }}
         />
@@ -441,8 +443,16 @@ const Momentum = ({ count }: { count: 0 | 1 }) => {
 
 const Object = ({ count }: { count: 0 | 1 }) => {
   return (
-    <div className="   flex flex-col items-center justify-center border w-fit rounded-md border-slate-900 ">
-      <h1 className="text-lg xl:text-xl font-bold">Object {count + 1}</h1>
+    <div className="   flex flex-col items-center justify-center border w-fit rounded-md border-slate-900 gap-1 ">
+      <div
+        className="rounded-md w-full text-lg  xl:text-xl font-bold flex items-center justify-center"
+        style={{
+          backgroundColor: colors[count * 2],
+        }}
+      >
+        Object {count + 1}
+      </div>
+
       {/* mass */}
       <Mass count={count} />
 

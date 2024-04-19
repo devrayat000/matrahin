@@ -26,7 +26,7 @@ export type TwoDCollisionValueSingleAxisType = {
 
 const vec = new Vector3();
 const MINIMUMs = {
-  m: 0.001,
+  m: 0,
   modV: -20,
   angle: -180,
 };
