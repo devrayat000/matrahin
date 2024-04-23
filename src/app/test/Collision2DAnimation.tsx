@@ -109,8 +109,8 @@ const MainContent = () => {
     setValues((prev) => {
       const newValues = [...prev];
 
-      newValues[index].V.i.x = -y;
-      newValues[index].V.i.y = x;
+      newValues[index].V.i.x = -x;
+      newValues[index].V.i.y = y;
 
       const { v1, v2 } = getUpdatedV(
         newValues[0].M,
@@ -119,8 +119,8 @@ const MainContent = () => {
         newValues[1].V.i
       );
 
-      newValues[0].V.f = v1;
-      newValues[1].V.f = v2;
+      newValues[0].V.f = { ...v1 };
+      newValues[1].V.f = { ...v2 };
       newValues[index] = {
         ...prev[index],
         V: {
@@ -131,20 +131,20 @@ const MainContent = () => {
           },
         },
       };
-      console.log(
-        0,
-        newValues[0].V.i.x,
-        newValues[0].V.i.y,
-        newValues[0].V.f.x,
-        newValues[0].V.f.y
-      );
-      console.log(
-        1,
-        newValues[1].V.i.x,
-        newValues[1].V.i.y,
-        newValues[1].V.f.x,
-        newValues[1].V.f.y
-      );
+      // console.log(
+      //   0,
+      //   newValues[0].V.i.x,
+      //   newValues[0].V.i.y,
+      //   newValues[0].V.f.x,
+      //   newValues[0].V.f.y
+      // );
+      // console.log(
+      //   1,
+      //   newValues[1].V.i.x,
+      //   newValues[1].V.i.y,
+      //   newValues[1].V.f.x,
+      //   newValues[1].V.f.y
+      // );
       return newValues;
     });
   };
