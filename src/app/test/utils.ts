@@ -1,6 +1,7 @@
 import { useSetAtom } from "jotai";
 import { TIME_STEP } from "~/components/common/CanvasTHREE/store";
 import {
+  COLLISION_TYPES,
   TwoDCollisionValueSingleAxisType,
   TwoDCollisionValueType,
   twoDCollisionInputsAtom,
@@ -50,8 +51,17 @@ const getUpdatedV = (
   m1: number,
   m2: number,
   u1: vectorType,
-  u2: vectorType
+  u2: vectorType,
+  collisionType: "elastic" | "inelastic"
 ): FinalVelocitiesType => {
+  if (collisionType == COLLISION_TYPES.INELASTIC) {
+    const v1 = {
+      x: (m1 * u1.x + m2 * u2.x) / (m1 + m2),
+      y: (m1 * u1.y + m2 * u2.y) / (m1 + m2),
+    };
+    return { v1, v2: v1 };
+  }
+
   const v1 = {
     x: (u1.x * (m1 - m2) + 2 * m2 * u2.x) / (m1 + m2),
     y: (u1.y * (m1 - m2) + 2 * m2 * u2.y) / (m1 + m2),
@@ -77,13 +87,14 @@ const getUpdatedUSelf = (
   m1: number,
   m2: number, //mOther
   vSelf: vectorType,
-  uOther: vectorType
+  uOther: vectorType,
+  collisionType: "elastic" | "inelastic" = COLLISION_TYPES.ELASTIC
 ): vectorType => {
-  console.log(m1, m2, vSelf, uOther);
-  return {
-    x: ((m1 + m2) * vSelf.x - 2 * m2 * uOther.x) / (m1 - m2),
-    y: ((m1 + m2) * vSelf.y - 2 * m2 * uOther.y) / (m1 - m2),
-  };
+  if (collisionType === COLLISION_TYPES.ELASTIC)
+    return {
+      x: ((m1 + m2) * vSelf.x - 2 * m2 * uOther.x) / (m1 - m2),
+      y: ((m1 + m2) * vSelf.y - 2 * m2 * uOther.y) / (m1 - m2),
+    };
 };
 
 const destructureToSingleAxis = (
@@ -181,18 +192,18 @@ const updateArrows = (
 };
 
 const checkOutOfField = (obj: THREE.Mesh) =>
-  obj.position.z > 21 ||
-  obj.position.z < -21 ||
-  obj.position.x > 21 ||
-  obj.position.x < -21;
+  obj.position.z > 100 ||
+  obj.position.z < -100 ||
+  obj.position.x > 100 ||
+  obj.position.x < -100;
 
 export {
   calculateInitialVelocity,
+  checkOutOfField,
   checkTendsToZero,
   deepCopy,
   destructureToSingleAxis,
   getUpdatedUSelf,
   getUpdatedV,
   updateArrows,
-  checkOutOfField,
 };

@@ -70,6 +70,19 @@ export const PLAYING_STATES = {
   PAUSE: "pause",
   RESET: "reset",
 };
+
+export const COLLISION_TYPES: {
+  ELASTIC: "elastic";
+  INELASTIC: "inelastic";
+} = {
+  ELASTIC: "elastic",
+  INELASTIC: "inelastic",
+};
+
+const collisionTypeAtom: PrimitiveAtom<"elastic" | "inelastic"> = atom(
+  COLLISION_TYPES.ELASTIC
+);
+
 const playingAtom = atom(PLAYING_STATES.PAUSE);
 
 /**
@@ -130,6 +143,7 @@ export {
   MAXIMUMs,
   MINIMUMs,
   calculatedValuesAtom,
+  collisionTypeAtom,
   playingAtom,
   totalValuesAtom,
   twoDCollisionAtom as twoDCollisionInputsAtom,

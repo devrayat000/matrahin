@@ -1,5 +1,6 @@
 "use client";
 
+import { useAtomValue } from "jotai";
 import {
   MutableRefObject,
   forwardRef,
@@ -11,7 +12,7 @@ import * as THREE from "three";
 import { Color, MathUtils } from "three";
 import { TIME_STEP } from "~/components/common/CanvasTHREE/store";
 import { useDrag } from "./DragContext";
-import { vec } from "./store";
+import { collisionTypeAtom, vec } from "./store";
 import { updateArrows } from "./utils";
 const Sphere = forwardRef<
   THREE.Mesh,
@@ -22,7 +23,12 @@ const Sphere = forwardRef<
     radius?: number;
     round?: (n: number) => number;
     clamp?: (n: number, min: number, max: number) => number;
-    updateInputsFromMouseDrag: (index: number, x: number, y: number) => void;
+    updateInputsFromMouseDrag: (
+      index: number,
+      x: number,
+      y: number,
+      collisionType: "elastic" | "inelastic"
+    ) => void;
     index: number;
     [key: string]: any;
   }
@@ -42,30 +48,39 @@ const Sphere = forwardRef<
     ref
   ) => {
     const pos = useRef(position);
+    const collisionType = useAtomValue(collisionTypeAtom);
 
     // clamp the position of the cube to the grid on Dragging
-    const onDrag = useCallback(({ x, z }) => {
-      pos.current = [
-        Math.round(clamp(x, -20, 20)),
-        position[1],
-        Math.round(clamp(z, -20, 20)),
-      ];
-      // easing.damp3(
-      //   ref?.current.position,
-      //   pos.current,
-      //   1,
-      //   0.01
-      // );
-      // no need of easing here
-      ref?.current.position.set(...pos.current);
+    const onDrag = useCallback(
+      ({ x, z }) => {
+        pos.current = [
+          Math.round(clamp(x, -20, 20)),
+          position[1],
+          Math.round(clamp(z, -20, 20)),
+        ];
+        // easing.damp3(
+        //   ref?.current.position,
+        //   pos.current,
+        //   1,
+        //   0.01
+        // );
+        // no need of easing here
+        ref?.current.position.set(...pos.current);
 
-      // update the inputs from the mouse drag
-      updateInputsFromMouseDrag(index, pos.current[2], -pos.current[0]);
-      updateArrows(ref?.current, arrowRef?.current, {
-        x: -pos.current?.[2] * TIME_STEP,
-        y: -pos.current?.[0] * TIME_STEP,
-      });
-    }, []);
+        // update the inputs from the mouse drag
+        updateInputsFromMouseDrag(
+          index,
+          pos.current[2],
+          -pos.current[0],
+          collisionType
+        );
+        updateArrows(ref?.current, arrowRef?.current, {
+          x: -pos.current?.[2] * TIME_STEP,
+          y: -pos.current?.[0] * TIME_STEP,
+        });
+      },
+      [collisionType]
+    );
 
     // get the events, active and hovered states from the useDrag hook
     const [events, active, hovered] = useDrag(onDrag);

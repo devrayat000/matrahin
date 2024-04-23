@@ -9,11 +9,13 @@ import Chip from "~/components/ui/chip";
 import Collision2DAnimation from "./Collision2DAnimation";
 import PauseResumeControl from "./PauseResumeControl";
 import {
+  COLLISION_TYPES,
   DEFAULT_VALUES,
   MAXIMUMs,
   MINIMUMs,
   TwoDCollisionValueType,
   calculatedValuesAtom,
+  collisionTypeAtom,
   twoDCollisionInputsAtom,
   vectorType,
 } from "./store";
@@ -81,6 +83,7 @@ const Velocity = ({ count }: { count: 0 | 1 }) => {
   const [format, setFormat] = useState<"xy" | "vtheta">("xy");
   const [velocity, setVelocity] = useAtom(twoDCollisionInputsAtom);
   const [unit, setUnit] = useState(1);
+  const collisionType = useAtomValue(collisionTypeAtom);
 
   const [inputs, setInputs] = useState(DEFAULT_VALUES[count].V);
 
@@ -184,21 +187,42 @@ const Velocity = ({ count }: { count: 0 | 1 }) => {
         newValues[0].M,
         newValues[1].M,
         newValues[0].V.i,
-        newValues[1].V.i
+        newValues[1].V.i,
+        collisionType
       );
 
       newValues[0].V.f = { ...v1 };
       newValues[1].V.f = { ...v2 };
     } else {
-      if (newValues[0].M !== newValues[1].M) {
-        newValues[count].V.i = getUpdatedUSelf(
-          newValues[0].M,
-          newValues[1].M,
-          newValues[count].V.f,
-          newValues[Math.abs(1 - count)].V.i
-        );
+      // final velocity is changed
+      if (collisionType == COLLISION_TYPES.INELASTIC) {
+        // formula: V = (m1 * u1 + m2 * u2) / (m1 + m2)
+        // so, u1 = ((m1 + m2) * V - m2 * u2) / m1
+        newValues[1 - count].V.f = { ...newValues[count].V.f };
+        newValues[count].V.i = {
+          x:
+            ((newValues[count].M + newValues[1 - count].M) *
+              newValues[count].V.f.x -
+              newValues[1 - count].M * newValues[1 - count].V.i.x) /
+            newValues[count].M,
+          y:
+            ((newValues[count].M + newValues[1 - count].M) *
+              newValues[count].V.f.y -
+              newValues[1 - count].M * newValues[1 - count].V.i.y) /
+            newValues[count].M,
+        };
       } else {
-        newValues[Math.abs(1 - count)].V.i = newValues[count].V.f;
+        if (newValues[0].M !== newValues[1].M) {
+          newValues[count].V.i = getUpdatedUSelf(
+            newValues[0].M,
+            newValues[1].M,
+            newValues[count].V.f,
+            newValues[Math.abs(1 - count)].V.i,
+            collisionType
+          );
+        } else {
+          newValues[Math.abs(1 - count)].V.i = newValues[count].V.f;
+        }
       }
     }
 
@@ -330,6 +354,7 @@ const Velocity = ({ count }: { count: 0 | 1 }) => {
 };
 
 const Mass = ({ count }: { count: 0 | 1 }) => {
+  const collisionType = useAtomValue(collisionTypeAtom);
   const setValues = useSetAtom(twoDCollisionInputsAtom);
   const [mass, setMass] = useState({
     value: DEFAULT_VALUES[count].M,
@@ -344,7 +369,8 @@ const Mass = ({ count }: { count: 0 | 1 }) => {
         newValues[0].M,
         newValues[1].M,
         newValues[0].V.i,
-        newValues[1].V.i
+        newValues[1].V.i,
+        collisionType
       );
       newValues[0].V.f = v1;
       newValues[1].V.f = v2;
@@ -472,15 +498,57 @@ const page = () => {
     <div className="flex flex-col gap-2">
       <h1 className=" text-center m-auto text-4xl font-bold">Collision 2D</h1>
       <div className="flex justify-between items-center mx-2 gap-2">
-        <div className="w-2/3  border border-slate-500 h-[70vh] self-start">
-          <Collision2DAnimation />
+        <div className="w-2/3 ">
+          <div className=" mb-2  border border-slate-500 md:h-[70vh] h-[60vh]  self-start">
+            <Collision2DAnimation />
+          </div>
+          <div className="flex justify-center items-center">
+            <PauseResumeControl />
+          </div>
         </div>
-        <Object count={0} />
-        <Object count={1} />
+        <div className="md:self-start">
+          <CollisionTypeInput />
+          <div className="flex  gap-2">
+            <Object count={0} />
+            <Object count={1} />
+          </div>
+        </div>
       </div>
-      <div className="flex justify-center items-center">
-        <PauseResumeControl />
-      </div>
+    </div>
+  );
+};
+
+const CollisionTypeInput = () => {
+  const [collisionType, setCollisionType] = useAtom(collisionTypeAtom);
+  const setValues = useSetAtom(twoDCollisionInputsAtom);
+  return (
+    <div className="flex justify-between items-center mb-2">
+      <p className="font-bold md:text-xl"> Collision Type</p>
+
+      <select
+        className="border rounded-md border-slate-900 w-fit px-2"
+        value={collisionType}
+        onChange={(e) => {
+          // update velocities as of collisionType
+          setValues((values) => {
+            const newValues = deepCopy(values);
+            const { v1, v2 } = getUpdatedV(
+              newValues[0].M,
+              newValues[1].M,
+              newValues[0].V.i,
+              newValues[1].V.i,
+              e.target.value
+            );
+            newValues[0].V.f = v1;
+            newValues[1].V.f = v2;
+            return newValues;
+          });
+          setCollisionType(e.target.value);
+        }}
+      >
+        <option value={COLLISION_TYPES.ELASTIC}>Elastic</option>
+        <option value={COLLISION_TYPES.INELASTIC}>Inelastic</option>
+      </select>
     </div>
   );
 };

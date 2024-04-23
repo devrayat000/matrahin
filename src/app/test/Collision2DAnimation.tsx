@@ -24,7 +24,6 @@ const MainContent = () => {
   const arrowRef2 = useRef<THREE.ArrowHelper>(null);
 
   const [values, setValues] = useAtom(twoDCollisionInputsAtom);
-
   const u1 = useRef({
     x: values[0].V.i.x * TIME_STEP,
     y: values[0].V.i.y * TIME_STEP,
@@ -100,49 +99,44 @@ const MainContent = () => {
     updateArrows(obj2, arrow2, u2.current);
   });
 
-  const updateInputsFromMouseDrag = (index: number, x: number, y: number) => {
-    setValues((prev) => {
-      const newValues = [...prev];
+  const updateInputsFromMouseDrag = useCallback(
+    (
+      index: number,
+      x: number,
+      y: number,
+      collisionType: "elastic" | "inelastic"
+    ) => {
+      setValues((prev) => {
+        const newValues = [...prev];
 
-      newValues[index].V.i.x = -x;
-      newValues[index].V.i.y = y;
+        newValues[index].V.i.x = -x;
+        newValues[index].V.i.y = y;
 
-      const { v1, v2 } = getUpdatedV(
-        newValues[0].M,
-        newValues[1].M,
-        newValues[0].V.i,
-        newValues[1].V.i
-      );
+        const { v1, v2 } = getUpdatedV(
+          newValues[0].M,
+          newValues[1].M,
+          newValues[0].V.i,
+          newValues[1].V.i,
+          collisionType
+        );
 
-      newValues[0].V.f = { ...v1 };
-      newValues[1].V.f = { ...v2 };
-      newValues[index] = {
-        ...prev[index],
-        V: {
-          ...prev[index].V,
-          i: {
-            x: -x,
-            y: y,
+        newValues[0].V.f = { ...v1 };
+        newValues[1].V.f = { ...v2 };
+        newValues[index] = {
+          ...prev[index],
+          V: {
+            ...prev[index].V,
+            i: {
+              x: -x,
+              y: y,
+            },
           },
-        },
-      };
-      // console.log(
-      //   0,
-      //   newValues[0].V.i.x,
-      //   newValues[0].V.i.y,
-      //   newValues[0].V.f.x,
-      //   newValues[0].V.f.y
-      // );
-      // console.log(
-      //   1,
-      //   newValues[1].V.i.x,
-      //   newValues[1].V.i.y,
-      //   newValues[1].V.f.x,
-      //   newValues[1].V.f.y
-      // );
-      return newValues;
-    });
-  };
+        };
+        return newValues;
+      });
+    },
+    []
+  );
 
   return (
     <DragContext>
