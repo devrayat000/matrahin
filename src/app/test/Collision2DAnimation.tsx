@@ -15,7 +15,7 @@ import { checkCollision } from "../collision/utils";
 import { DragContext } from "./DragContext";
 import Sphere from "./Sphere";
 import { PLAYING_STATES, playingAtom, twoDCollisionInputsAtom } from "./store";
-import { getUpdatedV, updateArrows } from "./utils";
+import { checkOutOfField, getUpdatedV, updateArrows } from "./utils";
 
 const MainContent = () => {
   const sphereRef1 = useRef<THREE.Mesh>(null);
@@ -86,12 +86,7 @@ const MainContent = () => {
       u2.current = { x: v2.x * TIME_STEP, y: v2.y * TIME_STEP };
     }
 
-    if (
-      obj1.position.z > 21 ||
-      obj1.position.z < -21 ||
-      obj1.position.x > 21 ||
-      obj1.position.x < -21
-    ) {
+    if (checkOutOfField(obj1) || checkOutOfField(obj2)) {
       reset();
       return;
     }

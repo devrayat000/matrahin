@@ -180,6 +180,12 @@ const updateArrows = (
   arrow.setLength(Math.sqrt(velocity.x ** 2 + velocity.y ** 2) / TIME_STEP);
 };
 
+const checkOutOfField = (obj: THREE.Mesh) =>
+  obj.position.z > 21 ||
+  obj.position.z < -21 ||
+  obj.position.x > 21 ||
+  obj.position.x < -21;
+
 export {
   calculateInitialVelocity,
   checkTendsToZero,
@@ -188,4 +194,5 @@ export {
   getUpdatedUSelf,
   getUpdatedV,
   updateArrows,
+  checkOutOfField,
 };
