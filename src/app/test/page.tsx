@@ -469,10 +469,10 @@ const Object = ({ count }: { count: 0 | 1 }) => {
 };
 const page = () => {
   return (
-    <div className="">
-      <h1 className=" text-center m-auto text-4xl font-bold">Test</h1>
+    <div className="flex flex-col gap-2">
+      <h1 className=" text-center m-auto text-4xl font-bold">Collision 2D</h1>
       <div className="flex justify-between items-center mx-2 gap-2">
-        <div className="w-2/3  border border-slate-500 h-[80vh] self-start">
+        <div className="w-2/3  border border-slate-500 h-[70vh] self-start">
           <Collision2DAnimation />
         </div>
         <Object count={0} />
