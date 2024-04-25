@@ -276,7 +276,7 @@ const Velocity = ({ count }: { count: 0 | 1 }) => {
         </Chip>
       </div>
 
-      <table className="w-full" align="center">
+      <table className="w-full " align="center">
         <thead>
           <tr>
             <th> </th>
@@ -501,20 +501,20 @@ const Object = ({ count }: { count: 0 | 1 }) => {
 };
 const page = () => {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 mb-3">
       <h1 className=" text-center m-auto text-4xl font-bold">Collision</h1>
-      <div className="flex justify-between items-center mx-2 gap-2">
-        <div className="w-2/3 ">
-          <div className=" mb-2  border border-slate-500 md:h-[70vh] h-[60vh]  self-start">
+      <div className="flex flex-col md:flex-row  justify-between items-center mx-2 gap-2">
+        <div className="w-[90vw] md:w-2/3 ">
+          <div className=" mb-2  border border-slate-500 md:h-[70vh] h-[40svh]  self-start">
             <Collision2DAnimation />
           </div>
           <div className="flex justify-center items-center">
             <PauseResumeControl />
           </div>
         </div>
-        <div className="md:self-start">
+        <div className="md:self-start ">
           <CollisionTypeInput />
-          <div className="flex  gap-2">
+          <div className="flex flex-col  items-center justify-center md:flex-row gap-2">
             <Object count={0} />
             <Object count={1} />
           </div>
@@ -529,56 +529,8 @@ const CollisionTypeInput = () => {
   const setValues = useSetAtom(twoDCollisionInputsAtom);
   return (
     <div className="my-1">
-      {/* <div className="flex items-center gap-2 justify-between mb-2">
-        <p className="font-bold md:text-xl"> Collision Type</p>
-
-        <div className="flex gap-2">
-          <Chip
-            selected={collisionType === COLLISION_TYPES.ELASTIC}
-            onClick={() => {
-              setValues((values) => {
-                const newValues = deepCopy(values);
-                const { v1, v2 } = getUpdatedV(
-                  newValues[0].M,
-                  newValues[1].M,
-                  newValues[0].V.i,
-                  newValues[1].V.i,
-                  COLLISION_TYPES.ELASTIC
-                );
-                newValues[0].V.f = v1;
-                newValues[1].V.f = v2;
-                return newValues;
-              });
-              setCollisionType(COLLISION_TYPES.ELASTIC);
-            }}
-          >
-            Elastic
-          </Chip>
-          <Chip
-            selected={collisionType === COLLISION_TYPES.INELASTIC}
-            onClick={() => {
-              setValues((values) => {
-                const newValues = deepCopy(values);
-                const { v1, v2 } = getUpdatedV(
-                  newValues[0].M,
-                  newValues[1].M,
-                  newValues[0].V.i,
-                  newValues[1].V.i,
-                  COLLISION_TYPES.INELASTIC
-                );
-                newValues[0].V.f = v1;
-                newValues[1].V.f = v2;
-                return newValues;
-              });
-              setCollisionType(COLLISION_TYPES.INELASTIC);
-            }}
-          >
-            Inelastic
-          </Chip>
-        </div>
-      </div> */}
       <div className="flex gap-2 items-center justify-between">
-        <div className="font-bold md:text-xl">After collision</div>
+        <div className="font-bold md:text-xl">After collision:</div>
         <div className="flex gap-2">
           <Chip
             selected={collisionType === COLLISION_TYPES.ELASTIC}
