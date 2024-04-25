@@ -11,12 +11,9 @@ import {
 import * as THREE from "three";
 import { Color, MathUtils } from "three";
 import { TIME_STEP } from "~/components/common/CanvasTHREE/store";
-import {
-  collisionTypeAtom,
-  vec,
-} from "../../../../../components/project/collision-2d/store";
-import { updateArrows } from "../../../../../components/project/collision-2d/utils";
 import { useDrag } from "./DragContext";
+import { collisionTypeAtom, vec } from "./store";
+import { updateArrows } from "./utils";
 const Sphere = forwardRef<
   THREE.Mesh,
   {

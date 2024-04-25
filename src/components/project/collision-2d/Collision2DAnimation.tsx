@@ -21,7 +21,7 @@ import {
   getUpdatedV,
   updateArrows,
 } from "~/components/project/collision-2d/utils";
-import { checkCollision } from "../../../../collision/utils";
+import { checkCollision } from "../../../app/collision/utils";
 import { DragContext } from "./DragContext";
 import Sphere from "./Sphere";
 

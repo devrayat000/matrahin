@@ -1,32 +1,10 @@
 "use client";
 
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Slack } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
-import NumInputWithSliderProp from "~/components/abstract/NumInputWithSliderProp";
-import colors from "~/components/common/CanvasTHREE/colors";
-import Chip from "~/components/ui/chip";
-import Collision2DAnimation from "./Collision2DAnimation";
-import PauseResumeControl from "./PauseResumeControl";
-import {
-  COLLISION_TYPES,
-  DEFAULT_VALUES,
-  MAXIMUMs,
-  MINIMUMs,
-  TwoDCollisionValueType,
-  calculatedValuesAtom,
-  collisionTypeAtom,
-  twoDCollisionInputsAtom,
-  vectorType,
-} from "../../../../../components/project/collision-2d/store";
-import {
-  checkTendsToZero,
-  deepCopy,
-  getUpdatedUSelf,
-  getUpdatedV,
-} from "../../../../../components/project/collision-2d/utils";
-import CollisionTypeInput from "./CollisionTypeInput";
-import ObjectInput from "./ObjectInput";
+import Collision2DAnimation from "../../../../../components/project/collision-2d/Collision2DAnimation";
+import CollisionTypeInput from "../../../../../components/project/collision-2d/CollisionTypeInput";
+import ObjectInput from "../../../../../components/project/collision-2d/ObjectInput";
+import PauseResumeControl from "../../../../../components/project/collision-2d/PauseResumeControl";
 
 const PRECISION = 2;
 
