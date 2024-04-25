@@ -107,9 +107,9 @@ const Velocity = ({ count }: { count: 0 | 1 }) => {
         // currently changing the magnitude
         // Vx = V * cos(θ)
         newValues[count].V[initOrFinal].x =
-          value * Math.cos(inputs[initOrFinal].y);
+          value * Math.cos((inputs[initOrFinal].y * Math.PI) / 180);
         newValues[count].V[initOrFinal].y =
-          value * Math.sin(inputs[initOrFinal].y);
+          value * Math.sin((inputs[initOrFinal].y * Math.PI) / 180);
       } else {
         // currently changing the angle
         // Vy = V * sin(θ)
