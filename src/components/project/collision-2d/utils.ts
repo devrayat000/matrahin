@@ -8,6 +8,7 @@ import {
   vec,
   vectorType,
 } from "./store";
+import { Box3 } from "three";
 
 type FinalVelocitiesType = {
   v1: vectorType;
@@ -198,7 +199,25 @@ const checkOutOfField = (obj: THREE.Mesh) =>
   obj.position.x > 100 ||
   obj.position.x < -100;
 
+const BoundingBox = new Box3();
+/**
+ * Checks if two objects collide with each other. It uses the bounding boxes of the objects to check for collision.
+ * @param object1 The first object to check for collision.
+ * @param object2 The second object to check for collision.
+ * @returns True if the objects collide, false otherwise.
+ */
+const checkCollision = (
+  object1: THREE.Object3D<THREE.Object3DEventMap>,
+  object2: THREE.Object3D<THREE.Object3DEventMap>
+) => {
+  const box1 = BoundingBox.clone();
+  const box2 = BoundingBox.clone();
+  box2.setFromObject(object1);
+  box1.setFromObject(object2);
+  return box1.intersectsBox(box2);
+};
 export {
+  checkCollision,
   calculateInitialVelocity,
   checkOutOfField,
   checkTendsToZero,
