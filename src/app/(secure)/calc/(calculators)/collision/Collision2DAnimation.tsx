@@ -11,11 +11,19 @@ import { Suspense, useCallback, useEffect, useRef } from "react";
 import colors from "~/components/common/CanvasTHREE/colors";
 import { TIME_STEP } from "~/components/common/CanvasTHREE/store";
 import { XTicks } from "~/components/common/CanvasTHREE/xTicks";
-import { checkCollision } from "../collision/utils";
+import {
+  PLAYING_STATES,
+  playingAtom,
+  twoDCollisionInputsAtom,
+} from "~/components/project/collision-2d/store";
+import {
+  checkOutOfField,
+  getUpdatedV,
+  updateArrows,
+} from "~/components/project/collision-2d/utils";
+import { checkCollision } from "../../../../collision/utils";
 import { DragContext } from "./DragContext";
 import Sphere from "./Sphere";
-import { PLAYING_STATES, playingAtom, twoDCollisionInputsAtom } from "./store";
-import { checkOutOfField, getUpdatedV, updateArrows } from "./utils";
 
 const MainContent = () => {
   const sphereRef1 = useRef<THREE.Mesh>(null);

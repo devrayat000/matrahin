@@ -140,7 +140,7 @@ export const updateInputValues = (
 
   if (param === "m") {
     newValues[count].M = value;
-
+    //@ts-ignore
     const { v1, v2 } = getUpdatedV(
       newValues[0].M,
       newValues[1].M,
@@ -152,6 +152,7 @@ export const updateInputValues = (
   } else if (param === "v" && initOrFinal === "i") {
     newValues[count].V.i[axis] = value;
 
+    //@ts-ignore
     const { v1, v2 } = getUpdatedV(
       newValues[0].M,
       newValues[1].M,

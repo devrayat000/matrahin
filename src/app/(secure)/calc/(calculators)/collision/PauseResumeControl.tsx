@@ -1,6 +1,10 @@
 import { useAtom, useAtomValue } from "jotai";
 import { Pause, Play, RotateCcw } from "lucide-react";
-import { PLAYING_STATES, playingAtom, twoDCollisionInputsAtom } from "./store";
+import {
+  PLAYING_STATES,
+  playingAtom,
+  twoDCollisionInputsAtom,
+} from "~/components/project/collision-2d/store";
 
 const PauseResumeControl = () => {
   const [animating, setAnimating] = useAtom(playingAtom);
