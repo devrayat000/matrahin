@@ -54,9 +54,9 @@ const Sphere = forwardRef<
     const onDrag = useCallback(
       ({ x, z }) => {
         pos.current = [
-          Math.round(clamp(x, -20, 20)),
+          Math.round(clamp(x, -50, 50)),
           position[1],
-          Math.round(clamp(z, -20, 20)),
+          Math.round(clamp(z, -50, 50)),
         ];
         // easing.damp3(
         //   ref?.current.position,

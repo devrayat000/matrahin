@@ -172,7 +172,7 @@ const Collision2DAnimation = () => {
           <Grid
             receiveShadow
             side={2}
-            args={[40, 40]}
+            args={[100, 100]}
             cellSize={5}
             sectionSize={10}
             cellColor={"#6f6f6f"}
@@ -181,7 +181,7 @@ const Collision2DAnimation = () => {
             fadeDistance={150}
           />
 
-          <PerspectiveCamera makeDefault position={[-30, 10, 0]} fov={45} />
+          <PerspectiveCamera makeDefault position={[-20, 20, 0]} fov={45} />
           {/* <OrthographicCamera makeDefault position={[0, 10, 0]} zoom={10} /> */}
           <ContactShadows
             blur={2}
@@ -192,7 +192,7 @@ const Collision2DAnimation = () => {
             scale={100}
           />
 
-          <XTicks length={25} />
+          <XTicks length={50} />
 
           <OrbitControls
             // enableRotate={false}

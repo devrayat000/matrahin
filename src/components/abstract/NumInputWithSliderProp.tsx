@@ -70,7 +70,7 @@ const NumInputWithSliderProp: FC<NumInputWithSliderPopProps> = ({
       {label ? <Label>{label}</Label> : null}
 
       <NumInput
-        value={value === 0 ? "" : value}
+        value={value === 0 ? "" : value.toString()}
         min={min}
         max={max}
         step={step}

@@ -386,28 +386,34 @@ const Mass = ({ count }: { count: 0 | 1 }) => {
   };
 
   return (
-    <div className="flex flex-row items-center justify-between w-full gap-3 p-1">
-      <p className="text-lg xl:text-xl text-left ">Mass</p>
-      <div className="flex items-center justify-around gap-2">
-        <NumInputWithSliderProp
-          value={mass.value}
-          min={MINIMUMs.m}
-          max={MAXIMUMs.m}
-          onChange={(value) => {
-            setMass({ ...mass, value: value < 0.1 ? 0.1 : value });
-            handleMassChange(value * mass.unit, count);
-          }}
-        />
-        <select
-          className="border rounded-md border-slate-900 w-fit px-2"
-          defaultValue={1}
-          onChange={(e) => handleUnitChange(Number(e.target.value))}
-        >
-          <option value={0.001}>g</option>
-          <option value={1}>kg</option>
-        </select>
+    <>
+      <div className="flex flex-row items-center justify-between w-full gap-3 p-1">
+        <p className="text-lg xl:text-xl text-left ">Mass</p>
+        <div className="flex items-center justify-around gap-2">
+          <NumInputWithSliderProp
+            value={mass.value}
+            min={MINIMUMs.m}
+            max={MAXIMUMs.m}
+            onChange={(value) => {
+              // setMass({ ...mass, value: value < 0 ? 0 : value });
+              setMass({ ...mass, value: value });
+              handleMassChange(value * mass.unit, count);
+            }}
+          />
+          <select
+            className="border rounded-md border-slate-900 w-fit px-2"
+            defaultValue={1}
+            onChange={(e) => handleUnitChange(Number(e.target.value))}
+          >
+            <option value={0.001}>g</option>
+            <option value={1}>kg</option>
+          </select>
+        </div>
       </div>
-    </div>
+      {mass.value === 0 && (
+        <p className="text-red-500 text-sm">Mass cannot be zero</p>
+      )}
+    </>
   );
 };
 
@@ -469,7 +475,7 @@ const Momentum = ({ count }: { count: 0 | 1 }) => {
 
 const Object = ({ count }: { count: 0 | 1 }) => {
   return (
-    <div className="   flex flex-col items-center justify-center border w-fit rounded-md border-slate-900 gap-1 ">
+    <div className=" md:self-start  flex flex-col items-center justify-center border w-fit rounded-md border-slate-900 gap-1 ">
       <div
         className="rounded-md w-full text-lg  xl:text-xl font-bold flex items-center justify-center"
         style={{
@@ -496,7 +502,7 @@ const Object = ({ count }: { count: 0 | 1 }) => {
 const page = () => {
   return (
     <div className="flex flex-col gap-2">
-      <h1 className=" text-center m-auto text-4xl font-bold">Collision 2D</h1>
+      <h1 className=" text-center m-auto text-4xl font-bold">Collision</h1>
       <div className="flex justify-between items-center mx-2 gap-2">
         <div className="w-2/3 ">
           <div className=" mb-2  border border-slate-500 md:h-[70vh] h-[60vh]  self-start">
@@ -522,10 +528,103 @@ const CollisionTypeInput = () => {
   const [collisionType, setCollisionType] = useAtom(collisionTypeAtom);
   const setValues = useSetAtom(twoDCollisionInputsAtom);
   return (
-    <div className="flex justify-between items-center mb-2">
-      <p className="font-bold md:text-xl"> Collision Type</p>
+    <div className="my-1">
+      {/* <div className="flex items-center gap-2 justify-between mb-2">
+        <p className="font-bold md:text-xl"> Collision Type</p>
 
-      <select
+        <div className="flex gap-2">
+          <Chip
+            selected={collisionType === COLLISION_TYPES.ELASTIC}
+            onClick={() => {
+              setValues((values) => {
+                const newValues = deepCopy(values);
+                const { v1, v2 } = getUpdatedV(
+                  newValues[0].M,
+                  newValues[1].M,
+                  newValues[0].V.i,
+                  newValues[1].V.i,
+                  COLLISION_TYPES.ELASTIC
+                );
+                newValues[0].V.f = v1;
+                newValues[1].V.f = v2;
+                return newValues;
+              });
+              setCollisionType(COLLISION_TYPES.ELASTIC);
+            }}
+          >
+            Elastic
+          </Chip>
+          <Chip
+            selected={collisionType === COLLISION_TYPES.INELASTIC}
+            onClick={() => {
+              setValues((values) => {
+                const newValues = deepCopy(values);
+                const { v1, v2 } = getUpdatedV(
+                  newValues[0].M,
+                  newValues[1].M,
+                  newValues[0].V.i,
+                  newValues[1].V.i,
+                  COLLISION_TYPES.INELASTIC
+                );
+                newValues[0].V.f = v1;
+                newValues[1].V.f = v2;
+                return newValues;
+              });
+              setCollisionType(COLLISION_TYPES.INELASTIC);
+            }}
+          >
+            Inelastic
+          </Chip>
+        </div>
+      </div> */}
+      <div className="flex gap-2 items-center justify-between">
+        <div className="font-bold md:text-xl">After collision</div>
+        <div className="flex gap-2">
+          <Chip
+            selected={collisionType === COLLISION_TYPES.ELASTIC}
+            onClick={() => {
+              setValues((values) => {
+                const newValues = deepCopy(values);
+                const { v1, v2 } = getUpdatedV(
+                  newValues[0].M,
+                  newValues[1].M,
+                  newValues[0].V.i,
+                  newValues[1].V.i,
+                  COLLISION_TYPES.ELASTIC
+                );
+                newValues[0].V.f = v1;
+                newValues[1].V.f = v2;
+                return newValues;
+              });
+              setCollisionType(COLLISION_TYPES.ELASTIC);
+            }}
+          >
+            Separate
+          </Chip>
+          <Chip
+            selected={collisionType === COLLISION_TYPES.INELASTIC}
+            onClick={() => {
+              setValues((values) => {
+                const newValues = deepCopy(values);
+                const { v1, v2 } = getUpdatedV(
+                  newValues[0].M,
+                  newValues[1].M,
+                  newValues[0].V.i,
+                  newValues[1].V.i,
+                  COLLISION_TYPES.INELASTIC
+                );
+                newValues[0].V.f = v1;
+                newValues[1].V.f = v2;
+                return newValues;
+              });
+              setCollisionType(COLLISION_TYPES.INELASTIC);
+            }}
+          >
+            Stick Together
+          </Chip>
+        </div>
+      </div>
+      {/* <select
         className="border rounded-md border-slate-900 w-fit px-2"
         value={collisionType}
         onChange={(e) => {
@@ -548,7 +647,7 @@ const CollisionTypeInput = () => {
       >
         <option value={COLLISION_TYPES.ELASTIC}>Elastic</option>
         <option value={COLLISION_TYPES.INELASTIC}>Inelastic</option>
-      </select>
+      </select> */}
     </div>
   );
 };
