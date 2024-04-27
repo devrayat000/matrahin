@@ -106,6 +106,7 @@ const Velocity = ({ count }: { count: 0 | 1 }) => {
       if (axis === "x") {
         // currently changing the magnitude
         // Vx = V * cos(θ)
+        value = Math.abs(value);
         newValues[count].V[initOrFinal].x =
           value * Math.cos((inputs[initOrFinal].y * Math.PI) / 180);
         newValues[count].V[initOrFinal].y =
