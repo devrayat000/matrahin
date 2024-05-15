@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { Resistance } from "./main";
-interface Coordinate {
-  x: number;
-  y: number;
-}
+import { Coordinate } from "./store";
+import { getCoordinatesById } from "./utils";
 
 interface ResistorState {
   start: Coordinate;
@@ -13,11 +11,6 @@ interface ResistorState {
   angle: number;
   labelPosition: Coordinate;
 }
-
-const getCoordinatesById = (id: string): Coordinate => {
-  const [x, y] = id.split("__").map(Number);
-  return { x, y };
-};
 
 const calculateLineAngles = (start: Coordinate, end: Coordinate) => {
   const dx = end.x - start.x;
