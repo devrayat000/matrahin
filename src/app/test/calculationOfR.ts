@@ -283,6 +283,10 @@ function mergeTwoSeriesResistance(
   r2.value = 0;
   handleZeroResistances(circuit, terminal1, terminal2);
   r1.name = getNewNameForResistance();
+  // add start and end: start = r1.start ,end = r2.end
+  // also check if there's already a resistance with the same start and end
+  // if there is, use start = r1.start and end = r1.end and add a wire between r1.end and r2.end
+  // also r1.end += "w" + r2.end; //making same node for r1.end and r2.end
   return r1;
 }
 

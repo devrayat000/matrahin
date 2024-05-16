@@ -36,48 +36,49 @@ const Page = () => {
     (point: { x: number; y: number }) => {
       if (currentPoint.x === -1) {
         setCurrentPoint(point);
-      } else {
-        // check if same point is clicked
-        if (currentPoint.x === point.x && currentPoint.y === point.y) {
-          setCurrentPoint({ x: -1, y: -1 });
-          return;
-        }
-
-        setPointsUsed((points) => [...points, currentPoint, point]);
-
-        if (ComponentSelectionType === "wire") {
-          setWires((wires) => [
-            ...wires,
-            {
-              start: `${currentPoint.x}__${currentPoint.y}`,
-              end: `${point.x}__${point.y}`,
-            },
-          ]);
-        } else if (ComponentSelectionType === "R") {
-          setResistance((resistances) => [
-            ...resistances,
-            {
-              name: `R${resistances.length + 1}`,
-              value: 1,
-              node1: `${currentPoint.x}__${currentPoint.y}`,
-              node2: `${point.x}__${point.y}`,
-            },
-          ]);
-        }
-        setBreadboardInfo((info) => {
-          const newInfo = [...info];
-          const currentIndex = getIndexFromPosition(
-            currentPoint.x,
-            currentPoint.y
-          );
-          const pointIndex = getIndexFromPosition(point.x, point.y);
-          newInfo[currentIndex.i][currentIndex.j] = ComponentSelectionType;
-          newInfo[pointIndex.i][pointIndex.j] = ComponentSelectionType;
-          return newInfo;
-        });
-
-        setCurrentPoint({ x: -1, y: -1 });
+        return;
       }
+
+      // check if same point is clicked
+      if (currentPoint.x === point.x && currentPoint.y === point.y) {
+        setCurrentPoint({ x: -1, y: -1 });
+        return;
+      }
+
+      setPointsUsed((points) => [...points, currentPoint, point]);
+
+      if (ComponentSelectionType === "wire") {
+        setWires((wires) => [
+          ...wires,
+          {
+            start: `${currentPoint.x}__${currentPoint.y}`,
+            end: `${point.x}__${point.y}`,
+          },
+        ]);
+      } else if (ComponentSelectionType === "R") {
+        setResistance((resistances) => [
+          ...resistances,
+          {
+            name: `R${resistances.length + 1}`,
+            value: 1,
+            node1: `${currentPoint.x}__${currentPoint.y}`,
+            node2: `${point.x}__${point.y}`,
+          },
+        ]);
+      }
+      setBreadboardInfo((info) => {
+        const newInfo = [...info];
+        const currentIndex = getIndexFromPosition(
+          currentPoint.x,
+          currentPoint.y
+        );
+        const pointIndex = getIndexFromPosition(point.x, point.y);
+        newInfo[currentIndex.i][currentIndex.j] = ComponentSelectionType;
+        newInfo[pointIndex.i][pointIndex.j] = ComponentSelectionType;
+        return newInfo;
+      });
+
+      setCurrentPoint({ x: -1, y: -1 });
     },
     [currentPoint, setResistance, setCurrentPoint]
   );

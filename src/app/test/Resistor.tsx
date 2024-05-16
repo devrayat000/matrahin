@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Resistance } from "./main";
+import { Resistance } from "./calculationOfR";
 import { Coordinate } from "./store";
 import { getCoordinatesById } from "./utils";
 

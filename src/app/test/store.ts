@@ -1,11 +1,11 @@
 import { atom } from "jotai";
-import { Resistance } from "./main";
+import { Resistance } from "./calculationOfR";
 
 export interface Coordinate {
   x: number;
   y: number;
 }
-interface Wire {
+export interface Wire {
   start: string;
   end: string;
 }
