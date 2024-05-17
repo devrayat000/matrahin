@@ -456,7 +456,6 @@ function findEquivalentResistance(
 
   if (circuit.length != 1) log(ACTION.FALLBACK, [], circuit);
 }
-
 const circuit: Resistance[] = [
   {
     name: "R1",
@@ -464,49 +463,75 @@ const circuit: Resistance[] = [
     node1: "A",
     node2: "B",
   },
-
   {
     name: "R2",
     value: 2,
-    node1: "A",
+    node1: "B",
     node2: "C",
   },
-
   {
     name: "R3",
-    value: 3,
-    node1: "B",
-    node2: "C",
-  },
-
-  {
-    name: "R4",
-    value: 4,
-    node1: "B",
-    node2: "D",
-  },
-
-  {
-    name: "R5",
-    value: 5,
-    node1: "B",
-    node2: "E",
-  },
-
-  {
-    name: "R6",
-    value: 6,
-    node1: "D",
-    node2: "E",
-  },
-
-  {
-    name: "R7",
-    value: 7,
+    value: 1,
     node1: "C",
     node2: "D",
   },
+  {
+    name: "R4",
+    value: 1,
+    node1: "D",
+    node2: "E",
+  },
 ];
+// const circuit: Resistance[] = [
+//   {
+//     name: "R1",
+//     value: 1,
+//     node1: "A",
+//     node2: "B",
+//   },
+
+//   {
+//     name: "R2",
+//     value: 2,
+//     node1: "A",
+//     node2: "C",
+//   },
+
+//   {
+//     name: "R3",
+//     value: 3,
+//     node1: "B",
+//     node2: "C",
+//   },
+
+//   {
+//     name: "R4",
+//     value: 4,
+//     node1: "B",
+//     node2: "D",
+//   },
+
+//   {
+//     name: "R5",
+//     value: 5,
+//     node1: "B",
+//     node2: "E",
+//   },
+
+//   {
+//     name: "R6",
+//     value: 6,
+//     node1: "D",
+//     node2: "E",
+//   },
+
+//   {
+//     name: "R7",
+//     value: 7,
+//     node1: "C",
+//     node2: "D",
+//   },
+// ];
 let currentCount = circuit.length;
 
 function log(action: ACTION, resistances: Resistance[], circuit: Resistance[]) {
@@ -545,4 +570,4 @@ function log(action: ACTION, resistances: Resistance[], circuit: Resistance[]) {
   console.log(circuit);
 }
 
-findEquivalentResistance(circuit, "A", "D", log);
+findEquivalentResistance(circuit, "A", "E", log);
