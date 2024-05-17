@@ -1,6 +1,4 @@
 import { atom } from "jotai";
-import { Resistance } from "./calculationOfR";
-
 export interface Coordinate {
   x: number;
   y: number;
@@ -9,9 +7,35 @@ export interface Wire {
   start: string;
   end: string;
 }
+
+export interface Resistance {
+  name: string;
+  value: number;
+  node1: string;
+  node2: string;
+}
+
+export enum ACTION {
+  SHORT_CIRCUIT_REMOVAL,
+  OPEN_CIRCUIT_REMOVAL,
+  SERIES,
+  PARALLEL,
+  WYE_DELTA,
+  FALLBACK,
+  EMPTY_CIRCUIT,
+}
+
+export interface StepsInfo {
+  Circuit: Resistance[];
+  Wires: Wire[];
+  terminal1: string;
+  terminal2: string;
+  removedResistances: Resistance[];
+  resultingResistances: Resistance[];
+}
 export const ResistanceAllAtom = atom<Resistance[]>([]);
 export const WiresAtom = atom<Wire[]>([]);
-
+export const PointUsedAtom = atom<Coordinate[]>([]);
 export const currentPointAtom = atom<{ x: number; y: number }>({
   x: -1,
   y: -1,
@@ -24,3 +48,6 @@ export const BreadboardInfoAtom = atom<Array<Array<"free" | "R" | "wire">>>(
 );
 
 export const ComponentSelectedAtom = atom<"R" | "wire">("R");
+
+export const calculatingAtom = atom<boolean>(false);
+export const SolvingStepsAtom = atom<StepsInfo[]>([]);

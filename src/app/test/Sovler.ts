@@ -1,19 +1,4 @@
-import { Wire } from "./store";
-export interface Resistance {
-  name: string;
-  value: number;
-  node1: string;
-  node2: string;
-}
-
-enum ACTION {
-  SHORT_CIRCUIT_REMOVAL,
-  OPEN_CIRCUIT_REMOVAL,
-  SERIES,
-  PARALLEL,
-  WYE_DELTA,
-  FALLBACK,
-}
+import { ACTION, Resistance, StepsInfo, Wire } from "./store";
 
 export class Solver {
   private resistances: Resistance[];
@@ -24,6 +9,8 @@ export class Solver {
   private nodes: string[][][];
 
   private resistanceCount: number;
+  private Steps: StepsInfo[] = [];
+  private previousCircuit: Resistance[] = [];
   constructor(
     resistances: Resistance[],
     wires: Wire[],
@@ -35,6 +22,78 @@ export class Solver {
     this.terminal1 = terminal1;
     this.terminal2 = terminal2;
     this.resistanceCount = resistances.length + 1;
+    this.previousCircuit = structuredClone(resistances);
+  }
+
+  private logSingleStep(action: ACTION, resistances: Resistance[]) {
+    let removedResistances: Resistance[] = [];
+    let resultingResistances: Resistance[] = [];
+    let msg: string;
+
+    switch (action) {
+      case ACTION.SHORT_CIRCUIT_REMOVAL:
+        removedResistances = resistances;
+        msg = `${resistances[0].name} was removed because of short circuit`;
+        break;
+      case ACTION.OPEN_CIRCUIT_REMOVAL:
+        removedResistances = resistances;
+        msg = `${resistances[0].name} was removed because of open circuit`;
+        break;
+      case ACTION.PARALLEL:
+        removedResistances = resistances.slice(0, resistances.length - 1);
+        resultingResistances = resistances.slice(resistances.length - 1);
+        msg =
+          removedResistances.map((r) => r.name).join(", ") +
+          " are in parallel, result: " +
+          resultingResistances[0].name;
+        break;
+      case ACTION.SERIES:
+        removedResistances = resistances.slice(0, resistances.length - 1);
+        resultingResistances = resistances.slice(resistances.length - 1);
+        msg =
+          removedResistances.map((r) => r.name).join(", ") +
+          " are in series, result: " +
+          resultingResistances[0].name;
+        break;
+      case ACTION.WYE_DELTA:
+        removedResistances = resistances.slice(0, 3);
+        resultingResistances = resistances.slice(3);
+        msg =
+          "wye-delta conversion with resistances: " +
+          removedResistances.map((r) => r.name).join(", ") +
+          " result: " +
+          resultingResistances.map((r) => r.name).join(", ");
+        break;
+
+      case ACTION.EMPTY_CIRCUIT:
+        removedResistances = [];
+        resultingResistances = [];
+        msg = "Empty Circuit";
+        break;
+      case ACTION.FALLBACK:
+        removedResistances = [];
+        resultingResistances = [];
+        msg = "Fallback, could not simplify further with traditional methods";
+        break;
+    }
+    // to highlight the resistors that are removing
+    this.Steps.push({
+      Circuit: this.previousCircuit,
+      Wires: this.wires,
+      terminal1: this.terminal1,
+      terminal2: this.terminal2,
+      removedResistances: removedResistances,
+      resultingResistances: [],
+    });
+    // to highlight the resistors that are adding
+    this.Steps.push({
+      Circuit: this.resistances,
+      Wires: this.wires,
+      terminal1: this.terminal1,
+      terminal2: this.terminal2,
+      removedResistances: [],
+      resultingResistances: resultingResistances,
+    });
   }
 
   private updateNodesAndResistances() {
@@ -45,6 +104,7 @@ export class Solver {
   public solve() {
     this.updateNodesAndResistances();
     this.findEquivalentResistance();
+    return this.Steps;
   }
 
   private initializeNodes() {
@@ -101,8 +161,6 @@ export class Solver {
   private isEqualNodes(node1: string, node2: string): boolean {
     return node1.split("h")[1] === node2.split("h")[1];
   }
-
-  private logSingleStep(action: ACTION, resistances: Resistance[]) {}
 
   private getNewNameForResistance(): string {
     return "R" + this.resistanceCount++;
@@ -514,6 +572,7 @@ export class Solver {
   private findEquivalentResistance() {
     while (this.resistances.length != 1) {
       while (this.removeUnnecessaryResistanceAndNodes());
+      if (this.resistances.length == 1) break;
       if (this.mergeParallelUnit()) continue;
       if (this.mergeSeriesUnit()) continue;
       if (this.solveWyes()) continue;
@@ -522,7 +581,9 @@ export class Solver {
 
       break;
     }
-
-    if (this.resistances.length != 1) this.logSingleStep(ACTION.FALLBACK, []);
+    if (this.resistances.length == 0)
+      this.logSingleStep(ACTION.EMPTY_CIRCUIT, []);
+    else if (this.resistances.length > 1)
+      this.logSingleStep(ACTION.FALLBACK, []);
   }
 }

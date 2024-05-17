@@ -570,4 +570,4 @@ function log(action: ACTION, resistances: Resistance[], circuit: Resistance[]) {
   console.log(circuit);
 }
 
-findEquivalentResistance(circuit, "A", "E", log);
+findEquivalentResistance(circuit, "A", "F", log);
