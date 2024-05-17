@@ -2,15 +2,15 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useCallback } from "react";
 import Circuit from "./Circuit";
 import Points from "./Points";
+import TerminalPoints from "./TerminalPointsInput";
 import {
-  BreadboardInfoAtom,
   ComponentSelectedAtom,
   PointUsedAtom,
   ResistanceAllAtom,
+  TerminalsAtom,
   WiresAtom,
   currentPointAtom,
 } from "./store";
-import { getIndexFromPosition } from "./utils";
 
 const InputCircuit = () => {
   const [currentPoint, setCurrentPoint] = useAtom(currentPointAtom);
@@ -20,14 +20,19 @@ const InputCircuit = () => {
   const Wires = useAtomValue(WiresAtom);
   const ComponentSelectionType = useAtomValue(ComponentSelectedAtom);
 
-  const setBreadboardInfo = useSetAtom(BreadboardInfoAtom);
+  const setTerminals = useSetAtom(TerminalsAtom);
   const setResistance = useSetAtom(ResistanceAllAtom);
   const setWires = useSetAtom(WiresAtom);
 
   const setPoint = useCallback(
     (point: { x: number; y: number }) => {
       if (currentPoint.x === -1) {
-        setCurrentPoint(point);
+        if (ComponentSelectionType === "t1")
+          setTerminals((terminals) => [`${point.x}__${point.y}`, terminals[1]]);
+        else if (ComponentSelectionType === "t2")
+          setTerminals((terminals) => [terminals[0], `${point.x}__${point.y}`]);
+        else setCurrentPoint(point);
+
         return;
       }
 
@@ -58,24 +63,13 @@ const InputCircuit = () => {
           },
         ]);
       }
-      setBreadboardInfo((info) => {
-        const newInfo = [...info];
-        const currentIndex = getIndexFromPosition(
-          currentPoint.x,
-          currentPoint.y
-        );
-        const pointIndex = getIndexFromPosition(point.x, point.y);
-        newInfo[currentIndex.i][currentIndex.j] = ComponentSelectionType;
-        newInfo[pointIndex.i][pointIndex.j] = ComponentSelectionType;
-        return newInfo;
-      });
 
       setCurrentPoint({ x: -1, y: -1 });
     },
     [currentPoint, setResistance, setCurrentPoint]
   );
   return (
-    <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg">
       <Points setPoint={setPoint} />
       {currentPoint.x !== -1 && (
         <circle
@@ -87,6 +81,8 @@ const InputCircuit = () => {
           onClick={() => setCurrentPoint({ x: -1, y: -1 })}
         />
       )}
+
+      <TerminalPoints />
 
       <Circuit ResistanceAll={ResistanceAll} Wires={Wires} />
       {/* to make clickable the points that have been used in Rs */}

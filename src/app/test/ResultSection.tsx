@@ -15,16 +15,18 @@ const ResultSection = () => {
   const OPTIONS: EmblaOptionsType = {
     slidesToScroll: "auto",
   };
-  const SLIDES = useMemo(
+  const slides = useMemo(
     () =>
-      solvingSteps.map((step, index) => {
-        return <ResultingCircuit key={index} {...step} />;
-      }),
+      solvingSteps.map((step, index) => (
+        <div key={index} className="w-full">
+          <ResultingCircuit {...step} />
+        </div>
+      )),
     [solvingSteps]
   );
   return (
     <div>
-      <EmblaCarousel slides={SLIDES} options={OPTIONS} />
+      <EmblaCarousel slides={slides} options={OPTIONS} />
     </div>
   );
 };

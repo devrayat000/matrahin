@@ -1,14 +1,20 @@
-const TerminalNode = () => {
-  return (
-    // <circle
-    //   cx={i * 30 + offset}
-    //   cy={j * 30 + offset}
-    //   r={5}
-    //   opacity={10}
-    //   fill="black"
-    // />
-    <g></g>
+const TerminalNodes = ({ terminals }: { terminals: string[] }) => {
+  return terminals.map(
+    (terminal, i) =>
+      terminal !== "-1__-1" && (
+        <circle
+          key={i}
+          cx={parseInt(terminal.split("__")[0])}
+          cy={parseInt(terminal.split("__")[1])}
+          r={12}
+          // blue for terminal 1 and
+          //  green for terminal 2
+          fill="none"
+          stroke={i == 0 ? "blue" : "green"}
+          strokeWidth={2}
+        />
+      )
   );
 };
 
-export default TerminalNode;
+export default TerminalNodes;

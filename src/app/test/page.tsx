@@ -1,8 +1,10 @@
 "use client";
 
+import { Button } from "~/components/ui/button";
 import ComponentInput from "./ComponentInput";
 import InputCircuit from "./InputCircuit";
 import ResultSection from "./ResultSection";
+import CalculateAndReset from "./CalculateAndReset";
 
 const Page = () => {
   return (
@@ -14,6 +16,9 @@ const Page = () => {
         </div>
       </div>
 
+      <section>
+        <CalculateAndReset />
+      </section>
       <section>
         <ResultSection />
       </section>

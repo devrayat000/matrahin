@@ -12,6 +12,7 @@ const Circuit = memo(
     ResistanceAll: Resistance[];
     Wires: Wire[];
   }) => {
+    console.log(ResistanceAll);
     return (
       <>
         {ResistanceAll.map((resistance, index) => (

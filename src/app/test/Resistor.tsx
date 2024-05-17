@@ -53,7 +53,7 @@ const calculateLabelPosition = (
   };
 
   if ((angle >= -90 && angle < -20) || (angle >= 90 && angle < 160)) {
-    labelPosition.x = (start.x + end.x) / 2 + 20;
+    labelPosition.x = (start.x + end.x) / 2 + 40;
     labelPosition.y = (start.y + end.y) / 2;
   }
 
@@ -162,7 +162,7 @@ const Resistor = ({
         textAnchor="middle"
         dominantBaseline="middle"
       >
-        {name + ": " + value.toFixed(0) + "Ω"}
+        {name + ": " + value.toFixed(2) + "Ω"}
       </text>
     </g>
   );

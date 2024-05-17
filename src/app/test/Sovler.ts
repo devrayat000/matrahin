@@ -23,9 +23,16 @@ export class Solver {
     this.terminal2 = terminal2;
     this.resistanceCount = resistances.length + 1;
     this.previousCircuit = structuredClone(resistances);
+    this.nodes = Array.from({ length: 700 }, () =>
+      Array.from({ length: 700 }, () => [])
+    );
   }
 
-  private logSingleStep(action: ACTION, resistances: Resistance[]) {
+  private logSingleStep(
+    action: ACTION,
+    resistances: Resistance[],
+    resultantCircuit: Resistance[]
+  ) {
     let removedResistances: Resistance[] = [];
     let resultingResistances: Resistance[] = [];
     let msg: string;
@@ -76,6 +83,16 @@ export class Solver {
         msg = "Fallback, could not simplify further with traditional methods";
         break;
     }
+
+    // console.log("starting:" + action);
+    // console.log("previous circuit: ");
+    // console.log(this.previousCircuit.map((r) => r.name).join(", "));
+
+    // console.log("logged resistances: ");
+    // console.log(resistances.map((r) => r.name).join(", "));
+    // console.log("resultant resistances: ");
+    // console.log(resultantCircuit.map((r) => r.name).join(", "));
+
     // to highlight the resistors that are removing
     this.Steps.push({
       Circuit: this.previousCircuit,
@@ -84,18 +101,20 @@ export class Solver {
       terminal2: this.terminal2,
       removedResistances: removedResistances,
       resultingResistances: [],
+      message: msg,
     });
     // to highlight the resistors that are adding
     this.Steps.push({
-      Circuit: this.resistances,
+      Circuit: structuredClone(resultantCircuit),
       Wires: this.wires,
       terminal1: this.terminal1,
       terminal2: this.terminal2,
       removedResistances: [],
       resultingResistances: resultingResistances,
+      message: msg,
     });
 
-    this.previousCircuit = structuredClone(this.resistances);
+    this.previousCircuit = structuredClone(resultantCircuit);
   }
 
   private updateNodesAndResistances() {
@@ -103,15 +122,23 @@ export class Solver {
     this.updateNodesOfResistances();
   }
 
+  private updateTerminalNodes() {
+    let node1 = this.terminal1.split("h")[0].split("__");
+    let node2 = this.terminal2.split("h")[0].split("__");
+    this.terminal1 += "h" + this.nodes[node1[0]][node1[1]].join("w");
+    this.terminal2 += "h" + this.nodes[node2[0]][node2[1]].join("w");
+  }
+
   public solve() {
     this.updateNodesAndResistances();
+    this.updateTerminalNodes();
     this.findEquivalentResistance();
     return this.Steps;
   }
 
   private initializeNodes() {
-    for (let i = 0; i < 30; i++) {
-      for (let j = 0; j < 30; j++) {
+    for (let i = 0; i < 700; i++) {
+      for (let j = 0; j < 700; j++) {
         this.nodes[i][j] = [`${i}__${j}`];
       }
     }
@@ -129,8 +156,8 @@ export class Solver {
       ];
       const uniqueNodes = Array.from(new Set(mergedNodes));
       // if nodes[i][j] contains node1 or node2, replace it with uniqueNodes
-      for (let i = 0; i < 30; i++) {
-        for (let j = 0; j < 30; j++) {
+      for (let i = 0; i < 700; i++) {
+        for (let j = 0; j < 700; j++) {
           if (
             this.nodes[i][j].includes(node1) ||
             this.nodes[i][j].includes(node2)
@@ -143,14 +170,15 @@ export class Solver {
   }
 
   private updateNodesOfResistances() {
-    this.resistances.forEach((r) => {
+    for (let i = 0; i < this.resistances.length; i++) {
+      const r = this.resistances[i];
       const [node1x, node1y] = r.node1.split("__").map((x) => parseInt(x));
       const [node2x, node2y] = r.node2.split("__").map((x) => parseInt(x));
       r.node1 =
         r.node1.split("h")[0] + "h" + this.nodes[node1x][node1y].join("w");
       r.node2 =
         r.node2.split("h")[0] + "h" + this.nodes[node2x][node2y].join("w");
-    });
+    }
   }
 
   private getPointFromNode(node: string): [number, number] {
@@ -226,7 +254,11 @@ export class Solver {
       if (this.isEqualNodes(resistance.node1, resistance.node2)) {
         changed = true;
         this.resistances.splice(i, 1);
-        this.logSingleStep(ACTION.SHORT_CIRCUIT_REMOVAL, [resistance]);
+        this.logSingleStep(
+          ACTION.SHORT_CIRCUIT_REMOVAL,
+          [resistance],
+          this.resistances
+        );
       }
     }
 
@@ -256,8 +288,8 @@ export class Solver {
         for (let j = 0; j < this.resistances.length; ++j) {
           if (i == j) continue;
           if (
-            this.resistances[j].node1 == node ||
-            this.resistances[j].node2 == node
+            this.isEqualNodes(this.resistances[j].node1, node) ||
+            this.isEqualNodes(this.resistances[j].node2, node)
           ) {
             found = true;
             break;
@@ -266,7 +298,11 @@ export class Solver {
         if (!found) {
           changed = true;
           this.resistances.splice(i, 1);
-          this.logSingleStep(ACTION.OPEN_CIRCUIT_REMOVAL, [resistance]);
+          this.logSingleStep(
+            ACTION.OPEN_CIRCUIT_REMOVAL,
+            [resistance],
+            this.resistances
+          );
         }
       }
     }
@@ -346,7 +382,7 @@ export class Solver {
     parallels[0].name = this.getNewNameForResistance();
     parallels[0].value = val;
 
-    for (let i = 0; i < parallels.length; ++i)
+    for (let i = 1; i < parallels.length; ++i)
       logResistances.push(structuredClone(parallels[i]));
 
     logResistances.push(structuredClone(parallels[0]));
@@ -357,7 +393,7 @@ export class Solver {
 
     // remove the parallel resistances
     this.filterOutInfiniteResistances();
-    this.logSingleStep(ACTION.PARALLEL, logResistances);
+    this.logSingleStep(ACTION.PARALLEL, logResistances, this.resistances);
 
     return true;
   }
@@ -466,7 +502,7 @@ export class Solver {
     }
 
     logResistances.push(structuredClone(rs));
-    this.logSingleStep(ACTION.SERIES, logResistances);
+    this.logSingleStep(ACTION.SERIES, logResistances, this.resistances);
     return true;
   }
 
@@ -551,14 +587,11 @@ export class Solver {
             this.resistances.splice(j, 1);
             const k = this.resistances.indexOf(r3);
             this.resistances.splice(k, 1);
-            this.logSingleStep(ACTION.WYE_DELTA, [
-              r1,
-              r2,
-              r3,
-              r_ab,
-              r_bc,
-              r_ca,
-            ]);
+            this.logSingleStep(
+              ACTION.WYE_DELTA,
+              [r1, r2, r3, r_ab, r_bc, r_ca],
+              this.resistances
+            );
             return true;
           }
         }
@@ -584,8 +617,8 @@ export class Solver {
       break;
     }
     if (this.resistances.length == 0)
-      this.logSingleStep(ACTION.EMPTY_CIRCUIT, []);
+      this.logSingleStep(ACTION.EMPTY_CIRCUIT, [], this.resistances);
     else if (this.resistances.length > 1)
-      this.logSingleStep(ACTION.FALLBACK, []);
+      this.logSingleStep(ACTION.FALLBACK, [], this.resistances);
   }
 }
