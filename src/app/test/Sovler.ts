@@ -35,63 +35,65 @@ export class Solver {
   ) {
     let removedResistances: Resistance[] = [];
     let resultingResistances: Resistance[] = [];
-    let msg: string;
+    let msg1: string;
+    let msg2: string;
 
     switch (action) {
       case ACTION.SHORT_CIRCUIT_REMOVAL:
         removedResistances = resistances;
-        msg = `${resistances[0].name} was removed because of short circuit`;
+        msg1 =
+          msg2 = `${resistances[0].name} was removed because of short circuit`;
         break;
       case ACTION.OPEN_CIRCUIT_REMOVAL:
         removedResistances = resistances;
-        msg = `${resistances[0].name} was removed because of open circuit`;
+        msg1 =
+          msg2 = `${resistances[0].name} was removed because of open circuit`;
         break;
       case ACTION.PARALLEL:
         removedResistances = resistances.slice(0, resistances.length - 1);
         resultingResistances = resistances.slice(resistances.length - 1);
-        msg =
-          removedResistances.map((r) => r.name).join(", ") +
-          " are in parallel, result: " +
-          resultingResistances[0].name;
+        msg1 =
+          removedResistances.map((r) => r.name).join(", ") + " are in parallel";
+        msg2 =
+          "result: " +
+          resultingResistances[0].name +
+          " ( = " +
+          removedResistances.map((r) => r.name).join(" || ") +
+          " )";
         break;
       case ACTION.SERIES:
         removedResistances = resistances.slice(0, resistances.length - 1);
         resultingResistances = resistances.slice(resistances.length - 1);
-        msg =
-          removedResistances.map((r) => r.name).join(", ") +
-          " are in series, result: " +
-          resultingResistances[0].name;
+        msg1 =
+          removedResistances.map((r) => r.name).join(", ") + " are in series";
+        msg2 =
+          "result: " +
+          resultingResistances[0].name +
+          "( = " +
+          removedResistances.map((r) => r.name).join(" + ") +
+          " )";
         break;
       case ACTION.WYE_DELTA:
         removedResistances = resistances.slice(0, 3);
         resultingResistances = resistances.slice(3);
-        msg =
+        msg1 =
           "wye-delta conversion with resistances: " +
-          removedResistances.map((r) => r.name).join(", ") +
-          " result: " +
-          resultingResistances.map((r) => r.name).join(", ");
+          removedResistances.map((r) => r.name).join(", ");
+        msg2 = " result: " + resultingResistances.map((r) => r.name).join(", ");
         break;
 
       case ACTION.EMPTY_CIRCUIT:
         removedResistances = [];
         resultingResistances = [];
-        msg = "Empty Circuit";
+        msg1 = msg2 = "Empty Circuit";
         break;
       case ACTION.FALLBACK:
         removedResistances = [];
         resultingResistances = [];
-        msg = "Fallback, could not simplify further with traditional methods";
+        msg1 = msg2 =
+          "Fallback, could not simplify further with traditional methods";
         break;
     }
-
-    // console.log("starting:" + action);
-    // console.log("previous circuit: ");
-    // console.log(this.previousCircuit.map((r) => r.name).join(", "));
-
-    // console.log("logged resistances: ");
-    // console.log(resistances.map((r) => r.name).join(", "));
-    // console.log("resultant resistances: ");
-    // console.log(resultantCircuit.map((r) => r.name).join(", "));
 
     // to highlight the resistors that are removing
     this.Steps.push({
@@ -101,7 +103,7 @@ export class Solver {
       terminal2: this.terminal2,
       removedResistances: removedResistances,
       resultingResistances: [],
-      message: msg,
+      message: msg1,
     });
     // to highlight the resistors that are adding
     this.Steps.push({
@@ -111,7 +113,7 @@ export class Solver {
       terminal2: this.terminal2,
       removedResistances: [],
       resultingResistances: resultingResistances,
-      message: msg,
+      message: msg2,
     });
 
     this.previousCircuit = structuredClone(resultantCircuit);

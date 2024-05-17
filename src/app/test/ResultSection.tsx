@@ -1,5 +1,6 @@
 import { EmblaOptionsType } from "embla-carousel";
 import { useAtomValue } from "jotai";
+import { Info } from "lucide-react";
 import { useMemo } from "react";
 import EmblaCarousel from "~/components/ui/EmblaCarousel";
 import "./../../embla.css";
@@ -20,6 +21,13 @@ const ResultSection = () => {
       solvingSteps.map((step, index) => (
         <div key={index} className="w-full">
           <ResultingCircuit {...step} />
+
+          <p className="text-left text-xl font-semibold flex items-center gap-2 italic">
+            <span>
+              <Info className="w-6 h-6 m-auto" />
+            </span>
+            {step.message}
+          </p>
         </div>
       )),
     [solvingSteps]
