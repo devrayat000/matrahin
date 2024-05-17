@@ -94,6 +94,8 @@ export class Solver {
       removedResistances: [],
       resultingResistances: resultingResistances,
     });
+
+    this.previousCircuit = structuredClone(this.resistances);
   }
 
   private updateNodesAndResistances() {

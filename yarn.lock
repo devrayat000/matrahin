@@ -4528,6 +4528,7 @@ __metadata:
     clsx: "npm:^2.0.0"
     critters: "npm:^0.0.20"
     dayjs: "npm:^1.11.10"
+    embla-carousel-react: "npm:^8.1.0"
     env-cmd: "npm:^10.1.0"
     eslint: "npm:^8.45.0"
     eslint-plugin-react-hooks: "npm:^4.6.0"
@@ -5703,6 +5704,34 @@ __metadata:
   version: 1.4.655
   resolution: "electron-to-chromium@npm:1.4.655"
   checksum: 10/2d0f623288d2da9f943c331a6e2fd1a65de151d67c32d034478d6ced34fa6c4cb73d78af9852f5b67cb8d5b4aebc16ee21d52922f4b21f0ffdb9733a85d4b789
+  languageName: node
+  linkType: hard
+
+"embla-carousel-react@npm:^8.1.0":
+  version: 8.1.0
+  resolution: "embla-carousel-react@npm:8.1.0"
+  dependencies:
+    embla-carousel: "npm:8.1.0"
+    embla-carousel-reactive-utils: "npm:8.1.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.1 || ^18.0.0
+  checksum: 10/79d9d079aa48e6520888e19d0f455a35fd0d5f1e6e3379cbb8477bd08dfea10312cc1d594ac174e61571c7dd8566cf1084b3762e1f9fd377543dfc92886bc69a
+  languageName: node
+  linkType: hard
+
+"embla-carousel-reactive-utils@npm:8.1.0":
+  version: 8.1.0
+  resolution: "embla-carousel-reactive-utils@npm:8.1.0"
+  peerDependencies:
+    embla-carousel: 8.1.0
+  checksum: 10/24cb7d4c5e13ed5cb49ef6097defd9ed4f157d81218416d16a4ec4150a8f714750e6129f4c11aa06b9d007a02d96fcda28136afd2a3803748ec9d14aaab2b2e8
+  languageName: node
+  linkType: hard
+
+"embla-carousel@npm:8.1.0":
+  version: 8.1.0
+  resolution: "embla-carousel@npm:8.1.0"
+  checksum: 10/15bd246211c5fa14f8ca33c9123c02944e656b8c2594ae4d0a2dc03189e1e5a5851bb83ab87fd50def2f19530f3969909baae080b157e8bce1a4d7e80309dd19
   languageName: node
   linkType: hard
 
