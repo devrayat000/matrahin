@@ -34,10 +34,33 @@ export interface StepsInfo {
   resultingResistances: Resistance[];
   message: string;
 }
+
+export interface UsedPointsType {
+  point: Coordinate;
+  count: number;
+}
 export const ResistanceAllAtom = atom<Resistance[]>([]);
 export const WiresAtom = atom<Wire[]>([]);
 export const TerminalsAtom = atom<string[]>(["-1__-1", "-1__-1"]);
-export const PointUsedAtom = atom<Coordinate[]>([]);
+
+export const PointsUsedAtom = atom<Set<Coordinate>>((get) => {
+  const uniquePoints: Set<Coordinate> = new Set();
+  get(ResistanceAllAtom).forEach((resistor) => {
+    const start = resistor.node1.split("__").map((point) => parseInt(point));
+    const end = resistor.node2.split("__").map((point) => parseInt(point));
+    uniquePoints.add({ x: start[0], y: start[1] });
+    uniquePoints.add({ x: end[0], y: end[1] });
+  });
+
+  get(WiresAtom).forEach((wire) => {
+    const start = wire.start.split("__").map((point) => parseInt(point));
+    const end = wire.end.split("__").map((point) => parseInt(point));
+    uniquePoints.add({ x: start[0], y: start[1] });
+    uniquePoints.add({ x: end[0], y: end[1] });
+  });
+
+  return uniquePoints;
+});
 export const currentPointAtom = atom<{ x: number; y: number }>({
   x: -1,
   y: -1,

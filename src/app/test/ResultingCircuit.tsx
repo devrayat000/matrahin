@@ -24,7 +24,7 @@ const ResultingCircuit = ({
           }}
         />
       ))}
-      <WiresComponent WiresList={Wires} onClick={() => {}} />
+      <WiresComponent WiresList={Wires} />
 
       {removedResistances.map((resistance, index) => (
         <Resistor key={index} R={resistance} onClick={() => {}} color="red" />

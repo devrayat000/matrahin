@@ -1,13 +1,16 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useCallback } from "react";
-import Circuit from "./Circuit";
-import Points from "./Points";
+import Breadboard from "./Breadboard";
+import ResistanceInputs from "./ResistanceInputs";
 import TerminalPoints from "./TerminalPointsInput";
+import WiresComponent from "./Wires";
 import {
   ComponentSelectedAtom,
-  PointUsedAtom,
+  PointsUsedAtom,
+  Resistance,
   ResistanceAllAtom,
   TerminalsAtom,
+  Wire,
   WiresAtom,
   currentPointAtom,
 } from "./store";
@@ -15,17 +18,23 @@ import {
 const InputCircuit = () => {
   const [currentPoint, setCurrentPoint] = useAtom(currentPointAtom);
 
-  const [pointsUsed, setPointsUsed] = useAtom(PointUsedAtom);
+  const pointsUsed = useAtomValue(PointsUsedAtom);
   const ResistanceAll = useAtomValue(ResistanceAllAtom);
-  const Wires = useAtomValue(WiresAtom);
+
+  const [wires, setWires] = useAtom(WiresAtom);
   const ComponentSelectionType = useAtomValue(ComponentSelectedAtom);
 
   const setTerminals = useSetAtom(TerminalsAtom);
   const setResistance = useSetAtom(ResistanceAllAtom);
-  const setWires = useSetAtom(WiresAtom);
 
   const setPoint = useCallback(
     (point: { x: number; y: number }) => {
+      if (ComponentSelectionType === "none") {
+        //todo: show alert as toast
+        // alert("Please select a component first");
+        return;
+      }
+
       if (currentPoint.x === -1) {
         if (ComponentSelectionType === "t1")
           setTerminals((terminals) => [`${point.x}__${point.y}`, terminals[1]]);
@@ -41,8 +50,6 @@ const InputCircuit = () => {
         setCurrentPoint({ x: -1, y: -1 });
         return;
       }
-
-      setPointsUsed((points) => [...points, currentPoint, point]);
 
       if (ComponentSelectionType === "wire") {
         setWires((wires) => [
@@ -68,9 +75,25 @@ const InputCircuit = () => {
     },
     [currentPoint, setResistance, setCurrentPoint]
   );
+
+  const onWireSelect = (wire: Wire, index: number) => {};
+
+  const handleWireRemove = useCallback(
+    (wire: Wire, index: number) => {
+      setWires((prev) => prev.filter((_, i) => i !== index));
+    },
+    [setWires]
+  );
+
+  const handleResistanceRemove = useCallback(
+    (resistance: Resistance, index: number) => {
+      setResistance((prev) => prev.filter((_, i) => i !== index));
+    },
+    [setResistance]
+  );
+
   return (
-    <svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg">
-      <Points setPoint={setPoint} />
+    <Breadboard setPoint={setPoint}>
       {currentPoint.x !== -1 && (
         <circle
           cx={currentPoint.x}
@@ -83,24 +106,42 @@ const InputCircuit = () => {
       )}
 
       <TerminalPoints />
-
-      <Circuit ResistanceAll={ResistanceAll} Wires={Wires} />
-      {/* to make clickable the points that have been used in Rs */}
-
-      {pointsUsed.map((point, index) => (
-        <circle
+      {/* 
+      {ResistanceAll.map((resistance, index) => (
+        <Resistor
           key={index}
-          cx={point.x}
-          cy={point.y}
-          r={5}
-          fill="black"
-          style={{ cursor: "pointer" }}
+          R={resistance}
           onClick={() => {
-            setPoint(point);
+            // alert(index);
           }}
         />
+      ))} */}
+
+      <ResistanceInputs
+        resistanceList={ResistanceAll}
+        onRemove={handleResistanceRemove}
+      />
+
+      <WiresComponent
+        WiresList={wires}
+        onSelect={onWireSelect}
+        onRemove={handleWireRemove}
+      />
+
+      {Array.from(pointsUsed).map((point, index) => (
+        <g
+          cursor="pointer"
+          onClick={() => {
+            setPoint({ ...point });
+          }}
+          key={index}
+        >
+          <circle cx={point.x} cy={point.y} r={5} fill="black" />
+          {/* prevent pop up */}
+          <circle cx={point.x} cy={point.y} r={10} fill="white" opacity={0} />
+        </g>
       ))}
-    </svg>
+    </Breadboard>
   );
 };
 
