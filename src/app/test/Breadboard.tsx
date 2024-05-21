@@ -29,12 +29,12 @@ const Breadboard: FC<BreadboardProps> = ({
 
   return (
     <svg
-      viewBox={breakPoint === "sm" ? "0 -10 370 570" : " 0 -10 620 380"}
+      viewBox={breakPoint === "sm" ? "0 -10 370 570" : " 0 -10 750 380"}
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       {...props}
     >
-      {Array.from({ length: breakPoint === "sm" ? 12 : 20 }, (_, i) =>
+      {Array.from({ length: breakPoint === "sm" ? 12 : 23 }, (_, i) =>
         Array.from({ length: breakPoint === "sm" ? 18 : 12 }, (_, j) => (
           <g
             key={i * 10 + j}

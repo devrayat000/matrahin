@@ -8,11 +8,13 @@ import ResultSection from "./ResultSection";
 const Page = () => {
   return (
     <>
-      <div className="text-center text-2xl font-bold">
+      <h1 className=" text-center m-auto text-4xl font-bold">
         Equivalent Resistance Calculator
-      </div>
-      <div className=" grid sm:grid-cols-5 md:mt-3  ">
-        <ComponentInput />
+      </h1>
+      <div className=" flex flex-col mx-4 sm:flex-row md:mt-3  ">
+        <div className="sm:w-1/3 sm:self-start">
+          <ComponentInput />
+        </div>
         <div className="w-full col-span-3 m-auto ">
           <InputCircuit />
         </div>

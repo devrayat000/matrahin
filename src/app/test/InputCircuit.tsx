@@ -3,30 +3,25 @@ import { useCallback } from "react";
 import Breadboard from "./Breadboard";
 import ResistanceInputs from "./ResistanceInputs";
 import TerminalPoints from "./TerminalPointsInput";
-import WiresComponent from "./Wires";
+import WiresInput from "./WiresInput";
 import {
   ComponentSelectedAtom,
   PointsUsedAtom,
-  Resistance,
   ResistanceAllAtom,
   TerminalsAtom,
-  Wire,
   WiresAtom,
   currentPointAtom,
 } from "./store";
-import WiresInput from "./WiresInput";
 
 const InputCircuit = () => {
   const [currentPoint, setCurrentPoint] = useAtom(currentPointAtom);
 
   const pointsUsed = useAtomValue(PointsUsedAtom);
-  const ResistanceAll = useAtomValue(ResistanceAllAtom);
-
-  const [wires, setWires] = useAtom(WiresAtom);
   const ComponentSelectionType = useAtomValue(ComponentSelectedAtom);
 
   const setTerminals = useSetAtom(TerminalsAtom);
   const setResistance = useSetAtom(ResistanceAllAtom);
+  const setWires = useSetAtom(WiresAtom);
 
   const setPoint = useCallback(
     (point: { x: number; y: number }) => {

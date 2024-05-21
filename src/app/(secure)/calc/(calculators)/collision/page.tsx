@@ -1,12 +1,10 @@
 "use client";
 
 import { Slack } from "lucide-react";
-import Collision2DAnimation from "../../../../../components/project/collision-2d/Collision2DAnimation";
-import CollisionTypeInput from "../../../../../components/project/collision-2d/CollisionTypeInput";
-import ObjectInput from "../../../../../components/project/collision-2d/ObjectInput";
-import PauseResumeControl from "../../../../../components/project/collision-2d/PauseResumeControl";
-
-const PRECISION = 2;
+import Collision2DAnimation from "~/components/project/collision-2d/Collision2DAnimation";
+import CollisionTypeInput from "~/components/project/collision-2d/CollisionTypeInput";
+import ObjectInput from "~/components/project/collision-2d/ObjectInput";
+import PauseResumeControl from "~/components/project/collision-2d/PauseResumeControl";
 
 const TwoInputs = () => {
   return (
