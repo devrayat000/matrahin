@@ -95,10 +95,14 @@ export class Solver {
         break;
     }
 
+    // step 1: get all the nodes necessary for resistors
+    // step 2: if shorted points on a node doesn't have a resister node or terminal node
+    // , remove the wire
+
     // to highlight the resistors that are removing
     this.Steps.push({
       Circuit: this.previousCircuit,
-      Wires: this.wires,
+      Wires: structuredClone(this.wires),
       terminal1: this.terminal1,
       terminal2: this.terminal2,
       removedResistances: removedResistances,
@@ -108,7 +112,7 @@ export class Solver {
     // to highlight the resistors that are adding
     this.Steps.push({
       Circuit: structuredClone(resultantCircuit),
-      Wires: this.wires,
+      Wires: structuredClone(this.wires),
       terminal1: this.terminal1,
       terminal2: this.terminal2,
       removedResistances: [],

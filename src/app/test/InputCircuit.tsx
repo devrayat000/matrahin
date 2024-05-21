@@ -14,6 +14,7 @@ import {
   WiresAtom,
   currentPointAtom,
 } from "./store";
+import WiresInput from "./WiresInput";
 
 const InputCircuit = () => {
   const [currentPoint, setCurrentPoint] = useAtom(currentPointAtom);
@@ -76,13 +77,6 @@ const InputCircuit = () => {
     [currentPoint, setResistance, setCurrentPoint]
   );
 
-  const handleWireRemove = useCallback(
-    (wire: Wire, index: number) => {
-      setWires((prev) => prev.filter((_, i) => i !== index));
-    },
-    [setWires]
-  );
-
   return (
     <Breadboard setPoint={setPoint}>
       {currentPoint.x !== -1 && (
@@ -100,7 +94,7 @@ const InputCircuit = () => {
 
       <ResistanceInputs />
 
-      <WiresComponent WiresList={wires} onRemove={handleWireRemove} />
+      <WiresInput />
 
       {Array.from(pointsUsed).map((point, index) => (
         <g

@@ -7,19 +7,19 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 
-import { useAtom } from "jotai";
-import { MinusCircle } from "lucide-react";
+import { useAtom, useSetAtom } from "jotai";
+import { MinusCircle, RefreshCcw } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Button } from "~/components/ui/button";
 import HighlightComponent from "./HighlightComponent";
 import Resistor from "./Resistor";
-import { Resistance, ResistanceAllAtom } from "./store";
+import { Resistance, ResistanceAllAtom, WiresAtom } from "./store";
 import { getCoordinatesById } from "./utils";
 
 const ResistanceInputs = () => {
   const [resistanceList, setResistanceList] = useAtom(ResistanceAllAtom);
   const [selectedR, setSelectedR] = useState<number | null>(null);
-
+  const setWire = useSetAtom(WiresAtom);
   const handleResistanceRemove = useCallback(
     (resistance: Resistance, index: number) => {
       setResistanceList((prev) => prev.filter((_, i) => i !== index));
@@ -37,6 +37,11 @@ const ResistanceInputs = () => {
     [setResistanceList]
   );
 
+  const addWire = useCallback(
+    (node1: string, node2: string) =>
+      setWire((prev) => [...prev, { start: node1, end: node2 }]),
+    [setWire]
+  );
   return resistanceList.map((r, index) => {
     const start = getCoordinatesById(r.node1);
     const end = getCoordinatesById(r.node2);
@@ -56,7 +61,11 @@ const ResistanceInputs = () => {
       >
         <PopoverTrigger className="cursor-grab">
           <g onClick={handleResistorClick}>
-            <Resistor R={r} onClick={() => {}} />
+            <Resistor
+              R={r}
+              onClick={() => {}}
+              color={selectedR === index ? "blue" : "black"}
+            />
             <HighlightComponent
               start={start}
               end={end}
@@ -68,7 +77,7 @@ const ResistanceInputs = () => {
           <PopoverContent side="top" className="w-fit pr-8">
             <div className="flex flex-row items-center justify-between w-fit gap-4 text-lg  ">
               <div className="flex flex-row items-center  justify-between w-full gap-2">
-                <p>Value:</p>
+                <p>{r.name}:</p>
                 <input
                   onChange={(e) => {
                     handleRValueChange(r, index, Number(e.target.value));
@@ -79,23 +88,34 @@ const ResistanceInputs = () => {
                     }
                   }}
                   type="number"
-                  className="w-24 p-2 border rounded-md border-slate-900"
+                  className="w-24 p-2 py-1 border rounded-md border-slate-900"
                   value={r.value === 0 ? "" : r.value}
                 />
               </div>
-              <div>
-                <Button
-                  variant="destructive"
-                  onClick={() => {
-                    setSelectedR(null);
-                    handleResistanceRemove(r, index);
-                  }}
-                  className="flex  gap-3"
-                >
-                  <MinusCircle />
-                  Remove
-                </Button>
-              </div>
+
+              <Button
+                variant="success"
+                onClick={() => {
+                  setSelectedR(null);
+                  addWire(r.node1, r.node2);
+                  handleResistanceRemove(r, index);
+                }}
+                className="flex  gap-3 "
+              >
+                <RefreshCcw />
+                Wire
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  setSelectedR(null);
+                  handleResistanceRemove(r, index);
+                }}
+                className="flex  gap-3 "
+              >
+                <MinusCircle />
+                Remove
+              </Button>
             </div>
             <PopoverClose />
             <PopoverArrow />
