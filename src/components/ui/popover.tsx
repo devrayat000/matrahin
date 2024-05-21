@@ -34,7 +34,7 @@ const PopoverClose = forwardRef<
 >(({ className, children, ...props }, ref) => (
   <PopoverPrimitive.Close
     ref={ref}
-    className="rounded-full h-[25px] w-[25px] inline-flex items-center justify-center  absolute top-[5px] right-[5px] hover:bg-red-200 focus:shadow-[0_0_0_2px] focus:shadow-violet7 outline-none cursor-pointer"
+    className="rounded-full bg-red-300  sm:bg-inherit h-[25px] w-[25px] inline-flex items-center justify-center  absolute top-[5px] right-[5px] hover:bg-red-200 focus:shadow-[0_0_0_2px] focus:shadow-violet7 outline-none cursor-pointer"
     aria-label="Close"
     {...props}
   >

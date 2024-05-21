@@ -76,5 +76,4 @@ export const ComponentSelectedAtom = atom<"R" | "wire" | "t1" | "t2" | "none">(
   "none"
 );
 
-export const calculatingAtom = atom<boolean>(false);
 export const SolvingStepsAtom = atom<StepsInfo[]>([]);

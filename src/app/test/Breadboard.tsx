@@ -11,7 +11,6 @@ const Breadboard: FC<BreadboardProps> = ({
   setPoint,
   ...props
 }) => {
-  console.log("breadboard");
   const [breakPoint, setBreakPoint] = useState<"sm" | "md" | "lg">("sm");
   useLayoutEffect(() => {
     const updateBreakpoint = () => {
@@ -30,13 +29,13 @@ const Breadboard: FC<BreadboardProps> = ({
 
   return (
     <svg
-      viewBox={breakPoint === "sm" ? "0 0 380 600" : " 0 0 600 380"}
+      viewBox={breakPoint === "sm" ? "0 -10 370 570" : " 0 -10 620 380"}
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       {...props}
     >
-      {Array.from({ length: breakPoint === "sm" ? 16 : 20 }, (_, i) =>
-        Array.from({ length: breakPoint === "sm" ? 12 : 12 }, (_, j) => (
+      {Array.from({ length: breakPoint === "sm" ? 12 : 20 }, (_, i) =>
+        Array.from({ length: breakPoint === "sm" ? 18 : 12 }, (_, j) => (
           <g
             key={i * 10 + j}
             onClick={(e) => {

@@ -1,10 +1,10 @@
+import { EmblaCarouselType } from "embla-carousel";
 import React, {
   PropsWithChildren,
   useCallback,
   useEffect,
   useState,
 } from "react";
-import { EmblaCarouselType } from "embla-carousel";
 
 type UseDotButtonType = {
   selectedIndex: number;
@@ -21,7 +21,7 @@ export const useDotButton = (
   const onDotButtonClick = useCallback(
     (index: number) => {
       if (!emblaApi) return;
-      emblaApi.scrollTo(index);
+      emblaApi.scrollTo(index, true);
     },
     [emblaApi]
   );

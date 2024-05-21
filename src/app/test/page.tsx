@@ -11,7 +11,7 @@ const Page = () => {
       <div className="text-center text-2xl font-bold">
         Equivalent Resistance Calculator
       </div>
-      <div className=" grid sm:grid-cols-5  ">
+      <div className=" grid sm:grid-cols-5 md:mt-3  ">
         <ComponentInput />
         <div className="w-full col-span-3 m-auto ">
           <InputCircuit />

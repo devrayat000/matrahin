@@ -1,6 +1,7 @@
 import { useAtomValue, useSetAtom } from "jotai";
+import { useCallback } from "react";
 import { Button } from "~/components/ui/button";
-import { Solver } from "./Sovler";
+import { Solver } from "./Solver";
 import {
   ResistanceAllAtom,
   SolvingStepsAtom,
@@ -12,9 +13,8 @@ const CalculateAndReset = () => {
   const resistances = useAtomValue(ResistanceAllAtom);
   const wires = useAtomValue(WiresAtom);
   const terminals = useAtomValue(TerminalsAtom);
-  // const setCalculating = useSetAtom(calculatingAtom);
-  const setSolvingStepsAtom = useSetAtom(SolvingStepsAtom);
-  const solveCircuit = () => {
+  const setSolvingSteps = useSetAtom(SolvingStepsAtom);
+  const solveCircuit = useCallback(() => {
     const data = new Solver(
       structuredClone(resistances),
       structuredClone(wires),
@@ -22,8 +22,8 @@ const CalculateAndReset = () => {
       terminals[1]
     );
     const result = data.solve();
-    setSolvingStepsAtom(result);
-  };
+    setSolvingSteps(result);
+  }, [resistances, wires, terminals, setSolvingSteps]);
 
   return (
     <div className="flex w-full items-center justify-evenly">

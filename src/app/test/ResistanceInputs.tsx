@@ -74,9 +74,9 @@ const ResistanceInputs = () => {
           </g>
         </PopoverTrigger>
         <PopoverPortal>
-          <PopoverContent side="top" className="w-fit pr-8">
-            <div className="flex flex-row items-center justify-between w-fit gap-4 text-lg  ">
-              <div className="flex flex-row items-center  justify-between w-full gap-2">
+          <PopoverContent side="top" className="w-fit pr-10 pt-10">
+            <div className="flex flex-col  sm:flex-row  items-center justify-between w-fit gap-4 text-lg  ">
+              <div className="flex flex-row items-center   justify-between w-full gap-2">
                 <p>{r.name}:</p>
                 <input
                   onChange={(e) => {
@@ -100,10 +100,10 @@ const ResistanceInputs = () => {
                   addWire(r.node1, r.node2);
                   handleResistanceRemove(r, index);
                 }}
-                className="flex  gap-3 "
+                className="flex  gap-3 w-full"
               >
                 <RefreshCcw />
-                Wire
+                Make Wire
               </Button>
               <Button
                 variant="destructive"
@@ -111,7 +111,7 @@ const ResistanceInputs = () => {
                   setSelectedR(null);
                   handleResistanceRemove(r, index);
                 }}
-                className="flex  gap-3 "
+                className="flex  gap-3  w-full"
               >
                 <MinusCircle />
                 Remove

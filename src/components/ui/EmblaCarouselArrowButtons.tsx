@@ -1,10 +1,10 @@
+import { EmblaCarouselType } from "embla-carousel";
 import React, {
   PropsWithChildren,
   useCallback,
   useEffect,
   useState,
 } from "react";
-import { EmblaCarouselType } from "embla-carousel";
 
 type UsePrevNextButtonsType = {
   prevBtnDisabled: boolean;
@@ -21,12 +21,12 @@ export const usePrevNextButtons = (
 
   const onPrevButtonClick = useCallback(() => {
     if (!emblaApi) return;
-    emblaApi.scrollPrev();
+    emblaApi.scrollPrev(true);
   }, [emblaApi]);
 
   const onNextButtonClick = useCallback(() => {
     if (!emblaApi) return;
-    emblaApi.scrollNext();
+    emblaApi.scrollNext(true);
   }, [emblaApi]);
 
   const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
