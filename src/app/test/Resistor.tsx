@@ -162,7 +162,7 @@ const Resistor = ({
         textAnchor="middle"
         dominantBaseline="middle"
       >
-        {name + ": " + value.toFixed(2) + "Ω"}
+        {name + ": " + value.toFixed(2) + " Ω"}
       </text>
     </g>
   );

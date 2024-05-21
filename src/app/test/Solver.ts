@@ -11,6 +11,8 @@ export class Solver {
   private resistanceCount: number;
   private Steps: StepsInfo[] = [];
   private previousCircuit: Resistance[] = [];
+
+  private maxLengthOfResistancesArray: number = 25;
   constructor(
     resistances: Resistance[],
     wires: Wire[],
@@ -22,9 +24,8 @@ export class Solver {
     this.terminal1 = terminal1;
     this.terminal2 = terminal2;
     this.resistanceCount = resistances.length + 1;
-    this.previousCircuit = structuredClone(resistances);
-    this.nodes = Array.from({ length: 700 }, () =>
-      Array.from({ length: 700 }, () => [])
+    this.nodes = Array.from({ length: this.maxLengthOfResistancesArray }, () =>
+      Array.from({ length: this.maxLengthOfResistancesArray }, () => [])
     );
   }
 
@@ -138,13 +139,14 @@ export class Solver {
   public solve() {
     this.updateNodesAndResistances();
     this.updateTerminalNodes();
+    this.previousCircuit = structuredClone(this.resistances);
     this.findEquivalentResistance();
     return this.Steps;
   }
 
   private initializeNodes() {
-    for (let i = 0; i < 700; i++) {
-      for (let j = 0; j < 700; j++) {
+    for (let i = 0; i < this.maxLengthOfResistancesArray; i++) {
+      for (let j = 0; j < this.maxLengthOfResistancesArray; j++) {
         this.nodes[i][j] = [`${i}__${j}`];
       }
     }
@@ -162,8 +164,8 @@ export class Solver {
       ];
       const uniqueNodes = Array.from(new Set(mergedNodes));
       // if nodes[i][j] contains node1 or node2, replace it with uniqueNodes
-      for (let i = 0; i < 700; i++) {
-        for (let j = 0; j < 700; j++) {
+      for (let i = 0; i < this.maxLengthOfResistancesArray; i++) {
+        for (let j = 0; j < this.maxLengthOfResistancesArray; j++) {
           if (
             this.nodes[i][j].includes(node1) ||
             this.nodes[i][j].includes(node2)
@@ -178,13 +180,14 @@ export class Solver {
   private updateNodesOfResistances() {
     for (let i = 0; i < this.resistances.length; i++) {
       const r = this.resistances[i];
-      const [node1x, node1y] = r.node1.split("__").map((x) => parseInt(x));
-      const [node2x, node2y] = r.node2.split("__").map((x) => parseInt(x));
+      const [node1x, node1y] = this.getPointFromNode(r.node1);
+      const [node2x, node2y] = this.getPointFromNode(r.node2);
       r.node1 =
         r.node1.split("h")[0] + "h" + this.nodes[node1x][node1y].join("w");
       r.node2 =
         r.node2.split("h")[0] + "h" + this.nodes[node2x][node2y].join("w");
     }
+    // console.log(this.resistances.map((i) => i));
   }
 
   private getPointFromNode(node: string): [number, number] {
@@ -195,7 +198,21 @@ export class Solver {
   }
 
   private isEqualNodes(node1: string, node2: string): boolean {
-    return node1.split("h")[1] === node2.split("h")[1];
+    // return node1.split("h")[1] === node2.split("h")[1];
+    // let,
+    //  node1.split("h")[1] = 3_4w2_3w1_1
+    //  and node2.split("h")[1] = 3_4
+    //  if second one is substring of first one then return true
+    //  or first one is substring of second one then return true
+    // else return false
+
+    const [node1x, node1y] = this.getPointFromNode(node1);
+    const [node2x, node2y] = this.getPointFromNode(node2);
+
+    return (
+      this.nodes[node1x][node1y].includes(`${node2x}__${node2y}`) ||
+      this.nodes[node2x][node2y].includes(`${node1x}__${node1y}`)
+    );
   }
 
   private getNewNameForResistance(): string {

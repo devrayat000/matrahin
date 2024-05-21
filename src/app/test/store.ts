@@ -43,6 +43,7 @@ export const ResistanceAllAtom = atom<Resistance[]>([]);
 export const WiresAtom = atom<Wire[]>([]);
 export const TerminalsAtom = atom<string[]>(["-1__-1", "-1__-1"]);
 
+// contains the  indices of  the points used in the circuit
 export const PointsUsedAtom = atom<Set<Coordinate>>((get) => {
   const uniquePoints: Set<Coordinate> = new Set();
   get(ResistanceAllAtom).forEach((resistor) => {
@@ -55,8 +56,14 @@ export const PointsUsedAtom = atom<Set<Coordinate>>((get) => {
   get(WiresAtom).forEach((wire) => {
     const start = wire.start.split("__").map((point) => parseInt(point));
     const end = wire.end.split("__").map((point) => parseInt(point));
-    uniquePoints.add({ x: start[0], y: start[1] });
-    uniquePoints.add({ x: end[0], y: end[1] });
+    uniquePoints.add({
+      x: start[0],
+      y: start[1],
+    });
+    uniquePoints.add({
+      x: end[0],
+      y: end[1],
+    });
   });
 
   return uniquePoints;

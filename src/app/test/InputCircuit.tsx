@@ -12,6 +12,7 @@ import {
   WiresAtom,
   currentPointAtom,
 } from "./store";
+import { getPointFromIndex } from "./utils";
 
 const InputCircuit = () => {
   const [currentPoint, setCurrentPoint] = useAtom(currentPointAtom);
@@ -36,7 +37,7 @@ const InputCircuit = () => {
           setTerminals((terminals) => [`${point.x}__${point.y}`, terminals[1]]);
         else if (ComponentSelectionType === "t2")
           setTerminals((terminals) => [terminals[0], `${point.x}__${point.y}`]);
-        else setCurrentPoint(point);
+        else setCurrentPoint({ ...point });
 
         return;
       }
@@ -76,11 +77,11 @@ const InputCircuit = () => {
     <Breadboard setPoint={setPoint}>
       {currentPoint.x !== -1 && (
         <circle
-          cx={currentPoint.x}
-          cy={currentPoint.y}
+          cx={getPointFromIndex(currentPoint.x)}
+          cy={getPointFromIndex(currentPoint.y)}
           r={8}
           fill="blue"
-          style={{ cursor: "pointer" }}
+          cursor="pointer"
           onClick={() => setCurrentPoint({ x: -1, y: -1 })}
         />
       )}
@@ -99,9 +100,20 @@ const InputCircuit = () => {
           }}
           key={index}
         >
-          <circle cx={point.x} cy={point.y} r={5} fill="black" />
+          <circle
+            cx={getPointFromIndex(point.x)}
+            cy={getPointFromIndex(point.y)}
+            r={5}
+            fill="black"
+          />
           {/* prevent pop up */}
-          <circle cx={point.x} cy={point.y} r={10} fill="white" opacity={0} />
+          <circle
+            cx={getPointFromIndex(point.x)}
+            cy={getPointFromIndex(point.y)}
+            r={10}
+            fill="white"
+            opacity={0}
+          />
         </g>
       ))}
     </Breadboard>

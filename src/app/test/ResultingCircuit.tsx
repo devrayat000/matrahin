@@ -15,13 +15,7 @@ const ResultingCircuit = ({
   return (
     <Breadboard setPoint={() => {}}>
       {Circuit.map((resistance, index) => (
-        <Resistor
-          key={index}
-          R={resistance}
-          onClick={() => {
-            // alert(index);
-          }}
-        />
+        <Resistor key={index} R={resistance} onClick={() => {}} />
       ))}
       <WiresComponent WiresList={Wires} />
 
