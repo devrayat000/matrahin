@@ -76,20 +76,11 @@ const InputCircuit = () => {
     [currentPoint, setResistance, setCurrentPoint]
   );
 
-  const onWireSelect = (wire: Wire, index: number) => {};
-
   const handleWireRemove = useCallback(
     (wire: Wire, index: number) => {
       setWires((prev) => prev.filter((_, i) => i !== index));
     },
     [setWires]
-  );
-
-  const handleResistanceRemove = useCallback(
-    (resistance: Resistance, index: number) => {
-      setResistance((prev) => prev.filter((_, i) => i !== index));
-    },
-    [setResistance]
   );
 
   return (
@@ -106,27 +97,10 @@ const InputCircuit = () => {
       )}
 
       <TerminalPoints />
-      {/* 
-      {ResistanceAll.map((resistance, index) => (
-        <Resistor
-          key={index}
-          R={resistance}
-          onClick={() => {
-            // alert(index);
-          }}
-        />
-      ))} */}
 
-      <ResistanceInputs
-        resistanceList={ResistanceAll}
-        onRemove={handleResistanceRemove}
-      />
+      <ResistanceInputs />
 
-      <WiresComponent
-        WiresList={wires}
-        onSelect={onWireSelect}
-        onRemove={handleWireRemove}
-      />
+      <WiresComponent WiresList={wires} onRemove={handleWireRemove} />
 
       {Array.from(pointsUsed).map((point, index) => (
         <g

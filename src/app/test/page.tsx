@@ -8,6 +8,9 @@ import ResultSection from "./ResultSection";
 const Page = () => {
   return (
     <>
+      <div className="text-center text-2xl font-bold">
+        Equivalent Resistance Calculator
+      </div>
       <div className=" grid sm:grid-cols-5  ">
         <ComponentInput />
         <div className="w-full col-span-3 m-auto ">

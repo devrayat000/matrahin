@@ -16,7 +16,6 @@ import { getCoordinatesById } from "./utils";
 
 const WiresComponent = ({
   WiresList,
-  onSelect,
   onRemove,
 }: {
   WiresList: Wire[];
@@ -32,7 +31,6 @@ const WiresComponent = ({
     const handleWireClick = () => {
       if (selectedWire === index) setSelectedWire(null);
       else setSelectedWire(index);
-      onSelect?.(wire, index);
     };
 
     return (

@@ -157,7 +157,7 @@ const Resistor = ({
       <text
         x={resistorState.labelPosition.x}
         y={resistorState.labelPosition.y}
-        fontSize="15"
+        fontSize="12"
         fill={color}
         textAnchor="middle"
         dominantBaseline="middle"

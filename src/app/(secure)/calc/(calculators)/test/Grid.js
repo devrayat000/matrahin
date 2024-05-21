@@ -1,4 +1,5 @@
 import { useFrame, useThree } from '@react-three/fiber'
+import { easing } from 'maath'
 import { createContext, useCallback, useContext, useRef, useState } from 'react'
 import { Plane, Vector3 } from 'three'
 
