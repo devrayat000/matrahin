@@ -106,8 +106,10 @@ const ResistanceInputs = () => {
                 <p>{r.name}:</p>
                 <input
                   onChange={(e) => {
+                    if (Number(e.target.value) < 0) return;
                     handleRValueChange(r, index, Number(e.target.value));
                   }}
+                  min={0}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       setSelectedR(null);
