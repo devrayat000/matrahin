@@ -1,20 +1,39 @@
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { BrainCircuit, Redo, Trash2, Undo } from "lucide-react";
+import { useCallback } from "react";
 import { Button } from "~/components/ui/button";
+import { Solver } from "./Solver";
 import {
+  Circuit,
   HistoryAtom,
   RedoListAtom,
   Resistance,
   ResistanceAllAtom,
+  SolvingStepsAtom,
+  TerminalsAtom,
   USER_ACTION,
   Wire,
   WiresAtom,
 } from "./store";
 
-const UndoRedoReset = () => {
-  const setResistanceAll = useSetAtom(ResistanceAllAtom);
-  const setWires = useSetAtom(WiresAtom);
+const ControlButtons = () => {
+  const [resistanceAll, setResistanceAll] = useAtom(ResistanceAllAtom);
+  const [wires, setWires] = useAtom(WiresAtom);
   const [history, setHistory] = useAtom(HistoryAtom);
   const [redoList, setRedoList] = useAtom(RedoListAtom);
+
+  const terminals = useAtomValue(TerminalsAtom);
+  const setSolvingSteps = useSetAtom(SolvingStepsAtom);
+  const solveCircuit = useCallback(() => {
+    const data = new Solver(
+      structuredClone(resistanceAll),
+      structuredClone(wires),
+      terminals[0],
+      terminals[1]
+    );
+    const result = data.solve();
+    setSolvingSteps(result);
+  }, [resistanceAll, wires, terminals, setSolvingSteps]);
 
   const undo = () => {
     const lastAction = history.pop();
@@ -44,8 +63,8 @@ const UndoRedoReset = () => {
           ]);
           break;
         case USER_ACTION.CLEAR_CKT:
-          setResistanceAll([]);
-          setWires([]);
+          setResistanceAll([...(lastAction.params as Circuit).resistances]);
+          setWires([...(lastAction.params as Circuit).wires]);
           break;
 
         default:
@@ -95,26 +114,62 @@ const UndoRedoReset = () => {
     }
   };
 
+  const reset = () => {
+    setHistory((prev) => [
+      ...prev,
+      {
+        action: USER_ACTION.CLEAR_CKT,
+        params: {
+          resistances: structuredClone(resistanceAll),
+          wires: structuredClone(wires),
+        },
+      },
+    ]);
+    setRedoList([]);
+    setResistanceAll([]);
+    setWires([]);
+  };
+
   return (
-    <div className="flex w-full items-center justify-evenly">
+    <div className="flex w-full items-center justify-center gap-2 flex-wrap sm:gap-8 p-1 ">
       <Button
-        className="font-semibold tracking-widest text-2xl p-4"
+        variant="destructive"
+        className=" flex flex-row gap-3 p-4 text-lg"
+        name="reset"
+        onClick={reset}
+      >
+        <Trash2 /> Clear All
+      </Button>
+      <Button
+        className=" flex flex-row gap-3 p-4 text-lg"
         name="undo"
         disabled={history.length === 0}
         onClick={undo}
       >
-        UNDO
+        <Undo />
+        Undo
       </Button>
       <Button
-        className="font-semibold tracking-widest text-2xl p-4"
+        className=" flex flex-row gap-3 p-4 text-lg"
         name="redo"
         disabled={redoList.length === 0}
         onClick={redo}
       >
-        REDO
+        Redo
+        <Redo />
+      </Button>
+
+      <Button
+        className="font-semibold tracking-widest text-2xl p-6 flex flex-row gap-3"
+        onClick={solveCircuit}
+        disabled={terminals[0] === "-1__-1" || terminals[1] === "-1__-1"}
+        name="solve"
+        variant="success"
+      >
+        <BrainCircuit /> SOLVE
       </Button>
     </div>
   );
 };
 
-export default UndoRedoReset;
+export default ControlButtons;

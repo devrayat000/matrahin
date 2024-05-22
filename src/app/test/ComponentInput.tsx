@@ -24,7 +24,7 @@ const ComponentInput = () => {
           <CornerRightDown />
         </span>
       </div>
-      <div className="flex flex-row sm:flex-col gap-1 sm:gap-3 items-center justify-start p-1 sm:p-3 text-center">
+      <div className="flex flex-row sm:flex-col gap-1 sm:gap-3 items-center justify-start sm:p-3 text-center">
         <div
           className={cn(
             componentStyle,

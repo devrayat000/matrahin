@@ -34,9 +34,14 @@ export enum USER_ACTION {
   // nothing for 'convert R to W' as it is removing R and adding W ,
 }
 
+export interface Circuit {
+  resistances: Resistance[];
+  wires: Wire[];
+}
+
 interface HistoryType {
   action: USER_ACTION;
-  params: Resistance | Wire | Resistance[] | Wire[];
+  params: Resistance | Wire | Circuit;
 }
 
 // history of user actions
