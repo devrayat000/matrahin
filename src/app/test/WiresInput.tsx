@@ -12,25 +12,52 @@ import { MinusCircle, RefreshCcw } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Button } from "~/components/ui/button";
 import HighlightComponent from "./HighlightComponent";
-import { ResistanceAllAtom, Wire, WiresAtom } from "./store";
+import {
+  HistoryAtom,
+  RedoListAtom,
+  ResistanceAllAtom,
+  USER_ACTION,
+  Wire,
+  WiresAtom,
+} from "./store";
 import { getCoordinatesById } from "./utils";
 
 const WiresInput = () => {
   const [selectedWire, setSelectedWire] = useState<number | null>(null);
   const [wireList, setWireList] = useAtom(WiresAtom);
   const setResistanceList = useSetAtom(ResistanceAllAtom);
+  const setHistory = useSetAtom(HistoryAtom);
+  const setRedoList = useSetAtom(RedoListAtom);
 
   const addResistance = useCallback(
     (node1: string, node2: string) =>
-      setResistanceList((prev) => [
+      {setResistanceList((prev) => [
         ...prev,
         { name: `R${prev.length + 1}`, value: 1, node1, node2 },
-      ]),
+      ])
+      setHistory((prev) => [
+        ...prev,
+        {
+          action: USER_ACTION.ADD_RESISTANCE,
+          params: { name: 'temp', value: 1, node1, node2 },
+        },
+      ]);
+      setRedoList([]);
+    }
+      ,
     [setResistanceList]
   );
   const handleWireRemove = useCallback(
     (wire: Wire, index: number) => {
       setWireList((prev) => prev.filter((_, i) => i !== index));
+      setHistory((prev) => [
+        ...prev,
+        {
+          action: USER_ACTION.REMOVE_WIRE,
+          params: { ...wire },
+        },
+      ]);
+      setRedoList([]);
     },
     [setWireList]
   );
@@ -75,8 +102,8 @@ const WiresInput = () => {
                 variant="success"
                 onClick={() => {
                   setSelectedWire(null);
-                  addResistance(wire.start, wire.end);
                   handleWireRemove(wire, index);
+                  addResistance(wire.start, wire.end);
                 }}
                 className="flex  gap-3"
               >

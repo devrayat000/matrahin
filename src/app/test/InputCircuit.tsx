@@ -6,9 +6,13 @@ import TerminalPoints from "./TerminalPointsInput";
 import WiresInput from "./WiresInput";
 import {
   ComponentSelectedAtom,
+  HistoryAtom,
   PointsUsedAtom,
+  RedoListAtom,
   ResistanceAllAtom,
   TerminalsAtom,
+  USER_ACTION,
+  Wire,
   WiresAtom,
   currentPointAtom,
 } from "./store";
@@ -16,12 +20,13 @@ import { getPointFromIndex } from "./utils";
 
 const InputCircuit = () => {
   const [currentPoint, setCurrentPoint] = useAtom(currentPointAtom);
-
+  const setHistory = useSetAtom(HistoryAtom);
+  const setRedoList = useSetAtom(RedoListAtom);
   const pointsUsed = useAtomValue(PointsUsedAtom);
   const ComponentSelectionType = useAtomValue(ComponentSelectedAtom);
 
   const setTerminals = useSetAtom(TerminalsAtom);
-  const setResistance = useSetAtom(ResistanceAllAtom);
+  const [resistances, setResistance] = useAtom(ResistanceAllAtom);
   const setWires = useSetAtom(WiresAtom);
 
   const setPoint = useCallback(
@@ -49,13 +54,19 @@ const InputCircuit = () => {
       }
 
       if (ComponentSelectionType === "wire") {
-        setWires((wires) => [
-          ...wires,
+        const newWire: Wire = {
+          start: `${currentPoint.x}__${currentPoint.y}`,
+          end: `${point.x}__${point.y}`,
+        };
+        setWires((wires) => [...wires, { ...newWire }]);
+        setHistory((history) => [
+          ...history,
           {
-            start: `${currentPoint.x}__${currentPoint.y}`,
-            end: `${point.x}__${point.y}`,
+            action: USER_ACTION.ADD_WIRE,
+            params: { ...newWire },
           },
         ]);
+        setRedoList([]);
       } else if (ComponentSelectionType === "R") {
         setResistance((resistances) => [
           ...resistances,
@@ -66,6 +77,19 @@ const InputCircuit = () => {
             node2: `${point.x}__${point.y}`,
           },
         ]);
+        setHistory((history) => [
+          ...history,
+          {
+            action: USER_ACTION.ADD_RESISTANCE,
+            params: {
+              name: `R${resistances.length + 1}`,
+              value: 1,
+              node1: `${currentPoint.x}__${currentPoint.y}`,
+              node2: `${point.x}__${point.y}`,
+            },
+          },
+        ]);
+        setRedoList([]);
       }
 
       setCurrentPoint({ x: -1, y: -1 });

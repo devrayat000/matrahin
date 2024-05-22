@@ -13,16 +13,33 @@ import { useCallback, useState } from "react";
 import { Button } from "~/components/ui/button";
 import HighlightComponent from "./HighlightComponent";
 import Resistor from "./Resistor";
-import { Resistance, ResistanceAllAtom, WiresAtom } from "./store";
+import {
+  HistoryAtom,
+  RedoListAtom,
+  Resistance,
+  ResistanceAllAtom,
+  USER_ACTION,
+  WiresAtom,
+} from "./store";
 import { getCoordinatesById } from "./utils";
 
 const ResistanceInputs = () => {
   const [resistanceList, setResistanceList] = useAtom(ResistanceAllAtom);
   const [selectedR, setSelectedR] = useState<number | null>(null);
+  const setHistory = useSetAtom(HistoryAtom);
+  const setRedoList = useSetAtom(RedoListAtom);
   const setWire = useSetAtom(WiresAtom);
   const handleResistanceRemove = useCallback(
     (resistance: Resistance, index: number) => {
       setResistanceList((prev) => prev.filter((_, i) => i !== index));
+      setHistory((prev) => [
+        ...prev,
+        {
+          action: USER_ACTION.REMOVE_RESISTANCE,
+          params: { ...resistance },
+        },
+      ]);
+      setRedoList([]);
     },
     [setResistanceList]
   );
@@ -38,8 +55,17 @@ const ResistanceInputs = () => {
   );
 
   const addWire = useCallback(
-    (node1: string, node2: string) =>
-      setWire((prev) => [...prev, { start: node1, end: node2 }]),
+    (node1: string, node2: string) => {
+      setWire((prev) => [...prev, { start: node1, end: node2 }]);
+      setHistory((prev) => [
+        ...prev,
+        {
+          action: USER_ACTION.ADD_WIRE,
+          params: { start: node1, end: node2 },
+        },
+      ]);
+      setRedoList([]);
+    },
     [setWire]
   );
   return resistanceList.map((r, index) => {
@@ -97,8 +123,8 @@ const ResistanceInputs = () => {
                 variant="success"
                 onClick={() => {
                   setSelectedR(null);
-                  addWire(r.node1, r.node2);
                   handleResistanceRemove(r, index);
+                  addWire(r.node1, r.node2);
                 }}
                 className="flex  gap-3 w-full"
               >

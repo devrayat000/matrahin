@@ -8,6 +8,7 @@ import {
   TerminalsAtom,
   WiresAtom,
 } from "./store";
+import UndoRedoReset from "./UndoRedoReset";
 
 const CalculateAndReset = () => {
   const resistances = useAtomValue(ResistanceAllAtom);
@@ -26,16 +27,18 @@ const CalculateAndReset = () => {
   }, [resistances, wires, terminals, setSolvingSteps]);
 
   return (
-    <div className="flex w-full items-center justify-evenly">
-      <Button
-        type="submit"
-        className="font-semibold tracking-widest text-2xl p-4"
-        onClick={solveCircuit}
-        disabled={terminals[0] === "-1__-1" || terminals[1] === "-1__-1"}
-        name="solve"
-      >
-        SOLVE
-      </Button>
+    <div>
+      <UndoRedoReset />
+      <div className="flex w-full items-center justify-evenly">
+        <Button
+          className="font-semibold tracking-widest text-2xl p-4"
+          onClick={solveCircuit}
+          disabled={terminals[0] === "-1__-1" || terminals[1] === "-1__-1"}
+          name="solve"
+        >
+          SOLVE
+        </Button>
+      </div>
     </div>
   );
 };

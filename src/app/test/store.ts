@@ -25,6 +25,24 @@ export enum ACTION {
   EMPTY_CIRCUIT,
 }
 
+export enum USER_ACTION {
+  ADD_RESISTANCE, // R , name is not available, on redo: set name as length +  1
+  ADD_WIRE, // W
+  REMOVE_RESISTANCE, // R
+  REMOVE_WIRE, // W
+  CLEAR_CKT, // full R[] and W[]
+  // nothing for 'convert R to W' as it is removing R and adding W ,
+}
+
+interface HistoryType {
+  action: USER_ACTION;
+  params: Resistance | Wire | Resistance[] | Wire[];
+}
+
+// history of user actions
+export const HistoryAtom = atom<HistoryType[]>([]);
+export const RedoListAtom = atom<HistoryType[]>([]);
+
 export interface StepsInfo {
   Circuit: Resistance[];
   Wires: Wire[];

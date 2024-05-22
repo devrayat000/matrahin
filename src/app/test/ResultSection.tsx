@@ -19,7 +19,7 @@ const ResultSection = () => {
         <div key={index} className="w-full">
           <ResultingCircuit {...step} />
 
-          <p className="text-center text-sm sm:text-xl font-semibold flex items-center gap-2 ">
+          <p className="text-center justify-center text-sm sm:text-xl font-semibold flex items-center gap-2 ">
             <span>
               <Info className="w-6 h-6 m-auto" />
             </span>
