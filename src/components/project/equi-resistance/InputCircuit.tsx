@@ -1,5 +1,5 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import Breadboard from "../breadboard/Breadboard";
 import WiresInput from "../breadboard/WiresInput";
 import ResistanceInputs from "./ResistanceInputs";
@@ -26,8 +26,10 @@ const InputCircuit = () => {
   const ComponentSelectionType = useAtomValue(ComponentSelectedAtom);
 
   const setTerminals = useSetAtom(TerminalsAtom);
-  const [resistances, setResistance] = useAtom(ResistanceAllAtom);
+  const setResistance = useSetAtom(ResistanceAllAtom);
   const setWires = useSetAtom(WiresAtom);
+
+  const resistanceCount = useRef(0);
 
   const setPoint = useCallback(
     (point: { x: number; y: number }) => {
@@ -68,10 +70,11 @@ const InputCircuit = () => {
         ]);
         setRedoList([]);
       } else if (ComponentSelectionType === "R") {
+        resistanceCount.current++;
         setResistance((resistances) => [
           ...resistances,
           {
-            name: `R${resistances.length + 1}`,
+            name: `R${resistanceCount.current}`,
             value: 1,
             node1: `${currentPoint.x}__${currentPoint.y}`,
             node2: `${point.x}__${point.y}`,
@@ -82,7 +85,7 @@ const InputCircuit = () => {
           {
             action: USER_ACTION.ADD_RESISTANCE,
             params: {
-              name: `R${resistances.length + 1}`,
+              name: `R${resistanceCount.current}`,
               value: 1,
               node1: `${currentPoint.x}__${currentPoint.y}`,
               node2: `${point.x}__${point.y}`,

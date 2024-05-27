@@ -81,7 +81,7 @@ export class Solver {
         msg1 =
           removedResistances.map((r) => r.name).join(", ") + " are in parallel";
         msg2 =
-          "result: " +
+          "Result: " +
           resultingResistances[0].name +
           " ( = " +
           removedResistances.map((r) => r.name).join(" || ") +
@@ -93,7 +93,7 @@ export class Solver {
         msg1 =
           removedResistances.map((r) => r.name).join(", ") + " are in series";
         msg2 =
-          "result: " +
+          "Result: " +
           resultingResistances[0].name +
           "( = " +
           removedResistances.map((r) => r.name).join(" + ") +
@@ -105,9 +105,9 @@ export class Solver {
 
         tempWires = tempWires.slice(0, tempWires.length - wireAddedCount);
         msg1 =
-          "wye-delta conversion with resistances: " +
+          "Wye-delta conversion with resistances: " +
           removedResistances.map((r) => r.name).join(", ");
-        msg2 = " result: " + resultingResistances.map((r) => r.name).join(", ");
+        msg2 = "Result: " + resultingResistances.map((r) => r.name).join(", ");
         break;
 
       case ACTION.EMPTY_CIRCUIT:
@@ -785,28 +785,28 @@ export class Solver {
       if (i == startX && j >= startY && j < limitY) {
         j++;
         continue;
-      }
+      } else if (i >= startX && i < limitX && j == limitY) {
       /**
        *   * * *
        *   * o v
        *   * * v
-       */ else if (i >= startX && i < limitX && j == limitY) {
+       */
         i++;
         continue;
-      }
+      } else if (i == limitX && j <= limitY && j > startY) {
       /**
        *   * * *
        *   * o *
        *   < < *
-       */ else if (i == limitX && j <= limitY && j > startY) {
+       */
         j--;
         continue;
-      }
+      } else if (i > startX && i <= limitX && j == startY) {
       /**
        *   ^ * *
        *   ^ o *
        *   * * *
-       */ else if (i > startX && i <= limitX && j == startY) {
+       */
         i--;
         continue;
       }
