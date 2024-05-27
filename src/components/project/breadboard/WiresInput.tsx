@@ -11,7 +11,6 @@ import { useAtom, useSetAtom } from "jotai";
 import { MinusCircle, RefreshCcw } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Button } from "~/components/ui/button";
-import HighlightComponent from "./HighlightComponent";
 import {
   HistoryAtom,
   RedoListAtom,
@@ -19,8 +18,9 @@ import {
   USER_ACTION,
   Wire,
   WiresAtom,
-} from "./store";
-import { getCoordinatesById } from "./utils";
+} from "../equi-resistance/store";
+import { getCoordinatesById } from "../equi-resistance/utils";
+import HighlightComponent from "./HighlightComponent";
 
 const WiresInput = () => {
   const [selectedWire, setSelectedWire] = useState<number | null>(null);
@@ -30,21 +30,20 @@ const WiresInput = () => {
   const setRedoList = useSetAtom(RedoListAtom);
 
   const addResistance = useCallback(
-    (node1: string, node2: string) =>
-      {setResistanceList((prev) => [
+    (node1: string, node2: string) => {
+      setResistanceList((prev) => [
         ...prev,
         { name: `R${prev.length + 1}`, value: 1, node1, node2 },
-      ])
+      ]);
       setHistory((prev) => [
         ...prev,
         {
           action: USER_ACTION.ADD_RESISTANCE,
-          params: { name: 'temp', value: 1, node1, node2 },
+          params: { name: "temp", value: 1, node1, node2 },
         },
       ]);
       setRedoList([]);
-    }
-      ,
+    },
     [setResistanceList]
   );
   const handleWireRemove = useCallback(

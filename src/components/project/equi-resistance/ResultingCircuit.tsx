@@ -1,9 +1,9 @@
 import { useCallback } from "react";
-import Breadboard from "./Breadboard";
-import Resistor from "./Resistor";
-import TerminalNodes from "./TerminalNode";
-import WiresComponent from "./Wires";
+import Breadboard from "../breadboard/Breadboard";
+import Resistor from "../breadboard/Resistor";
+import TerminalNodes from "../breadboard/TerminalNode";
 import { StepsInfo } from "./store";
+import { getCoordinatesById } from "./utils";
 
 const ResultingCircuit = ({
   Circuit,
@@ -13,9 +13,6 @@ const ResultingCircuit = ({
   terminal1,
   terminal2,
 }: StepsInfo) => {
-  // calculate the portion required to show the circuit
-  // and generate the breadboard accordingly
-
   const getX = useCallback(
     (node: string) => Number(node.split("h")[0].split("__")[0]),
     []
@@ -37,7 +34,7 @@ const ResultingCircuit = ({
     ];
 
     const minX = Math.min(...arrX) - 1;
-    const maxX = Math.max(...arrX) + 1;
+    const maxX = Math.max(...arrX) + 3; // + 2 to show the label of the R
     const minY = Math.min(...arrY) - 1;
     const maxY = Math.max(...arrY) + 1;
 
@@ -50,15 +47,27 @@ const ResultingCircuit = ({
   };
 
   return (
-    <Breadboard
-      setPoint={() => {}}
-      rangeForComponents={calculateCircuitRange()}
-    >
+    <Breadboard rangeForComponents={calculateCircuitRange()}>
       {Circuit.map((resistance, index) => (
         <Resistor key={index} R={resistance} onClick={() => {}} />
       ))}
-      <WiresComponent WiresList={Wires} />
 
+      {/* Wires */}
+      {Wires.map((wire, index) => {
+        const start = getCoordinatesById(wire.start);
+        const end = getCoordinatesById(wire.end);
+
+        return (
+          <line
+            x1={start.x}
+            y1={start.y}
+            x2={end.x}
+            y2={end.y}
+            stroke="black"
+            strokeWidth={2}
+          />
+        );
+      })}
       {removedResistances.map((resistance, index) => (
         <Resistor key={index} R={resistance} onClick={() => {}} color="red" />
       ))}

@@ -1,9 +1,10 @@
 "use client";
 
-import ComponentInput from "./ComponentInput";
-import ControlButtons from "./ControlButtons";
-import InputCircuit from "./InputCircuit";
-import ResultSection from "./ResultSection";
+import ComponentInput from "~/components/project/equi-resistance/ComponentInput";
+import ControlButtons from "~/components/project/equi-resistance/ControlButtons";
+import FinalResult from "~/components/project/equi-resistance/FinalResult";
+import InputCircuit from "~/components/project/equi-resistance/InputCircuit";
+import ResultSection from "~/components/project/equi-resistance/ResultSection";
 
 const Page = () => {
   return (
@@ -20,11 +21,12 @@ const Page = () => {
         </div>
       </div>
 
-      <section className="mb-4">
+      <section className="">
         <ControlButtons />
       </section>
-      <section>
+      <section className="mb-4">
         <ResultSection />
+        <FinalResult />
       </section>
     </>
   );

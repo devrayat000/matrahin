@@ -1,4 +1,4 @@
-import { offset } from "./utils";
+import { offset } from "../equi-resistance/utils";
 
 const Points = ({
   setPoint,

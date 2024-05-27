@@ -11,8 +11,8 @@ import { useAtom, useSetAtom } from "jotai";
 import { MinusCircle, RefreshCcw } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Button } from "~/components/ui/button";
-import HighlightComponent from "./HighlightComponent";
-import Resistor from "./Resistor";
+import HighlightComponent from "../breadboard/HighlightComponent";
+import Resistor from "../breadboard/Resistor";
 import {
   HistoryAtom,
   RedoListAtom,

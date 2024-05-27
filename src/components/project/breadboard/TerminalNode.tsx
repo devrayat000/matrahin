@@ -1,4 +1,4 @@
-import { getPointFromIndex } from "./utils";
+import { getPointFromIndex } from "../equi-resistance/utils";
 
 const TerminalNodes = ({ terminals }: { terminals: string[] }) => {
   return terminals.map(

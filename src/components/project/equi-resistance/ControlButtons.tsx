@@ -5,6 +5,7 @@ import { Button } from "~/components/ui/button";
 import { Solver } from "./Solver";
 import {
   Circuit,
+  FinalResultAtom,
   HistoryAtom,
   RedoListAtom,
   Resistance,
@@ -22,6 +23,7 @@ const ControlButtons = () => {
   const [history, setHistory] = useAtom(HistoryAtom);
   const [redoList, setRedoList] = useAtom(RedoListAtom);
 
+  const setFinalResult = useSetAtom(FinalResultAtom);
   const terminals = useAtomValue(TerminalsAtom);
   const setSolvingSteps = useSetAtom(SolvingStepsAtom);
   const solveCircuit = useCallback(() => {
@@ -33,6 +35,7 @@ const ControlButtons = () => {
     );
     const result = data.solve();
     setSolvingSteps(result);
+    setFinalResult(result[result.length - 1].resultingResistances[0]);
   }, [resistanceAll, wires, terminals, setSolvingSteps]);
 
   const undo = () => {

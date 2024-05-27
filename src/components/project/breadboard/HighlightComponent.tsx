@@ -1,4 +1,4 @@
-import { Coordinate } from "./store";
+import { Coordinate } from "../equi-resistance/store";
 
 /**
  * Renders a line component with highlighting functionality.

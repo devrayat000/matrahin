@@ -1,6 +1,6 @@
 import { useAtomValue } from "jotai";
+import TerminalNodes from "../breadboard/TerminalNode";
 import { TerminalsAtom } from "./store";
-import TerminalNodes from "./TerminalNode";
 
 const TerminalPoints = () => {
   const terminals = useAtomValue(TerminalsAtom);

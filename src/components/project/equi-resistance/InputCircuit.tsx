@@ -1,9 +1,9 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useCallback } from "react";
-import Breadboard from "./Breadboard";
+import Breadboard from "../breadboard/Breadboard";
+import WiresInput from "../breadboard/WiresInput";
 import ResistanceInputs from "./ResistanceInputs";
 import TerminalPoints from "./TerminalPointsInput";
-import WiresInput from "./WiresInput";
 import {
   ComponentSelectedAtom,
   HistoryAtom,

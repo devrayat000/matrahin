@@ -1,8 +1,8 @@
-import { FC, useEffect, useLayoutEffect, useMemo, useState } from "react";
-import { getPointFromIndex } from "./utils";
+import { FC, useEffect, useMemo, useState } from "react";
+import { getPointFromIndex } from "../equi-resistance/utils";
 
 interface BreadboardProps extends React.SVGProps<SVGSVGElement> {
-  setPoint: (point: { x: number; y: number }) => void;
+  setPoint?: (point: { x: number; y: number }) => void;
   rangeForComponents?: {
     minX: number;
     maxX: number;
@@ -32,11 +32,16 @@ const Breadboard: FC<BreadboardProps> = ({
     let croppedWidth = rangeForComponents.maxX - rangeForComponents.minX;
     let croppedHeight = rangeForComponents.maxY - rangeForComponents.minY;
 
-    // if the cropped Width is much less than maxWidth, the width should be increased
-    if ((croppedWidth * 30) / maxWidth <= 0.33) {
+    const ratioToCheck = 1 / 3;
+    const heightMuchLess = (croppedHeight * 30) / maxHeight <= ratioToCheck;
+    const widthMuchLess = (croppedWidth * 30) / maxWidth <= ratioToCheck;
+
+    if (heightMuchLess && widthMuchLess) {
+      croppedHeight = (maxHeight * ratioToCheck) / 30;
+      croppedWidth = (maxWidth * ratioToCheck) / 30;
+    } else if (widthMuchLess) {
       croppedWidth = croppedHeight * ratioOriginal;
-    }
-    if ((croppedHeight * 30) / maxHeight <= 0.33) {
+    } else if (heightMuchLess) {
       croppedHeight = croppedWidth / ratioOriginal;
     }
     return {
@@ -45,28 +50,6 @@ const Breadboard: FC<BreadboardProps> = ({
       x2: croppedWidth * 30,
       y2: croppedHeight * 30 + 30,
     };
-    // console.log(
-    //   `x:[${rangeForComponents.minX},${rangeForComponents.maxX}],y:[${rangeForComponents.minY},${rangeForComponents.maxY}]`
-    // );
-    // console.log("w:" + maxWidth + " , h: " + maxHeight);
-    // const ratioCropped = croppedWidth / croppedHeight;
-
-    // if (ratioCropped < ratioOriginal) {
-    //   const newWidth = ratioOriginal * croppedHeight;
-    //   return {
-    //     x1: rangeForComponents.minX * 30,
-    //     y1: rangeForComponents.minY * 30,
-    //     x2: newWidth * 30,
-    //     y2: (croppedHeight + 2) * 30,
-    //   };
-    // }
-    // const newHeight = croppedWidth / ratioOriginal;
-    // return {
-    //   x1: rangeForComponents.minX - 1,
-    //   y1: rangeForComponents.minY - 1,
-    //   x2: (croppedWidth + 2) * 30,
-    //   y2: newHeight * 30,
-    // };
   }, [
     breakPoint,
     rangeForComponents?.maxX,
@@ -103,12 +86,12 @@ const Breadboard: FC<BreadboardProps> = ({
           <g
             key={i * 10 + j}
             onClick={(e) => {
-              setPoint({
+              setPoint?.({
                 x: i,
                 y: j,
               });
             }}
-            cursor="pointer"
+            cursor={setPoint ? "pointer" : "default"}
             opacity={0.1}
           >
             <circle

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Resistance } from "./calculationOfR";
-import { Coordinate } from "./store";
-import { getCoordinatesById } from "./utils";
+import { Resistance } from "../../../app/test/calculationOfR";
+import { Coordinate } from "../equi-resistance/store";
+import { getCoordinatesById } from "../equi-resistance/utils";
 
 interface ResistorState {
   start: Coordinate;
@@ -155,6 +155,7 @@ const Resistor = ({
         />
       </svg>
       <text
+        style={{ userSelect: "none" }}
         x={resistorState.labelPosition.x}
         y={resistorState.labelPosition.y}
         fontSize="12"

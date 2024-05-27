@@ -62,7 +62,7 @@ const ComponentInput = () => {
               : setComponentSelectionType("t1")
           }
         >
-          Terminal1
+          Terminal A
         </div>
         <div
           className={cn(
@@ -75,7 +75,7 @@ const ComponentInput = () => {
               : setComponentSelectionType("t2")
           }
         >
-          Terminal2
+          Terminal B
         </div>
       </div>
     </div>

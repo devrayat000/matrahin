@@ -96,14 +96,14 @@ export const currentPointAtom = atom<{ x: number; y: number }>({
   y: -1,
 });
 
-// export const BreadboardInfoAtom = atom<Array<Array<"free" | "R" | "wire">>>(
-//   Array(20)
-//     .fill(null)
-//     .map(() => Array(12).fill("free"))
-// );
-
 export const ComponentSelectedAtom = atom<"R" | "wire" | "t1" | "t2" | "none">(
   "none"
 );
 
 export const SolvingStepsAtom = atom<StepsInfo[]>([]);
+export const FinalResultAtom = atom<Resistance>({
+  name: "R0",
+  value: -1,
+  node1: "-1__-1",
+  node2: "-1__-1",
+});

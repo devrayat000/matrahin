@@ -3,7 +3,7 @@ import { useAtomValue } from "jotai";
 import { Info } from "lucide-react";
 import { useMemo } from "react";
 import EmblaCarousel from "~/components/ui/EmblaCarousel";
-import "./../../embla.css";
+import "./../../../embla.css";
 import ResultingCircuit from "./ResultingCircuit";
 import { SolvingStepsAtom } from "./store";
 
