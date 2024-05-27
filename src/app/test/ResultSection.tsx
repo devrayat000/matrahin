@@ -16,8 +16,10 @@ const ResultSection = () => {
   const slides = useMemo(
     () =>
       solvingSteps.map((step, index) => (
-        <div key={index} className="w-full">
-          <ResultingCircuit {...step} />
+        <div key={index} className="w-full ">
+          <div className=" ">
+            <ResultingCircuit {...step} />
+          </div>
 
           <p className="text-center justify-center text-sm sm:text-xl font-semibold flex items-center gap-2 ">
             <span>
