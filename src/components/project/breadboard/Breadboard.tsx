@@ -80,45 +80,46 @@ const Breadboard: FC<BreadboardProps> = ({
       className={className}
       {...props}
     >
-      {/* so, max index can be 22,17 */}
-      {Array.from({ length: breakPoint === "sm" ? 12 : 24 }, (_, i) =>
-        Array.from({ length: breakPoint === "sm" ? 18 : 12 }, (_, j) => (
-          <g
-            key={i * 10 + j}
-            onClick={(e) => {
-              setPoint?.({
-                x: i,
-                y: j,
-              });
-            }}
-            cursor={setPoint ? "pointer" : "default"}
-            opacity={0.1}
-          >
-            <circle
-              cx={getPointFromIndex(i)}
-              cy={getPointFromIndex(j)}
-              r={15}
-              fill="white"
-            />
-            <circle
-              cx={getPointFromIndex(i)}
-              cy={getPointFromIndex(j)}
-              id="breadboardCircle"
-              r={10}
-              fill="white"
-              stroke="black"
-              strokeWidth={1.5}
-            />
-            <circle
-              cx={getPointFromIndex(i)}
-              cy={getPointFromIndex(j)}
-              r={5}
-              opacity={10}
-              fill="black"
-            />
-          </g>
-        ))
-      )}
+      {setPoint
+        ? Array.from({ length: breakPoint === "sm" ? 12 : 24 }, (_, i) =>
+            Array.from({ length: breakPoint === "sm" ? 18 : 12 }, (_, j) => (
+              <g
+                key={i * 10 + j}
+                onClick={(e) => {
+                  setPoint?.({
+                    x: i,
+                    y: j,
+                  });
+                }}
+                cursor={setPoint ? "pointer" : "default"}
+                opacity={0.1}
+              >
+                <circle
+                  cx={getPointFromIndex(i)}
+                  cy={getPointFromIndex(j)}
+                  r={15}
+                  fill="white"
+                />
+                <circle
+                  cx={getPointFromIndex(i)}
+                  cy={getPointFromIndex(j)}
+                  id="breadboardCircle"
+                  r={10}
+                  fill="white"
+                  stroke="black"
+                  strokeWidth={1.5}
+                />
+                <circle
+                  cx={getPointFromIndex(i)}
+                  cy={getPointFromIndex(j)}
+                  r={5}
+                  opacity={10}
+                  fill="black"
+                />
+              </g>
+            ))
+          )
+        : null}
 
       {children}
     </svg>
