@@ -9,7 +9,7 @@ const FinalResult = () => {
       <div className="m-auto  p-5 rounded-full bg-slate-300 w-fit text-3xl">
         Result {"   "}
         <span className="p-3 py-2 rounded-full bg-slate-50">
-          {FinalResult?.value} Ω
+          {FinalResult?.value.toFixed(2)} Ω
         </span>
       </div>
     )
