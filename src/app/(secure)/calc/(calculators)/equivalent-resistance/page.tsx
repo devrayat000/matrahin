@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import ComponentInput from "~/components/project/equi-resistance/ComponentInput";
 import ControlButtons from "~/components/project/equi-resistance/ControlButtons";
 import FinalResult from "~/components/project/equi-resistance/FinalResult";
@@ -7,6 +8,7 @@ import InputCircuit from "~/components/project/equi-resistance/InputCircuit";
 import ResultSection from "~/components/project/equi-resistance/ResultSection";
 
 const Page = () => {
+  const resultSectionRef = useRef(null);
   return (
     <>
       <h1 className=" text-center m-auto text-4xl font-bold">
@@ -25,7 +27,7 @@ const Page = () => {
         <ControlButtons />
       </section>
       <section className="mb-4">
-        <ResultSection />
+        <ResultSection resultRef={resultSectionRef} />
         <FinalResult />
       </section>
     </>

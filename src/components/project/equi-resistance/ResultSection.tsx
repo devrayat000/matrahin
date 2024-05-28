@@ -1,18 +1,19 @@
 import { EmblaOptionsType } from "embla-carousel";
 import { useAtomValue } from "jotai";
 import { Info } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import EmblaCarousel from "~/components/ui/EmblaCarousel";
 import "./../../../embla.css";
 import ResultingCircuit from "./ResultingCircuit";
 import { SolvingStepsAtom } from "./store";
 
-const ResultSection = () => {
+const ResultSection = ({ resultRef }) => {
   const solvingSteps = useAtomValue(SolvingStepsAtom);
 
   const OPTIONS: EmblaOptionsType = {
     slidesToScroll: "auto",
   };
+
   const slides = useMemo(
     () =>
       solvingSteps.map((step, index) => (
@@ -31,10 +32,17 @@ const ResultSection = () => {
       )),
     [solvingSteps]
   );
+
+  useEffect(() => {
+    if (slides.length > 0 && resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [slides, resultRef]);
+
   return (
     <>
       {slides.length > 0 && (
-        <div>
+        <div ref={resultRef}>
           <EmblaCarousel slides={slides} options={OPTIONS} />
         </div>
       )}
