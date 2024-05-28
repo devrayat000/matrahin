@@ -1,7 +1,7 @@
 import { EmblaOptionsType } from "embla-carousel";
 import { useAtomValue } from "jotai";
 import { Info } from "lucide-react";
-import { useMemo, useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import EmblaCarousel from "~/components/ui/EmblaCarousel";
 import "./../../../embla.css";
 import ResultingCircuit from "./ResultingCircuit";
@@ -42,7 +42,10 @@ const ResultSection = ({ resultRef }) => {
   return (
     <>
       {slides.length > 0 && (
-        <div ref={resultRef}>
+        <div>
+          <h2 ref={resultRef} className="text-3xl font-semibold text-center">
+            Solving Steps
+          </h2>
           <EmblaCarousel slides={slides} options={OPTIONS} />
         </div>
       )}
