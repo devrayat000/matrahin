@@ -729,6 +729,9 @@ export class Solver {
     return true;
   }
 
+  private isEqualPointFromNode(node1: string, node2: string) {
+    return node1.split("h")[0] === node2.split("h")[0];
+  }
   private checkTwoNodesContainsResistor(
     node1: string,
     node2: string,
@@ -738,10 +741,10 @@ export class Solver {
     return (
       this.resistances.filter(
         (r) =>
-          (this.isEqualNodes(r.node1, node1) &&
-            this.isEqualNodes(r.node2, node2)) ||
-          (this.isEqualNodes(r.node1, node2) &&
-            this.isEqualNodes(r.node2, node1))
+          (this.isEqualPointFromNode(r.node1, node1) &&
+            this.isEqualPointFromNode(r.node2, node2)) ||
+          (this.isEqualPointFromNode(r.node1, node2) &&
+            this.isEqualPointFromNode(r.node2, node1))
       ).length >= count
     );
   }

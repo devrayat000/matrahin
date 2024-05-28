@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { BrainCircuit, Redo, Trash2, Undo } from "lucide-react";
 import { useCallback } from "react";
 import { Button } from "~/components/ui/button";
@@ -22,9 +22,10 @@ const ControlButtons = () => {
   const [wires, setWires] = useAtom(WiresAtom);
   const [history, setHistory] = useAtom(HistoryAtom);
   const [redoList, setRedoList] = useAtom(RedoListAtom);
+  const [terminals, setTerminals] = useAtom(TerminalsAtom);
 
   const setFinalResult = useSetAtom(FinalResultAtom);
-  const terminals = useAtomValue(TerminalsAtom);
+
   const setSolvingSteps = useSetAtom(SolvingStepsAtom);
   const solveCircuit = useCallback(() => {
     const data = new Solver(
@@ -131,6 +132,7 @@ const ControlButtons = () => {
     setRedoList([]);
     setResistanceAll([]);
     setWires([]);
+    setTerminals(["-1__-1", "-1__-1"]);
   };
 
   return (
