@@ -303,8 +303,8 @@ export class Solver {
 
     for (const wire of this.wires) {
       const [node1, node2] = [wire.start, wire.end];
-      const [node1x, node1y] = node1.split("__").map((x) => parseInt(x));
-      const [node2x, node2y] = node2.split("__").map((x) => parseInt(x));
+      const [node1x, node1y] = this.getPointFromNode(node1);
+      const [node2x, node2y] = this.getPointFromNode(node2);
       const mergedNodes = [
         ...this.nodes[node1x][node1y],
         ...this.nodes[node2x][node2y],
@@ -314,8 +314,8 @@ export class Solver {
       for (let i = 0; i < this.maxLengthOfResistancesArray; i++) {
         for (let j = 0; j < this.maxLengthOfResistancesArray; j++) {
           if (
-            this.nodes[i][j].includes(node1) ||
-            this.nodes[i][j].includes(node2)
+            this.nodes[i][j].includes(node1.split("h")[0]) ||
+            this.nodes[i][j].includes(node2.split("h")[0])
           ) {
             this.nodes[i][j] = [...uniqueNodes];
           }
@@ -786,27 +786,27 @@ export class Solver {
         j++;
         continue;
       } else if (i >= startX && i < limitX && j == limitY) {
-      /**
-       *   * * *
-       *   * o v
-       *   * * v
-       */
+        /**
+         *   * * *
+         *   * o v
+         *   * * v
+         */
         i++;
         continue;
       } else if (i == limitX && j <= limitY && j > startY) {
-      /**
-       *   * * *
-       *   * o *
-       *   < < *
-       */
+        /**
+         *   * * *
+         *   * o *
+         *   < < *
+         */
         j--;
         continue;
       } else if (i > startX && i <= limitX && j == startY) {
-      /**
-       *   ^ * *
-       *   ^ o *
-       *   * * *
-       */
+        /**
+         *   ^ * *
+         *   ^ o *
+         *   * * *
+         */
         i--;
         continue;
       }

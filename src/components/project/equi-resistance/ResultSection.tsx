@@ -22,7 +22,7 @@ const ResultSection = ({ resultRef }) => {
             <ResultingCircuit {...step} />
           </div>
 
-          <p className="text-center justify-center text-lg sm:text-xl font-semibold flex items-center gap-2 ">
+          <p className="text-center select-none justify-center text-lg sm:text-xl font-semibold flex items-center gap-2 ">
             <span>
               <Info className="w-6 h-6 m-auto" />
             </span>
