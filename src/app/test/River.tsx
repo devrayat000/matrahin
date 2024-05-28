@@ -5,10 +5,12 @@ import {
   useLoader,
   useThree,
 } from "@react-three/fiber";
+import { useAtomValue } from "jotai";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 
 import { Water } from "three/examples/jsm/objects/Water.js";
+import { RiverWidthAtom } from "./store";
 extend({ Water });
 declare global {
   namespace JSX {
@@ -17,7 +19,9 @@ declare global {
     }
   }
 }
+
 function Ocean() {
+  const riverWidth = useAtomValue(RiverWidthAtom);
   const ref = useRef();
   const gl = useThree((state) => state.gl);
   const waterNormals = useLoader(
@@ -26,7 +30,7 @@ function Ocean() {
   );
 
   waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
-  const geom = useMemo(() => new THREE.PlaneGeometry(3000, 3000), []);
+  const geom = useMemo(() => new THREE.PlaneGeometry(1000, riverWidth), []);
   const config = useMemo(
     () => ({
       textureWidth: 512,
