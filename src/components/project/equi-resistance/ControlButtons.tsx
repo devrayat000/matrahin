@@ -54,7 +54,7 @@ const ControlButtons = () => {
             ...prev,
             {
               ...(lastAction.params as Resistance),
-              name: `R${prev.length + 1}`,
+              // name: `R${prev.length + 1}`,
             },
           ]);
           break;
