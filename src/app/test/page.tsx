@@ -13,7 +13,7 @@ import { Suspense, forwardRef, useRef } from "react";
 import { Color, Vector3 } from "three";
 import Banks from "./Banks";
 import Boat from "./Boat";
-import Ocean from "./River";
+import Ocean from "./Ocean";
 
 const App = () => {
   const mainContentRef = useRef<HTMLDivElement>();
@@ -62,7 +62,7 @@ const SideContent = forwardRef<HTMLDivElement>(({}, ref) => {
     <div id="main-content" ref={ref}>
       <View className=" absolute top-0 left-0 w-3/5 h-5/6 inline-block overflow-hidden ">
         <OceanScene />
-        <Boat cameraFixed={true} offset={vec.clone().set(0, 0, 0)} />
+        <Boat cameraFixed={true} />
 
         <PerspectiveCamera position={[0, 30, 90]} fov={60} makeDefault />
         <OrbitControls makeDefault />
@@ -75,7 +75,7 @@ const MainContent = forwardRef<HTMLDivElement>(({}, ref) => {
     <div id="side-content" ref={ref}>
       <View className="absolute top-0 left-[60%] w-2/5 h-1/2   inline-block overflow-hidden ">
         <OceanScene />
-        <Boat cameraFixed={false} offset={vec.clone().set(0, 5, 20)} />
+        <Boat cameraFixed={false} offset={vec.clone().set(0, 5, 25)} />
         <OrbitControls makeDefault />
 
         <PerspectiveCamera position={[30, 10, 30]} makeDefault />

@@ -11,7 +11,7 @@ const Boat = ({
   offset,
 }: {
   cameraFixed: boolean;
-  offset: THREE.Vector3;
+  offset?: THREE.Vector3;
 }) => {
   const boatRef = useRef<Object3D<Object3DEventMap>>(null);
 
@@ -27,7 +27,7 @@ const Boat = ({
       idealLookat.applyQuaternion(gltf.quaternion);
       idealLookat.add(gltf.position);
 
-      const idealOffset = offset.clone();
+      const idealOffset = offset?.clone() || vec.clone();
       idealOffset.applyQuaternion(gltf.quaternion);
       idealOffset.add(gltf.position);
 
