@@ -3,7 +3,7 @@ import { atom } from "jotai";
 export const RiverWidthAtom = atom(200);
 
 export const VelocityAtom = atom({
-  river: 10,
+  river: 5,
   boatValue: 10,
-  boatAngle: 120,
+  boatAngle: 60,
 });

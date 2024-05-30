@@ -116,12 +116,13 @@ const Banks = () => {
 
 export default Banks;
 
-useGLTF.preload(
-  "https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/tree-big/model.gltf"
-);
-useGLTF.preload(
-  "https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/low-poly-tree/model.gltf"
-);
-useGLTF.preload(
-  "https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/flag/model.gltf"
-);
+// ProgressEvent error occurs
+// useGLTF.preload(
+//   "https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/tree-big/model.gltf"
+// );
+// useGLTF.preload(
+//   "https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/low-poly-tree/model.gltf"
+// );
+// useGLTF.preload(
+//   "https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/flag/model.gltf"
+// );
