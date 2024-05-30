@@ -39,7 +39,7 @@ function Ocean() {
   const groupRef = useRef<Group>();
   const riverWidth = useAtomValue(RiverWidthAtom);
   const { river: riverVelocity } = useAtomValue(VelocityAtom);
-  const numObjects = useMemo(() => riverWidth ** 1.1, [riverWidth]);
+  const numObjects = useMemo(() => riverWidth ** 1.2, [riverWidth]);
 
   const ref = useRef();
   const gl = useThree((state) => state.gl);
@@ -61,15 +61,17 @@ function Ocean() {
       sunDirection: new Vector3(),
       sunColor: 0xffffff,
       waterColor: 0x0f5e9c,
-      distortionScale: 3.7,
+      distortionScale: 1 - riverVelocity / 20,
       // size: 5,
       fog: true,
       format: gl.encoding,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [waterNormals]
+    [waterNormals, riverVelocity]
   );
-
+  // const { scene: plantScene } = useGLTF(
+  //   "https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/plant-pirate-kit/model.gltf"
+  // );
   useEffect(() => {
     const material = ref?.current?.material as ShaderMaterial;
     material.uniforms.distortionScale.value = riverVelocity / 20;
@@ -92,9 +94,9 @@ function Ocean() {
     const objectMaterial = new PointsMaterial({
       color: 0x00af00,
       clipShadows: true,
-      size: 2, // Adjust the size as needed
-      transparent: true,
-      opacity: 1,
+      size: 3, // Adjust the size as needed
+      transparent: false,
+      opacity: 2,
       depthWrite: true,
       blending: AdditiveBlending,
     });
@@ -103,6 +105,7 @@ function Ocean() {
 
     objectRef.current = point;
     groupRef?.current.add(point);
+    // groupRef.current.add(plantScene);
   }, []);
 
   useFrame((state, delta) => {
@@ -134,6 +137,7 @@ function Ocean() {
       objectRef.current.geometry.attributes.position.needsUpdate = true;
     }
   });
+
   return (
     <group ref={groupRef}>
       <water
