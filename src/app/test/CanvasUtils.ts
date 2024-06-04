@@ -60,7 +60,10 @@ export const generateNewElectrons = (
   animationFrameCount: number,
   velocityOfElectron: number
 ) => {
-  if (shouldAddElectron(animationFrameCount, intensity)) {
+  if (
+    shouldAddElectron(animationFrameCount, intensity) &&
+    velocityOfElectron !== 0
+  ) {
     electrons.push({
       x: 140,
       y: Math.random() * 450 + 150,
