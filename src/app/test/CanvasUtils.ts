@@ -46,24 +46,15 @@ export const drawElectron = (
   // ctx.fillText("e", x, y - 2);
 };
 
-const shouldAddElectron = (animationFrameCount: number, intensity: number) => {
-  // const time = Math.ceil((animationFrameCount / 200) % 10);
-  const intensityNew = intensity / 2;
-
-  if (intensityNew === 0) return false;
-  if (intensityNew === 1) return true;
-  return animationFrameCount % Math.ceil((1 - intensityNew) * 10) === 0;
+const shouldAddElectron = (intensity: number) => {
+  return Math.random() < intensity / 4;
 };
 export const generateNewElectrons = (
   electrons: { x: number; y: number; v: number }[],
   intensity: number,
-  animationFrameCount: number,
   velocityOfElectron: number
 ) => {
-  if (
-    shouldAddElectron(animationFrameCount, intensity) &&
-    velocityOfElectron !== 0
-  ) {
+  if (shouldAddElectron(intensity) && velocityOfElectron !== 0) {
     electrons.push({
       x: 140,
       y: Math.random() * 450 + 150,
@@ -76,7 +67,7 @@ export const getLightProperties = (wavelength: number) => {
   // 440nm (681THz, 2.82eV)
 
   const energy = hc / (wavelength * 10 ** -9) / 1.6e-19;
-  return `${wavelength.toFixed(0)}nm (${(1000 / wavelength).toFixed(
+  return `${wavelength.toFixed(0)}nm (${(300 / wavelength).toFixed(
     2
   )}THz ${energy.toFixed(2)}eV)`;
 };

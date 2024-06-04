@@ -63,18 +63,11 @@ const TubeCanvas = () => {
     let animationFrameCount = 0;
 
     const animate = () => {
-      const time = performance.now();
-      // console.log(time);
       ctx.clearRect(0, 0, 1000, 1000);
       drawTube(ctx);
       drawMetalBars(ctx);
       animateElectrons(ctx, electronsRef.current);
-      generateNewElectrons(
-        electronsRef.current,
-        intensity,
-        time,
-        velocityOfElectron
-      );
+      generateNewElectrons(electronsRef.current, intensity, velocityOfElectron);
 
       animationFrameCount++;
       animationFrameId = requestAnimationFrame(animate);

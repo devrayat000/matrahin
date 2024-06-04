@@ -15,9 +15,9 @@ const Light = () => {
   return (
     <g>
       <foreignObject
-        width={800}
-        height={200}
-        transform="translate(0 0) scale(2, 2)"
+        width={200}
+        height={140}
+        transform="translate(550 0) scale(2, 2)"
       >
         {/* light wavelength input */}
         <LightInput />
@@ -49,19 +49,19 @@ const getBackgroundColor = (intensity) => {
 const LightInput = () => {
   const [{ wavelength, intensity }, setInput] = useAtom(LightInputAtom);
   return (
-    <div>
+    <div className="w-fit">
       <span id="labelU">{getLightProperties(wavelength)}</span>
       <br />
       <div
         id="wavelength"
-        className="slider-special flex rounded-lg  w-fit py-2 items-center bg-[url('/visible_light_2.png')]  "
+        className="slider-special flex rounded-lg  w-fit py-2 items-center bg-[url('/visible_light_2.png')]  bg-contain  "
       >
         <input
           className="slider-special "
           type="range"
           id="rangeU"
-          min="250"
-          max="800"
+          min="100"
+          max="850"
           value={wavelength}
           onChange={(e) => {
             setInput((input) => ({
@@ -74,15 +74,9 @@ const LightInput = () => {
       <span id="labelU" className="">
         Intensity: {(intensity * 100).toFixed(0)}%
       </span>
-      <div
-        className=" slider-special flex w-fit py-2 items-center rounded-lg transition-colors duration-300"
-        style={{
-          background: `linear-gradient(to right, black, white)`,
-          borderRadius: "0.5rem",
-        }}
-      >
+      <div className="border-slate-700 bg-gradient-to-r from-black to-white  slider-special flex w-fit py-2 items-center rounded-md ">
         <input
-          className="slider-special border-slate-700 rounded-full cursor-pointer"
+          className="  border-slate-700 rounded-full cursor-pointer"
           type="range"
           id="rangeU"
           min="0"
