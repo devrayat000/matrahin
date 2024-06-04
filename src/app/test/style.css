@@ -1,0 +1,20 @@
+.slider-special input[type="range"] {
+  @apply opacity-80 cursor-pointer bg-transparent;
+}
+
+.slider-special input[type="range"]::-webkit-slider-thumb {
+  @apply w-1 h-6 bg-slate-50  border-2 border-slate-800;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.slider-special input[type="range"]::-moz-range-thumb {
+  @apply w-1 h-6 bg-slate-50  border-2 border-slate-800;
+  cursor: pointer;
+}
+
+.slider-special input[type="range"]::-ms-thumb {
+  @apply w-1 h-6 bg-slate-50  border-2 border-slate-800;
+  cursor: pointer;
+}

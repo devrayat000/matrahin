@@ -8,11 +8,11 @@ const Ammeter = () => {
     <g>
       {/* ammeter */}
       {/* <rect x="715" y="400" width="170" height="100" /> */}
-      <circle cx="800" cy="500" r="100" fill="none" />
+      <circle cx="800" cy="700" r="70" fill="none" />
       {/* text indicating current value placed at the center aligned of the circle */}
       <text
         x="800"
-        y="485"
+        y="685"
         fontSize="40"
         strokeWidth={3}
         alignmentBaseline="middle"
@@ -24,7 +24,7 @@ const Ammeter = () => {
 
       <text
         x="800"
-        y="525"
+        y="725"
         fontSize="40"
         strokeWidth={3}
         alignmentBaseline="middle"
