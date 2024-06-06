@@ -1,6 +1,6 @@
 import { useAtom, useAtomValue } from "jotai";
 import { useMemo } from "react";
-import { getLightProperties, wavelengthToRGB } from "./CanvasUtils";
+import { wavelengthToRGB } from "./CanvasUtils";
 import TorchLight from "./TorchLight";
 import { LightInputAtom } from "./store";
 
@@ -15,9 +15,9 @@ const Light = () => {
   return (
     <g>
       <foreignObject
-        width={200}
-        height={140}
-        transform="translate(550 0) scale(2, 2)"
+        width={350}
+        height={200}
+        transform="translate(480 -40) scale(2, 2)"
       >
         {/* light wavelength input */}
         <LightInput />
@@ -42,19 +42,52 @@ const LightRay = ({ fillColor }) => {
   );
 };
 
-const getBackgroundColor = (intensity) => {
-  return `rgba(255,255,255,${1 - intensity})`;
-};
-
 const LightInput = () => {
   const [{ wavelength, intensity }, setInput] = useAtom(LightInputAtom);
+
+  const handleWavelengthChange = (value: number) => {
+    setInput((input) => ({
+      ...input,
+      wavelength: value,
+    }));
+  };
   return (
     <div className="w-fit">
-      <span id="labelU">{getLightProperties(wavelength)}</span>
-      <br />
+      <h4 className="text-center">Light Properties</h4>
+      {/* <span id="labelU">{getLightProperties(wavelength)}</span> */}
+      <div className="flex items-center justify-center gap-1   flex-wrap">
+        <div className="flex items-center ">
+          <input
+            type="number"
+            value={wavelength}
+            className="w-14 border-2 border-slate-800 rounded-md "
+            onChange={(e) => handleWavelengthChange(Number(e.target.value))}
+          />
+          nm
+        </div>
+        <div className="flex items-center">
+          <input
+            type="number"
+            value={(300 / wavelength).toFixed(2)} //to 10^15 Hz
+            className="w-14 border-2 border-slate-800 rounded-md "
+            onChange={(e) => handleWavelengthChange(Number(e.target.value))}
+          />
+          THz
+        </div>
+        <div className="flex items-center">
+          <input
+            type="number"
+            // 6.62607015 * 10^-34 * 3 * 10^8 / (wavelength * 10^-9) / 1.6 * 10^-19 = 1242.375 / wavelength
+            value={(1242.375 / wavelength).toFixed(2)}
+            className="w-14 border-2 border-slate-800 rounded-md "
+            onChange={(e) => handleWavelengthChange(Number(e.target.value))}
+          />
+          eV
+        </div>
+      </div>
       <div
         id="wavelength"
-        className="slider-special flex rounded-lg  w-fit py-2 items-center bg-[url('/visible_light_2.png')]  bg-contain  "
+        className="slider-special flex rounded-lg mt-1 w-fit py-2 items-center bg-[url('/visible_light_2.png')]  bg-contain  "
       >
         <input
           className="slider-special "
