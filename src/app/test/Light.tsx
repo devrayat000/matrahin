@@ -53,19 +53,24 @@ const LightInput = () => {
   };
   return (
     <div className="w-fit">
-      <h4 className="text-center">Light Properties</h4>
+      {/* <h4 className="text-center">Light Properties</h4> */}
       {/* <span id="labelU">{getLightProperties(wavelength)}</span> */}
-      <div className="flex items-center justify-center gap-1   flex-wrap">
+      <div className="flex flex-col items-center">
         <div className="flex items-center ">
+          <label htmlFor="wavelength">Wavelength &nbsp;</label>
           <input
             type="number"
             value={wavelength}
-            className="w-14 border-2 border-slate-800 rounded-md "
+            className="w-16 border-2 h-fit border-slate-800 rounded-md "
             onChange={(e) => handleWavelengthChange(Number(e.target.value))}
           />
-          nm
+          &nbsp; nm
         </div>
-        <div className="flex items-center">
+        <span>
+          f: {(300 / wavelength).toFixed(2)}x10<sup>15</sup> Hz &nbsp; &nbsp; E:
+          {(1242.375 / wavelength).toFixed(2)} eV
+        </span>
+        {/* <div className="flex items-center">
           <input
             type="number"
             value={(300 / wavelength).toFixed(2)} //to 10^15 Hz
@@ -83,7 +88,7 @@ const LightInput = () => {
             onChange={(e) => handleWavelengthChange(Number(e.target.value))}
           />
           eV
-        </div>
+        </div> */}
       </div>
       <div
         id="wavelength"
