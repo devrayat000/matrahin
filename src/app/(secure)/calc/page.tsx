@@ -2,11 +2,37 @@ import Link from "next/link";
 import { use } from "react";
 import Image from "next/image";
 import type { Url } from "next/dist/shared/lib/router/router";
+import { Metadata } from "next";
 
 import { buttonVariants } from "~/components/ui/button";
 import { getCalculators } from "~/services/graphql/calc";
 import { CardBody, CardContainer, CardItem } from "~/components/ui/3d-card";
 import Animated from "./Animated";
+import explore from "~/assets/seo/explore.jpeg";
+
+const title = "Explore - Matrahin";
+const description =
+  "Explore our cutting-edge physics simulations and advanced calculators. Dive into the world of physics with Matrahin's interactive tools.";
+const url = new URL("https://matrahin.com/calc");
+
+export const metadata: Metadata = {
+  title: title,
+  description: description,
+  openGraph: {
+    type: "website",
+    description: description,
+    images: [
+      {
+        url: explore.src,
+        alt: title,
+      },
+    ],
+    title: title,
+    url: url,
+  },
+  alternates: { canonical: url },
+  metadataBase: url,
+};
 
 export default function HomePage() {
   const imageSize = {

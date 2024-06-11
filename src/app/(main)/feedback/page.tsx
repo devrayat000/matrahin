@@ -1,3 +1,31 @@
+import { Metadata } from "next";
+
+import feedback from "~/assets/seo/feedback.jpeg";
+
+const title = "Feedback - Matrahin";
+const description =
+  "Send feedback about how we can improve matrahin. We are always looking for ways to improve our platform.";
+const url = new URL("https://matrahin.com/feedback");
+
+export const metadata: Metadata = {
+  title: title,
+  description: description,
+  openGraph: {
+    type: "website",
+    description: description,
+    images: [
+      {
+        url: feedback.src,
+        alt: title,
+      },
+    ],
+    title: title,
+    url: url,
+  },
+  alternates: { canonical: url },
+  metadataBase: url,
+};
+
 export default function FeedbackPage() {
   return (
     <div>

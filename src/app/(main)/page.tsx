@@ -5,7 +5,8 @@ import Features from "./Features";
 import Hero from "./Hero";
 import Stats from "./Stats";
 import Team from "./Team";
-import MathElements from "~/assets/math_elements.svg?url";
+// import MathElements from "~/assets/math_elements.svg?url";
+import MathElements from "~/assets/seo/home.jpeg";
 import { TracingBeam } from "~/components/ui/tracing-beam";
 
 export const metadata: Metadata = {
@@ -26,7 +27,6 @@ export const metadata: Metadata = {
     url: new URL("https://matrahin.com"),
   },
   alternates: { canonical: new URL("https://matrahin.com") },
-  category: "EdTech",
   metadataBase: new URL("https://matrahin.com"),
 };
 

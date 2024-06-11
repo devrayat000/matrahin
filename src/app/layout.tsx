@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     "learning",
     "edu",
   ],
+  category: "EdTech",
 };
 
 export default async function RootLayout({
