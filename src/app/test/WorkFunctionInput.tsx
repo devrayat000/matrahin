@@ -59,7 +59,7 @@ const WorkFunctionInput = () => {
           className="p-2 border w-[10ch]   rounded-xl"
           onChange={(e) => setWf(Number(e.target.value))}
         />
-        eV
+        &nbsp; eV
       </div>
       <select
         className="p-2 border w-[16ch]   rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
@@ -72,7 +72,6 @@ const WorkFunctionInput = () => {
           }
         }}
         value={wf}
-        defaultValue={2.27}
       >
         {/* {workFunctions.map((wf, index) => (
           <option key={index} value={wf} className="text-lg">

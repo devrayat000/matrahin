@@ -15,9 +15,9 @@ const Light = () => {
   return (
     <g>
       <foreignObject
-        width={350}
+        width={220}
         height={200}
-        transform="translate(480 -40) scale(2, 2)"
+        transform="translate(620 -40) scale(2, 2)"
       >
         {/* light wavelength input */}
         <LightInput />
@@ -52,7 +52,7 @@ const LightInput = () => {
     }));
   };
   return (
-    <div className="w-fit">
+    <div className="w-full">
       {/* <h4 className="text-center">Light Properties</h4> */}
       {/* <span id="labelU">{getLightProperties(wavelength)}</span> */}
       <div className="flex flex-col items-center">
@@ -92,7 +92,7 @@ const LightInput = () => {
       </div>
       <div
         id="wavelength"
-        className="slider-special flex rounded-lg mt-1 w-fit py-2 items-center bg-[url('/visible_light_2.png')]  bg-contain  "
+        className="slider-special flex rounded-lg mt-1 w-full py-2 items-center bg-[url('/visible_light_2.png')]  bg-contain  "
       >
         <input
           className="slider-special "
@@ -112,7 +112,7 @@ const LightInput = () => {
       <span id="labelU" className="">
         Intensity: {(intensity * 100).toFixed(0)}%
       </span>
-      <div className="border-slate-700 bg-gradient-to-r from-black to-white  slider-special flex w-fit py-2 items-center rounded-md ">
+      <div className="border-slate-700 bg-gradient-to-r from-black to-white  slider-special flex w-full py-2 items-center rounded-md ">
         <input
           className="  border-slate-700 rounded-full cursor-pointer"
           type="range"

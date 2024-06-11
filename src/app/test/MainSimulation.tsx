@@ -1,4 +1,3 @@
-import Ammeter from "./Ammeter";
 import Light from "./Light";
 import TubeCanvas from "./TubeCanvas";
 import VoltageInput from "./VoltageInput";
@@ -9,16 +8,19 @@ import WorkFunctionInput from "./WorkFunctionInput";
 const MainSimulation = () => {
   return (
     <svg
-      style={{
-        width: "50vw",
-        height: "80vh",
-      }}
+      className="md:h-[80vh]"
+      // className="md:w-[50vw] "
+      // style={{
+      //   width: "50vw",
+      //   height: "80vh",
+      // }}
       // className="border border-slate-900"
       viewBox="0 0 1000 1000"
       xmlns="http://www.w3.org/2000/svg"
       strokeWidth="4  "
       stroke="black"
       fill="none"
+      transform="scale(1 1) translate(0 0)"
     >
       {/* <rect x="0" y="0" width="1000" height="1000" /> */}
       <g transform="translate(-80 40)">
@@ -29,9 +31,10 @@ const MainSimulation = () => {
         <line x1="650" y1="450" x2="800" y2="450" />
         {/* vertical second line */}
         {/* before and after ammeter line */}
-        <line x1="800" y1="450" x2="800" y2="630" />
-        <Ammeter />
-        <line x1="800" y1="770" x2="800" y2="800" />
+        {/* <line x1="800" y1="450" x2="800" y2="630" /> */}
+        <line x1="800" y1="450" x2="800" y2="800" />
+        {/* <Ammeter /> */}
+        {/* <line x1="800" y1="770" x2="800" y2="800" /> */}
         {/* horizontal bottom line */}
         <line x1="98" y1="800" x2="300" y2="800" />
         <line x1="600" y1="800" x2="802" y2="800" />
@@ -47,7 +50,11 @@ const MainSimulation = () => {
 
         <VoltagePart />
         <g transform="translate(-450 800)">
-          <foreignObject width={1000} height={200} transform="scale(1.8, 2)">
+          <foreignObject
+            width={500}
+            height={100}
+            transform="translate(450 0) scale(1.8, 2)"
+          >
             <VoltageInput />
           </foreignObject>
         </g>
