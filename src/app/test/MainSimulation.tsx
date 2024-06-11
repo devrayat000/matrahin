@@ -8,7 +8,7 @@ import WorkFunctionInput from "./WorkFunctionInput";
 const MainSimulation = () => {
   return (
     <svg
-      className="md:h-[80vh]"
+      className="md:h-[80vh] p-4 md:p-2 "
       // className="md:w-[50vw] "
       // style={{
       //   width: "50vw",

@@ -35,8 +35,10 @@ const GraphsPhotoElectric = () => {
   const xAxisScale = 300;
   const xAxisLevel = 800;
   return (
-    <div>
-      <h1 className="text-2xl text-center">Energy of Electron vs Frequency</h1>
+    <div className="m-auto">
+      <h1 className="md:text-2xl text-center">
+        Energy of Electron vs Frequency
+      </h1>
 
       <svg
         className="md:h-[80vh]"
@@ -53,7 +55,7 @@ const GraphsPhotoElectric = () => {
       >
         {/* x and y axis in the bottom*/}
         <line x1="0" y1={xAxisLevel} x2="1000" y2={xAxisLevel} />
-        <line x1="100" y1="0" x2="100" y2="1000" />
+        <line x1="100" y1="0" x2="100" y2="900" />
 
         {/* grid lines */}
         {Array.from({ length: 6 }).map((_, i) => (

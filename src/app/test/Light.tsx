@@ -67,7 +67,7 @@ const LightInput = () => {
           &nbsp; nm
         </div>
         <span>
-          f: {(300 / wavelength).toFixed(2)}x10<sup>15</sup> Hz &nbsp; &nbsp; E:
+          F={(300 / wavelength).toFixed(2)}THz &nbsp; &nbsp; E=
           {(1242.375 / wavelength).toFixed(2)} eV
         </span>
         {/* <div className="flex items-center">
