@@ -172,18 +172,16 @@ const GraphsPhotoElectric = () => {
         />
 
         {/* some info, slope = plancks constant */}
-        <foreignObject
+        {/* <foreignObject
           x="30"
           y="45"
           width="350"
           height="100"
           transform="scale(2 2)"
-        >
-          {/* <MathJax>{`\\(\\text{Slope} = ${workFunction}\\) eV`}</MathJax> */}
-          <p className="text-xl">
-            Slope = h = 6.626 x 10 <sup>-34</sup> J.s
-          </p>
-        </foreignObject>
+        > */}
+        {/* <MathJax>{`\\(\\text{Slope} = ${workFunction}\\) eV`}</MathJax> */}
+        {/* <p className="text-xl">Slope = h =</p> */}
+        {/* </foreignObject> */}
 
         <IndicatorPoint
           xAxisLevel={xAxisLevel}
@@ -207,6 +205,10 @@ const IndicatorPoint = ({
   const { wavelength } = useAtomValue(LightInputAtom);
   const workFunction = useAtomValue(WorkFunctionAtom);
 
+  const minFToEmitElectron = useMemo(
+    () => workFunction / 4.12145,
+    [workFunction]
+  );
   const frequency = useMemo(() => 300 / wavelength, [wavelength]);
   const energy = useMemo(
     () => Math.max(4.12145 * frequency - workFunction, 0),
@@ -230,20 +232,41 @@ const IndicatorPoint = ({
         {energy.toFixed(2)} eV
       </text> */}
       <foreignObject
-        x="80"
-        y="90 "
-        width="300"
+        x="60"
+        y="10 "
+        width="150"
         height="100"
         transform="scale(2 2)"
       >
-        <p className="text-xl text-left">
-          E<sub>k(max)</sub> = {energy.toFixed(2)} eV
-        </p>
-
-        <p className="text-xl text-left">
+        <div className="bg-white text-left text-xl border-2">
+          Slope = h <br />E<sub>k(max)</sub> = {energy.toFixed(2)} eV <br />
           <i>f</i> = {frequency.toFixed(2)} THz
-        </p>
+        </div>
       </foreignObject>
+
+      <foreignObject
+        x={minFToEmitElectron * xAxisScale}
+        y={500}
+        width={160}
+        height={100}
+        transform="translate(-100 -300) scale(1.5 1.5)"
+      >
+        <div className="text-xl text-left bg-white border-2">
+          <span className="">To emit electron:</span>
+          <br />f<sub>min</sub> = {minFToEmitElectron.toFixed(2)} THz <br />λ
+          <sub>max</sub> = {(300 / minFToEmitElectron).toFixed(2)} nm
+        </div>
+      </foreignObject>
+
+      <line
+        strokeDasharray={"15,15"}
+        x1={100 + minFToEmitElectron * xAxisScale}
+        x2={100 + minFToEmitElectron * xAxisScale}
+        y1="600"
+        y2="800"
+        stroke="black"
+        strokeWidth={6}
+      />
     </g>
   );
 };

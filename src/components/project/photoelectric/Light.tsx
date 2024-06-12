@@ -61,13 +61,13 @@ const LightInput = () => {
           <input
             type="number"
             value={wavelength}
-            className="w-16 border-2 h-fit border-slate-800 rounded-md "
+            className="w-16 border-2 h-fit border-slate-800 rounded-md text-center "
             onChange={(e) => handleWavelengthChange(Number(e.target.value))}
           />
           &nbsp; nm
         </div>
         <span>
-          F={(300 / wavelength).toFixed(2)}THz &nbsp; &nbsp; E=
+          <i>f</i> ={(300 / wavelength).toFixed(2)} THz &nbsp; E =
           {(1242.375 / wavelength).toFixed(2)} eV
         </span>
         {/* <div className="flex items-center">

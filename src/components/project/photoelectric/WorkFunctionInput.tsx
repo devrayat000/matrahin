@@ -53,16 +53,16 @@ const WorkFunctionInput = () => {
       <div>
         <input
           type="number"
-          value={wf}
+          value={wf == 0 ? "" : wf}
           min={0}
           step={0.01}
-          className="p-2 border w-[10ch]   rounded-xl"
-          onChange={(e) => setWf(Number(e.target.value))}
+          className="p-2 border w-[10ch]    rounded-xl"
+          onChange={(e) => setWf(Math.abs(Number(e.target.value)))}
         />
         &nbsp; eV
       </div>
       <select
-        className="p-2 border w-[16ch]   rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+        className="p-2 border w-[13ch]   rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
         onChange={(e) => {
           if (e.target.value === "-1") {
             setCustomWfSelected(true);

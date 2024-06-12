@@ -43,6 +43,7 @@ const TubeCanvas = () => {
     () => (AccelerationFactor * voltage) / 5000000000,
     [voltage]
   );
+
   useEffect(() => {
     if (ref.current) {
       const canvas = ref.current;
@@ -77,7 +78,7 @@ const TubeCanvas = () => {
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [voltage, intensity, wavelength]);
+  }, [voltage, intensity, wavelength, workFunction]);
 
   const animateElectrons = useCallback(
     (
