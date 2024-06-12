@@ -42,8 +42,6 @@ const ProjectileMotion = () => {
   const [scale, setScale] = useAtom(scaleAtom);
   const points = useAtomValue(pointsAtom);
 
-  console.log("in projectile motion");
-
   const modifyPoints = (
     x: number,
     y: number,
