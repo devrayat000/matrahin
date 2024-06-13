@@ -1,14 +1,20 @@
 import { useCallback } from "react";
 import Breadboard from "../breadboard/Breadboard";
-<<<<<<< HEAD
+
+
 import { getCoordinatesById } from "../equi-resistance/utils";
 import Capacitor from "./Capacitor";
 import VoltageSourceComp from "./VoltageSource";
-=======
+
 import TerminalNodes from "../breadboard/TerminalNode";
 import { getCoordinatesById } from "../equi-resistance/utils";
 import Capacitor from "./Capacitor";
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+import { getCoordinatesById } from "../equi-resistance/utils";
+import Capacitor from "./Capacitor";
+import VoltageSourceComp from "./VoltageSource";
+
 import { StepsInfo } from "./store";
 
 const ResultingCircuit = ({
@@ -16,12 +22,16 @@ const ResultingCircuit = ({
   Wires,
   removedCapacitances,
   resultingCapacitances,
-<<<<<<< HEAD
+
+
   VoltageSource: vSource,
-=======
+
   terminal1,
   terminal2,
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+  VoltageSource: vSource,
+
 }: StepsInfo) => {
   const getX = useCallback(
     (node: string) => Number(node.split("h")[0].split("__")[0]),
@@ -55,18 +65,32 @@ const ResultingCircuit = ({
       maxY,
     };
   };
-<<<<<<< HEAD
+
+
+
   return (
     <Breadboard rangeForComponents={calculateCircuitRange()}>
       {Circuit.map((c, index) => (
         <Capacitor key={index} R={c} onClick={() => {}} />
-=======
+
 
   return (
     <Breadboard rangeForComponents={calculateCircuitRange()}>
       {Circuit.map((resistance, index) => (
         <Capacitor key={index} R={resistance} onClick={() => {}} />
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+  return (
+    <Breadboard rangeForComponents={calculateCircuitRange()}>
+      {Circuit.map((c, index) => (
+        <Capacitor key={index} R={c} onClick={() => {}} />
+
+
+  return (
+    <Breadboard rangeForComponents={calculateCircuitRange()}>
+      {Circuit.map((c, index) => (
+        <Capacitor key={index} R={c} onClick={() => {}} />
+
       ))}
 
       {/* Wires */}
@@ -92,11 +116,15 @@ const ResultingCircuit = ({
         <Capacitor key={index} R={resistance} onClick={() => {}} color="blue" />
       ))}
 
-<<<<<<< HEAD
+
+
       <VoltageSourceComp R={vSource} onClick={() => {}} color="black" />
-=======
+
       <TerminalNodes terminals={[terminal1, terminal2]} />
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+      <VoltageSourceComp R={vSource} onClick={() => {}} color="black" />
+
     </Breadboard>
   );
 };

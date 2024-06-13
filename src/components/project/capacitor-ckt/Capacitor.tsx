@@ -148,13 +148,26 @@ const Capacitor = ({
           <line x1="20" y1="14.5" x2="30" y2="14.5" />
           <line x1="10" y1="30" x2="10" y2="0" />
           <line x1="20" y1="30" x2="20" y2=" 0" /> */}
+        <rect
+          x="0"
+          y="0"
+          width="30"
+          height="30"
+          fill="white"
+          opacity={1}
+          stroke="none"
+          style={{
+            transformOrigin: "center center 0px",
+            transform: `rotate(${capacitorState.angle}deg)`,
+          }}
+        />
         <path
           style={{
             transformOrigin: "center center 0px",
             transform: `rotate(${capacitorState.angle}deg)`,
           }}
           d="M0 14.5 H10 M20 14.5 H30 M10 0 V30 M20 0 V30"
-          stroke="black"
+          stroke={color}
           strokeWidth="3"
           fill="none"
         />

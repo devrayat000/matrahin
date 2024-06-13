@@ -1,38 +1,41 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useRef } from "react";
 import Breadboard from "../breadboard/Breadboard";
-<<<<<<< HEAD
+
+
 import CapacitanceInputs from "./CapacitorInputs";
 import VoltageInput from "./VoltageInput";
 import WiresInput from "./WiresInput";
-=======
-import WiresInput from "../equi-resistance/WiresInput";
+
 import { getPointFromIndex } from "../equi-resistance/utils";
-import CapacitanceInputs from "./CapacitorInputs";
 import TerminalPoints from "./TerminalPointsInput";
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
 import {
   CapacitanceAllAtom,
   CapacitorComponentSelectedAtom,
   CapacitorHistoryAtom,
   PointsUsedCapacitorAtom,
   CapacitorRedoListAtom as RedoListAtom,
-<<<<<<< HEAD
+
+
   USER_ACTION,
   VoltageSource,
   VoltageSourceCapacitorAtom,
-=======
+
   TerminalsCapacitorAtom,
-  USER_ACTION,
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
   Wire,
   WiresCapacitorAtom,
   currentPointCapacitorAtom,
 } from "./store";
-<<<<<<< HEAD
+
+
 import { getPointFromIndex } from "./utils";
-=======
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+
+import { getPointFromIndex } from "./utils";
+
 
 const InputCircuit = () => {
   const [currentPoint, setCurrentPoint] = useAtom(currentPointCapacitorAtom);
@@ -41,11 +44,15 @@ const InputCircuit = () => {
   const pointsUsed = useAtomValue(PointsUsedCapacitorAtom);
   const ComponentSelectionType = useAtomValue(CapacitorComponentSelectedAtom);
 
-<<<<<<< HEAD
+
+
   const setVSource = useSetAtom(VoltageSourceCapacitorAtom);
-=======
+
   const setTerminals = useSetAtom(TerminalsCapacitorAtom);
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+  const setVSource = useSetAtom(VoltageSourceCapacitorAtom);
+
   const setCapacitance = useSetAtom(CapacitanceAllAtom);
   const setWires = useSetAtom(WiresCapacitorAtom);
 
@@ -60,16 +67,20 @@ const InputCircuit = () => {
       }
 
       if (currentPoint.x === -1) {
-<<<<<<< HEAD
+
+
         setCurrentPoint({ ...point });
-=======
+
         if (ComponentSelectionType === "t1")
           setTerminals((terminals) => [`${point.x}__${point.y}`, terminals[1]]);
         else if (ComponentSelectionType === "t2")
           setTerminals((terminals) => [terminals[0], `${point.x}__${point.y}`]);
         else setCurrentPoint({ ...point });
 
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+        setCurrentPoint({ ...point });
+
         return;
       }
 
@@ -79,7 +90,10 @@ const InputCircuit = () => {
         return;
       }
 
-<<<<<<< HEAD
+
+
+
+
       if (ComponentSelectionType === "v") {
         const voltageSource: VoltageSource = {
           node1: `${currentPoint.x}__${currentPoint.y}`,
@@ -97,8 +111,11 @@ const InputCircuit = () => {
         // setRedoList([]);
       }
 
-=======
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+
+
+
       if (ComponentSelectionType === "wire") {
         const newWire: Wire = {
           start: `${currentPoint.x}__${currentPoint.y}`,
@@ -112,21 +129,29 @@ const InputCircuit = () => {
             params: { ...newWire },
           },
         ]);
-<<<<<<< HEAD
+
+
         // setRedoList([]);
-=======
+
         setRedoList([]);
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+        // setRedoList([]);
+
       } else if (ComponentSelectionType === "C") {
         resistanceCount.current++;
         setCapacitance((resistances) => [
           ...resistances,
           {
-<<<<<<< HEAD
+
+
             name: `C${resistanceCount.current}`,
-=======
+
             name: `R${resistanceCount.current}`,
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+            name: `C${resistanceCount.current}`,
+
             value: 1,
             node1: `${currentPoint.x}__${currentPoint.y}`,
             node2: `${point.x}__${point.y}`,
@@ -137,24 +162,33 @@ const InputCircuit = () => {
           {
             action: USER_ACTION.ADD_RESISTANCE,
             params: {
-<<<<<<< HEAD
+
+
               name: `C${resistanceCount.current}`,
-=======
+
               name: `R${resistanceCount.current}`,
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+              name: `C${resistanceCount.current}`,
+
               value: 1,
               node1: `${currentPoint.x}__${currentPoint.y}`,
               node2: `${point.x}__${point.y}`,
             },
           },
         ]);
-<<<<<<< HEAD
+
+
       }
       setRedoList([]);
-=======
+
         setRedoList([]);
       }
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+      }
+      setRedoList([]);
+
 
       setCurrentPoint({ x: -1, y: -1 });
     },
@@ -174,13 +208,18 @@ const InputCircuit = () => {
         />
       )}
 
-<<<<<<< HEAD
+
+
       {/* <TerminalPoints /> */}
       <VoltageInput />
-=======
+
       <TerminalPoints />
 
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+      {/* <TerminalPoints /> */}
+      <VoltageInput />
+
       <CapacitanceInputs />
 
       <WiresInput />

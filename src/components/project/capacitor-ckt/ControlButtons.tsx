@@ -11,58 +11,34 @@ import {
   FinalResultCapacitorAtom,
   CapacitorRedoListAtom as RedoListAtom,
   SolvingStepscapacitorAtom,
-<<<<<<< HEAD
   USER_ACTION,
   VoltageSource,
   VoltageSourceCapacitorAtom,
-=======
-  TerminalsCapacitorAtom,
-  USER_ACTION,
->>>>>>> dffe9c0 (Equivalent Capacitor done)
   Wire,
   WiresCapacitorAtom,
 } from "./store";
 
 const ControlButtons = () => {
-<<<<<<< HEAD
   const [capacitanceAll, setCapacitanceAll] = useAtom(CapacitanceAllAtom);
   const [wires, setWires] = useAtom(WiresCapacitorAtom);
   const [history, setHistory] = useAtom(CapacitorHistoryAtom);
   const [redoList, setRedoList] = useAtom(RedoListAtom);
   // const [terminals, setTerminals] = useAtom(TerminalsCapacitorAtom);
   const [vSource, setVSource] = useAtom(VoltageSourceCapacitorAtom);
-=======
-  const [resistanceAll, setCapacitanceAll] = useAtom(CapacitanceAllAtom);
-  const [wires, setWires] = useAtom(WiresCapacitorAtom);
-  const [history, setHistory] = useAtom(CapacitorHistoryAtom);
-  const [redoList, setRedoList] = useAtom(RedoListAtom);
-  const [terminals, setTerminals] = useAtom(TerminalsCapacitorAtom);
 
->>>>>>> dffe9c0 (Equivalent Capacitor done)
   const setFinalResult = useSetAtom(FinalResultCapacitorAtom);
 
   const setSolvingSteps = useSetAtom(SolvingStepscapacitorAtom);
   const solveCircuit = useCallback(() => {
     const data = new Solver(
-<<<<<<< HEAD
       structuredClone(capacitanceAll),
       structuredClone(wires),
       structuredClone(vSource)
-=======
-      structuredClone(resistanceAll),
-      structuredClone(wires),
-      terminals[0],
-      terminals[1]
->>>>>>> dffe9c0 (Equivalent Capacitor done)
     );
-    const result = data.solve();
-    setSolvingSteps(result);
-    setFinalResult(result[result.length - 1].resultingCapacitances[0]);
-<<<<<<< HEAD
+    // const result = data.solve();
+    // setSolvingSteps(result);
+    // setFinalResult(result[result.length - 1].resultingCapacitances[0]);
   }, [capacitanceAll, wires, vSource.node1, vSource.node2, setSolvingSteps]);
-=======
-  }, [resistanceAll, wires, terminals, setSolvingSteps]);
->>>>>>> dffe9c0 (Equivalent Capacitor done)
 
   const undo = () => {
     const lastAction = history.pop();
@@ -96,7 +72,6 @@ const ControlButtons = () => {
           setWires([...(lastAction.params as Circuit).wires]);
           break;
 
-<<<<<<< HEAD
         case USER_ACTION.ADD_VOLTAGE_SOURCE:
           setVSource({ node1: "-1__-1", node2: "-1__-1", value: 0 });
           break;
@@ -104,8 +79,7 @@ const ControlButtons = () => {
         case USER_ACTION.REMOVE_VOLTAGE_SOURCE:
           setVSource({ ...(lastAction.params as VoltageSource) });
           break;
-=======
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
         default:
           break;
       }
@@ -145,7 +119,6 @@ const ControlButtons = () => {
           setWires([]);
           break;
 
-<<<<<<< HEAD
         case USER_ACTION.ADD_VOLTAGE_SOURCE:
           setVSource({ ...(lastAction.params as VoltageSource) });
           break;
@@ -154,8 +127,6 @@ const ControlButtons = () => {
           setVSource({ node1: "-1__-1", node2: "-1__-1", value: 0 });
           break;
 
-=======
->>>>>>> dffe9c0 (Equivalent Capacitor done)
         default:
           break;
       }
@@ -170,11 +141,8 @@ const ControlButtons = () => {
       {
         action: USER_ACTION.CLEAR_CKT,
         params: {
-<<<<<<< HEAD
           resistances: structuredClone(capacitanceAll),
-=======
-          resistances: structuredClone(resistanceAll),
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
           wires: structuredClone(wires),
         },
       },
@@ -182,11 +150,10 @@ const ControlButtons = () => {
     setRedoList([]);
     setCapacitanceAll([]);
     setWires([]);
-<<<<<<< HEAD
+
     setVSource({ node1: "-1__-1", node2: "-1__-1", value: 0 });
-=======
-    setTerminals(["-1__-1", "-1__-1"]);
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+    setVSource({ node1: "-1__-1", node2: "-1__-1", value: 0 });
   };
 
   return (
@@ -221,11 +188,7 @@ const ControlButtons = () => {
       <Button
         className="font-semibold tracking-widest text-2xl p-6 flex flex-row gap-3"
         onClick={solveCircuit}
-<<<<<<< HEAD
         disabled={vSource.node1 === "-1__-1" || vSource.node2 === "-1__-1"}
-=======
-        disabled={terminals[0] === "-1__-1" || terminals[1] === "-1__-1"}
->>>>>>> dffe9c0 (Equivalent Capacitor done)
         name="solve"
         variant="success"
       >

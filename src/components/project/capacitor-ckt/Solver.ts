@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { ACTION, Capacitance, StepsInfo, VoltageSource, Wire } from "./store";
-=======
-import { ACTION, Capacitance, StepsInfo, Wire } from "./store";
->>>>>>> dffe9c0 (Equivalent Capacitor done)
 
 export class Solver {
   private Capacitances: Capacitance[];
@@ -35,7 +31,6 @@ export class Solver {
    */
   private circuitPoints: string[][];
 
-<<<<<<< HEAD
   private mainVoltage: VoltageSource;
   constructor(
     Capacitances: Capacitance[],
@@ -46,18 +41,6 @@ export class Solver {
     this.wires = wires;
     this.terminal1 = vSource.node1;
     this.terminal2 = vSource.node2;
-=======
-  constructor(
-    Capacitances: Capacitance[],
-    wires: Wire[],
-    terminal1: string,
-    terminal2: string
-  ) {
-    this.Capacitances = Capacitances;
-    this.wires = wires;
-    this.terminal1 = terminal1;
-    this.terminal2 = terminal2;
->>>>>>> dffe9c0 (Equivalent Capacitor done)
     this.CapacitanceCount = Capacitances.length + 1;
     this.nodes = Array.from({ length: this.maxLengthOfCapacitancesArray }, () =>
       Array.from({ length: this.maxLengthOfCapacitancesArray }, () => [])
@@ -66,7 +49,6 @@ export class Solver {
       { length: this.maxLengthOfCapacitancesArray },
       () => Array.from({ length: this.maxLengthOfCapacitancesArray }, () => "")
     );
-<<<<<<< HEAD
     this.mainVoltage = vSource;
   }
 
@@ -209,8 +191,6 @@ export class Solver {
         (c) => c.name === this.Steps[i].resultingCapacitances[0].name
       );
     }
-=======
->>>>>>> dffe9c0 (Equivalent Capacitor done)
   }
 
   private logSingleStep(
@@ -227,12 +207,9 @@ export class Solver {
     let tempWires = structuredClone(this.wires);
 
     switch (action) {
-<<<<<<< HEAD
       case ACTION.FINISH:
         this.calculateChargeVoltage();
         return;
-=======
->>>>>>> dffe9c0 (Equivalent Capacitor done)
       case ACTION.SHORT_CIRCUIT_REMOVAL:
         removedCapacitances = Capacitances;
         msg1 =
@@ -282,7 +259,8 @@ export class Solver {
         break;
     }
 
-<<<<<<< HEAD
+
+
     // step 1: get all the nodes necessary for capacitors
     // step 2: if shorted points on a node doesn't have a resister node or terminal node
     // , remove the wire
@@ -292,6 +270,7 @@ export class Solver {
       Circuit: structuredClone(this.previousCircuit),
       Wires: structuredClone(tempWires),
       VoltageSource: structuredClone(this.mainVoltage),
+
       removedCapacitances: structuredClone(removedCapacitances),
       resultingCapacitances: [],
       message: msg1,
@@ -306,31 +285,40 @@ export class Solver {
       resultingCapacitances: structuredClone(resultingCapacitances),
       message: msg2,
       action,
-=======
+
     // step 1: get all the nodes necessary for resistors
+
+    // step 1: get all the nodes necessary for capacitors
+
     // step 2: if shorted points on a node doesn't have a resister node or terminal node
     // , remove the wire
 
-    // to highlight the resistors that are removing
+    // to highlight the capacitors that are removing
     this.Steps.push({
       Circuit: structuredClone(this.previousCircuit),
       Wires: structuredClone(tempWires),
       terminal1: this.terminal1,
       terminal2: this.terminal2,
+
+
       removedCapacitances: structuredClone(removedCapacitances),
       resultingCapacitances: [],
       message: msg1,
+      action,
     });
-    // to highlight the resistors that are adding
+    // to highlight the capacitors that are adding
     this.Steps.push({
       Circuit: structuredClone(resultantCircuit),
       Wires: structuredClone(this.wires),
-      terminal1: this.terminal1,
-      terminal2: this.terminal2,
+      VoltageSource: structuredClone(this.mainVoltage),
       removedCapacitances: [],
       resultingCapacitances: structuredClone(resultingCapacitances),
       message: msg2,
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+
+      action,
+
     });
 
     this.previousCircuit = structuredClone(resultantCircuit);
@@ -554,11 +542,15 @@ export class Solver {
   }
 
   private getNewNameForCapacitance(): string {
-<<<<<<< HEAD
+
+
     return "C" + this.CapacitanceCount++;
-=======
+
     return "R" + this.CapacitanceCount++;
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+    return "C" + this.CapacitanceCount++;
+
   }
 
   private filterOutInfiniteCapacitances(): boolean {
@@ -897,9 +889,13 @@ export class Solver {
       this.logSingleStep(ACTION.EMPTY_CIRCUIT, [], this.Capacitances);
     else if (this.Capacitances.length > 1)
       this.logSingleStep(ACTION.FALLBACK, [], this.Capacitances);
-<<<<<<< HEAD
+
+
     else this.logSingleStep(ACTION.FINISH, [], this.Capacitances);
-=======
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+
+    else this.logSingleStep(ACTION.FINISH, [], this.Capacitances);
+
   }
 }

@@ -5,16 +5,32 @@ import { useEffect, useMemo } from "react";
 import EmblaCarousel from "~/components/ui/EmblaCarousel";
 import "./../../../embla.css";
 import ResultingCircuit from "./ResultingCircuit";
-<<<<<<< HEAD
+
+
+
 import { SolvingStepscapacitorAtom, StepsInfo } from "./store";
 
 const formatMessage = (message) => {
   return { __html: message.replaceAll("\n", "<br/>") };
 };
-=======
+
 import { SolvingStepscapacitorAtom } from "./store";
 
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+import { SolvingStepscapacitorAtom, StepsInfo } from "./store";
+
+const formatMessage = (message) => {
+  return { __html: message.replaceAll("\n", "<br/>") };
+};
+
+
+import { SolvingStepscapacitorAtom, StepsInfo } from "./store";
+
+const formatMessage = (message) => {
+  return { __html: message.replaceAll("\n", "<br/>") };
+};
+
 const ResultSection = ({ resultRef }) => {
   const solvingSteps = useAtomValue(SolvingStepscapacitorAtom);
 
@@ -24,11 +40,19 @@ const ResultSection = ({ resultRef }) => {
 
   const slides = useMemo(
     () =>
-<<<<<<< HEAD
+
+
+
       solvingSteps.slice(0, solvingSteps.length / 2).map((step, index) => (
-=======
+
       solvingSteps.map((step, index) => (
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+      solvingSteps.slice(0, solvingSteps.length / 2).map((step, index) => (
+
+
+      solvingSteps.slice(0, solvingSteps.length / 2).map((step, index) => (
+
         <div key={index} className="w-full ">
           <div className=" ">
             <ResultingCircuit {...step} />
@@ -38,15 +62,27 @@ const ResultSection = ({ resultRef }) => {
             <span>
               <Info className="w-6 h-6 m-auto" />
             </span>
-<<<<<<< HEAD
+
+
+
+
+
+
+
             {step.message.replaceAll("\n", "<br/>")}
             {/* <p
               className="text-left"
               dangerouslySetInnerHTML={formatMessage(step.message)}
             /> */}
-=======
+
+
+
             {step.message}
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+
+
+
           </p>
         </div>
       )),
@@ -61,7 +97,13 @@ const ResultSection = ({ resultRef }) => {
 
   return (
     <>
-<<<<<<< HEAD
+
+
+
+
+
+
+
       <div id="slides">
         {slides.length > 0 && (
           <div>
@@ -77,7 +119,9 @@ const ResultSection = ({ resultRef }) => {
           <StepsBackward steps={solvingSteps.slice(solvingSteps.length / 2)} />
         )}
       </div>
-=======
+
+
+
       {slides.length > 0 && (
         <div>
           <h2 ref={resultRef} className="text-3xl font-semibold text-center">
@@ -86,13 +130,23 @@ const ResultSection = ({ resultRef }) => {
           <EmblaCarousel slides={slides} options={OPTIONS} />
         </div>
       )}
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+
+
+
     </>
   );
 };
 
 export default ResultSection;
-<<<<<<< HEAD
+
+
+
+
+
+
+
 
 const StepsBackward = ({ steps }: { steps: StepsInfo[] }) => {
   return (
@@ -119,5 +173,11 @@ const StepsBackward = ({ steps }: { steps: StepsInfo[] }) => {
     </div>
   );
 };
-=======
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+
+
+
+
+
+

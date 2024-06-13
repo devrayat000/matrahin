@@ -25,7 +25,8 @@ import { getCoordinatesById } from "./utils";
 const WiresInput = () => {
   const [selectedWire, setSelectedWire] = useState<number | null>(null);
   const [wireList, setWireList] = useAtom(WiresCapacitorAtom);
-<<<<<<< HEAD
+
+
   const setCapacitorList = useSetAtom(CapacitanceAllAtom);
   const setHistory = useSetAtom(CapacitorHistoryAtom);
   const setRedoList = useSetAtom(CapacitorRedoListAtom);
@@ -35,17 +36,24 @@ const WiresInput = () => {
       setCapacitorList((prev) => [
         ...prev,
         { name: `C${prev.length + 1}`, value: 1, node1, node2 },
-=======
+
   const setResistanceList = useSetAtom(CapacitanceAllAtom);
+
+  const setCapacitorList = useSetAtom(CapacitanceAllAtom);
+
   const setHistory = useSetAtom(CapacitorHistoryAtom);
   const setRedoList = useSetAtom(CapacitorRedoListAtom);
 
-  const addResistance = useCallback(
+  const addCapacitor = useCallback(
     (node1: string, node2: string) => {
-      setResistanceList((prev) => [
+      setCapacitorList((prev) => [
         ...prev,
+
         { name: `R${prev.length + 1}`, value: 1, node1, node2 },
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+        { name: `C${prev.length + 1}`, value: 1, node1, node2 },
+
       ]);
       setHistory((prev) => [
         ...prev,
@@ -56,11 +64,15 @@ const WiresInput = () => {
       ]);
       setRedoList([]);
     },
-<<<<<<< HEAD
+
+
     [setCapacitorList]
-=======
+
     [setResistanceList]
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+    [setCapacitorList]
+
   );
   const handleWireRemove = useCallback(
     (wire: Wire, index: number) => {
@@ -101,20 +113,28 @@ const WiresInput = () => {
               isHighlighted={selectedWire === index}
             />
             <line
-<<<<<<< HEAD
+
+
               id="wire"
-=======
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+
+              id="wire"
+
               x1={start.x}
               y1={start.y}
               x2={end.x}
               y2={end.y}
               stroke="black"
               strokeWidth={2}
-<<<<<<< HEAD
+
+
               opacity={1}
-=======
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+
+              opacity={1}
+
             />
           </g>
         </PopoverTrigger>
@@ -126,20 +146,28 @@ const WiresInput = () => {
                 onClick={() => {
                   setSelectedWire(null);
                   handleWireRemove(wire, index);
-<<<<<<< HEAD
+
+
                   addCapacitor(wire.start, wire.end);
-=======
+
                   addResistance(wire.start, wire.end);
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+                  addCapacitor(wire.start, wire.end);
+
                 }}
                 className="flex  gap-3"
               >
                 <RefreshCcw />
-<<<<<<< HEAD
+
+
                 Make Capacitor
-=======
+
                 Make Resistor
->>>>>>> dffe9c0 (Equivalent Capacitor done)
+
+
+                Make Capacitor
+
               </Button>
               <Button
                 variant="destructive"
