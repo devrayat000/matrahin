@@ -32,7 +32,8 @@ const ControlButtons = () => {
       structuredClone(resistanceAll),
       structuredClone(wires),
       terminals[0],
-      terminals[1]
+      terminals[1],
+      10
     );
     const result = data.solve();
     setSolvingSteps(result);

@@ -153,6 +153,7 @@ const Resistor = ({
         y={(resistorState.start.y + resistorState.end.y - 29) / 2}
         viewBox="0 0 462.782 462.782"
       >
+        <rect x="0" y="0" width="462.782" height="462.782" fill="white" />
         <path
           stroke={color}
           strokeWidth="15"

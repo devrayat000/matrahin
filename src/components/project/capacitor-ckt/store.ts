@@ -13,6 +13,8 @@ export interface Capacitance {
   value: number;
   node1: string;
   node2: string;
+  charge?: number;
+  voltage?: number;
 }
 
 export enum ACTION {
@@ -23,6 +25,7 @@ export enum ACTION {
   WYE_DELTA,
   FALLBACK,
   EMPTY_CIRCUIT,
+  FINISH,
 }
 
 export enum USER_ACTION {
@@ -56,6 +59,7 @@ export interface StepsInfo {
   removedCapacitances: Capacitance[];
   resultingCapacitances: Capacitance[];
   message: string;
+  action?: ACTION;
 }
 
 export interface UsedPointsType {

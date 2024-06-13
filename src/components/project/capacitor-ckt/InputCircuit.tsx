@@ -74,7 +74,7 @@ const InputCircuit = () => {
         setCapacitance((resistances) => [
           ...resistances,
           {
-            name: `R${resistanceCount.current}`,
+            name: `C${resistanceCount.current}`,
             value: 1,
             node1: `${currentPoint.x}__${currentPoint.y}`,
             node2: `${point.x}__${point.y}`,
@@ -85,7 +85,7 @@ const InputCircuit = () => {
           {
             action: USER_ACTION.ADD_RESISTANCE,
             params: {
-              name: `R${resistanceCount.current}`,
+              name: `C${resistanceCount.current}`,
               value: 1,
               node1: `${currentPoint.x}__${currentPoint.y}`,
               node2: `${point.x}__${point.y}`,

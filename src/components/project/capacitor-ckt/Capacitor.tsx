@@ -156,6 +156,10 @@ const Capacitor = ({
           fill="white"
           opacity={1}
           stroke="none"
+          style={{
+            transformOrigin: "center center 0px",
+            transform: `rotate(${capacitorState.angle}deg)`,
+          }}
         />
         <path
           style={{
@@ -163,7 +167,7 @@ const Capacitor = ({
             transform: `rotate(${capacitorState.angle}deg)`,
           }}
           d="M0 14.5 H10 M20 14.5 H30 M10 0 V30 M20 0 V30"
-          stroke="black"
+          stroke={color}
           strokeWidth="3"
           fill="none"
         />

@@ -31,11 +31,13 @@ export class Solver {
    */
   private circuitPoints: string[][];
 
+  private mainVoltage = 0;
   constructor(
     Capacitances: Capacitance[],
     wires: Wire[],
     terminal1: string,
-    terminal2: string
+    terminal2: string,
+    voltage: number
   ) {
     this.Capacitances = Capacitances;
     this.wires = wires;
@@ -49,6 +51,221 @@ export class Solver {
       { length: this.maxLengthOfCapacitancesArray },
       () => Array.from({ length: this.maxLengthOfCapacitancesArray }, () => "")
     );
+    this.mainVoltage = voltage;
+  }
+
+  private calculateChargeVoltage() {
+    const size = this.Steps.length;
+    for (let i = size - 1; i >= 1; i -= 2) {
+      const Ceq = this.Steps[i].resultingCapacitances[0]; // equivalent Capacitance
+      if (i == size - 1) Ceq.voltage = this.mainVoltage;
+      Ceq.charge = Ceq.value * Ceq.voltage;
+
+      let map1: Map<String, { voltage: number; charge: number }> = new Map();
+      let map2: Map<String, { voltage: number; charge: number }> = new Map();
+
+      this.Steps[i].Circuit.forEach((c) => {
+        map2.set(c.name, {
+          charge: c.charge,
+          voltage: c.voltage,
+        });
+      });
+
+      this.Steps[i - 1].Circuit.forEach((c) => {
+        map1.set(c.name, {
+          charge: c.charge,
+          voltage: c.voltage,
+        });
+      });
+
+      map2.set(Ceq.name, {
+        charge: Ceq.charge,
+        voltage: Ceq.voltage,
+      });
+
+      let removedC: Capacitance[] = [];
+      switch (this.Steps[i].action) {
+        case ACTION.PARALLEL:
+          removedC = this.Steps[i - 1].removedCapacitances.map((c) => {
+            map1.set(c.name, {
+              charge: c.charge,
+              voltage: c.voltage,
+            });
+            return {
+              ...c,
+              voltage: Ceq.voltage,
+              charge: c.value * Ceq.voltage,
+            };
+          });
+
+          this.Steps.push({
+            ...this.Steps[i],
+            Circuit: this.Steps[i].Circuit.map((c) => ({
+              ...c,
+              charge: map2.get(c.name).charge,
+              voltage: map2.get(c.name).voltage,
+            })),
+            resultingCapacitances: [Ceq],
+            message: `Voltage across ${Ceq.name} is ${Ceq.voltage}V
+            Charge stored in ${Ceq.name} is (C*V)= ${Ceq.charge}μC`,
+          });
+
+          this.Steps.push({
+            ...this.Steps[i - 1],
+            Circuit: this.Steps[i - 1].Circuit.map((c) => ({
+              ...c,
+              charge: map1.get(c.name).charge,
+              voltage: map1.get(c.name).voltage,
+            })),
+            removedCapacitances: structuredClone(removedC),
+            message: `
+              ${removedC
+                .map(
+                  (c) => `V${c.name.replace("C", "")} = ${c.voltage}V
+                  Q${c.name.replace("C", "")} = ${c.charge}μC`
+                )
+                .join("\n")}
+              }
+            `,
+          });
+
+          break;
+
+        case ACTION.SERIES:
+          removedC = this.Steps[i - 1].removedCapacitances.map((c) => {
+            map1.set(c.name, {
+              charge: c.charge,
+              voltage: c.voltage,
+            });
+            return {
+              ...c,
+              charge: Ceq.charge,
+              voltage: Ceq.charge / c.charge,
+            };
+          });
+
+          this.Steps.push({
+            ...this.Steps[i],
+            Circuit: this.Steps[i].Circuit.map((c) => ({
+              ...c,
+              charge: map2.get(c.name).charge,
+              voltage: map2.get(c.name).voltage,
+            })),
+            resultingCapacitances: [Ceq],
+            message: `Voltage across ${Ceq.name} is ${Ceq.voltage}V
+                        Charge stored in ${Ceq.name} is (C*V)= ${Ceq.charge}μC`,
+          });
+
+          this.Steps.push({
+            ...this.Steps[i - 1],
+            Circuit: this.Steps[i - 1].Circuit.map((c) => ({
+              ...c,
+              charge: map1.get(c.name).charge,
+              voltage: map1.get(c.name).voltage,
+            })),
+            removedCapacitances: structuredClone(removedC),
+            message: `
+            ${removedC.map(
+              (c) => `V${c.name.replace("C", "")} = ${c.voltage}V
+                    Q${c.name.replace("C", "")} = ${c.charge}μC`
+            )}`,
+          });
+
+          break;
+      }
+
+      console.log(this.Steps);
+    }
+  }
+
+  private calculateChargeVoltage1() {
+    const size = this.Steps.length;
+
+    const map: Map<String, { voltage: number; charge: number }> = new Map();
+    map.set(this.Steps[size - 1].resultingCapacitances[0].name, {
+      charge:
+        this.mainVoltage * this.Steps[size - 1].resultingCapacitances[0].value,
+      voltage: this.mainVoltage,
+    });
+
+    for (let i = size - 1; i >= 1; i -= 2) {
+      const equi = map.get(this.Steps[i].resultingCapacitances[0].name);
+      const resultingCapacitance = {
+        ...this.Steps[i].resultingCapacitances[0],
+        charge: equi.charge,
+        voltage: equi.voltage,
+      };
+      let removedC: Capacitance[] = [];
+      let messageBack: string = "";
+      switch (this.Steps[i].action) {
+        case ACTION.PARALLEL:
+          removedC = this.Steps[i - 1].removedCapacitances.map((c) => {
+            c.voltage = equi.voltage;
+            c.charge = c.value * c.voltage;
+
+            map.set(c.name, {
+              charge: c.charge,
+              voltage: c.voltage,
+            });
+            return { ...c };
+          });
+
+          messageBack = removedC
+            .map(
+              (c) => `V${c.name.replace("C", "")} = ${c.voltage.toFixed(2)}V
+            Q${c.name.replace("C", "")} = ${c.charge.toFixed(2)}μC`
+            )
+            .join(",");
+
+          break;
+
+        case ACTION.SERIES:
+          removedC = this.Steps[i - 1].removedCapacitances.map((c) => {
+            c.charge = equi.charge;
+            c.voltage = c.charge / c.value;
+
+            map.set(c.name, {
+              charge: c.charge,
+              voltage: c.voltage,
+            });
+            return { ...c };
+          });
+
+          messageBack = this.Steps[i - 1].removedCapacitances
+            .map(
+              (c) => `V${c.name.replace("C", "")} = ${c.voltage.toFixed(2)}V
+            Q${c.name.replace("C", "")} = ${c.charge.toFixed(2)}μC`
+            )
+            .join(",");
+
+          break;
+      }
+      this.Steps.push({
+        ...this.Steps[i],
+        Circuit: this.Steps[i].Circuit.map((c) => ({
+          ...c,
+          charge: map.get(c.name).charge ?? null,
+          voltage: map.get(c.name).voltage,
+        })),
+        resultingCapacitances: [resultingCapacitance],
+        message: messageBack,
+      });
+
+      this.Steps.push({
+        ...this.Steps[i - 1],
+        Circuit: this.Steps[i - 1].Circuit.map((c) => ({
+          ...c,
+          charge: map.get(c.name).charge,
+          voltage: map.get(c.name).voltage,
+        })),
+        removedCapacitances: structuredClone(removedC),
+        message: messageBack,
+      });
+
+      this.Steps[i].Circuit.filter(
+        (c) => c.name === this.Steps[i].resultingCapacitances[0].name
+      );
+    }
   }
 
   private logSingleStep(
@@ -65,6 +282,9 @@ export class Solver {
     let tempWires = structuredClone(this.wires);
 
     switch (action) {
+      case ACTION.FINISH:
+        this.calculateChargeVoltage1();
+        return;
       case ACTION.SHORT_CIRCUIT_REMOVAL:
         removedCapacitances = Capacitances;
         msg1 =
@@ -127,6 +347,7 @@ export class Solver {
       removedCapacitances: structuredClone(removedCapacitances),
       resultingCapacitances: [],
       message: msg1,
+      action,
     });
     // to highlight the capacitors that are adding
     this.Steps.push({
@@ -137,6 +358,7 @@ export class Solver {
       removedCapacitances: [],
       resultingCapacitances: structuredClone(resultingCapacitances),
       message: msg2,
+      action,
     });
 
     this.previousCircuit = structuredClone(resultantCircuit);
@@ -360,7 +582,7 @@ export class Solver {
   }
 
   private getNewNameForCapacitance(): string {
-    return "R" + this.CapacitanceCount++;
+    return "C" + this.CapacitanceCount++;
   }
 
   private filterOutInfiniteCapacitances(): boolean {
@@ -699,5 +921,6 @@ export class Solver {
       this.logSingleStep(ACTION.EMPTY_CIRCUIT, [], this.Capacitances);
     else if (this.Capacitances.length > 1)
       this.logSingleStep(ACTION.FALLBACK, [], this.Capacitances);
+    else this.logSingleStep(ACTION.FINISH, [], this.Capacitances);
   }
 }
