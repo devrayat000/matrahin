@@ -11,23 +11,23 @@ import { useAtom, useSetAtom } from "jotai";
 import { MinusCircle, RefreshCcw } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Button } from "~/components/ui/button";
+import HighlightComponent from "../breadboard/HighlightComponent";
 import {
-  HistoryAtom,
-  RedoListAtom,
-  ResistanceAllAtom,
+  CapacitanceAllAtom,
+  CapacitorHistoryAtom,
+  CapacitorRedoListAtom,
   USER_ACTION,
   Wire,
-  WiresAtom,
-} from "../equi-resistance/store";
-import { getCoordinatesById } from "../equi-resistance/utils";
-import HighlightComponent from "./HighlightComponent";
+  WiresCapacitorAtom,
+} from "./store";
+import { getCoordinatesById } from "./utils";
 
 const WiresInput = () => {
   const [selectedWire, setSelectedWire] = useState<number | null>(null);
-  const [wireList, setWireList] = useAtom(WiresAtom);
-  const setResistanceList = useSetAtom(ResistanceAllAtom);
-  const setHistory = useSetAtom(HistoryAtom);
-  const setRedoList = useSetAtom(RedoListAtom);
+  const [wireList, setWireList] = useAtom(WiresCapacitorAtom);
+  const setResistanceList = useSetAtom(CapacitanceAllAtom);
+  const setHistory = useSetAtom(CapacitorHistoryAtom);
+  const setRedoList = useSetAtom(CapacitorRedoListAtom);
 
   const addResistance = useCallback(
     (node1: string, node2: string) => {

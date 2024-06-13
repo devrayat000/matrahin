@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { Resistance } from "../../../app/test/calculationOfR";
-import { Coordinate } from "../equi-resistance/store";
 import { getCoordinatesById } from "../equi-resistance/utils";
+import { Capacitance, Coordinate } from "./store";
 
-interface ResistorState {
+interface CapacitorState {
   start: Coordinate;
   end: Coordinate;
   firstEnd: Coordinate;
@@ -21,7 +20,7 @@ const calculateLineAngles = (start: Coordinate, end: Coordinate) => {
   return { length, angle };
 };
 
-const calculateResistorEnds = (
+const calculateCapacitorEnds = (
   start: Coordinate,
   end: Coordinate,
   length: number
@@ -49,11 +48,11 @@ const calculateLabelPosition = (
 ) => {
   let labelPosition = {
     x: (start.x + end.x + 15) / 2,
-    y: (start.y + end.y - 30) / 2,
+    y: (start.y + end.y - 40) / 2,
   };
 
   if ((angle >= -90 && angle < -20) || (angle >= 90 && angle < 160)) {
-    labelPosition.x = (start.x + end.x) / 2 + 40;
+    labelPosition.x = (start.x + end.x) / 2 + 45;
     labelPosition.y = (start.y + end.y) / 2;
   }
 
@@ -61,16 +60,16 @@ const calculateLabelPosition = (
 };
 
 const initialCoordinates: Coordinate = { x: -1, y: -1 };
-const Resistor = ({
+const Capacitor = ({
   R: { node1: startId, node2: endId, value, name },
   onClick,
   color = "black",
 }: {
-  R: Resistance;
+  R: Capacitance;
   onClick: () => void;
   color?: string;
 }) => {
-  const [resistorState, setResistorState] = useState<ResistorState>({
+  const [capacitorState, setCapacitorState] = useState<CapacitorState>({
     start: initialCoordinates,
     end: initialCoordinates,
     firstEnd: initialCoordinates,
@@ -87,7 +86,7 @@ const Resistor = ({
       startCoordinate,
       endCoordinate
     );
-    const { firstEnd, secondEnd } = calculateResistorEnds(
+    const { firstEnd, secondEnd } = calculateCapacitorEnds(
       startCoordinate,
       endCoordinate,
       length
@@ -98,7 +97,7 @@ const Resistor = ({
       lineAngle
     );
 
-    setResistorState({
+    setCapacitorState({
       start: startCoordinate,
       end: endCoordinate,
       firstEnd,
@@ -107,66 +106,73 @@ const Resistor = ({
       labelPosition,
     });
   }, [startId, endId]);
-  return resistorState.start.x === -1 || resistorState.end.x === -1 ? null : (
+  return capacitorState.start.x === -1 || capacitorState.end.x === -1 ? null : (
     <g onClick={onClick}>
       <circle
-        cx={resistorState.start.x}
-        cy={resistorState.start.y}
+        cx={capacitorState.start.x}
+        cy={capacitorState.start.y}
         r="5"
         fill={color}
       />
       <circle
-        cx={resistorState.end.x}
-        cy={resistorState.end.y}
+        cx={capacitorState.end.x}
+        cy={capacitorState.end.y}
         r="5"
         fill={color}
       />
       <g stroke={color} strokeWidth={2.75}>
         <line
-          x1={resistorState.start.x}
-          y1={resistorState.start.y}
-          x2={resistorState.firstEnd.x}
-          y2={resistorState.firstEnd.y}
+          x1={capacitorState.start.x}
+          y1={capacitorState.start.y}
+          x2={capacitorState.firstEnd.x}
+          y2={capacitorState.firstEnd.y}
           height={30}
         />
         <line
-          x1={resistorState.end.x}
-          y1={resistorState.end.y}
-          x2={resistorState.secondEnd.x}
-          y2={resistorState.secondEnd.y}
+          x1={capacitorState.end.x}
+          y1={capacitorState.end.y}
+          x2={capacitorState.secondEnd.x}
+          y2={capacitorState.secondEnd.y}
         />
       </g>
 
       <svg
+        x={(capacitorState.start.x + capacitorState.end.x - 30) / 2}
+        y={(capacitorState.start.y + capacitorState.end.y - 29) / 2}
+        viewBox="0 0 30 30"
         height={30}
         width={30}
-        x={(resistorState.start.x + resistorState.end.x - 30) / 2}
-        y={(resistorState.start.y + resistorState.end.y - 29) / 2}
-        viewBox="0 0 462.782 462.782"
+        stroke={color}
       >
+        {/* <line x1="0" y1="14.5" x2="10" y2="14.5" />
+          <line x1="20" y1="14.5" x2="30" y2="14.5" />
+          <line x1="10" y1="30" x2="10" y2="0" />
+          <line x1="20" y1="30" x2="20" y2=" 0" /> */}
         <path
-          stroke={color}
-          strokeWidth="15"
-          d="M350.272,323.014c-5.974,0-11.411-3.556-13.783-9.091l-50.422-117.65l-40.505,116.662 c-2.08,5.989-7.699,10.023-14.038,10.08c-0.044,0-0.089,0-0.133,0c-6.286,0-11.911-3.921-14.081-9.831l-41.979-114.358 l-40.798,114.234c-2.095,5.867-7.599,9.828-13.827,9.952c-6.242,0.127-11.886-3.615-14.213-9.394l-31.482-78.172H0v-30h85.141 c6.121,0,11.627,3.719,13.914,9.396l20.511,50.93l41.446-116.048c2.124-5.947,7.745-9.927,14.06-9.955c0.022,0,0.044,0,0.066,0 c6.289,0,11.912,3.923,14.081,9.831l41.779,113.814l39.431-113.565c2.032-5.851,7.451-9.852,13.64-10.071 c6.203-0.217,11.877,3.389,14.317,9.082l49.683,115.927l15.254-48.815c1.957-6.262,7.756-10.526,14.317-10.526h85.141v30h-74.113 l-24.076,77.043c-1.873,5.994-7.281,10.186-13.553,10.506C350.784,323.007,350.527,323.014,350.272,323.014z"
           style={{
             transformOrigin: "center center 0px",
-            transform: `rotate(${resistorState.angle}deg)`,
+            transform: `rotate(${capacitorState.angle}deg)`,
           }}
+          d="M0 14.5 H10 M20 14.5 H30 M10 0 V30 M20 0 V30"
+          stroke="black"
+          strokeWidth="3"
+          fill="none"
         />
       </svg>
+
       <text
         style={{ userSelect: "none" }}
-        x={resistorState.labelPosition.x}
-        y={resistorState.labelPosition.y}
+        x={capacitorState.labelPosition.x}
+        y={capacitorState.labelPosition.y}
         fontSize="12"
         fill={color}
         textAnchor="middle"
         dominantBaseline="middle"
       >
-        {name + ": " + value.toFixed(2) + " Ω"}
+        {name + ": " + value.toFixed(2) + " μF"}
       </text>
     </g>
   );
 };
 
-export default Resistor;
+export default Capacitor;

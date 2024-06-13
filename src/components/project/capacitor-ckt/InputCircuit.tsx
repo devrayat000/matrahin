@@ -1,33 +1,33 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useRef } from "react";
 import Breadboard from "../breadboard/Breadboard";
-import ResistanceInputs from "./ResistanceInputs";
+import WiresInput from "../equi-resistance/WiresInput";
+import { getPointFromIndex } from "../equi-resistance/utils";
+import CapacitanceInputs from "./CapacitorInputs";
 import TerminalPoints from "./TerminalPointsInput";
-import WiresInput from "./WiresInput";
 import {
-  ComponentSelectedAtom,
-  HistoryAtom,
-  PointsUsedAtom,
-  RedoListAtom,
-  ResistanceAllAtom,
-  TerminalsAtom,
+  CapacitanceAllAtom,
+  CapacitorComponentSelectedAtom,
+  CapacitorHistoryAtom,
+  PointsUsedCapacitorAtom,
+  CapacitorRedoListAtom as RedoListAtom,
+  TerminalsCapacitorAtom,
   USER_ACTION,
   Wire,
-  WiresAtom,
-  currentPointAtom,
+  WiresCapacitorAtom,
+  currentPointCapacitorAtom,
 } from "./store";
-import { getPointFromIndex } from "./utils";
 
 const InputCircuit = () => {
-  const [currentPoint, setCurrentPoint] = useAtom(currentPointAtom);
-  const setHistory = useSetAtom(HistoryAtom);
+  const [currentPoint, setCurrentPoint] = useAtom(currentPointCapacitorAtom);
+  const setHistory = useSetAtom(CapacitorHistoryAtom);
   const setRedoList = useSetAtom(RedoListAtom);
-  const pointsUsed = useAtomValue(PointsUsedAtom);
-  const ComponentSelectionType = useAtomValue(ComponentSelectedAtom);
+  const pointsUsed = useAtomValue(PointsUsedCapacitorAtom);
+  const ComponentSelectionType = useAtomValue(CapacitorComponentSelectedAtom);
 
-  const setTerminals = useSetAtom(TerminalsAtom);
-  const setResistance = useSetAtom(ResistanceAllAtom);
-  const setWires = useSetAtom(WiresAtom);
+  const setTerminals = useSetAtom(TerminalsCapacitorAtom);
+  const setCapacitance = useSetAtom(CapacitanceAllAtom);
+  const setWires = useSetAtom(WiresCapacitorAtom);
 
   const resistanceCount = useRef(0);
 
@@ -69,9 +69,9 @@ const InputCircuit = () => {
           },
         ]);
         setRedoList([]);
-      } else if (ComponentSelectionType === "R") {
+      } else if (ComponentSelectionType === "C") {
         resistanceCount.current++;
-        setResistance((resistances) => [
+        setCapacitance((resistances) => [
           ...resistances,
           {
             name: `R${resistanceCount.current}`,
@@ -97,7 +97,7 @@ const InputCircuit = () => {
 
       setCurrentPoint({ x: -1, y: -1 });
     },
-    [currentPoint, setResistance, setCurrentPoint]
+    [currentPoint, setCapacitance, setCurrentPoint]
   );
 
   return (
@@ -115,7 +115,7 @@ const InputCircuit = () => {
 
       <TerminalPoints />
 
-      <ResistanceInputs />
+      <CapacitanceInputs />
 
       <WiresInput />
 

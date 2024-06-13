@@ -1,5 +1,7 @@
-import { Coordinate } from "../equi-resistance/store";
-
+interface Coordinate {
+  x: number;
+  y: number;
+}
 /**
  * Renders a line component with highlighting functionality.
  *

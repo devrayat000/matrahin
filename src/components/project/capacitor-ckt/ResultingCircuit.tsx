@@ -1,15 +1,15 @@
 import { useCallback } from "react";
 import Breadboard from "../breadboard/Breadboard";
 import TerminalNodes from "../breadboard/TerminalNode";
-import Resistor from "./Resistor";
+import { getCoordinatesById } from "../equi-resistance/utils";
+import Capacitor from "./Capacitor";
 import { StepsInfo } from "./store";
-import { getCoordinatesById } from "./utils";
 
 const ResultingCircuit = ({
   Circuit,
   Wires,
-  removedResistances,
-  resultingResistances,
+  removedCapacitances,
+  resultingCapacitances,
   terminal1,
   terminal2,
 }: StepsInfo) => {
@@ -49,7 +49,7 @@ const ResultingCircuit = ({
   return (
     <Breadboard rangeForComponents={calculateCircuitRange()}>
       {Circuit.map((resistance, index) => (
-        <Resistor key={index} R={resistance} onClick={() => {}} />
+        <Capacitor key={index} R={resistance} onClick={() => {}} />
       ))}
 
       {/* Wires */}
@@ -68,11 +68,11 @@ const ResultingCircuit = ({
           />
         );
       })}
-      {removedResistances.map((resistance, index) => (
-        <Resistor key={index} R={resistance} onClick={() => {}} color="red" />
+      {removedCapacitances.map((resistance, index) => (
+        <Capacitor key={index} R={resistance} onClick={() => {}} color="red" />
       ))}
-      {resultingResistances.map((resistance, index) => (
-        <Resistor key={index} R={resistance} onClick={() => {}} color="blue" />
+      {resultingCapacitances.map((resistance, index) => (
+        <Capacitor key={index} R={resistance} onClick={() => {}} color="blue" />
       ))}
 
       <TerminalNodes terminals={[terminal1, terminal2]} />
