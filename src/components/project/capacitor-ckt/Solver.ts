@@ -114,11 +114,11 @@ export class Solver {
         break;
     }
 
-    // step 1: get all the nodes necessary for resistors
+    // step 1: get all the nodes necessary for capacitors
     // step 2: if shorted points on a node doesn't have a resister node or terminal node
     // , remove the wire
 
-    // to highlight the resistors that are removing
+    // to highlight the capacitors that are removing
     this.Steps.push({
       Circuit: structuredClone(this.previousCircuit),
       Wires: structuredClone(tempWires),
@@ -128,7 +128,7 @@ export class Solver {
       resultingCapacitances: [],
       message: msg1,
     });
-    // to highlight the resistors that are adding
+    // to highlight the capacitors that are adding
     this.Steps.push({
       Circuit: structuredClone(resultantCircuit),
       Wires: structuredClone(this.wires),

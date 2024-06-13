@@ -25,15 +25,15 @@ import { getCoordinatesById } from "./utils";
 const WiresInput = () => {
   const [selectedWire, setSelectedWire] = useState<number | null>(null);
   const [wireList, setWireList] = useAtom(WiresCapacitorAtom);
-  const setResistanceList = useSetAtom(CapacitanceAllAtom);
+  const setCapacitorList = useSetAtom(CapacitanceAllAtom);
   const setHistory = useSetAtom(CapacitorHistoryAtom);
   const setRedoList = useSetAtom(CapacitorRedoListAtom);
 
-  const addResistance = useCallback(
+  const addCapacitor = useCallback(
     (node1: string, node2: string) => {
-      setResistanceList((prev) => [
+      setCapacitorList((prev) => [
         ...prev,
-        { name: `R${prev.length + 1}`, value: 1, node1, node2 },
+        { name: `C${prev.length + 1}`, value: 1, node1, node2 },
       ]);
       setHistory((prev) => [
         ...prev,
@@ -44,7 +44,7 @@ const WiresInput = () => {
       ]);
       setRedoList([]);
     },
-    [setResistanceList]
+    [setCapacitorList]
   );
   const handleWireRemove = useCallback(
     (wire: Wire, index: number) => {
@@ -85,12 +85,14 @@ const WiresInput = () => {
               isHighlighted={selectedWire === index}
             />
             <line
+              id="wire"
               x1={start.x}
               y1={start.y}
               x2={end.x}
               y2={end.y}
               stroke="black"
               strokeWidth={2}
+              opacity={1}
             />
           </g>
         </PopoverTrigger>
@@ -102,7 +104,7 @@ const WiresInput = () => {
                 onClick={() => {
                   setSelectedWire(null);
                   handleWireRemove(wire, index);
-                  addResistance(wire.start, wire.end);
+                  addCapacitor(wire.start, wire.end);
                 }}
                 className="flex  gap-3"
               >

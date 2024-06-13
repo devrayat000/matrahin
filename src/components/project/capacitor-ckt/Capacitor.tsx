@@ -148,6 +148,15 @@ const Capacitor = ({
           <line x1="20" y1="14.5" x2="30" y2="14.5" />
           <line x1="10" y1="30" x2="10" y2="0" />
           <line x1="20" y1="30" x2="20" y2=" 0" /> */}
+        <rect
+          x="0"
+          y="0"
+          width="30"
+          height="30"
+          fill="white"
+          opacity={1}
+          stroke="none"
+        />
         <path
           style={{
             transformOrigin: "center center 0px",

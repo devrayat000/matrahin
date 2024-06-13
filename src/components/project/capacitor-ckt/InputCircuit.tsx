@@ -1,10 +1,9 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useRef } from "react";
 import Breadboard from "../breadboard/Breadboard";
-import WiresInput from "../equi-resistance/WiresInput";
-import { getPointFromIndex } from "../equi-resistance/utils";
 import CapacitanceInputs from "./CapacitorInputs";
 import TerminalPoints from "./TerminalPointsInput";
+import WiresInput from "./WiresInput";
 import {
   CapacitanceAllAtom,
   CapacitorComponentSelectedAtom,
@@ -17,6 +16,7 @@ import {
   WiresCapacitorAtom,
   currentPointCapacitorAtom,
 } from "./store";
+import { getPointFromIndex } from "./utils";
 
 const InputCircuit = () => {
   const [currentPoint, setCurrentPoint] = useAtom(currentPointCapacitorAtom);
