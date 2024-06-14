@@ -109,7 +109,7 @@ const WiresInput = () => {
                 className="flex  gap-3"
               >
                 <RefreshCcw />
-                Make Resistor
+                Make Capacitor
               </Button>
               <Button
                 variant="destructive"

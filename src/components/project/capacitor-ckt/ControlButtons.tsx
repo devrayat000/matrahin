@@ -11,34 +11,33 @@ import {
   FinalResultCapacitorAtom,
   CapacitorRedoListAtom as RedoListAtom,
   SolvingStepscapacitorAtom,
-  TerminalsCapacitorAtom,
   USER_ACTION,
+  VoltageSource,
+  VoltageSourceCapacitorAtom,
   Wire,
   WiresCapacitorAtom,
 } from "./store";
 
 const ControlButtons = () => {
-  const [resistanceAll, setCapacitanceAll] = useAtom(CapacitanceAllAtom);
+  const [capacitanceAll, setCapacitanceAll] = useAtom(CapacitanceAllAtom);
   const [wires, setWires] = useAtom(WiresCapacitorAtom);
   const [history, setHistory] = useAtom(CapacitorHistoryAtom);
   const [redoList, setRedoList] = useAtom(RedoListAtom);
-  const [terminals, setTerminals] = useAtom(TerminalsCapacitorAtom);
-
+  // const [terminals, setTerminals] = useAtom(TerminalsCapacitorAtom);
+  const [vSource, setVSource] = useAtom(VoltageSourceCapacitorAtom);
   const setFinalResult = useSetAtom(FinalResultCapacitorAtom);
 
   const setSolvingSteps = useSetAtom(SolvingStepscapacitorAtom);
   const solveCircuit = useCallback(() => {
     const data = new Solver(
-      structuredClone(resistanceAll),
+      structuredClone(capacitanceAll),
       structuredClone(wires),
-      terminals[0],
-      terminals[1],
-      10
+      structuredClone(vSource)
     );
     const result = data.solve();
     setSolvingSteps(result);
     setFinalResult(result[result.length - 1].resultingCapacitances[0]);
-  }, [resistanceAll, wires, terminals, setSolvingSteps]);
+  }, [capacitanceAll, wires, vSource.node1, vSource.node2, setSolvingSteps]);
 
   const undo = () => {
     const lastAction = history.pop();
@@ -72,6 +71,13 @@ const ControlButtons = () => {
           setWires([...(lastAction.params as Circuit).wires]);
           break;
 
+        case USER_ACTION.ADD_VOLTAGE_SOURCE:
+          setVSource({ node1: "-1__-1", node2: "-1__-1", value: 0 });
+          break;
+
+        case USER_ACTION.REMOVE_VOLTAGE_SOURCE:
+          setVSource({ ...(lastAction.params as VoltageSource) });
+          break;
         default:
           break;
       }
@@ -111,6 +117,14 @@ const ControlButtons = () => {
           setWires([]);
           break;
 
+        case USER_ACTION.ADD_VOLTAGE_SOURCE:
+          setVSource({ ...(lastAction.params as VoltageSource) });
+          break;
+
+        case USER_ACTION.REMOVE_VOLTAGE_SOURCE:
+          setVSource({ node1: "-1__-1", node2: "-1__-1", value: 0 });
+          break;
+
         default:
           break;
       }
@@ -125,7 +139,7 @@ const ControlButtons = () => {
       {
         action: USER_ACTION.CLEAR_CKT,
         params: {
-          resistances: structuredClone(resistanceAll),
+          resistances: structuredClone(capacitanceAll),
           wires: structuredClone(wires),
         },
       },
@@ -133,7 +147,7 @@ const ControlButtons = () => {
     setRedoList([]);
     setCapacitanceAll([]);
     setWires([]);
-    setTerminals(["-1__-1", "-1__-1"]);
+    setVSource({ node1: "-1__-1", node2: "-1__-1", value: 0 });
   };
 
   return (
@@ -168,7 +182,7 @@ const ControlButtons = () => {
       <Button
         className="font-semibold tracking-widest text-2xl p-6 flex flex-row gap-3"
         onClick={solveCircuit}
-        disabled={terminals[0] === "-1__-1" || terminals[1] === "-1__-1"}
+        disabled={vSource.node1 === "-1__-1" || vSource.node2 === "-1__-1"}
         name="solve"
         variant="success"
       >

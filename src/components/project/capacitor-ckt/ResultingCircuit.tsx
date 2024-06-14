@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import Breadboard from "../breadboard/Breadboard";
-import TerminalNodes from "../breadboard/TerminalNode";
 import { getCoordinatesById } from "../equi-resistance/utils";
 import Capacitor from "./Capacitor";
+import VoltageSourceComp from "./VoltageSource";
 import { StepsInfo } from "./store";
 
 const ResultingCircuit = ({
@@ -10,8 +10,7 @@ const ResultingCircuit = ({
   Wires,
   removedCapacitances,
   resultingCapacitances,
-  terminal1,
-  terminal2,
+  VoltageSource: vSource,
 }: StepsInfo) => {
   const getX = useCallback(
     (node: string) => Number(node.split("h")[0].split("__")[0]),
@@ -75,7 +74,7 @@ const ResultingCircuit = ({
         <Capacitor key={index} R={resistance} onClick={() => {}} color="blue" />
       ))}
 
-      <TerminalNodes terminals={[terminal1, terminal2]} />
+      <VoltageSourceComp R={vSource} onClick={() => {}} color="black" />
     </Breadboard>
   );
 };

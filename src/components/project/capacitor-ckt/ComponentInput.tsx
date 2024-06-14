@@ -55,8 +55,20 @@ const ComponentInput = () => {
           Wire
         </div>
 
-        {/* //TODO add voltage source here */}
         <div
+          className={cn(
+            componentStyle,
+            ComponentSelectionType === "v" && "bg-green-600 text-white"
+          )}
+          onClick={() =>
+            ComponentSelectionType === "v"
+              ? setComponentSelectionType("none")
+              : setComponentSelectionType("v")
+          }
+        >
+          Voltage Source
+        </div>
+        {/* <div
           className={cn(
             componentStyle,
             ComponentSelectionType === "t1" && "bg-blue-900 text-white"
@@ -81,7 +93,7 @@ const ComponentInput = () => {
           }
         >
           Terminal B
-        </div>
+        </div> */}
       </div>
     </div>
   );
