@@ -55,6 +55,9 @@ export class Solver {
   private calculateChargeVoltage() {
     const size = this.Steps.length;
 
+    const getName = (name: string, char: string) =>
+      ` ${char}<sub>${name.replace("C", "")}</sub>`;
+    const getValue = (val: number) => val.toPrecision(2);
     const map: Map<String, { voltage: number; charge: number }> = new Map();
     map.set(this.Steps[size - 1].resultingCapacitances[0].name, {
       charge:
@@ -85,13 +88,35 @@ export class Solver {
             return { ...c };
           });
 
-          messageBack = removedC
-            .map(
-              (c) => `V${c.name.replace("C", "")} = ${c.voltage.toFixed(2)}V
-            Q${c.name.replace("C", "")} = ${c.charge.toFixed(2)}μC`
-            )
-            .join(",");
-
+          messageBack = `${removedC
+            .map((c) => getName(c.name, "C"))
+            .join(", ")} are in parallel. Resultant: ${getName(
+            resultingCapacitance.name,
+            "C"
+          )} ( = ${removedC
+            .map((c) => getName(c.name, "C"))
+            .join(" + ")}) = ${getValue(resultingCapacitance.value)}μF
+                As they are in <strong>parallel</strong>, they have the same <strong>voltage</strong> as of Resultant Capacitor
+                So,<strong>${getName(
+                  resultingCapacitance.name,
+                  "V"
+                )} </strong> = ${removedC
+            .map((r) => getName(r.name, "V"))
+            .join(" = ")} = ${getValue(equi.voltage)} V 
+              Charge on each Capacitor, <span><i>Q = C * V</i> </span> =>${removedC
+                .map(
+                  (r) =>
+                    `<strong>${getName(r.name, "Q")}</strong> = ${getValue(
+                      r.charge
+                    )} μC`
+                )
+                .join(", ")}
+            Energy stored in each Capacitor, <span><i>U = 1/2 * C * V<sup>2</sup> </i> </span> => ${removedC.map(
+              (r) =>
+                `<strong>${getName(r.name, "U")}</strong> = ${getValue(
+                  0.5 * r.value * r.voltage * r.voltage
+                )} μJ`
+            )}`;
           break;
 
         case ACTION.SERIES:
@@ -106,12 +131,37 @@ export class Solver {
             return { ...c };
           });
 
-          messageBack = this.Steps[i - 1].removedCapacitances
-            .map(
-              (c) => `V${c.name.replace("C", "")} = ${c.voltage.toFixed(2)}V
-            Q${c.name.replace("C", "")} = ${c.charge.toFixed(2)}μC`
-            )
-            .join(",");
+          messageBack = `${removedC
+            .map((c) => getName(c.name, "C"))
+            .join(", ")} are in Series. Resultant: ${getName(
+            resultingCapacitance.name,
+            "C"
+          )} =(  ${removedC
+            .map((c) => ` ${getName(c.name, "C")}<sup> -1</sup>`)
+            .join(" + ")})<sup> -1</sup> = ${getValue(
+            resultingCapacitance.value
+          )}μF 
+          As they are in <strong>series</strong>, they have the same <strong>charge</strong> as of Resultant Capacitor
+                So,<strong>${getName(
+                  resultingCapacitance.name,
+                  "Q"
+                )}</strong> = ${removedC
+            .map((r) => getName(r.name, "Q"))
+            .join(" = ")} = ${getValue(equi.charge)} μC 
+              Voltage on each Capacitor, <span><i>V = Q / C</i></span> =>${removedC
+                .map(
+                  (r) =>
+                    `<strong>${getName(r.name, "V")}</strong> = ${getValue(
+                      r.voltage
+                    )} V`
+                )
+                .join(", ")}
+            Energy stored in each Capacitor,<span><i>U = 1/2 * C * V<sup>2</sup> </i> </span> => ${removedC.map(
+              (r) =>
+                `<strong>${getName(r.name, "U")}</strong> = ${getValue(
+                  0.5 * r.value * r.voltage * r.voltage
+                )} μJ`
+            )}`;
 
           break;
       }

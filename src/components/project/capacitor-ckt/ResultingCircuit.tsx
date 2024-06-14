@@ -44,11 +44,10 @@ const ResultingCircuit = ({
       maxY,
     };
   };
-
   return (
     <Breadboard rangeForComponents={calculateCircuitRange()}>
-      {Circuit.map((resistance, index) => (
-        <Capacitor key={index} R={resistance} onClick={() => {}} />
+      {Circuit.map((c, index) => (
+        <Capacitor key={index} R={c} onClick={() => {}} />
       ))}
 
       {/* Wires */}
