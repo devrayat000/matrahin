@@ -1,33 +1,34 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useRef } from "react";
 import Breadboard from "../breadboard/Breadboard";
-import ResistanceInputs from "./ResistanceInputs";
-import TerminalPoints from "./TerminalPointsInput";
+import CapacitanceInputs from "./CapacitorInputs";
+import VoltageInput from "./VoltageInput";
 import WiresInput from "./WiresInput";
 import {
-  ComponentSelectedAtom,
-  HistoryAtom,
-  PointsUsedAtom,
-  RedoListAtom,
-  ResistanceAllAtom,
-  TerminalsAtom,
+  CapacitanceAllAtom,
+  CapacitorComponentSelectedAtom,
+  CapacitorHistoryAtom,
+  PointsUsedCapacitorAtom,
+  CapacitorRedoListAtom as RedoListAtom,
   USER_ACTION,
+  VoltageSource,
+  VoltageSourceCapacitorAtom,
   Wire,
-  WiresAtom,
-  currentPointAtom,
+  WiresCapacitorAtom,
+  currentPointCapacitorAtom,
 } from "./store";
 import { getPointFromIndex } from "./utils";
 
 const InputCircuit = () => {
-  const [currentPoint, setCurrentPoint] = useAtom(currentPointAtom);
-  const setHistory = useSetAtom(HistoryAtom);
+  const [currentPoint, setCurrentPoint] = useAtom(currentPointCapacitorAtom);
+  const setHistory = useSetAtom(CapacitorHistoryAtom);
   const setRedoList = useSetAtom(RedoListAtom);
-  const pointsUsed = useAtomValue(PointsUsedAtom);
-  const ComponentSelectionType = useAtomValue(ComponentSelectedAtom);
+  const pointsUsed = useAtomValue(PointsUsedCapacitorAtom);
+  const ComponentSelectionType = useAtomValue(CapacitorComponentSelectedAtom);
 
-  const setTerminals = useSetAtom(TerminalsAtom);
-  const setResistance = useSetAtom(ResistanceAllAtom);
-  const setWires = useSetAtom(WiresAtom);
+  const setVSource = useSetAtom(VoltageSourceCapacitorAtom);
+  const setCapacitance = useSetAtom(CapacitanceAllAtom);
+  const setWires = useSetAtom(WiresCapacitorAtom);
 
   const resistanceCount = useRef(0);
 
@@ -40,12 +41,7 @@ const InputCircuit = () => {
       }
 
       if (currentPoint.x === -1) {
-        if (ComponentSelectionType === "t1")
-          setTerminals((terminals) => [`${point.x}__${point.y}`, terminals[1]]);
-        else if (ComponentSelectionType === "t2")
-          setTerminals((terminals) => [terminals[0], `${point.x}__${point.y}`]);
-        else setCurrentPoint({ ...point });
-
+        setCurrentPoint({ ...point });
         return;
       }
 
@@ -53,6 +49,23 @@ const InputCircuit = () => {
       if (currentPoint.x === point.x && currentPoint.y === point.y) {
         setCurrentPoint({ x: -1, y: -1 });
         return;
+      }
+
+      if (ComponentSelectionType === "v") {
+        const voltageSource: VoltageSource = {
+          node1: `${currentPoint.x}__${currentPoint.y}`,
+          node2: `${point.x}__${point.y}`,
+          value: 1,
+        };
+        setVSource({ ...voltageSource });
+        setHistory((history) => [
+          ...history,
+          {
+            action: USER_ACTION.ADD_VOLTAGE_SOURCE,
+            params: { ...voltageSource },
+          },
+        ]);
+        // setRedoList([]);
       }
 
       if (ComponentSelectionType === "wire") {
@@ -68,13 +81,13 @@ const InputCircuit = () => {
             params: { ...newWire },
           },
         ]);
-        setRedoList([]);
-      } else if (ComponentSelectionType === "R") {
+        // setRedoList([]);
+      } else if (ComponentSelectionType === "C") {
         resistanceCount.current++;
-        setResistance((resistances) => [
+        setCapacitance((resistances) => [
           ...resistances,
           {
-            name: `R${resistanceCount.current}`,
+            name: `C${resistanceCount.current}`,
             value: 1,
             node1: `${currentPoint.x}__${currentPoint.y}`,
             node2: `${point.x}__${point.y}`,
@@ -85,19 +98,19 @@ const InputCircuit = () => {
           {
             action: USER_ACTION.ADD_RESISTANCE,
             params: {
-              name: `R${resistanceCount.current}`,
+              name: `C${resistanceCount.current}`,
               value: 1,
               node1: `${currentPoint.x}__${currentPoint.y}`,
               node2: `${point.x}__${point.y}`,
             },
           },
         ]);
-        setRedoList([]);
       }
+      setRedoList([]);
 
       setCurrentPoint({ x: -1, y: -1 });
     },
-    [currentPoint, setResistance, setCurrentPoint]
+    [currentPoint, setCapacitance, setCurrentPoint]
   );
 
   return (
@@ -113,9 +126,9 @@ const InputCircuit = () => {
         />
       )}
 
-      <TerminalPoints />
-
-      <ResistanceInputs />
+      {/* <TerminalPoints /> */}
+      <VoltageInput />
+      <CapacitanceInputs />
 
       <WiresInput />
 

@@ -11,6 +11,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { MinusCircle, RefreshCcw } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Button } from "~/components/ui/button";
+import HighlightComponent from "../breadboard/HighlightComponent";
 import {
   HistoryAtom,
   RedoListAtom,
@@ -18,9 +19,8 @@ import {
   USER_ACTION,
   Wire,
   WiresAtom,
-} from "../equi-resistance/store";
-import { getCoordinatesById } from "../equi-resistance/utils";
-import HighlightComponent from "./HighlightComponent";
+} from "./store";
+import { getCoordinatesById } from "./utils";
 
 const WiresInput = () => {
   const [selectedWire, setSelectedWire] = useState<number | null>(null);

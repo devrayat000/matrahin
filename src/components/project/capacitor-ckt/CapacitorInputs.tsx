@@ -12,46 +12,46 @@ import { MinusCircle, RefreshCcw } from "lucide-react";
 import { useCallback, useState } from "react";
 import { Button } from "~/components/ui/button";
 import HighlightComponent from "../breadboard/HighlightComponent";
-import Resistor from "./Resistor";
+import Capacitor from "./Capacitor";
+import { getCoordinatesById } from "../equi-resistance//utils";
 import {
-  HistoryAtom,
-  RedoListAtom,
-  Resistance,
-  ResistanceAllAtom,
+  Capacitance,
+  CapacitanceAllAtom,
+  CapacitorHistoryAtom,
+  CapacitorRedoListAtom as RedoListAtom,
   USER_ACTION,
-  WiresAtom,
+  WiresCapacitorAtom,
 } from "./store";
-import { getCoordinatesById } from "./utils";
 
-const ResistanceInputs = () => {
-  const [resistanceList, setResistanceList] = useAtom(ResistanceAllAtom);
+const CapacitorInputs = () => {
+  const [capacitanceList, setCapacitanceList] = useAtom(CapacitanceAllAtom);
   const [selectedR, setSelectedR] = useState<number | null>(null);
-  const setHistory = useSetAtom(HistoryAtom);
+  const setHistory = useSetAtom(CapacitorHistoryAtom);
   const setRedoList = useSetAtom(RedoListAtom);
-  const setWire = useSetAtom(WiresAtom);
-  const handleResistanceRemove = useCallback(
-    (resistance: Resistance, index: number) => {
-      setResistanceList((prev) => prev.filter((_, i) => i !== index));
+  const setWire = useSetAtom(WiresCapacitorAtom);
+  const handleCapacitanceRemove = useCallback(
+    (capacitance: Capacitance, index: number) => {
+      setCapacitanceList((prev) => prev.filter((_, i) => i !== index));
       setHistory((prev) => [
         ...prev,
         {
           action: USER_ACTION.REMOVE_RESISTANCE,
-          params: { ...resistance },
+          params: { ...capacitance },
         },
       ]);
       setRedoList([]);
     },
-    [setResistanceList]
+    [setCapacitanceList]
   );
 
   const handleRValueChange = useCallback(
-    (resistance: Resistance, index: number, value: number) => {
-      setResistanceList((prev) => {
+    (capacitance: Capacitance, index: number, value: number) => {
+      setCapacitanceList((prev) => {
         prev[index].value = value;
         return [...prev];
       });
     },
-    [setResistanceList]
+    [setCapacitanceList]
   );
 
   const addWire = useCallback(
@@ -68,11 +68,11 @@ const ResistanceInputs = () => {
     },
     [setWire]
   );
-  return resistanceList.map((r, index) => {
+  return capacitanceList.map((r, index) => {
     const start = getCoordinatesById(r.node1);
     const end = getCoordinatesById(r.node2);
 
-    const handleResistorClick = () => {
+    const handleCapacitorClick = () => {
       if (selectedR === index) setSelectedR(null);
       else setSelectedR(index);
     };
@@ -86,8 +86,8 @@ const ResistanceInputs = () => {
         }}
       >
         <PopoverTrigger className="cursor-grab">
-          <g onClick={handleResistorClick}>
-            <Resistor
+          <g onClick={handleCapacitorClick}>
+            <Capacitor
               R={r}
               onClick={() => {}}
               color={selectedR === index ? "blue" : "black"}
@@ -125,7 +125,7 @@ const ResistanceInputs = () => {
                 variant="success"
                 onClick={() => {
                   setSelectedR(null);
-                  handleResistanceRemove(r, index);
+                  handleCapacitanceRemove(r, index);
                   addWire(r.node1, r.node2);
                 }}
                 className="flex  gap-3 w-full"
@@ -137,7 +137,7 @@ const ResistanceInputs = () => {
                 variant="destructive"
                 onClick={() => {
                   setSelectedR(null);
-                  handleResistanceRemove(r, index);
+                  handleCapacitanceRemove(r, index);
                 }}
                 className="flex  gap-3  w-full"
               >
@@ -154,4 +154,4 @@ const ResistanceInputs = () => {
   });
 };
 
-export default ResistanceInputs;
+export default CapacitorInputs;
