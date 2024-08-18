@@ -1,33 +1,9 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { Metadata } from "next";
 
+import { buttonVariants } from "~/components/ui/button";
 import LoginForm from "./LoginForm";
-import login from "~/assets/seo/login.jpeg";
-
-const title = "Login - Matrahin";
-const description =
-  "Login wth matrahin to get started. Enter your ACS HSC 25 physics cycle's access code to gain access to this website.";
-const url = new URL("https://matrahin.com/login");
-
-export const metadata: Metadata = {
-  title: title,
-  description: description,
-  openGraph: {
-    type: "website",
-    description: description,
-    images: [
-      {
-        url: login.src,
-        alt: title,
-      },
-    ],
-    title: title,
-    url: url,
-  },
-  alternates: { canonical: url },
-  metadataBase: url,
-};
+import { cn } from "~/lib/utils";
 
 export default function LoginPage() {
   return (
